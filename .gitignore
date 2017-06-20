@@ -10,7 +10,7 @@
 *.opendp
 *.dir
 
-build
+build/
 
 #Exclude all model .objs
 #!resources/models/*.obj
