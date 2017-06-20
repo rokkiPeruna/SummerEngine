@@ -19,18 +19,18 @@ public:
 protected:
 	std::string m_filepath;
 
-}
+};
 
-class TextResource : public
+class TextResource : public Resource
 {
 public:
 	TextResource(std::string filepath) :Resource(filepath) {}
-}
+};
 
 class ImageResource : public Resource
 {
 public:
-	ImageResource(std::string filepath) :m_filepath(filepath)
+	ImageResource(std::string filepath) :Resource(filepath) {}
 };
 
 
