@@ -10,7 +10,12 @@
 *.opendp
 *.dir
 
+#Ignore the whole build folder
 build/
+
+#Ignore libs in external and libs folders
+external/**.lib
+libs/**.lib
 
 #Exclude all model .objs
 #!resources/models/*.obj
