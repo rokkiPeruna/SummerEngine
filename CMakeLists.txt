@@ -1,0 +1,36 @@
+#----------------------------------------------------------------------------------------------------------------------------------
+#-- Visual Studio 													CMake Command
+#-- Solution file (.sln) 											project
+#-- Project file (.vcproj) 											target name in the command add_executable or add_library
+#-- executable (.exe) 												add_executable
+#-- static library (.lib) 											add_library
+#-- dynamic library (.dll) 											add_library(SHARED)
+#-- Source Folders 													source_group
+#-- Project Folders 												set_property(TARGET PROPERTY FOLDER)
+#-- Properties->General->Output Directory 							set_target_properties(PROPERTIES RUNTIME_OUTPUT_DIRECTORY)
+#-- Properties->C/C++->Preprocessor->Preprocessor Definitions 		add_definitions
+#-- Properties->C/C++->General->Additional Include Directories 		include_directories
+#-- Properties->Linker->General->Additional Library Directories 	link_directories
+#-- Properties->Linker->Input->Additional Dependencies 				target_link_libraries
+#----------------------------------------------------------------------------------------------------------------------------------
+
+#This is root file
+cmake_minimum_required(VERSION 3.7)
+
+#Solution name
+set(SOLUTION_NAME SummerEngine)
+project(${SOLUTION_NAME})
+
+#Current version
+set(${SOLUTION_NAME}_VERSION_MAJOR 0)
+set(${SOLUTION_NAME}_VERSION_MINOR 1)
+
+#Turn on the ability to make create folders to organize projects (.vcproj)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+#Set warning level to 4
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+
+#Add sub-directories where more CMakeLists.txt exist
+add_subdirectory(engine)
+add_subdirectory(external)

@@ -1,0 +1,17 @@
+*.obj
+*.log
+*.pdb
+*.tlog
+*.idb
+*.lastbuildstate
+*.exe
+*.ilk
+*.db
+*.opendp
+*.dir
+
+build
+
+#Exclude all model .objs
+#!resources/models/*.obj
+#!xGameAI/resources/models/*.obj

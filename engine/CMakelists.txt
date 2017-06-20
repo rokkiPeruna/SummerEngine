@@ -1,0 +1,87 @@
+#root/engine
+
+#Add include directories
+include_directories(${PROJECT_SOURCE_DIR}/engine/include)
+include_directories(${PROJECT_SOURCE_DIR}/engine/src)
+include_directories(${PROJECT_SOURCE_DIR}/external)
+include_directories(${PROJECT_SOURCE_DIR}/external/OpenGL)
+
+#Add library directories
+link_directories(${PROJECT_SOURCE_DIR}/libs)
+
+#-----------------------------------------------------------------
+#Components
+set(COMPONENTS_FILES
+	include/components/Component.h
+	src/components/Component.cpp
+	include/components/CTransform.h
+	src/components/CTransform.cpp
+	)
+source_group("components" FILES ${COMPONENTS_FILES})
+#-----------------------------------------------------------------
+#Systems
+set(SYSTEMS_FILES
+	include/systems/ComponentSystem.h
+	src/systems/ComponentSystem.cpp
+	include/systems/System.h
+	src/systems/System.cpp
+	)
+source_group("systems" FILES ${SYSTEMS_FILES})
+#-----------------------------------------------------------------
+#Managers
+set(MANAGERS_FILES
+	include/managers/ResourceManager.h
+	src/managers/ResourceManager.cpp
+	include/managers/Resource.h
+	)
+source_group("managers" FILES ${MANAGERS_FILES})
+#-----------------------------------------------------------------
+#Core
+set(CORE_FILES
+	include/core/Engine.h
+	src/core/Engine.cpp
+	include/core/Window.h
+	src/core/Window.cpp	
+	)
+source_group("core" FILES ${CORE_FILES})
+#-----------------------------------------------------------------
+#Utility
+set(UTILITY_FILES
+	include/utility/Typedefs.h
+	)
+source_group("utility" FILES ${UTILITY_FILES})
+#-----------------------------------------------------------------
+#Main.cpp
+set(MAIN_CPP
+	src/main.cpp
+	)
+source_group("" FILES ${MAIN_CPP})
+#-----------------------------------------------------------------
+
+#Project name
+add_executable(engine
+	src/main.cpp
+	${COMPONENTS_FILES}
+	${SYSTEMS_FILES}
+	${MANAGERS_FILES}
+	${CORE_FILES}
+	${UTILITY_FILES}
+	${MAIN_CPP}
+	)
+
+#Link libraries
+link_libraries(libEGL 
+			   libGLESv2)
+target_link_libraries(engine PUBLIC 
+					box2d 
+					SDL2-static 
+					SDL2main 
+					)
+# Remember to add 'OALWrapper' to target_link_libraries
+
+#Add folder for exes
+set_property(TARGET engine PROPERTY FOLDER "engine")
+
+# Properties->General->Output Directory
+set_target_properties(engine PROPERTIES
+                      RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
