@@ -15,14 +15,14 @@
 #include <OpenGL/GLES3/gl3platform.h>
 #include <OpenGL/EGL/egl.h>
 
+#include <core/Engine.h>
+
 int main(int argc, char *argv[])
 {
-	SDL_Init(SDL_VIDEO_OPENGL_ES2);
+	se::Engine GameEngine;
 
-	glm::mat4 keijo = glm::inverse(glm::transpose(glm::mat4(5.0)));
-	GLboolean matti = true;
-	GLint64 simo = 100;
-	b2CircleShape shape;
+	GameEngine.InitializeEngine();
+	
 	Sleep(3000.f);
 	return 0;
 }
