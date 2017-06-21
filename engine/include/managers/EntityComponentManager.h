@@ -13,8 +13,7 @@ namespace se
 {
 namespace priv
 {
-
-
+///Brief: EntityComponentManager -class handless entities and their component pointers
 class EntityComponentManager
 {
 public:

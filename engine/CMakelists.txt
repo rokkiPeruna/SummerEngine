@@ -23,8 +23,8 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
-	include/systems/System.h
-	src/systems/System.cpp
+	include/systems/TransformSystem.h
+	src/systems/TransformSystem.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -51,6 +51,10 @@ source_group("core" FILES ${CORE_FILES})
 #Utility
 set(UTILITY_FILES
 	include/utility/Typedefs.h
+	include/utility/Time.h
+	src/utility/Time.cpp
+	include/utility/Clock.h
+	src/utility/Clock.cpp
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
@@ -74,7 +78,9 @@ add_executable(engine
 
 #Link libraries
 link_libraries(libEGL 
-			   libGLESv2)
+			   libGLESv2
+			   glew32
+			   glew32s)
 target_link_libraries(engine PUBLIC 
 					box2d 
 					SDL2-static 

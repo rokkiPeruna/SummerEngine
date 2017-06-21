@@ -38,6 +38,8 @@ void Entity::ReplaceComponent()
 std::shared_ptr<priv::Component> Entity::GetComponent(/*COMPONENT_TYPE type*/)
 {
 	//Use COMPONENT_TYPE and entity's name to make a unigue identifier
+
+	return nullptr;
 }
 
 }//namespace se

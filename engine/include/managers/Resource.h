@@ -7,6 +7,9 @@
 //SE includes
 #include <utility/Typedefs.h>
 
+namespace se
+{
+
 
 ///Brief: Resource -class is a abstract base class for all usable resources.
 ///It has scene id for identifying to which scene resource belongs or if it a global
@@ -33,5 +36,6 @@ public:
 	ImageResource(std::string filepath) :Resource(filepath) {}
 };
 
+}//namespace se
 
 #endif

@@ -1,6 +1,9 @@
 #ifndef SE_TYPEDEFS_H
 #define SE_TYPEDEFS_H
 
+//STL includes:
+#include <cstdint>
+
 //External includes:
 #include <OpenGL/GLES2/gl2.h>
 
@@ -23,7 +26,9 @@ typedef unsigned short			SEushort;
 typedef long int				SElint;
 typedef unsigned long int		SEulint;
 typedef unsigned int			SEuint;
-typedef unsigned long long		SEint64;
+typedef int32_t					SEint32;
+typedef int64_t					SEint64;
+typedef unsigned long long		SEuint64;
 
 typedef float					SEfloat;
 typedef double					SEdouble;
