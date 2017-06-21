@@ -38,8 +38,7 @@ public:
 	void InitializeWindow();
 
 	///Get window handle outside of a class
-	const SDL_Window* GetWindowHandle() const;
-
+	SDL_Window* GetWindowHandle();
 
 private:
 
@@ -51,6 +50,8 @@ private:
 
 	///Handle to window
 	SDL_Window* m_sdl_window_handle;
+	
+	//SDL_GLContext m_glContext;
 };
 
 }//end namespace priv

@@ -20,9 +20,12 @@
 int main(int argc, char *argv[])
 {
 	se::Engine GameEngine;
-
 	GameEngine.InitializeEngine();
 	
-	Sleep(3000.f);
+	
+	
+	GameEngine.EngineUpdate();
+
 	return 0;
+	
 }

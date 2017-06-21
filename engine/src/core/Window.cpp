@@ -24,15 +24,16 @@ Window::~Window()
 void Window::InitializeWindow()
 {
 
-	// Initialize SDL video
+
+	//Initialize SDL video
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		// TODO: Change to our own messenger when we get one
-		std::cout << "SDL 'initialize everything' failed. returning.. " << std::endl;
+		std::cout << "SDL 'initialize video' has failed. returning.. " << std::endl;
 		return;
 	}
 
-	// Initialize window handle 
+	//Initialize window handle 
 	m_sdl_window_handle = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_width, m_height, SDL_WINDOW_OPENGL);
 
 	if (m_sdl_window_handle == nullptr)
@@ -42,10 +43,12 @@ void Window::InitializeWindow()
 		return;
 	}
 
+
+
+
 }
 
-
-const SDL_Window* Window::GetWindowHandle() const
+SDL_Window* Window::GetWindowHandle()
 {
 	return m_sdl_window_handle;
 }
