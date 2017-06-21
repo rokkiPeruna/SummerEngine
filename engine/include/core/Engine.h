@@ -3,13 +3,16 @@
 
 //include STL
 
-//TODO: 'memory' can propably be deleted after we recive 'typedefs'
-#include <memory>
-
 //include external
+#include <SDL2/include/SDL.h>
+
+
 
 //include se 
 #include <core/Window.h>
+#include <core/Graphics.h>
+#include <utility/Typedefs.h>
+
 
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
@@ -39,10 +42,13 @@ public:
 	// TODO: everything
 	void UninitializeEngine();
 
+	// Engine update 
+	void EngineUpdate();
+
 private:
 
 	std::shared_ptr<priv::Window> m_window;
-
+	std::shared_ptr<priv::Graphics> m_graphics;
 
 };
 
