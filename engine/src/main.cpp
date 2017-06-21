@@ -11,9 +11,6 @@
 #include <Windows.h>
 #include <STB/stb_image.h>
 #include <glm/glm.hpp>
-#include <OpenGL/GLES3/gl3.h>
-#include <OpenGL/GLES3/gl3platform.h>
-#include <OpenGL/EGL/egl.h>
 
 #include <core/Engine.h>
 

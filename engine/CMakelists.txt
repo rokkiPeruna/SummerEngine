@@ -45,6 +45,8 @@ set(CORE_FILES
 	src/core/Engine.cpp
 	include/core/Window.h
 	src/core/Window.cpp	
+	include/core/Graphics.h
+	src/core/Graphics.cpp	
 	)
 source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------
