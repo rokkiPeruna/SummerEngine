@@ -2,19 +2,24 @@
 #define SE_COMPONENTSYSTEM_H
 
 
+//SE includes:
+#include <utility/Typedefs.h>
+#include <components/Component.h>
+#include <managers/EntityComponentManager.h>
+
 namespace se
 {
 namespace priv
 {
 ///Brief: ComponentSystem -class works as a abstract interface class for other
-///systems responsible for updating components
+///systems that are responsible for updating components
 class ComponentSystem
 {
 public:
 	///Default constructor
-	ComponentSystem() {}
+	ComponentSystem(std::shared_ptr<EntityComponentManager> ecm_ptr);
 	///Destructor
-	virtual ~ComponentSystem() {}
+	virtual ~ComponentSystem();
 
 	///ComponentSystem's initializing method.
 	///Must be overridden in inheriting class.
@@ -26,8 +31,16 @@ public:
 
 	///ComponentSystem's update. Takes in (float)deltatime as parameter.
 	///Must be overridden in inheriting class.
-	virtual void Update(float deltaTime) = 0;
+	virtual void Update(SEfloat deltaTime) = 0;
 
+	///Initializes new component and adds it to system's component container.
+	///Communicates with EntityComponentManager to give the shared pointer of the component to user
+	virtual void InitializeNewComponent() = 0;
+
+protected:
+
+	///Shared pointer to EntityComponentManager
+	std::shared_ptr<EntityComponentManager> m_ecm_ptr;
 };
 
 }//namespace priv

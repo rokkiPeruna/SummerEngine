@@ -16,8 +16,8 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 set(COMPONENTS_FILES
 	include/components/Component.h
 	src/components/Component.cpp
-	include/components/CTransform.h
-	src/components/CTransform.cpp
+	include/components/CTransform2D.h
+	src/components/CTransform2D.cpp
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -69,6 +69,25 @@ set(MAIN_CPP
 source_group("" FILES ${MAIN_CPP})
 #-----------------------------------------------------------------
 
+#JSON files
+set(JSON_COMPONENT_TEMPLATES
+	json_files/component_templates.json)
+	
+set(JSON_ENTITY_TEMPLATES
+	json_files/entity_templates.json)
+
+set(JSON_SCENES
+	json_files/scenes.json)
+	
+set(JSON_FILES
+	${JSON_COMPONENT_TEMPLATES}
+	${JSON_ENTITY_TEMPLATES}
+	${JSON_SCENES})
+	
+source_group("json" FILES
+	${JSON_FILES})
+#-----------------------------------------------------------------
+
 #Project name
 add_executable(engine
 	src/main.cpp
@@ -78,6 +97,7 @@ add_executable(engine
 	${CORE_FILES}
 	${UTILITY_FILES}
 	${MAIN_CPP}
+	${JSON_FILES}
 	)
 
 #Link libraries
