@@ -38,7 +38,10 @@ set(MANAGERS_FILES
 	include/managers/EntityComponentManager.h
 	src/managers/EntityComponentManager.cpp
 	include/managers/Entity.h
-	src/managers/Entity.cpp)
+	src/managers/Entity.cpp
+	include/managers/RenderManager.h
+	src/managers/RenderManager.cpp
+	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
 #Core

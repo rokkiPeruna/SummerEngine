@@ -11,8 +11,15 @@
 
 
 //include se 
+
+//core
 #include <core/Window.h>
 #include <core/Graphics.h>
+
+//managers
+#include <managers/RenderManager.h>
+
+//utility
 #include <utility/Typedefs.h>
 
 
@@ -51,7 +58,11 @@ private:
 
 	std::shared_ptr<priv::Window> m_window;
 	std::shared_ptr<priv::Graphics> m_graphics;
+	
 
+	std::shared_ptr<priv::RenderManager> m_renderManager;
+
+	
 };
 
 }

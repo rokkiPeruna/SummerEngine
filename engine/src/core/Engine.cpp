@@ -11,6 +11,7 @@ namespace se
 Engine::Engine()
 	: m_window(new priv::Window)
 	, m_graphics(new priv::Graphics)
+	, m_renderManager(new priv::RenderManager)
 {
 
 }
@@ -25,6 +26,7 @@ void Engine::InitializeEngine()
 {
 	m_window->InitializeWindow();
 	m_graphics->InitializeGraphics(m_window);
+	m_renderManager->InitializeRenderManager();
 }
 
 void Engine::UninitializeEngine()
@@ -35,6 +37,8 @@ void Engine::UninitializeEngine()
 
 void Engine::EngineUpdate()
 {
+
+	m_renderManager->UpdateRenderManager();
 
 	bool loop = true;
 
@@ -80,27 +84,29 @@ void Engine::EngineUpdate()
 					SDL_GL_SwapWindow(m_window->GetWindowHandle());
 					break;
 
-				case SDL_FINGERDOWN :
-
-					glClearColor(1.0, 1.0, 0.0, 1.0);
-					glClear(GL_COLOR_BUFFER_BIT);
-					SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					break;
-
-				case SDL_FINGERUP :
-
-					glClearColor(0.0, 1.0, 1.0, 1.0);
-					glClear(GL_COLOR_BUFFER_BIT);
-					SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					break;
-
-				case SDL_FINGERMOTION :
-
-					glClearColor(1.0, 0.0, 1.0, 1.0);
-					glClear(GL_COLOR_BUFFER_BIT);
-					SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					break;
-
+				//If we manage to get this shieet working on, android try this..
+				//--------------------------------------------------------------
+				case SDL_FINGERDOWN :										   
+																			   
+					glClearColor(1.0, 1.0, 0.0, 1.0);						   
+					glClear(GL_COLOR_BUFFER_BIT);							   
+					SDL_GL_SwapWindow(m_window->GetWindowHandle());			   
+					break;													   
+																			   
+				case SDL_FINGERUP :											   
+																			   
+					glClearColor(0.0, 1.0, 1.0, 1.0);						   
+					glClear(GL_COLOR_BUFFER_BIT);							   
+					SDL_GL_SwapWindow(m_window->GetWindowHandle());			   
+					break;													   
+																			   
+				case SDL_FINGERMOTION :										   
+																			   
+					glClearColor(1.0, 0.0, 1.0, 1.0);						   
+					glClear(GL_COLOR_BUFFER_BIT);							   
+					SDL_GL_SwapWindow(m_window->GetWindowHandle());			   
+					break;													   
+					//----------------------------------------------------------
 				default:
 					break;
 				}
