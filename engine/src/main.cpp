@@ -3,7 +3,6 @@
 #include <SDL2/include/SDL_config.h>
 #include <SDL2/include/SDL.h>
 //#undef main
-#include <OpenGL/GLES3/glew.h>
 
 //For memory management
 #include <vld.h>
@@ -19,11 +18,10 @@ int main(int argc, char *argv[])
 {
 	se::Engine GameEngine;
 	GameEngine.InitializeEngine();
-	
-	
-
-
 	GameEngine.EngineUpdate();
+	
+	
+	
 
 	return 0;
 	

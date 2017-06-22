@@ -5,9 +5,11 @@ include_directories(${PROJECT_SOURCE_DIR}/engine/include)
 include_directories(${PROJECT_SOURCE_DIR}/engine/src)
 include_directories(${PROJECT_SOURCE_DIR}/external)
 include_directories(${PROJECT_SOURCE_DIR}/external/OpenGL)
+include_directories(${PROJECT_SOURCE_DIR}/libs)
 
 #Add library directories
 link_directories(${PROJECT_SOURCE_DIR}/libs)
+
 
 #-----------------------------------------------------------------
 #Components
@@ -53,13 +55,10 @@ source_group("core" FILES ${CORE_FILES})
 #Utility
 set(UTILITY_FILES
 	include/utility/Typedefs.h
-	include/utility/Math.h
 	include/utility/Time.h
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
-	include/utility/Messenger.h
-	src/utility/Messenger.cpp
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
@@ -82,16 +81,22 @@ add_executable(engine
 	)
 
 #Link libraries
+#link_libraries(
+#			   libEGL 
+#			   libGLESv2			   
+#				glew32 
+#				glew32s 
+#)
+#					libEGL 
+#					libGLESv2 
 target_link_libraries(engine PUBLIC 
 					box2d 
 					SDL2-static 
 					SDL2main 
-					libEGL
-					libGLESv2
-					glew32
-					glew32s
-					libMaliEmulator
-					)
+					glew32 
+					glew32s 	
+					OpenGL32
+				)
 # Remember to add 'OALWrapper' to target_link_libraries
 
 #Add folder for exes
