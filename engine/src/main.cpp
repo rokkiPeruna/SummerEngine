@@ -18,10 +18,10 @@ int main(int argc, char *argv[])
 {
 	se::Engine GameEngine;
 	GameEngine.InitializeEngine();
-	
-	
-	
 	GameEngine.EngineUpdate();
+	
+	
+	
 
 	return 0;
 	
