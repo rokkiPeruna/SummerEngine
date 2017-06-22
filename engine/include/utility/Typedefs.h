@@ -4,10 +4,6 @@
 //STL includes:
 #include <cstdint>
 
-//External includes:
-#include <OpenGL/GLES2/gl2.h>
-
-
 
 //Create typedefs for data types so that the whole engine uses same types everywhere
 

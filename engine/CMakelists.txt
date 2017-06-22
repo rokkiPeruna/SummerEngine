@@ -53,10 +53,13 @@ source_group("core" FILES ${CORE_FILES})
 #Utility
 set(UTILITY_FILES
 	include/utility/Typedefs.h
+	include/utility/Math.h
 	include/utility/Time.h
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
+	include/utility/Messenger.h
+	src/utility/Messenger.cpp
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
@@ -79,14 +82,15 @@ add_executable(engine
 	)
 
 #Link libraries
-link_libraries(libEGL 
-			   libGLESv2
-			   glew32
-			   glew32s)
 target_link_libraries(engine PUBLIC 
 					box2d 
 					SDL2-static 
 					SDL2main 
+					libEGL
+					libGLESv2
+					glew32
+					glew32s
+					libMaliEmulator
 					)
 # Remember to add 'OALWrapper' to target_link_libraries
 

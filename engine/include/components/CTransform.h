@@ -15,10 +15,10 @@ public:
 	CTransform();
 	///Destructor
 	~CTransform();
-	///Copy constructor
-	CTransform(const CTransform)
+	///Copy constructor and assing operator
+	CTransform(const CTransform& other);
+	CTransform& operator=(const CTransform& other);
 };
-
 }//namespace se
 
 #endif
