@@ -1,27 +1,28 @@
 #ifndef SE_ENGINE_H
 #define SE_ENGINE_H
 
-//include STL
+///STL includes:
 
-//include external
+///External includes:
 #include <SDL2/include/SDL.h>
-
-//#include <OpenGL/GLES3/glew.h>
 #include <GLES2/glew.h>
 
 
-//include se 
+///SE includes:
 #include <core/Window.h>
 #include <core/Graphics.h>
 #include <utility/Typedefs.h>
+///Systems
+#include <systems/TransformSystem.h>
 
 
-///Brief: Engine contains all managers and systems and is resposible for
-///updating them.
 
 namespace se
 {
-
+namespace priv
+{
+///Brief: Engine contains all managers and systems and is resposible for
+///updating them.
 class Engine
 {
 public:
@@ -52,8 +53,12 @@ private:
 	std::shared_ptr<priv::Window> m_window;
 	std::shared_ptr<priv::Graphics> m_graphics;
 
-};
+	///Systems:
+	TransformSystem m_transformSystem;
+	
 
-}
+};
+}//namespace priv
+}//namespace se
 
 #endif // !SE_ENGINE_H

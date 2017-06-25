@@ -12,6 +12,8 @@
 
 namespace se
 {
+typedef std::unordered_map<COMPONENT_TYPE, std::function<void>()> componentFactory;
+
 ///Brief: EntityComponentManager -class handless entities and their component pointers
 class EntityComponentManager
 {

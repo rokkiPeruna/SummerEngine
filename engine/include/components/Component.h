@@ -20,14 +20,14 @@ namespace priv
 {
 ///Forward declaring ComponentSystem to avoid linking errors
 class ComponentSystem;
-
 ///Brief: Component -class is a base class for all components.
 ///Components are POD -classes.
 class Component
 {
-public:
+protected:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
 	Component(COMPONENT_TYPE type);
+public:
 	///Destructor
 	virtual ~Component();
 	///Copy constructor
@@ -42,7 +42,10 @@ public:
 	///Set to false by default.
 	bool overwritable;
 
-	ComponentSystem* mySystem;
+	///Pointer to owning system
+	std::shared_ptr<ComponentSystem> mySystem;
+
+	
 };
 }//namespace priv
 }//namespace se

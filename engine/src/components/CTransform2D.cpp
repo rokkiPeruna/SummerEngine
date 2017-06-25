@@ -1,10 +1,12 @@
 #include <components/CTransform2D.h>
+#include <systems/TransformSystem.h>
 
 
 namespace se
 {
+
 CTransform2D::CTransform2D(Vec2f position, Vec2f orientation, Vec2f scale)
-	: Component(COMPONENT_TYPE::TRANSFORM)
+	: priv::Component(COMPONENT_TYPE::TRANSFORM)
 	, position(position)
 	, orientation(orientation)
 	, scale(scale)
@@ -12,7 +14,7 @@ CTransform2D::CTransform2D(Vec2f position, Vec2f orientation, Vec2f scale)
 	, prevOrientation(orientation)
 	, prevScale(scale)
 {
-
+	
 }
 
 CTransform2D::~CTransform2D()
@@ -21,7 +23,7 @@ CTransform2D::~CTransform2D()
 }
 
 CTransform2D::CTransform2D(const CTransform2D& other)
-	: Component(COMPONENT_TYPE::TRANSFORM)
+	: priv::Component(COMPONENT_TYPE::TRANSFORM)
 	, position(other.position)
 	, orientation(other.orientation)
 	, scale(other.scale)
@@ -29,7 +31,7 @@ CTransform2D::CTransform2D(const CTransform2D& other)
 	, prevOrientation(other.orientation)
 	, prevScale(other.scale)
 {
-
+	
 }
 
 CTransform2D& CTransform2D::operator=(const CTransform2D& other)

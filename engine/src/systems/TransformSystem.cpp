@@ -5,8 +5,7 @@ namespace se
 {
 namespace priv
 {
-TransformSystem::TransformSystem(std::shared_ptr<EntityComponentManager> ecm_ptr)
-	: ComponentSystem(ecm_ptr)
+TransformSystem::TransformSystem()
 {
 
 }
@@ -16,9 +15,10 @@ TransformSystem::~TransformSystem()
 
 }
 
-void TransformSystem::Initialize()
+void TransformSystem::Initialize(std::shared_ptr<EntityComponentManager> ecm_ptr)
 {
-
+	//Init ecm pointer
+	m_ecm_ptr = ecm_ptr;
 }
 
 void TransformSystem::Uninitialize()
@@ -31,9 +31,10 @@ void TransformSystem::Update(SEfloat deltaTime)
 	
 }
 
-void TransformSystem::InitializeNewComponent()
+std::shared_ptr<Component> TransformSystem::CreateNewComponent(std::shared_ptr<Component> component)
 {
-
+	
+	return nullptr;
 }
 }//namespace priv
 }//namespace se
