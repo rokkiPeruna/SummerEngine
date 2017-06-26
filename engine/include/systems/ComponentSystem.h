@@ -1,8 +1,6 @@
 #ifndef SE_COMPONENTSYSTEM_H
 #define SE_COMPONENTSYSTEM_H
 
-//STL includes:
-#include <initializer_list>
 
 //SE includes:
 #include <utility/Typedefs.h>
@@ -14,23 +12,18 @@ namespace se
 namespace priv
 {
 ///Brief: ComponentSystem -class works as a abstract interface class for other
-///systems that are responsible for updating components. In addition to pure virtual methods
-///described below, every system should have a method for adding a new component to system's component
-///container. That method must return shared pointer to the newly created component.
-///		Also, in the header file that declares the system, there should be a GLOBAL FREE FUNCTION
-///in namespace 'se' that calls for the before-mentioned member method with same parameters. This global free function works
-///as a interface for user to add components and must also return a shared pointer to the newly created component.
+///systems that are responsible for updating components
 class ComponentSystem
 {
 public:
 	///Default constructor
-	ComponentSystem();
+	ComponentSystem(std::shared_ptr<EntityComponentManager> ecm_ptr);
 	///Destructor
 	virtual ~ComponentSystem();
 
-	///ComponentSystem's initializing method. Takes in shared pointer to EntityComponentManager.
+	///ComponentSystem's initializing method.
 	///Must be overridden in inheriting class.
-	virtual void Initialize(std::shared_ptr<EntityComponentManager> ecm_ptr) = 0;
+	virtual void Initialize() = 0;
 
 	///ComponentSystem's uninitializing
 	///Must be overridden in inheriting class.
@@ -40,8 +33,9 @@ public:
 	///Must be overridden in inheriting class.
 	virtual void Update(SEfloat deltaTime) = 0;
 
-	///Add new component. TODO: Better description
-	virtual std::shared_ptr<Component> CreateNewComponent(std::shared_ptr<Component> component) = 0;
+	///Initializes new component and adds it to system's component container.
+	///Communicates with EntityComponentManager to give the shared pointer of the component to user
+	virtual void InitializeNewComponent() = 0;
 
 protected:
 

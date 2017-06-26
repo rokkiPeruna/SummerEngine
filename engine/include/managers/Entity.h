@@ -11,7 +11,6 @@
 #include <utility/Typedefs.h>
 #include <components/Component.h>
 
-
 namespace se
 {
 ///Brief: Entity -class represents game objetcs in the game world.
@@ -35,8 +34,14 @@ public:
 	Entity& operator=(const Entity&) = delete;
 
 
-	///Method for adding components to entity
-	void AddComponent(std::shared_ptr<priv::Component> component);
+	///Static template method for adding components to entity
+	template<priv::Component T>
+	static void AddComponent(T component)
+	{
+		component 
+	}
+	OLET TÄSSÄ
+
 
 	///Static method for removing component from entity
 	static void RemoveComponent();
@@ -63,7 +68,7 @@ private:
 	std::map<COMPONENT_TYPE, std::shared_ptr<priv::Component>> m_myComponents;
 
 	///Number of children this entity has. This is used when naming entities that are constructed from other entity,
-	///so that newly created copies (children) get order number after them
+	///so that newly 
 	SEuint m_numOfChildren;
 };
 }//namespace se

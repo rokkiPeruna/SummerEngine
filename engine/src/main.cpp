@@ -19,7 +19,7 @@
 
 int main(int argc, char *argv[])
 {
-	se::priv::Engine GameEngine;
+	se::Engine GameEngine;
 
 	se::EntityComponentManager ecm;
 	auto player = ecm.CreateEntity("player");
@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
 	GameEngine.InitializeEngine();
 	GameEngine.EngineUpdate();
 	
-	//player->AddComponent(se::CTransform2D(se::Vec2f(0.0f)));
-	player->GetComponent(se::COMPONENT_TYPE::TRANSFORM);
+
+	
 
 	return 0;
 	

@@ -1,8 +1,4 @@
 #include <managers/Entity.h>
-#include <systems/ComponentSystem.h>
-
-//Components
-#include <components/CTransform2D.h>
 
 namespace se
 {
@@ -30,12 +26,10 @@ Entity::Entity(const Entity& other)
 	//TODO: Copy components
 }
 
-void Entity::AddComponent(std::shared_ptr<priv::Component> component)
+void Entity::AddComponent()
 {
-	auto c = component->mySystem->CreateNewComponent(component);
-	//m_myComponents.emplace(c->myType, c);
-}
 
+}
 
 void Entity::RemoveComponent()
 {

@@ -17,7 +17,7 @@ class TransformSystem : public ComponentSystem
 {
 public:
 	///Default constructor. Takes in shared_ptr of EntityComponentManager.
-	TransformSystem();
+	TransformSystem(std::shared_ptr<EntityComponentManager> ecm_ptr);
 	///Destructor
 	~TransformSystem();
 	///No copies allowed
@@ -25,8 +25,8 @@ public:
 	void operator=(const TransformSystem&) = delete;
 
 
-	///Initialize. Takes in shared pointer to EntityComponentManager.
-	void Initialize(std::shared_ptr<EntityComponentManager> ecm_ptr) override final;
+	///Initialize
+	void Initialize() override final;
 
 	///Uninitialize
 	void Uninitialize() override final;
@@ -35,7 +35,7 @@ public:
 	void Update(SEfloat deltaTime) override final;
 
 	///Initialize new component and add it to container
-	std::shared_ptr<Component> CreateNewComponent(std::shared_ptr<Component> component) override final;
+	void InitializeNewComponent() override final;
 
 
 private:

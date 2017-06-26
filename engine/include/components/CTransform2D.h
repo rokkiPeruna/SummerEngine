@@ -1,7 +1,6 @@
 #ifndef SE_TRANSFORM2DCOMPONENT_H
 #define SE_TRANSFORM2DCOMPONENT_H
 
-#include <unordered_map>
 
 //SE includes:
 #include <components/Component.h>
@@ -44,10 +43,7 @@ public:
 	///Previous scale
 	Vec2f prevScale;
 
-	static CTransform2D* create(int i, int j) { return new CTransform2D; }
 };
-
-
 }//namespace se
 
 #endif
