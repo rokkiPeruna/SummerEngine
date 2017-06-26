@@ -11,6 +11,8 @@ namespace se
 Engine::Engine()
 	: m_window(new priv::Window)
 	, m_graphics(new priv::Graphics)
+	, m_transformSystem()
+	, m_transformSystem_ptr(std::make_shared<priv::TransformSystem>(m_transformSystem))
 {
 
 }
@@ -25,6 +27,11 @@ void Engine::InitializeEngine()
 {
 	m_window->InitializeWindow();
 	m_graphics->InitializeGraphics(m_window);
+
+
+	//Initialize SystemForComponentDictionary
+	sysForCompDictionary.at(COMPONENT_TYPE::TRANSFORM) = m_transformSystem_ptr;
+
 }
 
 void Engine::UninitializeEngine()

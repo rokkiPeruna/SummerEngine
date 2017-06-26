@@ -13,6 +13,7 @@ namespace se
 ///Brief: Component types as enumerations. TODO: This should be somewhere where user can modify it.
 enum class COMPONENT_TYPE : SEuint
 {
+	NULL_COMPONENT,
 	TRANSFORM,
 	PHYSICS
 };
@@ -27,7 +28,7 @@ class Component
 {
 public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
-	Component(COMPONENT_TYPE type);
+	Component(COMPONENT_TYPE type = COMPONENT_TYPE::NULL_COMPONENT);
 	///Destructor
 	virtual ~Component();
 	///Copy constructor

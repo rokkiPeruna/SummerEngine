@@ -14,10 +14,15 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
+	include/components/ComponentDictionary.h
 	include/components/Component.h
 	src/components/Component.cpp
+	include/components/NullComponent.h
+	src/components/NullComponent.cpp
 	include/components/CTransform2D.h
 	src/components/CTransform2D.cpp
+	include/components/CPhysics2D.h
+	src/components/CPhysics2D.cpp
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------

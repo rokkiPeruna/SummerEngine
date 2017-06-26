@@ -20,6 +20,7 @@
 int main(int argc, char *argv[])
 {
 	se::Engine GameEngine;
+	GameEngine.InitializeEngine();
 
 	se::EntityComponentManager ecm;
 	auto player = ecm.CreateEntity("player");
@@ -29,10 +30,16 @@ int main(int argc, char *argv[])
 	std::cout << player->name << "  " << second->name << "  " << third->name << fourth->name << std::endl;
 
 
-	GameEngine.InitializeEngine();
-	GameEngine.EngineUpdate();
-	
 
+	player->AddComponent(se::CTransform2D(se::Vec2f(0.0f, 1.0f)));
+	//std::cout << player->GetComponent<se::CTransform2D>()->position.y << std::endl;
+
+	//player->_AddComponent<se::CTransform2D>();
+
+	//player->GetComponent<se::CTransform2D>()->position.y = 5.0f;
+	//std::cout << player->GetComponent<se::CTransform2D>()->position.y << std::endl;
+
+	GameEngine.EngineUpdate();
 	
 
 	return 0;

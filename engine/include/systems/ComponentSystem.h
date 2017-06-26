@@ -17,7 +17,7 @@ class ComponentSystem
 {
 public:
 	///Default constructor
-	ComponentSystem(std::shared_ptr<EntityComponentManager> ecm_ptr);
+	ComponentSystem();
 	///Destructor
 	virtual ~ComponentSystem();
 
@@ -35,7 +35,7 @@ public:
 
 	///Initializes new component and adds it to system's component container.
 	///Communicates with EntityComponentManager to give the shared pointer of the component to user
-	virtual void InitializeNewComponent() = 0;
+	virtual std::shared_ptr<priv::Component> InitializeNewComponent(priv::Component&) = 0;
 
 protected:
 

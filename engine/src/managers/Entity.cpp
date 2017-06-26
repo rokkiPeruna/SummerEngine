@@ -1,4 +1,5 @@
 #include <managers/Entity.h>
+#include <core/Engine.h>
 
 namespace se
 {
@@ -26,9 +27,13 @@ Entity::Entity(const Entity& other)
 	//TODO: Copy components
 }
 
-void Entity::AddComponent()
+void Entity::AddComponent(priv::Component& component)
 {
-
+	m_myComponents.emplace(
+		componentDictionary.at(component.myType),
+		sysForCompDictionary.at(component.myType)->InitializeNewComponent(component)
+	);TÄMÄ KOSAHTAA!!
+		//sysForCompDictionary.at(component.myType)->InitializeNewComponent(component) nullptr!!!!
 }
 
 void Entity::RemoveComponent()
@@ -41,20 +46,20 @@ void Entity::ReplaceComponent()
 
 }
 
-std::shared_ptr<priv::Component> Entity::GetComponent(COMPONENT_TYPE type)
-{
-	//Use COMPONENT_TYPE to find correct component
-	auto itr = m_myComponents.find(type);
-	//If found, return pointer
-	if (itr != m_myComponents.end())
-		return itr->second;
-	//If not, send message and return nullptr
-	else
-	{
-		//TODO: Send message to log
-		return nullptr;
-	}
-}
+//std::shared_ptr<priv::Component> Entity::GetComponent(COMPONENT_TYPE type)
+//{
+//	//Use COMPONENT_TYPE to find correct component
+//	auto itr = m_myComponents.find(type);
+//	//If found, return pointer
+//	if (itr != m_myComponents.end())
+//		return itr->second;
+//	//If not, send message and return nullptr
+//	else
+//	{
+//		//TODO: Send message to log
+//		return nullptr;
+//	}
+//}
 
 const SEuint Entity::GetNumOfChildren() const
 {

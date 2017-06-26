@@ -15,13 +15,15 @@
 #include <core/Graphics.h>
 #include <utility/Typedefs.h>
 
+#include <systems/TransformSystem.h>
 
-///Brief: Engine contains all managers and systems and is resposible for
-///updating them.
+
 
 namespace se
 {
 
+///Brief: Engine contains all managers and systems and is resposible for
+///updating them.
 class Engine
 {
 public:
@@ -51,6 +53,10 @@ private:
 
 	std::shared_ptr<priv::Window> m_window;
 	std::shared_ptr<priv::Graphics> m_graphics;
+
+	///Declared systems and pointers to them
+	priv::TransformSystem m_transformSystem;
+	std::shared_ptr<priv::TransformSystem> m_transformSystem_ptr;
 
 };
 

@@ -3,8 +3,14 @@
 
 //STL includes:
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <map>
+#include <memory>
 
+
+//SE includes:
+#include <managers/Resource.h>
 
 namespace se
 {
@@ -30,8 +36,15 @@ public:
 	///Update resource manager. Checks if scene has changed and/or new resources must be loaded
 	void Update();
 
-	///Load text resource. Returns pointer to TextResource object.
+	///Load text resource. Returns shared_ptr to TextResource object.
+	std::shared_ptr<TextResource> LoadTextResource(std::string filepath, std::string name);
+	
+	///Container holding shared pointers to text resources. Find text resource
+	///with it's name: textResources.at("resourceName")
+	std::map<std::string, std::shared_ptr<TextResource>> textResources;
 
+private:
+	std::vector<TextResource> m_textResourcesContainer;
 
 };
 }//namespace priv
