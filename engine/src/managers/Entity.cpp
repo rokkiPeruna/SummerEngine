@@ -34,6 +34,9 @@ void Entity::AddComponent(priv::Component& component)
 		sysForCompDictionary.at(component.myType)->InitializeNewComponent(component)
 	);TÄMÄ KOSAHTAA!!
 		//sysForCompDictionary.at(component.myType)->InitializeNewComponent(component) nullptr!!!!
+
+		//Vaihda static SystemForComponentDictionary siten, että COMPONENT_TYPEn parina on funktiopointteri systeemin InitializeNewComponent metodiin
+		//Tämä mahdollistaa sen, että systeemi voi initialisoida useampia eri komponenttityyppejä joustavammin
 }
 
 void Entity::RemoveComponent()
