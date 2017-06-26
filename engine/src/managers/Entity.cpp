@@ -32,7 +32,7 @@ void Entity::AddComponent(priv::Component& component)
 	m_myComponents.emplace(
 		componentDictionary.at(component.myType),
 		sysForCompDictionary.at(component.myType)->InitializeNewComponent(component)
-	);TÄMÄ KOSAHTAA!!
+	);//TÄMÄ KOSAHTAA!!
 		//sysForCompDictionary.at(component.myType)->InitializeNewComponent(component) nullptr!!!!
 
 		//Vaihda static SystemForComponentDictionary siten, että COMPONENT_TYPEn parina on funktiopointteri systeemin InitializeNewComponent metodiin

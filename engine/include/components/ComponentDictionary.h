@@ -4,11 +4,14 @@
 ///STL includes:
 #include <unordered_map>
 #include <typeindex>
+#include <functional>
 
 ///SE includes:
 #include <components/Component.h>
 #include <components/NullComponent.h>
 #include <components/CTransform2D.h>
+#include <systems/ComponentSystem.h>
+#include <systems/TransformSystem.h>
 #include <components/CPhysics2d.h>
 
 namespace se
@@ -22,6 +25,15 @@ static ComponentDictionary componentDictionary
 	{ COMPONENT_TYPE::PHYSICS, std::type_index(typeid(CPhysics2D)) }
 }
 );
+
+
+typedef std::unordered_map < COMPONENT_TYPE, std::function<std::shared_ptr<priv::Component>(priv::ComponentSystem&, priv::Component&)>> ComponentToMethodDictionary; //Katso tätä, pitäisi toimia!!
+static ComponentToMethodDictionary c_to_m(
+{ 
+	{COMPONENT_TYPE::TRANSFORM,  &priv::TransformSystem::InitializeNewComponent}
+}
+);
+
 
 ///Brief: Dictionary binding component types to correct systems.
 typedef std::unordered_map<COMPONENT_TYPE, std::shared_ptr<priv::ComponentSystem>> SystemForComponentDictionary;
