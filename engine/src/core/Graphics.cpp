@@ -40,7 +40,10 @@ void Graphics::InitializeGraphics(std::shared_ptr<Window> window)
 	{
 		std::cout << "Context creation failed " << std::endl;
 	}
-	
+
+//	glewInit();
+//	glewExperimental = true;
+
 }
 
 }//end namespace priv
