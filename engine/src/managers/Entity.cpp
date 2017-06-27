@@ -27,11 +27,11 @@ Entity::Entity(const Entity& other)
 	//TODO: Copy components
 }
 
-void Entity::AddComponent(priv::Component& component)
+std::shared_ptr<priv::Component> Entity::AddComponent(priv::Component* component)
 {
 	m_myComponents.emplace(
-		componentDictionary.at(component.myType),
-		sysForCompDictionary.at(component.myType)->InitializeNewComponent(component)
+		componentDictionary.at(component->myType),
+		sysForCompDictionary.at(component->myType)->InitializeNewComponent(*component)
 	);//TÄMÄ KOSAHTAA!!
 		//sysForCompDictionary.at(component.myType)->InitializeNewComponent(component) nullptr!!!!
 

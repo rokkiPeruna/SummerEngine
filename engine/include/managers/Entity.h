@@ -14,21 +14,20 @@
 
 namespace se
 {
-///Brief: Entity -class represents game objetcs in the game world.
+///Brief: Entity -class represents game objects in the game world. User can use this class alone, but it is recommended to
+///inherit this class in her/his own class, e.g. class Player : public se::Entity. This way user can gain direct access to
+///components. See examples for further info.
 ///Entities are made up from components which define their outlook, actions, etc.
 class Entity
 {
-	///EntityComponentManager is friend with Entity -class so that user can't use default constructor and copy constructors
-	///but is instead "forced" to use EntityComponentManager's CreateEntity() -method.
-	friend class EntityComponentManager;
-
+public:
 	///Default constructor. Takes in std::string as name of the entity.
 	Entity(std::string entityName);
+
 	///Build Entity from json file.
 	///First parameter is template entity's name in json file, second one is entity's name which user can decide
 	Entity(std::string jsonTemplateName, std::string entityName);
 
-public:
 	///Copy constructors
 	Entity(const Entity&);
 	///Assign operator deleted
@@ -36,31 +35,7 @@ public:
 
 
 	///Static method for adding components to entity
-	void AddComponent(priv::Component& component);
-
-//	template<typename T>
-//	std::shared_ptr<T> _AddComponent()
-//	{
-//		bool isDerivedFromComponent = true;
-//#ifdef _DEBUG
-//		auto index = std::type_index(typeid(T));
-//		auto c = dynamic_cast<priv::Component*>(&T);
-//		auto c_index = std::type_index(typeid(priv::Component));
-//		if (index != c_index))
-//		{
-//			std::cout << "is_NOT_Component";
-//			return nullptr;
-//		}
-//#endif
-//
-//
-//		///Check if T is legit component. Means that it can be found from ComponentDictionary
-//		//std::type_index index(typeid(T));
-//		//if(componentDictionary)
-//		
-//		//componentDictionary;
-//		return nullptr;
-//	}
+	std::shared_ptr<priv::Component> AddComponent(priv::Component* component);
 
 	///Static method for removing componaent from entity
 	void RemoveComponent();
