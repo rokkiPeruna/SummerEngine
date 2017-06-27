@@ -17,6 +17,8 @@
 
 #include <systems/TransformSystem.h>
 
+#include <core/Dictionaries.h>
+
 
 
 namespace se
@@ -49,14 +51,22 @@ public:
 	// Engine update 
 	void EngineUpdate();
 
+	///System getters
+
+	///Returns shared_ptr to Engine's TransformSystem
+	std::shared_ptr<priv::TransformSystem> GetTransformSystem() { return m_transformSystem; }
+
+	///Static dictionaries
+	static ComponentDictionary componentDictionary;
+	static SystemForComponentDictionary systemForComponentDictionary;
+
 private:
 
 	std::shared_ptr<priv::Window> m_window;
 	std::shared_ptr<priv::Graphics> m_graphics;
 
 	///Declared systems and pointers to them
-	priv::TransformSystem m_transformSystem;
-	std::shared_ptr<priv::TransformSystem> m_transformSystem_ptr;
+	std::shared_ptr<priv::TransformSystem> m_transformSystem;
 
 };
 

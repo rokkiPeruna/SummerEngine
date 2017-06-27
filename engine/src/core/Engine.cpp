@@ -7,12 +7,15 @@
 
 namespace se
 {
+//Static variables
+ComponentDictionary Engine::componentDictionary{};
+SystemForComponentDictionary Engine::systemForComponentDictionary{};
+
 
 Engine::Engine()
 	: m_window(new priv::Window)
 	, m_graphics(new priv::Graphics)
-	, m_transformSystem()
-	, m_transformSystem_ptr(std::make_shared<priv::TransformSystem>(m_transformSystem))
+	, m_transformSystem(std::make_shared<priv::TransformSystem>())
 {
 
 }
@@ -29,8 +32,9 @@ void Engine::InitializeEngine()
 	m_graphics->InitializeGraphics(m_window);
 
 
-	//Initialize SystemForComponentDictionary
-	sysForCompDictionary.at(COMPONENT_TYPE::TRANSFORM) = m_transformSystem_ptr;
+	//Initialize Engine's static dictionaries
+	componentDictionary = initComponentDictionary();
+	systemForComponentDictionary = initSystemForComponentDictionary(*this);
 
 }
 

@@ -14,7 +14,6 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
-	include/components/ComponentDictionary.h
 	include/components/Component.h
 	src/components/Component.cpp
 	include/components/NullComponent.h
@@ -53,7 +52,9 @@ set(CORE_FILES
 	include/core/Window.h
 	src/core/Window.cpp	
 	include/core/Graphics.h
-	src/core/Graphics.cpp	
+	src/core/Graphics.cpp
+	include/core/Dictionaries.h
+	src/core/Dictionaries.cpp
 	)
 source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------

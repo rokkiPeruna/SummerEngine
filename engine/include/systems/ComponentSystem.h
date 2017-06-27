@@ -6,6 +6,7 @@
 #include <utility/Typedefs.h>
 #include <components/Component.h>
 #include <managers/EntityComponentManager.h>
+//#include <core/Dictionaries.h>
 
 namespace se
 {
@@ -16,7 +17,7 @@ namespace priv
 class ComponentSystem
 {
 public:
-	///Default constructor
+	///Default constructor. Takes in dictionaries
 	ComponentSystem();
 	///Destructor
 	virtual ~ComponentSystem();
@@ -33,14 +34,11 @@ public:
 	///Must be overridden in inheriting class.
 	virtual void Update(SEfloat deltaTime) = 0;
 
-	///Initializes new component and adds it to system's component container.
-	///Communicates with EntityComponentManager to give the shared pointer of the component to user
-	virtual std::shared_ptr<priv::Component> InitializeNewComponent(priv::Component&) = 0;
-
 protected:
 
 	///Shared pointer to EntityComponentManager
 	std::shared_ptr<EntityComponentManager> m_ecm_ptr;
+
 };
 
 }//namespace priv

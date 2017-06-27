@@ -25,7 +25,7 @@ public:
 		: se::Entity("player")
 		, transform(nullptr)
 	{
-		transform = se::Entity::AddComponent(&se::CTransform2D());
+		transform = se::priv::TransformSystem::CreateComponent(se::CTransform2D(se::Vec2f(1.0f)));
 	}
 
 	std::shared_ptr<se::CTransform2D> transform;
@@ -38,6 +38,11 @@ int main(int argc, char *argv[])
 
 	GameEngine.EngineUpdate();
 	
+	Player player;
+	std::cout << player.transform->position.x << std::endl;
+	player.transform->position.x = 2.0f;
+	std::cout << player.transform->position.x << std::endl;
+	//player.GetComponent<se::CTransform2D>()->position.x = 8.0f;
 
 	return 0;
 	

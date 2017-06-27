@@ -5,6 +5,8 @@ namespace se
 {
 namespace priv
 {
+std::vector<CTransform2D> TransformSystem::m_components{};
+
 TransformSystem::TransformSystem()
 	: ComponentSystem()
 {
@@ -28,17 +30,13 @@ void TransformSystem::Uninitialize()
 
 void TransformSystem::Update(SEfloat deltaTime)
 {
-	
+	SEfloat i = deltaTime;
 }
 
-std::shared_ptr<priv::Component> TransformSystem::InitializeNewComponent(priv::Component& component)
+std::shared_ptr<CTransform2D> TransformSystem::CreateComponent(CTransform2D& component)
 {
-	//Here we can safely cast Component& to CTransform2D
-	auto c = static_cast<CTransform2D*>(&component);
-
-	m_components.emplace_back(*c);
-	//return nullptr;
-	return std::make_shared<priv::Component>(m_components.back());
+	m_components.emplace_back(component);
+	return std::make_shared<CTransform2D>(m_components.back());
 }
 }//namespace priv
 }//namespace se

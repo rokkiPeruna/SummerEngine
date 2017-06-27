@@ -34,13 +34,13 @@ public:
 	///Updates TransformComponents
 	void Update(SEfloat deltaTime) override final;
 
-	///Initialize new component and add it to container
-	std::shared_ptr<priv::Component> InitializeNewComponent(priv::Component& component) override final;
+	///Initialize new component and add it to container. Return shared_ptr
+	static std::shared_ptr<CTransform2D> CreateComponent(CTransform2D& component);
 
-
+	
 private:
 	///Container holding actual TransformComponents. Uses std::vector for memory layout benefits.
-	std::vector<CTransform2D> m_components;
+	static std::vector<CTransform2D> m_components;
 
 };
 }//namespace priv

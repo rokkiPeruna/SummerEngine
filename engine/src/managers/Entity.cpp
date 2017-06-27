@@ -27,17 +27,13 @@ Entity::Entity(const Entity& other)
 	//TODO: Copy components
 }
 
-std::shared_ptr<priv::Component> Entity::AddComponent(priv::Component* component)
-{
-	m_myComponents.emplace(
-		componentDictionary.at(component->myType),
-		sysForCompDictionary.at(component->myType)->InitializeNewComponent(*component)
-	);//TÄMÄ KOSAHTAA!!
-		//sysForCompDictionary.at(component.myType)->InitializeNewComponent(component) nullptr!!!!
-
-		//Vaihda static SystemForComponentDictionary siten, että COMPONENT_TYPEn parina on funktiopointteri systeemin InitializeNewComponent metodiin
-		//Tämä mahdollistaa sen, että systeemi voi initialisoida useampia eri komponenttityyppejä joustavammin
-}
+//std::shared_ptr<priv::Component> Entity::AddComponent(priv::Component* component)
+//{
+//	m_myComponents.emplace(
+//		componentDictionary.at(component->myType),
+//		sysForCompDictionary.at(component->myType)->InitializeNewComponent(*component)
+//	);
+//}
 
 void Entity::RemoveComponent()
 {

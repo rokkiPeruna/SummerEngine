@@ -5,12 +5,13 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <typeindex>
 
 
 //SE includes:
-#include <components/ComponentDictionary.h>
 #include <utility/Typedefs.h>
-//#include <components/Component.h>
+#include <components/Component.h>
+
 
 namespace se
 {
@@ -33,9 +34,6 @@ public:
 	///Assign operator deleted
 	Entity& operator=(const Entity&) = delete;
 
-
-	///Static method for adding components to entity
-	std::shared_ptr<priv::Component> AddComponent(priv::Component* component);
 
 	///Static method for removing componaent from entity
 	void RemoveComponent();
