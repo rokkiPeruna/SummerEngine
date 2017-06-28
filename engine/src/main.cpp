@@ -18,32 +18,24 @@
 #include <managers/EntityComponentManager.h>
 
 
-class Player : public se::Entity
-{
-public:
-	Player() 
-		: se::Entity("player")
-		, transform(nullptr)
-	{
-		transform = se::priv::TransformSystem::CreateComponent(se::CTransform2D(se::Vec2f(1.0f)));
-	}
-
-	std::shared_ptr<se::CTransform2D> transform;
-};
-
 int main(int argc, char *argv[])
 {
-	se::Engine GameEngine;
+	se::priv::Engine& GameEngine = se::priv::Engine::Instance();
 	GameEngine.InitializeEngine();
+
+	auto ecm = GameEngine.GetEntityCompMgr();
+	auto p = ecm->CreateEntity("player");
+	
+	
+	//se::Entity* player = GameEngine.GetEntityCompMgr()->CreateEntity("player");
+	//ecm->AddComponent()
+	//ecm->GetTransform2D("player");
+	se::AddTransform2D(p->id, se::CTransform2D(se::Vec2f(1.0f)));
+	se::GetTransform2D(p->id);
+
 
 	GameEngine.EngineUpdate();
 	
-	Player player;
-	std::cout << player.transform->position.x << std::endl;
-	player.transform->position.x = 2.0f;
-	std::cout << player.transform->position.x << std::endl;
-	//player.GetComponent<se::CTransform2D>()->position.x = 8.0f;
-
 	return 0;
 	
 }

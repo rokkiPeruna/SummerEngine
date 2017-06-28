@@ -6,7 +6,7 @@ namespace se
 namespace priv
 {
 NullComponent::NullComponent(const Entity& entity, const char* name)
-	: Component(COMPONENT_TYPE::NULL_COMPONENT)
+	: Component(nullComponent_id)
 {
 	//TODO: Add message to log that informs that NullComponent was created.
 	

@@ -14,7 +14,7 @@ namespace se
 ///Vec2f prevPosition
 ///Vec2f prevOrientation
 ///Vec2f prevScale
-class CTransform2D : public priv::Component
+class CTransform2D : public Component
 {
 public:
 	///Default constructor

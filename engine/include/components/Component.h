@@ -7,6 +7,7 @@
 //SE includes:
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
+#include <user/ComponentList.h>
 
 namespace se
 {
@@ -17,8 +18,6 @@ enum class COMPONENT_TYPE : SEuint
 	TRANSFORM,
 	PHYSICS
 };
-namespace priv
-{
 ///Forward declaring ComponentSystem to avoid linking errors
 class ComponentSystem;
 
@@ -28,7 +27,7 @@ class Component
 {
 public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
-	Component(COMPONENT_TYPE type = COMPONENT_TYPE::NULL_COMPONENT);
+	Component(SEuint64 type = nullComponent_id);
 	///Destructor
 	virtual ~Component();
 	///Copy constructor
@@ -37,14 +36,17 @@ public:
 	Component& operator=(const Component& other) = delete;
 
 	///Every component has it's type as enum
-	COMPONENT_TYPE myType;
+	SEuint64 type;
+
+	///Component's unique id
+	SEuint64 id;
 
 	///Boolean for defining if component can overridden in system's component container.
 	///Set to false by default.
 	bool overwritable;
 
-	ComponentSystem* mySystem;
+	///Owner id
+	SEuint ownerID;
 };
-}//namespace priv
 }//namespace se
 #endif

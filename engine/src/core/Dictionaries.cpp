@@ -26,15 +26,15 @@ ComponentDictionary initComponentDictionary()
 }
 
 ///Brief: Function for initializing static Engine::systemForComponentDictionary in Engine::Initialize()
-SystemForComponentDictionary initSystemForComponentDictionary(Engine& engine)
-{
-	SystemForComponentDictionary tmp
-	(
-	{
-		{ COMPONENT_TYPE::TRANSFORM, engine.GetTransformSystem() }
-	}
-	);
-	return tmp;
-}
+//SystemForComponentDictionary initSystemForComponentDictionary(priv::Engine& engine)
+//{
+//	SystemForComponentDictionary tmp
+//	(
+//	{
+//		{ COMPONENT_TYPE::TRANSFORM, engine.GetTransformSystem() }
+//	}
+//	);
+//	return tmp;
+//}
 
 }//namespace se

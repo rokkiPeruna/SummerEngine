@@ -2,11 +2,11 @@
 
 namespace se
 {
-namespace priv
-{
-Component::Component(COMPONENT_TYPE type)
-	: myType(type)
+Component::Component(SEuint64 type)
+	: type(type)
+	, id(0)
 	, overwritable(false)
+	, ownerID(0)
 {
 
 }
@@ -17,11 +17,11 @@ Component::~Component()
 }
 
 Component::Component(const Component& other)
-	: myType(other.myType)
+	: type(other.type)
+	, id(other.id)
 	, overwritable(false)
+	, ownerID(other.id)
 {
 
 }
-
-}//namespace priv
 }//namespace se

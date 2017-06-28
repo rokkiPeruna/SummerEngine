@@ -4,7 +4,7 @@
 namespace se
 {
 CPhysics2D::CPhysics2D()
-	:Component(COMPONENT_TYPE::PHYSICS)
+	:Component(CPhysics2D_id)
 {
 
 }
@@ -15,14 +15,14 @@ CPhysics2D::~CPhysics2D()
 }
 
 CPhysics2D::CPhysics2D(const CPhysics2D& other)
-	:Component(COMPONENT_TYPE::PHYSICS)
+	:Component(CPhysics2D_id)
 {
 
 }
 
 CPhysics2D& CPhysics2D::operator=(const CPhysics2D& other)
 {
-	myType = COMPONENT_TYPE::PHYSICS;
+	type = other.type;
 
 	return *this;
 }

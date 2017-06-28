@@ -4,7 +4,7 @@
 namespace se
 {
 CTransform2D::CTransform2D(Vec2f position, Vec2f orientation, Vec2f scale)
-	: Component(COMPONENT_TYPE::TRANSFORM)
+	: Component(CTransform2D_id)
 	, position(position)
 	, orientation(orientation)
 	, scale(scale)
@@ -21,7 +21,7 @@ CTransform2D::~CTransform2D()
 }
 
 CTransform2D::CTransform2D(const CTransform2D& other)
-	: Component(COMPONENT_TYPE::TRANSFORM)
+	: Component(CTransform2D_id)
 	, position(other.position)
 	, orientation(other.orientation)
 	, scale(other.scale)
@@ -34,7 +34,7 @@ CTransform2D::CTransform2D(const CTransform2D& other)
 
 CTransform2D& CTransform2D::operator=(const CTransform2D& other)
 {
-	myType = COMPONENT_TYPE::TRANSFORM;
+	type = other.type;
 	position = other.position;
 	orientation = other.orientation;
 	scale = other.scale;

@@ -65,8 +65,15 @@ set(UTILITY_FILES
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
+	include/utility/Math.h
 	)
 source_group("utility" FILES ${UTILITY_FILES})
+#-----------------------------------------------------------------
+#User
+set(USER_FILES
+	include/user/ComponentList.h
+	)
+source_group("user" FILES ${USER_FILES})
 #-----------------------------------------------------------------
 #Main.cpp
 set(MAIN_CPP
@@ -102,6 +109,7 @@ add_executable(engine
 	${MANAGERS_FILES}
 	${CORE_FILES}
 	${UTILITY_FILES}
+	${USER_FILES}
 	${MAIN_CPP}
 	${JSON_FILES}
 	)

@@ -34,11 +34,6 @@ public:
 	///Must be overridden in inheriting class.
 	virtual void Update(SEfloat deltaTime) = 0;
 
-protected:
-
-	///Shared pointer to EntityComponentManager
-	std::shared_ptr<EntityComponentManager> m_ecm_ptr;
-
 };
 
 }//namespace priv

@@ -6,7 +6,6 @@ namespace se
 namespace priv
 {
 ComponentSystem::ComponentSystem()
-	: m_ecm_ptr(nullptr)
 {
 	
 }

@@ -8,7 +8,9 @@
 
 //SE includes:
 #include <components/Component.h>
+#include <components/CTransform2D.h>
 #include <managers/Entity.h>
+#include <user/ComponentList.h>
 
 namespace se
 {
@@ -25,25 +27,19 @@ public:
 	void operator=(const EntityComponentManager&) = delete;
 
 	///Create new entity
-	std::shared_ptr<Entity> CreateEntity(std::string name);
-	std::shared_ptr<Entity> CreateEntity(std::string jsonTemplateName, std::string entityName);
-	std::shared_ptr<Entity> CreateEntity(std::shared_ptr<Entity> other);
-
-	///Deletes entity and all it's components. If deleteChildren is set to true,
-	///deletes also all children and their components
-	void DeleteEntity(std::string name, bool deleteChildren = false);
-	void DeleteEntity(Entity& entity, bool deleteChildren = false);
-
-	///Save entity to entity_templates.json
-	void SaveEntityToJSONTemplates(const Entity& entity);
-
+	Entity* CreateEntity(std::string name);
+	
+	///Create new from other Entity. If name is left to default (""),
+	///new Entity will be assigned as child of the other and will receive name
+	///from other appended with child count index, e.g "flying_enemy_1"
+	Entity* CreateEntity(Entity& other, std::string name = "");
 
 private:
-	///Load entity from json file
-	std::shared_ptr<Entity> _loadEntityFromJSONTemplates(std::string templateName, std::string entityName);
+	///Container holding pointers to entities and their access keys
+	std::unordered_map<std::string, Entity*> m_entities_map;
 
-	///Container holding entities and their access keys
-	std::unordered_map<std::string, Entity> m_entities;
+	///Container holding Entities
+	std::vector<Entity> m_entities;
 };
 }//namespace se
 #endif

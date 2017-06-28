@@ -8,7 +8,7 @@
 namespace se
 {
 ///Brief: CPhysics2D -class represents entity's physical properties in 2D space.
-class CPhysics2D : public priv::Component
+class CPhysics2D : public Component
 {
 public:
 	///Default constructor

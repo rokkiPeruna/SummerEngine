@@ -10,12 +10,20 @@
 #include <GLES2/glew.h>
 
 
-//include se 
+//SE includes:
+#include <utility/Clock.h>
+#include <utility/Time.h>
+
 #include <core/Window.h>
 #include <core/Graphics.h>
 #include <utility/Typedefs.h>
 
+//Systems
+#include <systems/ComponentSystem.h>
 #include <systems/TransformSystem.h>
+
+//Managers
+#include <managers/EntityComponentManager.h>
 
 #include <core/Dictionaries.h>
 
@@ -23,15 +31,17 @@
 
 namespace se
 {
-
+namespace priv
+{
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
 class Engine
 {
-public:
-
 	///Default engine constructor
 	Engine();
+public:
+	///Get engine instance
+	static Engine& Instance() { static Engine engine; return engine; }
 
 	///Default Engine destructor
 	~Engine();
@@ -51,25 +61,39 @@ public:
 	// Engine update 
 	void EngineUpdate();
 
-	///System getters
-
-	///Returns shared_ptr to Engine's TransformSystem
-	std::shared_ptr<priv::TransformSystem> GetTransformSystem() { return m_transformSystem; }
-
-	///Static dictionaries
 	static ComponentDictionary componentDictionary;
 	static SystemForComponentDictionary systemForComponentDictionary;
+	
+	///System getters
+	//
+	///Returns shared_ptr to Engine's TransformSystem
+	TransformSystem* GetTransformSystem() { return m_transformSystem_ptr; }
+
+	///Manager getters
+	//
+	EntityComponentManager* GetEntityCompMgr() { return m_entityCompMng_ptr; }
+
+	///Static dictionaries
 
 private:
 
-	std::shared_ptr<priv::Window> m_window;
-	std::shared_ptr<priv::Graphics> m_graphics;
+	///Clock and time
+	Clock m_engine_clock;
+	Time m_frame_time;
+
+	std::shared_ptr<Window> m_window;
+	std::shared_ptr<Graphics> m_graphics;
 
 	///Declared systems and pointers to them
-	std::shared_ptr<priv::TransformSystem> m_transformSystem;
+	TransformSystem m_transformSystem;
+	TransformSystem* m_transformSystem_ptr;
+
+	///Managers
+	EntityComponentManager m_entityCompMgr;
+	EntityComponentManager* m_entityCompMng_ptr;
 
 };
-
-}
+}//namespace priv
+}//namespace se
 
 #endif // !SE_ENGINE_H
