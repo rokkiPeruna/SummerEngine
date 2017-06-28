@@ -19,10 +19,8 @@ Engine::Engine()
 	, m_frame_time()
 	, m_window(new priv::Window)
 	, m_graphics(new priv::Graphics)
-	, m_transformSystem()
-	, m_transformSystem_ptr(&m_transformSystem)
+	, m_movementSystem()
 	, m_entityCompMgr()
-	, m_entityCompMng_ptr(&m_entityCompMgr)
 {
 
 }
@@ -125,7 +123,7 @@ void Engine::EngineUpdate()
 				}
 			}
 		}
-		m_transformSystem.Update(deltaTime);
+		m_movementSystem.Update(deltaTime);
 		// Swap our back buffer to the front
 		// This is the same as :
 		// 		SDL_RenderPresent(&renderer);

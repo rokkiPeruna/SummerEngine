@@ -18,10 +18,8 @@ set(COMPONENTS_FILES
 	src/components/Component.cpp
 	include/components/NullComponent.h
 	src/components/NullComponent.cpp
-	include/components/CTransform2D.h
-	src/components/CTransform2D.cpp
-	include/components/CPhysics2D.h
-	src/components/CPhysics2D.cpp
+	include/components/CPosition.h
+	include/components/CVelocity.h
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -31,6 +29,9 @@ set(SYSTEMS_FILES
 	src/systems/ComponentSystem.cpp
 	include/systems/TransformSystem.h
 	src/systems/TransformSystem.cpp
+	include/systems/MovementSystem.h
+	src/systems/MovementSystem.cpp
+	src/systems/MovementSystemUiImpl.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------

@@ -20,7 +20,7 @@
 
 //Systems
 #include <systems/ComponentSystem.h>
-#include <systems/TransformSystem.h>
+#include <systems/MovementSystem.h>
 
 //Managers
 #include <managers/EntityComponentManager.h>
@@ -66,12 +66,12 @@ public:
 	
 	///System getters
 	//
-	///Returns shared_ptr to Engine's TransformSystem
-	TransformSystem* GetTransformSystem() { return m_transformSystem_ptr; }
+	///Returns ptr to Engine's TransformSystem
+	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
 
 	///Manager getters
 	//
-	EntityComponentManager* GetEntityCompMgr() { return m_entityCompMng_ptr; }
+	EntityComponentManager* GetEntityCompMgr() { return &m_entityCompMgr; }
 
 	///Static dictionaries
 
@@ -85,12 +85,11 @@ private:
 	std::shared_ptr<Graphics> m_graphics;
 
 	///Declared systems and pointers to them
-	TransformSystem m_transformSystem;
-	TransformSystem* m_transformSystem_ptr;
+	MovementSystem m_movementSystem;
+
 
 	///Managers
 	EntityComponentManager m_entityCompMgr;
-	EntityComponentManager* m_entityCompMng_ptr;
 
 };
 }//namespace priv

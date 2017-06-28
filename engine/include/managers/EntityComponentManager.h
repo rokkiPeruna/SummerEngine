@@ -8,7 +8,6 @@
 
 //SE includes:
 #include <components/Component.h>
-#include <components/CTransform2D.h>
 #include <managers/Entity.h>
 #include <user/ComponentList.h>
 
@@ -35,11 +34,12 @@ public:
 	Entity* CreateEntity(Entity& other, std::string name = "");
 
 private:
+	///Container holding Entities
+	std::vector<Entity> m_entities;
+
 	///Container holding pointers to entities and their access keys
 	std::unordered_map<std::string, Entity*> m_entities_map;
 
-	///Container holding Entities
-	std::vector<Entity> m_entities;
 };
 }//namespace se
 #endif

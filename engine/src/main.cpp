@@ -26,12 +26,13 @@ int main(int argc, char *argv[])
 	auto ecm = GameEngine.GetEntityCompMgr();
 	auto p = ecm->CreateEntity("player");
 	
+	se::AddCPosition(p->id, se::CPosition());
+	se::AddCVelocity(p->id, se::CVelocity());
 	
 	//se::Entity* player = GameEngine.GetEntityCompMgr()->CreateEntity("player");
 	//ecm->AddComponent()
 	//ecm->GetTransform2D("player");
-	se::AddTransform2D(p->id, se::CTransform2D(se::Vec2f(1.0f)));
-	se::GetTransform2D(p->id);
+	
 
 
 	GameEngine.EngineUpdate();

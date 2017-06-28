@@ -1,6 +1,9 @@
 #ifndef SE_COMPONENTSYSTEM_H
 #define SE_COMPONENTSYSTEM_H
 
+//STL includes:
+#include <vector>
+#include <unordered_map>
 
 //SE includes:
 #include <utility/Typedefs.h>

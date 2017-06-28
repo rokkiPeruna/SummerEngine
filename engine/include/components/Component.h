@@ -27,7 +27,7 @@ class Component
 {
 public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
-	Component(SEuint64 type = nullComponent_id);
+	Component(SEuint64 type);
 	///Destructor
 	virtual ~Component();
 	///Copy constructor
@@ -35,7 +35,7 @@ public:
 	///Deleted assign operator
 	Component& operator=(const Component& other) = delete;
 
-	///Every component has it's type as enum
+	///Every component has it's type as SEuint64 bit (see ComponentList.h)
 	SEuint64 type;
 
 	///Component's unique id
