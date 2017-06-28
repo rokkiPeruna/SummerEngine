@@ -27,8 +27,6 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
-	include/systems/TransformSystem.h
-	src/systems/TransformSystem.cpp
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
 	src/systems/MovementSystemUiImpl.cpp
