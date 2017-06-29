@@ -2,9 +2,6 @@
 
 #Sub-directories having CMakeLists
 add_subdirectory(Box2D)
-
-#TODO: add imgui
-
 add_subdirectory(OpenGL)
 add_subdirectory(SDL2)
 #add_subdirectory(OpenAL)
@@ -20,5 +17,6 @@ include_directories(OpenGL/EGL)
 include_directories(OpenGL/GLES2)
 include_directories(OpenGL/GLES3)
 include_directories(OpenGL/KHR)
+include_directories(imgui)
 #include_directories(OpenAL)
 

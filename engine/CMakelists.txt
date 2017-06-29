@@ -2,10 +2,11 @@
 
 #Add include directories
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
-include_directories(${PROJECT_SOURCE_DIR}/engine/src)
+include_directories(${PROJECT_SOURCE_DIR}/engine/json_files)
 include_directories(${PROJECT_SOURCE_DIR}/external)
 include_directories(${PROJECT_SOURCE_DIR}/external/OpenGL)
 include_directories(${PROJECT_SOURCE_DIR}/libs)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
 
 #Add library directories
 link_directories(${PROJECT_SOURCE_DIR}/libs)
@@ -54,6 +55,8 @@ set(CORE_FILES
 	src/core/Graphics.cpp
 	include/core/Dictionaries.h
 	src/core/Dictionaries.cpp
+	include/core/imgui_impl_sdl_gl3.h
+	src/core/imgui_impl_sdl_gl3.cpp
 	)
 source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------
@@ -74,6 +77,17 @@ set(USER_FILES
 	)
 source_group("user" FILES ${USER_FILES})
 #-----------------------------------------------------------------
+#Imgui
+set(IMGUI_FILES
+	${PROJECT_SOURCE_DIR}/external/imgui/imconfig.h
+	${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp
+	${PROJECT_SOURCE_DIR}/external/imgui/imgui.h
+	${PROJECT_SOURCE_DIR}/external/imgui/imgui_demo.cpp
+	${PROJECT_SOURCE_DIR}/external/imgui/imgui_draw.cpp
+	${PROJECT_SOURCE_DIR}/external/imgui/imgui_internal.h
+	)
+source_group("imgui" FILES ${IMGUI_FILES})
+#-----------------------------------------------------------------
 #Main.cpp
 set(MAIN_CPP
 	src/main.cpp
@@ -90,11 +104,17 @@ set(JSON_ENTITY_TEMPLATES
 
 set(JSON_SCENES
 	json_files/scenes.json)
+
+set(JSON_ENGINE_CONFIG
+	json_files/engine_config.json
+	json_files/testi.txt)
 	
 set(JSON_FILES
 	${JSON_COMPONENT_TEMPLATES}
 	${JSON_ENTITY_TEMPLATES}
-	${JSON_SCENES})
+	${JSON_SCENES}
+	${JSON_ENGINE_CONFIG}
+	)
 	
 source_group("json" FILES
 	${JSON_FILES})
@@ -110,18 +130,10 @@ add_executable(engine
 	${UTILITY_FILES}
 	${USER_FILES}
 	${MAIN_CPP}
+	${IMGUI_FILES}
 	${JSON_FILES}
 	)
 
-#Link libraries
-#link_libraries(
-#			   libEGL 
-#			   libGLESv2			   
-#				glew32 
-#				glew32s 
-#)
-#					libEGL 
-#					libGLESv2 
 target_link_libraries(engine PUBLIC 
 					box2d 
 					SDL2-static 

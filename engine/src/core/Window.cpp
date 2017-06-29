@@ -25,26 +25,25 @@ void Window::InitializeWindow()
 {
 
 
-	//Initialize SDL video
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	// Setup SDL
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
 	{
-		// TODO: Change to our own messenger when we get one
-		std::cout << "SDL 'initialize video' has failed. returning.. " << std::endl;
+		printf("Error: %s\n", SDL_GetError());
 		return;
 	}
 
-	//Initialize window handle 
-	m_sdl_window_handle = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_width, m_height, SDL_WINDOW_OPENGL);
-
-	if (m_sdl_window_handle == nullptr)
-	{
-		// TODO: Change to our own messenger when we get one
-		std::cout << "SDL create window failed. returning.." << std::endl;
-		return;
-	}
-
-
-
+	// Setup window
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_DisplayMode current;
+	SDL_GetCurrentDisplayMode(0, &current);
+	m_sdl_window_handle = SDL_CreateWindow("SE Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeigth, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	
 
 }
 

@@ -31,6 +31,7 @@ int main(int, char**)
     gl3wInit();
 
     // Setup ImGui binding
+	
     ImGui_ImplSdlGL3_Init(window);
 
     // Load Fonts

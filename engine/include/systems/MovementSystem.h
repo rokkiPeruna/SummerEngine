@@ -21,6 +21,8 @@ CPosition* AddCPosition(SEuint owner_id, CPosition component);
 ///Add CVelocity -component to Entity. Takes in Entity's id and built-in-place CVelocity object
 CVelocity* AddCVelocity(SEuint owner_id, CVelocity component);
 
+//void gui::UpdateMovementSystemGUI();
+
 namespace priv
 {
 ///Brief: MovementSystem handles components that are related to movement, such as CVelocity and CPosition. It has also
@@ -33,6 +35,8 @@ class MovementSystem : public ComponentSystem
 	friend CPosition* se::AddCPosition(SEuint owner_id, CPosition component);
 	friend CVelocity* se::AddCVelocity(SEuint owner_id, CVelocity component);
 
+	//friend void gui::UpdateMovementSystemGUI();
+	
 public:
 	///Default constructor
 	MovementSystem();

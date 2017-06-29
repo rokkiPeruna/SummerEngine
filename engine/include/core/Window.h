@@ -40,6 +40,10 @@ public:
 	///Get window handle outside of a class
 	SDL_Window* GetWindowHandle();
 
+
+	SEuint windowWidth;
+	SEuint windowHeigth;
+
 private:
 
 	///Window width 

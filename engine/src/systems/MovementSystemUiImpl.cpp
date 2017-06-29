@@ -1,5 +1,6 @@
 #include <systems/MovementSystem.h>
 #include <core/Engine.h>
+#include <imgui/imgui.h>
 
 namespace se
 {
@@ -23,6 +24,15 @@ CVelocity* AddCVelocity(SEuint owner_id, CVelocity component)
 {
 	component.ownerID = owner_id;
 	return priv::Engine::Instance().GetMovementSystem()->_createCVelocityComponent(component);
+}
+
+//Update ImGui
+namespace gui
+{
+void UpdateMovementSystemGUI()
+{
+	
+}
 }
 
 }//namespace se
