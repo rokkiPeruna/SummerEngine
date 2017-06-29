@@ -76,6 +76,13 @@ public:
 	///Static dictionaries
 
 private:
+	///Initialize nlohmann::json object with engine_congif.json
+	void _initJConfigObject();
+
+	///Get settings from engine_config.json
+	void _initAndApplyEngineSettings();
+
+	nlohmann::json j_config;
 
 	///Clock and time
 	Clock m_engine_clock;

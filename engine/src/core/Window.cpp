@@ -9,8 +9,7 @@ namespace priv
 {
 // TODO: Get m_width / m_height from .json file
 Window::Window()
-	: m_width(512)
-	, m_height(512)
+	: windowInitData()
 	, m_sdl_window_handle(nullptr)
 {
 
@@ -42,8 +41,10 @@ void Window::InitializeWindow()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
-	m_sdl_window_handle = SDL_CreateWindow("SE Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeigth, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-	
+	if (windowInitData.centered)
+		m_sdl_window_handle = SDL_CreateWindow("SE Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask);
+	else
+		m_sdl_window_handle = SDL_CreateWindow("SE Editor", windowInitData.pos_x, windowInitData.pos_y, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask);
 
 }
 

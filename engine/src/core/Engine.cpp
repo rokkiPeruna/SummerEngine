@@ -4,7 +4,7 @@
 #include <ostream>
 #include <fstream>
 #include <iomanip>
-#include <nlohmann_json/json.hpp>
+//#include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
 #include <core/imgui_impl_sdl_gl3.h>
 
@@ -21,7 +21,8 @@ SystemForComponentDictionary Engine::systemForComponentDictionary{};
 
 
 Engine::Engine()
-	: m_engine_clock()
+	: j_config()
+	, m_engine_clock()
 	, m_frame_time()
 	, m_window(new priv::Window)
 	, m_graphics(new priv::Graphics)
@@ -39,30 +40,11 @@ Engine::~Engine()
 
 void Engine::InitializeEngine()
 {
-	//Read engine_config.json file and set engine settings accordingly
-	nlohmann::json j_eng_conf;
-	//std::ifstream data("engine_config.json", std::ios::out);
-	std::ifstream data("../../engine/json_files/engine_config.json");
-	if (data.is_open())
-	{
-		//Read data to single string
-		j_eng_conf = nlohmann::json::parse(data);
-	}
-	else
-	{
-		//TODO: send message
-	}
+	//Fetch engine settings from engine_config.json and apply them
+	_initJConfigObject();
+	_initAndApplyEngineSettings();
 
-	//Send window size data to Window
-	if (j_eng_conf.find("window_width") != j_eng_conf.end())
-	{
-		m_window->windowWidth = j_eng_conf.at("window_width");
-	}
-	if (j_eng_conf.find("window_heigth") != j_eng_conf.end())
-	{
-		m_window->windowHeigth = j_eng_conf.at("window_heigth");
-	}
-
+	//Initialize window and graphical context
 	m_window->InitializeWindow();
 	m_graphics->InitializeGraphics(m_window);
 
@@ -190,5 +172,44 @@ void Engine::EngineUpdate()
 	ImGui_ImplSdlGL3_Shutdown();
 
 }
+
+void Engine::_initJConfigObject()
+{
+	//Read engine_config.json file and set engine settings accordingly
+	//TODO: set folder paths
+	std::ifstream data("../../engine/json_files/engine_config.json");
+	if (data.is_open())
+	{
+		//Read data to single string
+		j_config = nlohmann::json::parse(data);
+		data.close();
+	}
+	else
+	{
+		//TODO: send message
+	}
+}
+
+void Engine::_initAndApplyEngineSettings()
+{
+	auto& windata = m_window->windowInitData;
+	//Send window size data to Window
+	if (j_config.find("window_width") != j_config.end())
+		windata.width = j_config.at("window_width");
+	if (j_config.find("window_heigth") != j_config.end())
+		windata.heigth = j_config.at("window_heigth");
+	if (j_config.find("window_pos_x") != j_config.end())
+		windata.pos_x = j_config.at("window_pos_x");
+	if (j_config.find("window_pos_y") != j_config.end())
+		windata.pos_y = j_config.at("window_pos_y");
+	if (j_config.find("window_centered") != j_config.end())
+		windata.centered = j_config.at("window_centered");
+	if (j_config.find("window_fullscreen") != j_config.end() && j_config.at("window_fullscreen") != 0)
+		windata.sdl_settings_mask += SDL_WINDOW_FULLSCREEN;
+	if (j_config.find("window_borderless") != j_config.end() && j_config.at("window_borderless") != 0)
+		windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
+
+}
+
 }//namespace priv
 }//namespace se

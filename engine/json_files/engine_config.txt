@@ -1,7 +1,0 @@
-{
-  "window_heigth": 500,
-  "window_width": 500,
-  "clear_color_r": 0.5,
-  "clear_color_g": 0.2,
-  "clear_color_b": 0.2 
-}

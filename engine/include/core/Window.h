@@ -17,7 +17,26 @@ namespace se
 
 namespace priv
 {
+///Brief: Window initialization data struct. Initialized in Engine.cpp, values loaded from engine_config.json
+struct WindowInitData
+{
+	SEuint width;
+	SEuint heigth;
+	bool centered;
+	SEint pos_x;
+	SEint pos_y;
+	SEuint sdl_settings_mask;
+	WindowInitData()
+		: width(0)
+		, heigth(0)
+		, centered(false)
+		, pos_x(0)
+		, pos_y(0)
+		, sdl_settings_mask(0)
+	{}
+};
 
+///Brief: Window class handles window initialization via SDL functions
 class Window
 {
 public:
@@ -40,22 +59,13 @@ public:
 	///Get window handle outside of a class
 	SDL_Window* GetWindowHandle();
 
+	///Window initialization data
+	WindowInitData windowInitData;
 
-	SEuint windowWidth;
-	SEuint windowHeigth;
 
 private:
-
-	///Window width 
-	SEuint m_width;
-
-	///Window height
-	SEuint m_height;
-
 	///Handle to window
 	SDL_Window* m_sdl_window_handle;
-	
-	//SDL_GLContext m_glContext;
 };
 
 }//end namespace priv

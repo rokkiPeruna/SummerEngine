@@ -107,7 +107,7 @@ set(JSON_SCENES
 
 set(JSON_ENGINE_CONFIG
 	json_files/engine_config.json
-	json_files/testi.txt)
+	)
 	
 set(JSON_FILES
 	${JSON_COMPONENT_TEMPLATES}
