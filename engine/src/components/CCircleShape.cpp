@@ -4,6 +4,7 @@ namespace se
 {
 
 CCircleShape::CCircleShape()
+	: Component(CCircleShape_id)
 {
 	
 }

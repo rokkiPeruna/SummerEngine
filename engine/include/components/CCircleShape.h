@@ -14,7 +14,7 @@
 namespace se
 {
 
-class CCircleShape : public priv::Component
+class CCircleShape : public Component
 {
 
 public:

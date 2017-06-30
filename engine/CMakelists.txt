@@ -4,6 +4,7 @@
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
 include_directories(${PROJECT_SOURCE_DIR}/engine/src)
 include_directories(${PROJECT_SOURCE_DIR}/external)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
 include_directories(${PROJECT_SOURCE_DIR}/external/OpenGL)
 include_directories(${PROJECT_SOURCE_DIR}/libs)
 
@@ -16,8 +17,8 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 set(COMPONENTS_FILES
 	include/components/Component.h
 	src/components/Component.cpp
-	include/components/CTransform.h
-	src/components/CTransform.cpp
+	include/components/CPosition.h
+	include/components/CVelocity.h
     include/components/CTriangleShape.h
     src/components/CTriangleShape.cpp
     include/components/CRectangleShape.h
@@ -31,8 +32,8 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
-	include/systems/TransformSystem.h
-	src/systems/TransformSystem.cpp
+	include/systems/MovementSystem.h
+	src/systems/MovementSystem.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -45,6 +46,10 @@ set(MANAGERS_FILES
 	src/managers/EntityComponentManager.cpp
 	include/managers/Entity.h
 	src/managers/Entity.cpp
+	include/managers/SceneManager.h
+	src/managers/SceneManager.cpp
+	include/managers/Scene.h
+	src/managers/Scene.cpp
 	include/managers/RenderManager.h
 	src/managers/RenderManager.cpp
 	)
@@ -57,9 +62,16 @@ set(CORE_FILES
 	include/core/Window.h
 	src/core/Window.cpp	
 	include/core/Graphics.h
-	src/core/Graphics.cpp	
+	src/core/Graphics.cpp
 	)
 source_group("core" FILES ${CORE_FILES})
+
+#-----------------------------------------------------------------
+#Core
+set(USER_FILES
+	include/user/ComponentList.h
+	)
+source_group("user" FILES ${USER_FILES})
 
 #-----------------------------------------------------------------
 #Utility
@@ -86,19 +98,11 @@ add_executable(engine
 	${SYSTEMS_FILES}
 	${MANAGERS_FILES}
 	${CORE_FILES}
+	${USER_FILES}
 	${UTILITY_FILES}
 	${MAIN_CPP}
 	)
 
-#Link libraries
-#link_libraries(
-#			   libEGL 
-#			   libGLESv2			   
-#				glew32 
-#				glew32s 
-#)
-#					libEGL 
-#					libGLESv2 
 target_link_libraries(engine PUBLIC 
 					box2d 
 					SDL2-static 

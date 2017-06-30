@@ -4,7 +4,8 @@
 *.tlog
 *.idb
 *.lastbuildstate
-*.exe
+#*.exe
+*.stamp
 *.ilk
 *.db
 *.opendp

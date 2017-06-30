@@ -16,9 +16,9 @@ namespace se
 const SEuint64 nullComponent_id = 0x00000000;
 const SEuint64 CVelocity_id = 0x0000001;
 const SEuint64 CPosition_id = 0x00000002;
-const SEuint64 dummy_id_2 = 0x0000004;
-const SEuint64 dummy_id_3 = 0x0000008;
-const SEuint64 dummy_id_4 = 0x0000010;
+const SEuint64 CRectangleShape_id = 0x0000004;
+const SEuint64 CCircleShape_id = 0x0000008;
+const SEuint64 CTriangleShape_id = 0x0000010;
 const SEuint64 dummy_id_5 = 0x0000020;
 const SEuint64 dummy_id_6 = 0x0000040;
 const SEuint64 dummy_id_7 = 0x0000080;

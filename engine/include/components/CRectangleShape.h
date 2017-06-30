@@ -16,8 +16,7 @@
 
 namespace se
 {
-
-class CRectangleShape : public priv::Component
+class CRectangleShape : public Component
 {
 
 public:

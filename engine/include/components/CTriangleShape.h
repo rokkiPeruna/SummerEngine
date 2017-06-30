@@ -17,7 +17,7 @@
 namespace se
 {
 
-class CTriangleShape : public priv::Component
+class CTriangleShape : public Component
 {
 
 public:
