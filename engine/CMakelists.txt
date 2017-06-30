@@ -2,11 +2,10 @@
 
 #Add include directories
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
-include_directories(${PROJECT_SOURCE_DIR}/engine/json_files)
+include_directories(${PROJECT_SOURCE_DIR}/engine/src)
 include_directories(${PROJECT_SOURCE_DIR}/external)
 include_directories(${PROJECT_SOURCE_DIR}/external/OpenGL)
 include_directories(${PROJECT_SOURCE_DIR}/libs)
-include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
 
 #Add library directories
 link_directories(${PROJECT_SOURCE_DIR}/libs)
@@ -17,10 +16,14 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 set(COMPONENTS_FILES
 	include/components/Component.h
 	src/components/Component.cpp
-	include/components/NullComponent.h
-	src/components/NullComponent.cpp
-	include/components/CPosition.h
-	include/components/CVelocity.h
+	include/components/CTransform.h
+	src/components/CTransform.cpp
+    include/components/CTriangleShape.h
+    src/components/CTriangleShape.cpp
+    include/components/CRectangleShape.h
+    src/components/CRectangleShape.cpp
+    include/components/CCircleShape.h
+    src/components/CCircleShape.cpp
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -28,9 +31,8 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
-	include/systems/MovementSystem.h
-	src/systems/MovementSystem.cpp
-	src/systems/MovementSystemUiImpl.cpp
+	include/systems/TransformSystem.h
+	src/systems/TransformSystem.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -39,14 +41,12 @@ set(MANAGERS_FILES
 	include/managers/ResourceManager.h
 	src/managers/ResourceManager.cpp
 	include/managers/Resource.h
-	include/managers/SceneManager.h
-	src/managers/SceneManager.cpp
-	include/managers/Scene.h
-	src/managers/Scene.cpp
 	include/managers/EntityComponentManager.h
 	src/managers/EntityComponentManager.cpp
 	include/managers/Entity.h
 	src/managers/Entity.cpp
+	include/managers/RenderManager.h
+	src/managers/RenderManager.cpp
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
@@ -57,13 +57,10 @@ set(CORE_FILES
 	include/core/Window.h
 	src/core/Window.cpp	
 	include/core/Graphics.h
-	src/core/Graphics.cpp
-	include/core/Dictionaries.h
-	src/core/Dictionaries.cpp
-	include/core/imgui_impl_sdl_gl3.h
-	src/core/imgui_impl_sdl_gl3.cpp
+	src/core/Graphics.cpp	
 	)
 source_group("core" FILES ${CORE_FILES})
+
 #-----------------------------------------------------------------
 #Utility
 set(UTILITY_FILES
@@ -72,57 +69,14 @@ set(UTILITY_FILES
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
-	include/utility/Math.h
 	)
 source_group("utility" FILES ${UTILITY_FILES})
-#-----------------------------------------------------------------
-#User
-set(USER_FILES
-	include/user/ComponentList.h
-	)
-source_group("user" FILES ${USER_FILES})
-#-----------------------------------------------------------------
-#Imgui
-set(IMGUI_FILES
-	${PROJECT_SOURCE_DIR}/external/imgui/imconfig.h
-	${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp
-	${PROJECT_SOURCE_DIR}/external/imgui/imgui.h
-	${PROJECT_SOURCE_DIR}/external/imgui/imgui_demo.cpp
-	${PROJECT_SOURCE_DIR}/external/imgui/imgui_draw.cpp
-	${PROJECT_SOURCE_DIR}/external/imgui/imgui_internal.h
-	)
-source_group("imgui" FILES ${IMGUI_FILES})
 #-----------------------------------------------------------------
 #Main.cpp
 set(MAIN_CPP
 	src/main.cpp
 	)
 source_group("" FILES ${MAIN_CPP})
-#-----------------------------------------------------------------
-
-#JSON files
-set(JSON_COMPONENT_TEMPLATES
-	json_files/component_templates.json)
-	
-set(JSON_ENTITY_TEMPLATES
-	json_files/entity_templates.json)
-
-set(JSON_SCENES
-	json_files/scenes.json)
-
-set(JSON_ENGINE_CONFIG
-	json_files/engine_config.json
-	)
-	
-set(JSON_FILES
-	${JSON_COMPONENT_TEMPLATES}
-	${JSON_ENTITY_TEMPLATES}
-	${JSON_SCENES}
-	${JSON_ENGINE_CONFIG}
-	)
-	
-source_group("json" FILES
-	${JSON_FILES})
 #-----------------------------------------------------------------
 
 #Project name
@@ -133,12 +87,18 @@ add_executable(engine
 	${MANAGERS_FILES}
 	${CORE_FILES}
 	${UTILITY_FILES}
-	${USER_FILES}
 	${MAIN_CPP}
-	${IMGUI_FILES}
-	${JSON_FILES}
 	)
 
+#Link libraries
+#link_libraries(
+#			   libEGL 
+#			   libGLESv2			   
+#				glew32 
+#				glew32s 
+#)
+#					libEGL 
+#					libGLESv2 
 target_link_libraries(engine PUBLIC 
 					box2d 
 					SDL2-static 
