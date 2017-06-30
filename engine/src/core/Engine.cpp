@@ -47,8 +47,11 @@ void Engine::InitializeEngine()
 	m_window->InitializeWindow();
 	m_graphics->InitializeGraphics(m_window);
 
-	//Init imgui using imolementation provided in examples
+	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
+
+	///Init managers
+	m_sceneMgr.Initialize();
 
 }
 

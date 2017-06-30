@@ -1,0 +1,21 @@
+{
+  "scenes": {
+    "main_menu": {
+      "m_name": "main_menu",
+      "m_type": 1,
+      "id": 1
+    },
+
+    "level1": {
+      "m_name": "level1",
+      "m_type": 1,
+      "id": 2
+    },
+
+    "level2": {
+      "m_name": "level2",
+      "m_type": 1,
+      "id": 3
+    }
+  }
+}

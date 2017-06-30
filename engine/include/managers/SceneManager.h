@@ -4,6 +4,8 @@
 ///STL includes:
 #include <vector>
 #include <string>
+#include <fstream>
+
 
 ///SE includes:
 #include <managers/Scene.h>
@@ -25,6 +27,12 @@ public:
 	SceneManager(const SceneManager&) = delete;
 	void operator=(const SceneManager&) = delete;
 
+	///Init SceneManager
+	void Initialize();
+
+	///Uninit
+	void Uninitialize();
+
 	///Update manager and gui
 	void Update(bool showGUIwindow);
 
@@ -44,7 +52,12 @@ public:
 private:
 	///Scene container
 	std::vector<Scene> m_scenes;
+	///Scene name container
+	std::vector<std::string> m_sceneNames;
 
+	///Loads scene names from scenes.json so that user can see
+	/// and pick from names in SceneManager GUI
+	void _loadSceneNames();
 
 
 	///GUI

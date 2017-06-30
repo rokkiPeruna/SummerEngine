@@ -44,6 +44,7 @@ public:
 	///Getters for variables
 	std::string GetName();
 	SCENE_TYPE GetType();
+	SEint GetID();
 
 private:
 	///Name of the scene
@@ -51,6 +52,9 @@ private:
 
 	///Type of the scene
 	SCENE_TYPE m_type;
+
+	///Id as SEint
+	SEint m_id;
 
 	///EntityComponentManager object
 	EntityComponentManager m_ecm;
