@@ -18,6 +18,12 @@ set(COMPONENTS_FILES
 	src/components/Component.cpp
 	include/components/CTransform.h
 	src/components/CTransform.cpp
+    include/components/CTriangleShape.h
+    src/components/CTriangleShape.cpp
+    include/components/CRectangleShape.h
+    src/components/CRectangleShape.cpp
+    include/components/CCircleShape.h
+    src/components/CCircleShape.cpp
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -54,6 +60,7 @@ set(CORE_FILES
 	src/core/Graphics.cpp	
 	)
 source_group("core" FILES ${CORE_FILES})
+
 #-----------------------------------------------------------------
 #Utility
 set(UTILITY_FILES

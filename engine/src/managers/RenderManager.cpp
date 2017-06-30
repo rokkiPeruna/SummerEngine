@@ -9,10 +9,11 @@ namespace priv
 {
 
 RenderManager::RenderManager()
-	: m_vbo(0)
+	: m_ebo(0)
 	, m_shaderProgram(0)
 	, m_vertexShader(0)
 	, m_fragmentShader(0)
+	, m_numAttributes(0)
 {
 
 }
@@ -26,45 +27,29 @@ void RenderManager::InitializeRenderManager()
 {
 	glewInit();
 
+	// TODO : change to root path + shader name
 	if (!_loadShaders("../../engine/shaders/defaultShader.vert", "../../engine/shaders/defaultShader.frag"))
 	{
 		std::cout << "Error at loading shaders" << std::endl;
 	}
+
+	_addAttribute("vertexPosition");
+
+
+
 	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
-	if (!m_vbo)
+	if (!m_ebo)
 	{
-		glGenBuffers(1, &m_vbo);
+		glGenBuffers(1, &m_ebo);
 	}
 
 
-	SEfloat vertexData[12];
-
-	// Point 1 of Triangle 1
-	vertexData[0] = 0.25f;
-	vertexData[1] = 0.30f;
-
-	// Point 2 of Triangle 1	
-	vertexData[2] = -0.30f;
-	vertexData[3] = 0.30f;
-
-	// Point 3 of Triangle 1
-	vertexData[4] = -0.30f;
-	vertexData[5] = -0.25f;
-
-	// Point 1 of Triangle 2
-	vertexData[6] = 0.30f;
-	vertexData[7] = 0.25f;
-	// Point 2 of Triangle 2
-	vertexData[8] = 0.30f;
-	vertexData[9] = -0.30f;
-	// Point 3 of Triangle 2
-	vertexData[10] = -0.25f;
-	vertexData[11] = -0.30f;
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ebo);
+
+//	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData1), &vertexData1, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -74,27 +59,29 @@ void RenderManager::InitializeRenderManager()
 
 void RenderManager::UpdateRenderManager(SDL_Window* windowHandle)
 {
-	
+
 
 	glClearDepth(1.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(m_shaderProgram);
+	Use();
 
 	// include into a sprite (maybe) --------------------
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ebo);
+	
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 2, 0);
 	glDisableVertexAttribArray(0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
 	//---------------------------------------------------
-
 	SDL_GL_SwapWindow(windowHandle);
+
 }
 
 SEbool RenderManager::_loadShaders(const std::string& vertex_file_path, const std::string& fragment_file_path)
@@ -133,8 +120,13 @@ SEbool RenderManager::_loadShaders(const std::string& vertex_file_path, const st
 
 	if (!_checkCompileErrors(m_vertexShader))
 	{
+		glDeleteShader(m_vertexShader);
+		glDeleteShader(m_fragmentShader);
+
 		return false;
 	}
+
+	std::cout << "Compiling fragment shader.. " << std::endl;
 
 	const char* fragmentScourcePointer = FragmentData.c_str();
 
@@ -143,6 +135,9 @@ SEbool RenderManager::_loadShaders(const std::string& vertex_file_path, const st
 
 	if (!_checkCompileErrors(m_fragmentShader))
 	{
+		glDeleteShader(m_vertexShader);
+		glDeleteShader(m_fragmentShader);
+
 		return false;
 	}
 
@@ -153,13 +148,17 @@ SEbool RenderManager::_loadShaders(const std::string& vertex_file_path, const st
 
 	glAttachShader(m_shaderProgram, m_vertexShader);
 	glAttachShader(m_shaderProgram, m_fragmentShader);
+
 	glLinkProgram(m_shaderProgram);
 
 
 	// Check the program
-
 	if (!_checkCompileErrors(m_shaderProgram))
 	{
+
+		glDeleteShader(m_vertexShader);
+		glDeleteShader(m_fragmentShader);
+
 		return false;
 	}
 
@@ -169,6 +168,8 @@ SEbool RenderManager::_loadShaders(const std::string& vertex_file_path, const st
 
 	glDeleteShader(m_vertexShader);
 	glDeleteShader(m_fragmentShader);
+
+
 
 	return true;
 }
@@ -209,6 +210,34 @@ SEbool RenderManager::_checkCompileErrors(SEuint p_shader)
 
 	return true;
 }
+
+void RenderManager::_addAttribute(const std::string& attributeName)
+{
+	glBindAttribLocation(m_shaderProgram, m_numAttributes++, attributeName.c_str());
+}
+
+
+void RenderManager::Use()
+{
+	glUseProgram(m_shaderProgram);
+
+	for (int i = 0; i < m_numAttributes; i++)
+	{
+		glEnableVertexAttribArray(i);
+	}
+}
+
+
+void RenderManager::Unuse()
+{
+	glUseProgram(0);
+
+	for (int i = 0; i < m_numAttributes; i++)
+	{
+		glDisableVertexAttribArray(i);
+	}
+}
+
 
 
 }//namespace priv

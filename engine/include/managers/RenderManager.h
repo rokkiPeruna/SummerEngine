@@ -18,6 +18,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+#include <components/CTriangleShape.h>
+#include <components/CRectangleShape.h>
+#include <components/CCircleShape.h>
 // -----------------------------
 
 ///Brief : Render manager initializes glew and loads shaders.
@@ -51,6 +55,8 @@ public:
 	///Update render manager
 	void UpdateRenderManager(SDL_Window* windowHandle);
 
+	void Use();
+	void Unuse();
 
 private:
 
@@ -64,8 +70,10 @@ private:
 	///Returns false if any of shaders doesn't compile
 	SEbool _checkCompileErrors(SEuint p_shader);
 
+	void _addAttribute(const std::string& attributeName);
+
 	///Vertex buffer object
-	SEuint m_vbo;
+	SEuint m_ebo;
 	
 	// Shader program id
 	SEuint m_shaderProgram;
@@ -75,6 +83,8 @@ private:
 	//Fragment shader hanlde 
 	SEuint m_fragmentShader;
 
+	//Number of attributes
+	SEint m_numAttributes;
 	
 
 	
