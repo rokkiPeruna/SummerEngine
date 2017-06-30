@@ -17,12 +17,14 @@ CVelocity* GetCVelocity(SEuint owner_id)
 CPosition* AddCPosition(SEuint owner_id, CPosition component)
 {
 	component.ownerID = owner_id;
+	component.type = CPosition_id;
 	return priv::Engine::Instance().GetMovementSystem()->_createCPositionComponent(component);
 }
 
 CVelocity* AddCVelocity(SEuint owner_id, CVelocity component)
 {
 	component.ownerID = owner_id;
+	component.type = CVelocity_id;
 	return priv::Engine::Instance().GetMovementSystem()->_createCVelocityComponent(component);
 }
 

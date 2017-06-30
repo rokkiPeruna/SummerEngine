@@ -39,10 +39,15 @@ set(MANAGERS_FILES
 	include/managers/ResourceManager.h
 	src/managers/ResourceManager.cpp
 	include/managers/Resource.h
+	include/managers/SceneManager.h
+	src/managers/SceneManager.cpp
+	include/managers/Scene.h
+	src/managers/Scene.cpp
 	include/managers/EntityComponentManager.h
 	src/managers/EntityComponentManager.cpp
 	include/managers/Entity.h
-	src/managers/Entity.cpp)
+	src/managers/Entity.cpp
+	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
 #Core

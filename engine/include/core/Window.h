@@ -4,6 +4,7 @@
 //include STL
 //TODO: Delete 'memory' after we get typedefs
 #include <memory>
+#include <string>
 
 //include external
 #include <SDL2/include/SDL.h>
@@ -20,6 +21,7 @@ namespace priv
 ///Brief: Window initialization data struct. Initialized in Engine.cpp, values loaded from engine_config.json
 struct WindowInitData
 {
+	std::string name;
 	SEuint width;
 	SEuint heigth;
 	bool centered;
@@ -27,7 +29,8 @@ struct WindowInitData
 	SEint pos_y;
 	SEuint sdl_settings_mask;
 	WindowInitData()
-		: width(0)
+		: name("")
+		, width(0)
 		, heigth(0)
 		, centered(false)
 		, pos_x(0)

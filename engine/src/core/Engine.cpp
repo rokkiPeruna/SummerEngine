@@ -8,8 +8,6 @@
 #include <imgui/imgui.h>
 #include <core/imgui_impl_sdl_gl3.h>
 
-//Include GUI implementations
-
 
 namespace se
 {
@@ -24,10 +22,11 @@ Engine::Engine()
 	: j_config()
 	, m_engine_clock()
 	, m_frame_time()
+	, m_input_coolDown()
 	, m_window(new priv::Window)
 	, m_graphics(new priv::Graphics)
 	, m_movementSystem()
-	, m_entityCompMgr()
+	, m_sceneMgr()
 {
 
 }
@@ -84,7 +83,7 @@ void Engine::EngineUpdate()
 			if (event.type == SDL_QUIT)
 				loop = false;
 
-			if (event.type == SDL_KEYDOWN)
+			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
 			{
 				switch (event.key.keysym.sym)
 				{
@@ -92,47 +91,10 @@ void Engine::EngineUpdate()
 					loop = false;
 					break;
 
-				case SDLK_r:
-					// Cover with red and update
-					glClearColor(1.0, 0.0, 0.0, 1.0);
-					glClear(GL_COLOR_BUFFER_BIT);
-					SDL_GL_SwapWindow(m_window->GetWindowHandle());
+				case SDLK_F12:
+					//Switch if main window in editor is visible
+					_gui_show_main_window = (_gui_show_main_window) ? false : true;
 					break;
-
-					//	case SDLK_g:
-					//		// Cover with green and update
-					//		glClearColor(0.0, 1.0, 0.0, 1.0);
-					//		glClear(GL_COLOR_BUFFER_BIT);
-					//		SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					//		break;
-
-					//	case SDLK_b:
-					//		// Cover with blue and update
-					//		glClearColor(0.0, 0.0, 1.0, 1.0);
-					//		glClear(GL_COLOR_BUFFER_BIT);
-					//		SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					//		break;
-
-					//	case SDL_FINGERDOWN:
-
-					//		glClearColor(1.0, 1.0, 0.0, 1.0);
-					//		glClear(GL_COLOR_BUFFER_BIT);
-					//		SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					//		break;
-
-					//	case SDL_FINGERUP:
-
-					//		glClearColor(0.0, 1.0, 1.0, 1.0);
-					//		glClear(GL_COLOR_BUFFER_BIT);
-					//		SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					//		break;
-
-					//	case SDL_FINGERMOTION:
-
-					//		glClearColor(1.0, 0.0, 1.0, 1.0);
-					//		glClear(GL_COLOR_BUFFER_BIT);
-					//		SDL_GL_SwapWindow(m_window->GetWindowHandle());
-					//		break;
 
 				default:
 					break;
@@ -143,22 +105,30 @@ void Engine::EngineUpdate()
 		}
 		//New frame for imgui drawing
 		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
-		m_movementSystem.Update(deltaTime);
-		//gui::UpdateMovementSystemGUI();
 
-		// 1. Show a simple window
-		// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
+
+		///Update systems TODO: Thread these, mind the update order
+		m_movementSystem.Update(deltaTime);
+
+
+		
+		//Engine window in editor //TODO: Move to own function
+		if(_gui_show_main_window)
 		{
-			ImGui::Begin("Editor");
-			static float f = 0.0f;
-			ImGui::Text("Create entity");
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+			ImGui::Begin("Engine");
+			ImGui::Text("SE Engine, %s");
+			ImGui::Separator();
 			ImGui::ColorEdit3("clear color", (float*)&clear_color);
-			if (ImGui::Button("Entity editor")) show_test_window ^= 1;
-			if (ImGui::Button("Scene editor")) show_another_window ^= 1;
+			if (ImGui::Button("Scene manager"))
+			{
+				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
+			}
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
+
+		///Update managers
+		m_sceneMgr.Update(_gui_show_scene_mgr_window);
 
 		// Rendering
 		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
@@ -177,7 +147,7 @@ void Engine::_initJConfigObject()
 {
 	//Read engine_config.json file and set engine settings accordingly
 	//TODO: set folder paths
-	std::ifstream data("../../engine/json_files/engine_config.json");
+	std::ifstream data(REL_PATH_TO_ENGINE_CONFIG);
 	if (data.is_open())
 	{
 		//Read data to single string
@@ -194,6 +164,8 @@ void Engine::_initAndApplyEngineSettings()
 {
 	auto& windata = m_window->windowInitData;
 	//Send window size data to Window
+	if (j_config.find("window_name") != j_config.end())
+		//windata.name = j_config.at("window_name");
 	if (j_config.find("window_width") != j_config.end())
 		windata.width = j_config.at("window_width");
 	if (j_config.find("window_heigth") != j_config.end())

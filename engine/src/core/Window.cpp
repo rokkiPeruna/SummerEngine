@@ -42,9 +42,9 @@ void Window::InitializeWindow()
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 	if (windowInitData.centered)
-		m_sdl_window_handle = SDL_CreateWindow("SE Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask | SDL_WINDOW_OPENGL);
+		m_sdl_window_handle = SDL_CreateWindow(windowInitData.name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask | SDL_WINDOW_OPENGL);
 	else
-		m_sdl_window_handle = SDL_CreateWindow("SE Editor", windowInitData.pos_x, windowInitData.pos_y, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask | SDL_WINDOW_OPENGL);
+		m_sdl_window_handle = SDL_CreateWindow(windowInitData.name.c_str(), windowInitData.pos_x, windowInitData.pos_y, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask | SDL_WINDOW_OPENGL);
 
 }
 

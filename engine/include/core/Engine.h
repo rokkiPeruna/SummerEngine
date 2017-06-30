@@ -1,5 +1,16 @@
 #ifndef SE_ENGINE_H
 #define SE_ENGINE_H
+#include <string>
+///!!**********NOTE**********!!///
+///String below must always be the relative path to engine_config.json file from .vcproj file.
+///That file contains relative paths to resources and other useful assets.
+const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_config.json";
+///!!**********NOTE**********!!///
+
+///Boolean for defining if GUI window show on editor
+static bool _gui_show_main_window = true;
+static bool _gui_show_scene_mgr_window = true;
+
 
 //include STL
 
@@ -9,6 +20,9 @@
 #include <GLES2/glew.h>
 
 #include <nlohmann_json/json.hpp>
+
+
+
 
 //SE includes:
 #include <utility/Clock.h>
@@ -23,11 +37,9 @@
 #include <systems/MovementSystem.h>
 
 //Managers
-#include <managers/EntityComponentManager.h>
+#include <managers/SceneManager.h>
 
 #include <core/Dictionaries.h>
-
-
 
 namespace se
 {
@@ -71,22 +83,23 @@ public:
 
 	///Manager getters
 	//
-	EntityComponentManager* GetEntityCompMgr() { return &m_entityCompMgr; }
+	SceneManager* GetEntityCompMgr() { return &m_sceneMgr; }
 
 	///Static dictionaries
 
 private:
 	///Initialize nlohmann::json object with engine_congif.json
+	nlohmann::json j_config;
 	void _initJConfigObject();
 
 	///Get settings from engine_config.json
 	void _initAndApplyEngineSettings();
 
-	nlohmann::json j_config;
 
 	///Clock and time
 	Clock m_engine_clock;
 	Time m_frame_time;
+	Time m_input_coolDown;
 
 	std::shared_ptr<Window> m_window;
 	std::shared_ptr<Graphics> m_graphics;
@@ -96,7 +109,7 @@ private:
 
 
 	///Managers
-	EntityComponentManager m_entityCompMgr;
+	SceneManager m_sceneMgr;
 
 };
 }//namespace priv

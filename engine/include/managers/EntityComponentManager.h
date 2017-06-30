@@ -13,7 +13,8 @@
 
 namespace se
 {
-///Brief: EntityComponentManager -class handless entities and their component pointers
+///Brief: EntityComponentManager -class handless entities and pointer to them. It can create
+///entities from scratch or read them from json files. 
 class EntityComponentManager
 {
 public:
