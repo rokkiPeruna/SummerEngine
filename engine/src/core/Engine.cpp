@@ -115,6 +115,7 @@ void Engine::EngineUpdate()
 		//Engine window in editor //TODO: Move to own function
 		if(_gui_show_main_window)
 		{
+			ImGui::SetWindowSize(ImVec2(500, 300), ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Engine");
 			ImGui::Text("SE Engine, %s");
 			ImGui::Separator();
@@ -129,6 +130,8 @@ void Engine::EngineUpdate()
 
 		///Update managers
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
+
+		
 
 		// Rendering
 		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);

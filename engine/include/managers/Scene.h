@@ -15,7 +15,7 @@ namespace priv
 enum class SCENE_TYPE : SEint
 {
 	FAULTY = -1,
-	MENU,
+	MENU = 1,
 	LEVEL,
 	CREDITS
 };

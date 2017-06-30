@@ -32,7 +32,7 @@ public:
 	void AddScene(std::string scenename, SCENE_TYPE type);
 
 	///Save current scene to json
-	void SaveScene();
+	void SaveScene(std::string scenename, SCENE_TYPE type, SEint width = 0, SEint heigth = 0);
 
 	///Load scene from json
 	void LoadScene(std::string scenename);
@@ -44,6 +44,12 @@ public:
 private:
 	///Scene container
 	std::vector<Scene> m_scenes;
+
+
+
+	///GUI
+	///Method for updating gui
+	void _updateGUI();
 
 };
 }//namespace priv
