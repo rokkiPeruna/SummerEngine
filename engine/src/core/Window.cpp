@@ -11,6 +11,7 @@ namespace priv
 Window::Window()
 	: windowInitData()
 	, m_sdl_window_handle(nullptr)
+	, m_glContext(nullptr)
 {
 
 }
@@ -20,7 +21,7 @@ Window::~Window()
 
 }
 
-void Window::InitializeWindow()
+void Window::Initialize()
 {
 
 
@@ -46,12 +47,27 @@ void Window::InitializeWindow()
 	else
 		m_sdl_window_handle = SDL_CreateWindow(windowInitData.name.c_str(), windowInitData.pos_x, windowInitData.pos_y, windowInitData.width, windowInitData.heigth, windowInitData.sdl_settings_mask | SDL_WINDOW_OPENGL);
 
+	m_glContext = SDL_GL_CreateContext(m_sdl_window_handle);
+	if (m_glContext == nullptr)
+	{
+		std::cout << "Was not able to create context " << std::endl;
+	}
+
+	glewInit();
+	
 }
 
 SDL_Window* Window::GetWindowHandle()
 {
-	return m_sdl_window_handle;
+	return  m_sdl_window_handle;
 }
+
+SDL_GLContext* Window::GetContextHandle()
+{
+	return &m_glContext;
+}
+
+
 
 }//end namespace priv
 }//end namespace se

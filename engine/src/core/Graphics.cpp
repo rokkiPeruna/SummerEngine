@@ -40,10 +40,10 @@ void Graphics::InitializeGraphics(std::shared_ptr<Window> window)
 	//	std::cout << "Context creation failed " << std::endl;
 	//}
 
-	m_glContext = SDL_GL_CreateContext(window->GetWindowHandle());
+	
 	
 	//Init glew
-	glewInit();
+	//glewInit();
 
 	
 }

@@ -13,6 +13,7 @@ namespace se
 {
 namespace priv
 {
+
 //Static variables
 ComponentDictionary Engine::componentDictionary{};
 SystemForComponentDictionary Engine::systemForComponentDictionary{};
@@ -24,9 +25,10 @@ Engine::Engine()
 	, m_frame_time()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
-	, m_graphics(new priv::Graphics)
 	, m_movementSystem()
 	, m_sceneMgr()
+	, m_resourceMgr()
+	, m_renderMgr()
 {
 
 }
@@ -44,8 +46,10 @@ void Engine::InitializeEngine()
 	_initAndApplyEngineSettings();
 
 	//Initialize window and graphical context
-	m_window->InitializeWindow();
-	m_graphics->InitializeGraphics(m_window);
+	m_window->Initialize();
+
+	m_renderMgr.Initialize(m_resourceMgr.LoadShaders());
+	
 
 	//Init imgui using imolementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
@@ -60,86 +64,93 @@ void Engine::UninitializeEngine()
 
 void Engine::EngineUpdate()
 {
-	//Imgui test variables
-	bool show_test_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImColor(114, 144, 154);
 
-
-
-	bool loop = true;
-	while (loop)
+	while (1)
 	{
-		//
-		m_frame_time = m_engine_clock.restart();
-		float deltaTime = m_frame_time.asSeconds();
-
-		SDL_Event event;
-		while (SDL_PollEvent(&event))
-		{
-			//Send events to ImGui_SDL_GL3_implentation
-			ImGui_ImplSdlGL3_ProcessEvent(&event);
-
-			if (event.type == SDL_QUIT)
-				loop = false;
-
-			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
-			{
-				switch (event.key.keysym.sym)
-				{
-				case SDLK_ESCAPE:
-					loop = false;
-					break;
-
-				case SDLK_F12:
-					//Switch if main window in editor is visible
-					_gui_show_main_window = (_gui_show_main_window) ? false : true;
-					break;
-
-				default:
-					break;
-				}
-			}
-
-
-		}
-		//New frame for imgui drawing
-		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
-
-
-		///Update systems TODO: Thread these, mind the update order
-		m_movementSystem.Update(deltaTime);
-
-
-		
-		//Engine window in editor //TODO: Move to own function
-		if(_gui_show_main_window)
-		{
-			ImGui::Begin("Engine");
-			ImGui::Text("SE Engine, %s");
-			ImGui::Separator();
-			ImGui::ColorEdit3("clear color", (float*)&clear_color);
-			if (ImGui::Button("Scene manager"))
-			{
-				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
-			}
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
-		}
-
-		///Update managers
-		m_sceneMgr.Update(_gui_show_scene_mgr_window);
-
-		// Rendering
-		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui::Render();
-		SDL_GL_SwapWindow(m_window->GetWindowHandle());
+		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle());
 	}
 
-	//Cleanup imgui
-	ImGui_ImplSdlGL3_Shutdown();
+//		//Imgui test variables
+//		bool show_test_window = true;
+//		bool show_another_window = false;
+//		ImVec4 clear_color = ImColor(114, 144, 154);
+//	
+//	
+//	
+//		bool loop = true;
+//		while (loop)
+//		{
+//			//
+//			m_frame_time = m_engine_clock.restart();
+//			float deltaTime = m_frame_time.asSeconds();
+//	
+//			SDL_Event event;
+//			while (SDL_PollEvent(&event))
+//			{
+//				//Send events to ImGui_SDL_GL3_implentation
+//				ImGui_ImplSdlGL3_ProcessEvent(&event);
+//	
+//				if (event.type == SDL_QUIT)
+//					loop = false;
+//	
+//				if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
+//				{
+//					switch (event.key.keysym.sym)
+//					{
+//					case SDLK_ESCAPE:
+//						loop = false;
+//						break;
+//	
+//					case SDLK_F12:
+//						//Switch if main window in editor is visible
+//						_gui_show_main_window = (_gui_show_main_window) ? false : true;
+//						break;
+//	
+//					default:
+//						break;
+//					}
+//				}
+//	
+//	
+//			}
+//			//New frame for imgui drawing
+//			ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+//	
+//	
+//			///Update systems TODO: Thread these, mind the update order
+//			m_movementSystem.Update(deltaTime);
+//	
+//	
+//			
+//			//Engine window in editor //TODO: Move to own function
+//			if(_gui_show_main_window)
+//			{
+//				ImGui::Begin("Engine");
+//				ImGui::Text("SE Engine, %s");
+//				ImGui::Separator();
+//				ImGui::ColorEdit3("clear color", (float*)&clear_color);
+//				if (ImGui::Button("Scene manager"))
+//				{
+//					_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
+//				}
+//				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+//				ImGui::End();
+//			}
+//	
+//			///Update managers
+//			m_sceneMgr.Update(_gui_show_scene_mgr_window);
+//	
+//			// Rendering
+//			glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+//			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+//			glClear(GL_COLOR_BUFFER_BIT);
+//			ImGui::Render();
+//			SDL_GL_SwapWindow(m_window->GetWindowHandle());
+//		}
+//	
+//	
+//		//Cleanup imgui
+//		ImGui_ImplSdlGL3_Shutdown();
 
 }
 
@@ -166,8 +177,8 @@ void Engine::_initAndApplyEngineSettings()
 	//Send window size data to Window
 	if (j_config.find("window_name") != j_config.end())
 		//windata.name = j_config.at("window_name");
-	if (j_config.find("window_width") != j_config.end())
-		windata.width = j_config.at("window_width");
+		if (j_config.find("window_width") != j_config.end())
+			windata.width = j_config.at("window_width");
 	if (j_config.find("window_heigth") != j_config.end())
 		windata.heigth = j_config.at("window_heigth");
 	if (j_config.find("window_pos_x") != j_config.end())

@@ -50,38 +50,20 @@ public:
 	void operator=(const RenderManager&) = delete;
 
 	///Initialize Render Manager
-	void InitializeRenderManager();
+	void Initialize(SEuint shaderProgram);
 
 	///Update render manager
 	void UpdateRenderManager(SDL_Window* windowHandle);
 
-	void Use();
+	void Use(SEuint shaderProgram);
 	void Unuse();
 
 private:
 
-	///Load shaders 
-	SEbool _loadShaders(const std::string& vertex_file_path, const std::string& fragment_file_path);
-
-	//TODO: Change to our own recource loading system after it is recived (task for Jusa)
-	//Read shaders from .txt file 
-	std::string _readFile(std::string filePath);
-
-	///Returns false if any of shaders doesn't compile
-	SEbool _checkCompileErrors(SEuint p_shader);
-
-	void _addAttribute(const std::string& attributeName);
+	void _addAttribute(SEuint shaderProgram, const std::string& attributeName);
 
 	///Vertex buffer object
 	SEuint m_ebo;
-	
-	// Shader program id
-	SEuint m_shaderProgram;
-
-	//Vertex shader handle
-	SEuint m_vertexShader;
-	//Fragment shader hanlde 
-	SEuint m_fragmentShader;
 
 	//Number of attributes
 	SEint m_numAttributes;
