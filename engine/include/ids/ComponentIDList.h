@@ -1,8 +1,6 @@
-#ifndef SE_COMPONENT_LIST
-#define SE_COMPONENT_LIST
+#ifndef SE_COMPONENT_ID_LIST_SE
+#define SE_COMPONENT_ID_LIST_SE
 
-//STL includes:
-#include <unordered_map>
 
 //SE includes:
 #include <utility/Typedefs.h>
@@ -13,7 +11,7 @@ namespace se
 {
 ///Brief: List of components and their hexadecimal id for masking operations.
 ///As new components are created, they are added here.
-const SEuint64 nullComponent_id = 0x00000000;
+const SEuint64 _nullComponent_id = 0x00000000;
 const SEuint64 CVelocity_id = 0x0000001;
 const SEuint64 CPosition_id = 0x00000002;
 const SEuint64 CRectangleShape_id = 0x0000004;

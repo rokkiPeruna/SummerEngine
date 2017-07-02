@@ -7,7 +7,7 @@
 //SE includes:
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
-#include <user/ComponentList.h>
+#include <ids/ComponentIDList.h>
 
 namespace se
 {

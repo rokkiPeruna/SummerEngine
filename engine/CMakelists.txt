@@ -65,15 +65,19 @@ set(CORE_FILES
 	src/core/Graphics.cpp
 	include/core/imgui_impl_sdl_gl3.h
 	src/core/imgui_impl_sdl_gl3.cpp
+	include/core/Messages.h
+	include/core/Messenger.h
+	src/core/Messenger.cpp
 	)
 source_group("core" FILES ${CORE_FILES})
 
 #-----------------------------------------------------------------
-#Core
-set(USER_FILES
-	include/user/ComponentList.h
+#IDs
+set(IDS_FILES
+	include/ids/ComponentIDList.h
+	include/ids/SystemAndManagerIDList.h
 	)
-source_group("user" FILES ${USER_FILES})
+source_group("ids" FILES ${IDS_FILES})
 
 #-----------------------------------------------------------------
 #Utility
@@ -135,12 +139,13 @@ add_executable(engine
 	${SYSTEMS_FILES}
 	${MANAGERS_FILES}
 	${CORE_FILES}
-	${USER_FILES}
+	${IDS_FILES}
 	${UTILITY_FILES}
 	${IMGUI_FILES}
 	${MAIN_CPP}
 	${JSON_FILES}
 	)
+
 
 target_link_libraries(engine PUBLIC 
 					box2d 

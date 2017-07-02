@@ -27,6 +27,7 @@ Engine::Engine()
 	, m_graphics(new priv::Graphics)
 	, m_movementSystem()
 	, m_sceneMgr()
+	, m_messenger()
 {
 
 }
@@ -135,6 +136,8 @@ void Engine::EngineUpdate()
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
 
 		
+		///Messenger should be last to update before render
+		m_messenger.PrintMessages(_messageLogType_console, true);
 
 		// Rendering
 		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
@@ -162,7 +165,7 @@ void Engine::_initJConfigObject()
 	}
 	else
 	{
-		//TODO: send message
+		MessageError(Engine_id) << "Failed to initialize json object in _initJConfigObject()";
 	}
 }
 

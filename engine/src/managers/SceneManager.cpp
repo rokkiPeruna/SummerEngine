@@ -121,7 +121,7 @@ void SceneManager::_updateGUI()
 		{
 			ImGui::Separator();
 			ImGui::SliderInt("Level width", &width, 2, 128);
-			ImGui::SliderInt("Level width", &heigth, 2, 128);
+			ImGui::SliderInt("Level heigth", &heigth, 2, 128);
 		}
 
 		//Save created scene

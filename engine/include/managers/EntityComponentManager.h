@@ -9,7 +9,7 @@
 //SE includes:
 #include <components/Component.h>
 #include <managers/Entity.h>
-#include <user/ComponentList.h>
+
 
 namespace se
 {

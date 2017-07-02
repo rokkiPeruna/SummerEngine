@@ -10,6 +10,7 @@ const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_co
 ///Boolean for defining if GUI window show on editor
 static bool _gui_show_main_window = true;
 static bool _gui_show_scene_mgr_window = true;
+static bool _gui_show_console_window = true;
 
 
 //include STL
@@ -27,10 +28,13 @@ static bool _gui_show_scene_mgr_window = true;
 //SE includes:
 #include <utility/Clock.h>
 #include <utility/Time.h>
+#include <core/Messages.h>
 
 #include <core/Window.h>
 #include <core/Graphics.h>
 #include <utility/Typedefs.h>
+
+#include <core/Messenger.h>
 
 //Systems
 #include <systems/ComponentSystem.h>
@@ -110,6 +114,9 @@ private:
 
 	///Managers
 	SceneManager m_sceneMgr;
+
+	///Messenger
+	Messenger m_messenger;
 
 };
 }//namespace priv
