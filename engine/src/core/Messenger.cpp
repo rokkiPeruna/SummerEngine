@@ -48,7 +48,7 @@ void Messenger::PrintMessages(SEint flags, SEbool printDebugAlso)
 
 void Messenger::_printToConsole(SEbool printDebugAlso)
 {
-
+	//ImGui::Checkbox("Systems", ) //OLET TÄSSÄ
 }
 
 }//namespace priv
