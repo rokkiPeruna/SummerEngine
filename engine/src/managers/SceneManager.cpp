@@ -44,6 +44,7 @@ void SceneManager::Update(bool showGUIwindow)
 
 }
 
+
 void SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
 	//Check for name conflicts
@@ -52,28 +53,51 @@ void SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 		if (scenename == sn)
 		{
 			MessageWarning(SceneMgr_id) << "Scene with name " + scenename + " already exists, scene not added to scenes.json";
+			ImGui::BeginPopupContextWindow();
+			ImGui::Text("Scenename already in use!");
+			ImGui::EndPopup();
 			return;
 		}
 	}
-	//If name is valid, add scene to scenes.json and add it name to m_sceneNames
-	std::ofstream scenes(m_rel_filep_scenes + "scenes.json", std::ios::app);
+	//If name is valid, add scene to scenes.json and add it's name to m_sceneNames
+	std::ifstream scenes(m_rel_filep_scenes + "scenes.json");
 	if (scenes.is_open())
 	{
-		//SE_TODO: Make this cleverer
+		//SE_TODO: Make this cleverer?
 		std::string type_as_string;
 		if (type == SCENE_TYPE::MENU) type_as_string = "menu";
 		else if (type == SCENE_TYPE::LEVEL) type_as_string = "level";
 		else if (type == SCENE_TYPE::CREDITS) type_as_string = "credits";
 		else type_as_string = "faulty_type";
 
-		nlohmann::json newScene = {
-			{"name", scenename},
-			{"type", type_as_string},
-			{"width", width},
-			{"heigth", heigth},
-			{"entity_ids", 0} //No entities at adding
-		};
-		scenes << std::setw(4) << newScene << std::endl;
+		auto& mainobj = nlohmann::json::parse(scenes);
+		scenes.close();
+		auto& s_obj = mainobj.find("scenes");
+		if (s_obj != mainobj.end())
+		{
+			const char* tmpname = scenename.c_str();
+			s_obj.value().object(
+			{
+				{tmpname,
+				{
+					{"name", scenename},
+					{"type", type_as_string},
+					{"width", width},
+					{"heigth", heigth},
+					{"entity_ids", 0}//No entities at adding
+				}
+				}
+			}
+			);
+			std::ofstream write(m_rel_filep_scenes + "scenes.json", std::ios::app);
+			if (write.is_open())
+			{
+				
+				write << mainobj << std::endl;
+			}
+		}
+
+		
 	}
 	else
 	{
@@ -86,7 +110,7 @@ void SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 
 void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
-	
+
 
 }
 
@@ -107,18 +131,43 @@ void SceneManager::_loadSceneNames()
 	std::ifstream data(m_rel_filep_scenes + "/scenes.json");
 	if (data.is_open())
 	{
+		//Check if scenes.json is empty
+		if (data.peek() == std::ifstream::traits_type::eof())
+		{
+			MessageInfo(SceneMgr_id) << "scenes.json is empty, no scenes available, creating json structure";
+			_createSceneStructureToJsonFile();
+			return;
+		}
+
 		loader = nlohmann::json::parse(data);
 		data.close();
 
-		if(loader.find("scenes") != loader.end())
-		for (auto itr = loader["scenes"].begin(); itr != loader["scenes"].end(); itr++)
-		{
-			m_sceneNames.emplace_back(itr.key());
-		}
+		if (loader.find("scenes") != loader.end())
+			for (auto itr = loader["scenes"].begin(); itr != loader["scenes"].end(); itr++)
+			{
+				m_sceneNames.emplace_back(itr.key());
+			}
 	}
 	else
 	{
 		MessageError(SceneMgr_id) << "Failed to load and parse scenes.json in _loadSceneNames()";
+	}
+}
+
+void SceneManager::_createSceneStructureToJsonFile()
+{
+	nlohmann::json j;
+	std::ofstream data(m_rel_filep_scenes + "scenes.json");
+	if (data.is_open())
+	{
+		data << "{\n" <<
+			"\"scenes\":{\n" <<
+			"  }\n" <<
+			"}" << std::endl;
+	}
+	else
+	{
+		MessageWarning(SceneMgr_id) << "Failed to open scenes.json in _createSceneStructureToJsonFile()";
 	}
 }
 

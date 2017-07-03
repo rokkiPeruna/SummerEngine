@@ -4,6 +4,9 @@
 ///STL includes:
 #include <string>
 
+//External includes:
+#include <nlohmann_json/json.hpp>
+
 ///SE includes:
 #include <managers/EntityComponentManager.h>
 
@@ -20,13 +23,12 @@ enum class SCENE_TYPE : SEint
 	CREDITS
 };
 
-
-
 ///Brief: Scene -class represents one scene in game, e.g. main menu, levels, credits etc.
 ///It holds entities through EntityComponentManager object and handles scene loading and saving
 ///from/to json files.
 class Scene
 {
+	friend void to_json(nlohmann::json& j, const Scene& s);
 public:
 	///Default constructor. Takes in string for scene name
 	Scene(std::string sceneName, SCENE_TYPE type);
@@ -48,7 +50,7 @@ public:
 
 private:
 	///Name of the scene
-	const std::string m_name;
+	std::string m_name;
 
 	///Type of the scene
 	SCENE_TYPE m_type;
@@ -62,8 +64,8 @@ private:
 
 };
 
-}
-}
+}//namespace priv
+}//namespace se
 
 
 #endif

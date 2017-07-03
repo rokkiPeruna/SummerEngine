@@ -63,6 +63,9 @@ private:
 	/// and pick from names in SceneManager GUI
 	void _loadSceneNames();
 
+	///If scenes.json is empty, create scene structure for json objects
+	void _createSceneStructureToJsonFile();
+
 
 	///GUI
 	///Method for updating gui
