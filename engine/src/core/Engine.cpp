@@ -24,7 +24,6 @@ Engine::Engine()
 	, m_frame_time()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
-	, m_graphics(new priv::Graphics)
 	, m_movementSystem()
 	, m_sceneMgr()
 	, m_messenger()
@@ -45,8 +44,7 @@ void Engine::InitializeEngine()
 	_initAndApplyEngineSettings();
 
 	//Initialize window and graphical context
-	m_window->InitializeWindow();
-	m_graphics->InitializeGraphics(m_window);
+	m_window->Initialize();
 
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());

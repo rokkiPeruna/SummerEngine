@@ -31,7 +31,6 @@ static bool _gui_show_console_window = true;
 #include <core/Messages.h>
 
 #include <core/Window.h>
-#include <core/Graphics.h>
 #include <utility/Typedefs.h>
 
 #include <core/Messenger.h>

@@ -61,8 +61,6 @@ set(CORE_FILES
 	src/core/Engine.cpp
 	include/core/Window.h
 	src/core/Window.cpp	
-	include/core/Graphics.h
-	src/core/Graphics.cpp
 	include/core/imgui_impl_sdl_gl3.h
 	src/core/imgui_impl_sdl_gl3.cpp
 	include/core/Messages.h
