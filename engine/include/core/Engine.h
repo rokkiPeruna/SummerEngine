@@ -42,6 +42,8 @@ static bool _gui_show_console_window = true;
 
 //Managers
 #include <managers/SceneManager.h>
+#include <managers/ResourceManager.h>
+#include <managers/RenderManager.h>
 
 #include <core/Dictionaries.h>
 
@@ -106,7 +108,6 @@ private:
 	Time m_input_coolDown;
 
 	std::shared_ptr<Window> m_window;
-	std::shared_ptr<Graphics> m_graphics;
 
 	///Declared systems and pointers to them
 	MovementSystem m_movementSystem;
@@ -114,6 +115,8 @@ private:
 
 	///Managers
 	SceneManager m_sceneMgr;
+	ResourceManager m_resourceMgr;
+	RenderManager m_renderMgr;
 
 	///Messenger
 	Messenger m_messenger;

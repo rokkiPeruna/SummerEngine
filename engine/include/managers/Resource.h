@@ -61,6 +61,7 @@ public:
 	ImageResource(std::string filepath, std::string name) :Resource(filepath, name) {}
 };
 
+
 }//namespace se
 
 #endif

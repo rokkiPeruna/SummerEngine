@@ -8,6 +8,8 @@
 
 //include external
 #include <SDL2/include/SDL.h>
+#include <OpenGL/GLES3/glew.h>
+
 
 //include se
 #include <utility/Typedefs.h>
@@ -57,10 +59,12 @@ public:
 	///Initialize window 
 
 	//TODO: recive 'nlohmann.json' as a parameter 
-	void InitializeWindow();
+	void Initialize();
 
 	///Get window handle outside of a class
 	SDL_Window* GetWindowHandle();
+
+	SDL_GLContext* GetContextHandle();
 
 	///Window initialization data
 	WindowInitData windowInitData;
@@ -69,6 +73,10 @@ public:
 private:
 	///Handle to window
 	SDL_Window* m_sdl_window_handle;
+
+	///Habdle to context
+	SDL_GLContext m_glContext;
+
 };
 
 }//end namespace priv
