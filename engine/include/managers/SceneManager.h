@@ -4,7 +4,8 @@
 ///STL includes:
 #include <vector>
 #include <string>
-#include <fstream>
+#include <istream>
+#include <ostream>
 
 
 ///SE includes:
@@ -28,7 +29,7 @@ public:
 	void operator=(const SceneManager&) = delete;
 
 	///Init SceneManager
-	void Initialize();
+	void Initialize(std::string filepath_to_json_scenes);
 
 	///Uninit
 	void Uninitialize();
@@ -37,7 +38,7 @@ public:
 	void Update(bool showGUIwindow);
 
 	///Add new scene
-	void AddScene(std::string scenename, SCENE_TYPE type);
+	void AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
 
 	///Save current scene to json
 	void SaveScene(std::string scenename, SCENE_TYPE type, SEint width = 0, SEint heigth = 0);
@@ -50,6 +51,9 @@ public:
 
 
 private:
+	///Relative file path to json folder
+	std::string m_rel_filep_scenes;
+
 	///Scene container
 	std::vector<Scene> m_scenes;
 	///Scene name container

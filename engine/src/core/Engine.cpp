@@ -52,8 +52,20 @@ void Engine::InitializeEngine()
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
-	///Init managers
-	m_sceneMgr.Initialize();
+	///Init managers: //TODO: move to own method
+	auto& fp_itr = j_config.find("relative_file_paths");
+	if (fp_itr != j_config.end())
+	{
+		auto& paths_itr = fp_itr.value();
+		if (paths_itr.find("json_files_file_path") != paths_itr.end())
+		{
+			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"));
+		}
+		else
+		{
+			MessageWarning(Engine_id) << "Could not find relative file path for scenes.json in InitializeEngine()";
+		}
+	}
 
 }
 

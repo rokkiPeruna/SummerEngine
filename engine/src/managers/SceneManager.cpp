@@ -9,7 +9,8 @@ namespace se
 namespace priv
 {
 SceneManager::SceneManager()
-	: m_scenes{}
+	: m_rel_filep_scenes("")
+	, m_scenes{}
 	, m_sceneNames{}
 {
 
@@ -20,9 +21,10 @@ SceneManager::~SceneManager()
 
 }
 
-void SceneManager::Initialize()
+void SceneManager::Initialize(std::string filepath_to_json_scenes)
 {
-	///TODO: Add init of relative path to scenes.json file
+	///Relative path to scenes.json file
+	m_rel_filep_scenes = filepath_to_json_scenes;
 
 	///Load scene names
 	_loadSceneNames();
@@ -42,26 +44,50 @@ void SceneManager::Update(bool showGUIwindow)
 
 }
 
-void SceneManager::AddScene(std::string scenename, SCENE_TYPE type)
+void SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
-	//Check names for possible conflicts
-	//for (auto& s : m_scenes)
-	//{
-	//	if (s.GetName() == scenename)
-	//	{
-	//		//TODO: Send message
-	//		return;
-	//	}
-	//}
-	////If there is no name conflict, add scene to container
-	//m_scenes.emplace_back(Scene(scenename, type));
-	std::cout << "scene " << scenename << " added" << std::endl;
+	//Check for name conflicts
+	for (auto sn : m_sceneNames)
+	{
+		if (scenename == sn)
+		{
+			MessageWarning(SceneMgr_id) << "Scene with name " + scenename + " already exists, scene not added to scenes.json";
+			return;
+		}
+	}
+	//If name is valid, add scene to scenes.json and add it name to m_sceneNames
+	std::ofstream scenes(m_rel_filep_scenes + "scenes.json", std::ios::app);
+	if (scenes.is_open())
+	{
+		//SE_TODO: Make this cleverer
+		std::string type_as_string;
+		if (type == SCENE_TYPE::MENU) type_as_string = "menu";
+		else if (type == SCENE_TYPE::LEVEL) type_as_string = "level";
+		else if (type == SCENE_TYPE::CREDITS) type_as_string = "credits";
+		else type_as_string = "faulty_type";
+
+		nlohmann::json newScene = {
+			{"name", scenename},
+			{"type", type_as_string},
+			{"width", width},
+			{"heigth", heigth},
+			{"entity_ids", 0} //No entities at adding
+		};
+		scenes << std::setw(4) << newScene << std::endl;
+	}
+	else
+	{
+		MessageWarning(SceneMgr_id) << "Failed to open scenes.json in AddScene, scene not added";
+		return;
+	}
+
 
 }
 
 void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
-	//Save scene to json
+	
+
 }
 
 void SceneManager::LoadScene(std::string scenename)
@@ -78,9 +104,7 @@ void SceneManager::_loadSceneNames()
 {
 	///Load all scenes from scenes.json file
 	nlohmann::json loader;
-
-	//TODO: Change this to load with correct relative path name.
-	std::ifstream data("../../engine/json_files/scenes.json");
+	std::ifstream data(m_rel_filep_scenes + "/scenes.json");
 	if (data.is_open())
 	{
 		loader = nlohmann::json::parse(data);
@@ -129,9 +153,9 @@ void SceneManager::_updateGUI()
 		if (scenetype_picker != 0 && scenename != "")
 		{
 			ImGui::Separator();
-			if (ImGui::Button("Save scene"))
+			if (ImGui::Button("Add scene"))
 			{
-				SaveScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
+				AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
 			}
 		}
 
