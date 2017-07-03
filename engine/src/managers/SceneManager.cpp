@@ -1,6 +1,7 @@
 #include <managers/SceneManager.h>
 #include <imgui/imgui.h>
 #include <core/Engine.h>
+#include <core/Messages.h>
 #include <nlohmann_json/json.hpp>
 
 namespace se
@@ -93,7 +94,7 @@ void SceneManager::_loadSceneNames()
 	}
 	else
 	{
-		//TODO: Send Message
+		MessageError(SceneMgr_id) << "Failed to load and parse scenes.json in _loadSceneNames()";
 	}
 }
 

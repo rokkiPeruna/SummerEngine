@@ -69,7 +69,7 @@ public:
 	///Delete copy assignment operator
 	void operator=(const Engine&) = delete;
 
-	// Initialize engine TODO: pass json conifg file as a parameter 
+	// Initialize engine 
 	void InitializeEngine();
 
 	// TODO: everything

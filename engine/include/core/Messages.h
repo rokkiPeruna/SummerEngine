@@ -28,11 +28,13 @@ struct Message
 	}
 	void operator<<(const std::string& message)
 	{
-		priv::Messenger::m_messages.emplace_back(new Message(*this));
+		msg = message;
+		priv::Messenger::m_messages.emplace_back(new Message(sndr, msgtype, msg));
 	}
 	SEuint64 sndr;
 	MESSAGE_TYPE_INTERNAL msgtype;
-	Message(SEuint64 sender, MESSAGE_TYPE_INTERNAL type = MESSAGE_TYPE_INTERNAL::_NO_TYPE) : sndr(sender), msgtype(type) {}
+	std::string msg;
+	Message(SEuint64 sender, MESSAGE_TYPE_INTERNAL type = MESSAGE_TYPE_INTERNAL::_NO_TYPE, std::string message = "") : sndr(sender), msgtype(type), msg(message) {}
 };
 
 
@@ -79,12 +81,14 @@ struct DebugMessage
 	}
 	void operator<<(const std::string& message)
 	{
-		priv::Messenger::m_debugMessages.emplace_back(new DebugMessage(*this));
+		msg = message;
+		priv::Messenger::m_debugMessages.emplace_back(new DebugMessage(sndr, msgtype, msg));
 	}
 
 	SEuint64 sndr;
 	MESSAGE_TYPE_INTERNAL msgtype;
-	DebugMessage(SEuint64 sender, MESSAGE_TYPE_INTERNAL type = MESSAGE_TYPE_INTERNAL::_NO_TYPE) : sndr(sender), msgtype(type) {}
+	std::string msg;
+	DebugMessage(SEuint64 sender, MESSAGE_TYPE_INTERNAL type = MESSAGE_TYPE_INTERNAL::_NO_TYPE, std::string message = "") : sndr(sender), msgtype(type), msg(message){}
 };
 
 

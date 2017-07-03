@@ -46,6 +46,9 @@ void Engine::InitializeEngine()
 	//Initialize window and graphical context
 	m_window->Initialize();
 
+	///Init messenger
+	m_messenger.Initialize();
+
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
@@ -113,9 +116,9 @@ void Engine::EngineUpdate()
 		m_movementSystem.Update(deltaTime);
 
 
-		
+
 		//Engine window in editor //TODO: Move to own function
-		if(_gui_show_main_window)
+		if (_gui_show_main_window)
 		{
 			ImGui::SetWindowSize(ImVec2(500, 300), ImGuiSetCond_FirstUseEver);
 			ImGui::Begin("Engine");
@@ -133,9 +136,8 @@ void Engine::EngineUpdate()
 		///Update managers
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
 
-		
 		///Messenger should be last to update before render
-		m_messenger.PrintMessages(_messageLogType_console, true);
+		m_messenger.PrintMessages(_messageLogType_console);
 
 		// Rendering
 		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
@@ -153,7 +155,6 @@ void Engine::EngineUpdate()
 void Engine::_initJConfigObject()
 {
 	//Read engine_config.json file and set engine settings accordingly
-	//TODO: set folder paths
 	std::ifstream data(REL_PATH_TO_ENGINE_CONFIG);
 	if (data.is_open())
 	{
@@ -169,24 +170,31 @@ void Engine::_initJConfigObject()
 
 void Engine::_initAndApplyEngineSettings()
 {
-	auto& windata = m_window->windowInitData;
-	//Send window size data to Window
-	if (j_config.find("window_name") != j_config.end())
-		//windata.name = j_config.at("window_name");
-	if (j_config.find("window_width") != j_config.end())
-		windata.width = j_config.at("window_width");
-	if (j_config.find("window_heigth") != j_config.end())
-		windata.heigth = j_config.at("window_heigth");
-	if (j_config.find("window_pos_x") != j_config.end())
-		windata.pos_x = j_config.at("window_pos_x");
-	if (j_config.find("window_pos_y") != j_config.end())
-		windata.pos_y = j_config.at("window_pos_y");
-	if (j_config.find("window_centered") != j_config.end())
-		windata.centered = j_config.at("window_centered");
-	if (j_config.find("window_fullscreen") != j_config.end() && j_config.at("window_fullscreen") != 0)
-		windata.sdl_settings_mask += SDL_WINDOW_FULLSCREEN;
-	if (j_config.find("window_borderless") != j_config.end() && j_config.at("window_borderless") != 0)
-		windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
+	MessageInfo(Engine_id) << "Applying window settings..";
+	//Initialize window settings
+	auto& winset_json = j_config.find("window_settings");
+	if (winset_json != j_config.end())
+	{
+		auto& stngs = winset_json.value();
+		auto& windata = m_window->windowInitData;
+		//Send window size data to Window
+		if (stngs.find("window_name") != stngs.end())
+			windata.name = stngs.at("window_name");
+		if (stngs.find("window_width") != stngs.end())
+			windata.width = stngs.at("window_width");
+		if (stngs.find("window_heigth") != stngs.end())
+			windata.heigth = stngs.at("window_heigth");
+		if (stngs.find("window_pos_x") != stngs.end())
+			windata.pos_x = stngs.at("window_pos_x");
+		if (stngs.find("window_pos_y") != stngs.end())
+			windata.pos_y = stngs.at("window_pos_y");
+		if (stngs.find("window_centered") != stngs.end())
+			windata.centered = stngs.at("window_centered");
+		if (stngs.find("window_fullscreen") != stngs.end() && stngs.at("window_fullscreen") != 0)
+			windata.sdl_settings_mask += SDL_WINDOW_FULLSCREEN;
+		if (stngs.find("window_borderless") != stngs.end() && stngs.at("window_borderless") != 0)
+			windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
+	}
 
 }
 
