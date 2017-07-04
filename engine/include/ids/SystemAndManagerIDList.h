@@ -1,6 +1,9 @@
 #ifndef SE_SYSTEM_AND_MANAGER_ID_LIST_H
 #define SE_SYSTEM_AND_MANAGER_ID_LIST_H
 
+//STL includes:
+#include <map>
+#include <string>
 
 //SE includes:
 #include <utility/Typedefs.h>
@@ -40,8 +43,23 @@ const SEuint64 dummy_id_mgrsys_25 = 0x2000000;
 const SEuint64 dummy_id_mgrsys_26 = 0x4000000;
 const SEuint64 dummy_id_mgrsys_27 = 0x8000000;
 
+namespace priv
+{
+///Brief: std::map containing id as key and value as const string naming the system or manager, etc.
+///Update this as you add more systems, managers, etc.
+static std::map<SEuint64, std::string> sys_mgr_id_to_name
+{
+	{ _nullSysMgr_id, "" },
+	{ ResourceMgr_id, "resource_mgr" },
+	{ EntityComponentMgr_id, "entitycomp_mgr" },
+	{ RenderMgr_id, "render_mgr" },
+	{ SceneMgr_id, "scene_mgr" },
+	{ MovementSys_id, "movement_sys" },
+	{ Engine_id, "engine" }
+};
 
 
+}//namespace priv
 }//namespace se
 
 #endif

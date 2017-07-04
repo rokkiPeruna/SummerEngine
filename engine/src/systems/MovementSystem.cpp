@@ -1,5 +1,7 @@
 #include <systems/MovementSystem.h>
+#include <core/Messages.h>
 #include <imgui/imgui.h>
+
 
 namespace se
 {
@@ -38,7 +40,7 @@ CPosition* MovementSystem::_createCPositionComponent(CPosition& component)
 		m_cpositions_map.emplace(component.ownerID, &m_cpositions.back());
 		return &m_cpositions.back();
 	}
-	//TODO: Send message to log
+	MessageWarning(MovementSys_id) << "Failed to create CPosition component with owner id: " + component.ownerID;
 	return nullptr;
 }
 CVelocity* MovementSystem::_createCVelocityComponent(CVelocity& component)
@@ -49,7 +51,7 @@ CVelocity* MovementSystem::_createCVelocityComponent(CVelocity& component)
 		m_cvelocities_map.emplace(component.ownerID, &m_cvelocities.back());
 		return &m_cvelocities.back();
 	}
-	//TODO: Send message to log
+	MessageWarning(MovementSys_id) << "Failed to create CVelocity component with owner id: " + component.ownerID;
 	return nullptr;
 }
 

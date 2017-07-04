@@ -14,9 +14,12 @@ ResourceManager::~ResourceManager()
 
 }
 
-void ResourceManager::Initialize()
+//Recived path is where the actual shader files are.
+void ResourceManager::Initialize(const std::string sourcePath)
 {
 	//TODO: Do initialization for starting scene resources
+	_initializeShaders(sourcePath);
+	std::cout << "Hello world " << std::endl;
 	
 }
 
@@ -56,10 +59,127 @@ std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string file
 			MessageType::Error,
 			AttentionLevel::MEDIUM
 		);*/
-		std::cout << "Was not able to open file " + name << std::endl;
+		MessageError(ResourceMgr_id) << "Was not able to open file " + filepath + name;
 		return nullptr;
 	}
 
+}
+
+void ResourceManager::_initializeShaders(const std::string path)
+{
+	//First we should determine how many shaders must be created and for that we need the 
+	//data shader_conifg_json
+	_initJConfigObject();
+
+	//The json data is now stored in json_conif and will be read one by one into m_shaderProgramContainer
+	for (auto& allShaders = json_config["shader_data"].begin(); allShaders != json_config["shader_data"].end(); ++allShaders)
+	{
+		auto& spesificShader = allShaders.value();
+	//	m_shaderProgramContainer.emplace(allShaders.key(), ShaderResource(path, allShaders.key(), spesificShader.find("vertex_shader").value(), spesificShader.find("fragment_shader").value()));
+		
+		_createShaders(path, allShaders.key(), spesificShader.find("vertex_shader").value(), spesificShader.find("fragment_shader").value());
+
+		//Spesicid shader value will be the m_shaderProgramContainer name (string) henc this
+		// is the new shader.. 1st parameter is vertex, shader 2nd parameter is the fragment shader
+	}
+
+}
+
+void ResourceManager::_createShaders(const std::string path, const std::string name, const std::string vertexName, const std::string fragmentName)
+{
+	SEuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	SEuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	std::shared_ptr<TextResource>(vertexData) = LoadTextResource(path + vertexName, vertexName);
+	if (vertexData == nullptr)
+	{		
+		//Error message sohuld be sent by Load Texture Resource function. In case of failure
+		//this one has to realease memory and return.
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		
+		return;
+	}
+	// For debug delete after no longer needed
+	MessageInfo(ResourceMgr_id) << "Compiling " + vertexName;
+
+	std::string strData = vertexData->GetTextData();
+	const char* charData = strData.c_str();
+	
+	glShaderSource(vertexShader, 1, &charData, NULL);
+	glCompileShader(vertexShader);
+
+	if (_compileErrors(vertexShader))
+	{
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		return;
+	}
+
+	std::shared_ptr<TextResource>(fragmentData) = LoadTextResource(path + fragmentName, fragmentName);
+
+	if (fragmentData == nullptr)
+	{
+		//Error message sohuld be sent by Load Texture Resource function. In case of failure
+		//this one has to realease memory and return.
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		
+		return;
+	}
+
+	MessageInfo(ResourceMgr_id) << "Compiling " + fragmentName;
+
+	strData = fragmentData->GetTextData();
+	charData = strData.c_str();
+
+	glShaderSource(fragmentShader, 1, &charData, NULL);
+	glCompileShader(fragmentShader);
+
+	if (_compileErrors(fragmentShader))
+	{
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		return;
+	}
+
+	SEuint shaderProgramId = glCreateProgram();
+
+	glAttachShader(shaderProgramId, vertexShader);
+	glAttachShader(shaderProgramId, fragmentShader);
+
+	glLinkProgram(shaderProgramId);
+	
+	if (_compileErrors(shaderProgramId))
+	{
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+
+		return;
+	}
+
+	glDetachShader(shaderProgramId, vertexShader);
+	glDetachShader(shaderProgramId, fragmentShader);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	m_shaderProgramContainer.emplace(name, shaderProgramId);
+}
+
+void ResourceManager::_initJConfigObject()
+{
+	//Read shader_config.json file and store data into a single string
+	std::ifstream data(REL_PATH_TO_SHADER_CONFIG);
+	if (data.is_open())
+	{
+		json_config = nlohmann::json::parse(data);
+		data.close();
+	}
+	else
+	{
+		MessageError(ResourceMgr_id) << "Failed to initialize json object in _initJConfigObject()";
+	}
 }
 
 SEuint ResourceManager::LoadShaders()
@@ -154,7 +274,8 @@ SEbool ResourceManager::_compileErrors(SEuint shader)
 	{
 		std::vector<char> shaderErrorMessage(errLog + 1);
 		glGetShaderInfoLog(shader, errLog, NULL, &shaderErrorMessage[0]);
-		std::cout << "Error at compiling " << shader << "\n" << &shaderErrorMessage[0] << std::endl;
+		MessageError(ResourceMgr_id) << "Error at compiling " + shader;
+		MessageError(ResourceMgr_id) << &shaderErrorMessage[0];
 		return true;
 	}
 	return false;

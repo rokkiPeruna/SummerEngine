@@ -1,0 +1,15 @@
+{
+"shader_data" : 	
+	{
+		"defaultShader" :
+		{
+			"vertex_shader"		: "defaultShader.vert",
+			"fragment_shader"	: "defaultShader.frag"
+		},
+		"testShader" :
+		{
+			"vertex_shader"		: "test.vert",
+			"fragment_shader"	: "test.frag"
+		}	
+	}
+}

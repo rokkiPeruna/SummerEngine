@@ -1,13 +1,22 @@
 {
-  "window_name": "SE_editor",
-  "window_heigth": 800,
-  "window_width": 1200,
-  "window_centered": true,
-  "window_pos_x": 0,
-  "window_pos_y": 0,
-  "window_fullscreen": 0,
-  "window_borderless": 0,
-  "clear_color_r": 0.5,
-  "clear_color_g": 0.2,
-  "clear_color_b": 0.2
+  "relative_file_paths": {
+	"shader_file_path": "../../engine/shaders/",
+    "resources_file_path": "",
+    "json_files_file_path": "../../engine/json_files/"
+  },
+  "window_settings": {
+    "window_name": "SE_editor",
+    "window_heigth": 800,
+    "window_width": 1200,
+    "window_centered": true,
+    "window_pos_x": 0,
+    "window_pos_y": 0,
+    "window_fullscreen": 0,
+    "window_borderless": 0
+  },
+  "renderer_settings": {
+    "clear_color_r": 0.5,
+    "clear_color_g": 0.2,
+    "clear_color_b": 0.2
+  }
 }
