@@ -137,12 +137,11 @@ void Engine::EngineUpdate()
 			ImGui::Text("SE Engine, %s");
 			ImGui::Separator();
 			ImGui::ColorEdit3("clear color", (float*)&clear_color);
-			if (ImGui::Button("Scene manager"))
+			if (ImGui::Button("Scenes"))
 			{
 				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
 			}
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
 		}
 
 		///Update managers
@@ -150,6 +149,9 @@ void Engine::EngineUpdate()
 
 		///Messenger should be last to update before render
 		m_messenger.PrintMessages(_messageLogType_console);
+
+		//TODO: This is test, can we make gui logic elsewhere and still show in the main window(Engine)
+		ImGui::End();
 
 		// Rendering
 		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);

@@ -4,6 +4,7 @@
 ///STL includes:
 #include <vector>
 #include <map>
+#include <set>
 #include <string>
 #include <istream>
 #include <ostream>
@@ -74,12 +75,14 @@ private:
 	///GUI
 	///Method for updating gui
 	void _updateGUI();
+	void _handlePopups();
 
 	///GUI variables
 	SEfloat m_gui_width;
 	SEfloat m_gui_heigth;
 	bool m_gui_sceneAdded;
 	bool m_gui_addSceneNameConflict;
+	bool m_gui_sceneAlreadyLoaded;
 
 };
 }//namespace priv

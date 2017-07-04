@@ -30,12 +30,13 @@ class Scene
 {
 public:
 	///Default constructor. Takes in string for scene name
-	Scene(std::string sceneName, SCENE_TYPE type);
+	Scene(std::string sceneName, SCENE_TYPE type, SEint id, SEuint width, SEuint heigth);
 	///Destructor
 	~Scene();
-	///No copies needed?
-	//Scene(const Scene&) = delete;
-	//void operator=(const Scene&) = delete;
+	///Copy constructor
+	Scene(const Scene&);
+	///Deleted assign operator
+	void operator=(const Scene&) = delete;
 
 	///Load resources to current scene
 
@@ -46,6 +47,8 @@ public:
 	std::string GetName();
 	SCENE_TYPE GetType();
 	SEint GetID();
+	SEuint GetWidth();
+	SEuint GetHeigth();
 
 private:
 	///Name of the scene
@@ -57,9 +60,9 @@ private:
 	///Id as SEint
 	SEint m_id;
 
-	///EntityComponentManager object
-	EntityComponentManager m_ecm;
-
+	///Width and heigth
+	SEuint m_width;
+	SEuint m_heigth;
 
 };
 

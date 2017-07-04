@@ -1,0 +1,18 @@
+{
+    "scenes": {
+        "kentta": {
+            "heigth": 89,
+            "id": 1,
+            "name": "kentta",
+            "type": "level",
+            "width": 44
+        },
+        "starting_level": {
+            "heigth": 24,
+            "id": 2,
+            "name": "starting_level",
+            "type": "level",
+            "width": 24
+        }
+    }
+}

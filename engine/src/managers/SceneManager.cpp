@@ -17,6 +17,7 @@ SceneManager::SceneManager()
 	, m_gui_heigth(300.f)
 	, m_gui_sceneAdded(false)
 	, m_gui_addSceneNameConflict(false)
+	, m_gui_sceneAlreadyLoaded(false)
 {
 
 }
@@ -102,7 +103,7 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 			{"id", ++m_curr_largest_sceneid} //Increment m_curr_largest_sceneid before adding it to the new scene!!
 	};
 	//Open scenes.json for writing with ios::trunc flag so that the main_obj that now contains all old scenes and the newly added scene, overwrites
-	//the whole json file. //TODO: This can improved a lot
+	//the whole json file. //TODO: This can improved a lot, currently we clear the whole file and rewrite it again
 	std::ofstream write(m_rel_filep_scenes + "scenes.json", std::ios::out | std::ios::trunc);
 	if (!write.is_open())
 	{
@@ -124,7 +125,58 @@ void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width
 
 void SceneManager::LoadScene(std::string scenename)
 {
+	///Check if scene with that id is already loaded to m_scenes
+	for (auto& s : m_scenes)
+	{
+		if (s.GetName() == scenename)
+		{
+			MessageInfo(SceneMgr_id) << "Scene already loaded to memory!";
+			m_gui_sceneAlreadyLoaded = true;
+			return;
+		}
+	}
+	//Create Scene object
+	std::ifstream data(m_rel_filep_scenes + "scenes.json");
+	if (!data.is_open())
+	{
+		MessageWarning(SceneMgr_id) << "Could not open scenes.json for reading in LoadScene(). Returning!";
+		return;
+	}
+	nlohmann::json main_obj = nlohmann::json::parse(data);
+	data.close();
+	//Check that scenes.json has "scenes" object
+	if (main_obj.find("scenes") == main_obj.end())
+	{
+		MessageWarning(SceneMgr_id) << "\"scenes\" object not found in scenes.json in LoadScene(). Scene not loaded to memory, returning.";
+		return;
+	}
+	//Take itr to "scenes" object
+	auto& scenes_obj = main_obj.at("scenes");
 
+	//Check that scene with parameter "scenename" can be found
+	if (scenes_obj.find(scenename) == scenes_obj.end())
+	{
+		MessageWarning(SceneMgr_id) << "Could not find scene with name " + scenename + " in LoadScene(). Scene not loaded to memory, returning";
+		return;
+	}
+	auto& loaded_scene_obj = scenes_obj.find(scenename);
+	auto& values = loaded_scene_obj.value();
+	//Fetch values from json object and emplace scene to m_scenes
+	std::string tmpname = values.at("name");
+	
+	//SE_TODO: Make this cleverer?
+	SCENE_TYPE tmptype;
+	std::string type_as_string = values.at("type");
+	if (type_as_string == "menu") tmptype = SCENE_TYPE::MENU;
+	else if (type_as_string == "level") tmptype = SCENE_TYPE::LEVEL;
+	else if (type_as_string == "credits") tmptype = SCENE_TYPE::CREDITS;
+	else if (type_as_string == "faulty") tmptype = SCENE_TYPE::FAULTY;
+
+	SEint tmpid = values.at("id");
+	SEuint tmpwidth = values.at("width");
+	SEuint tmpheigth = values.at("heigth");
+
+	m_scenes.emplace_back(Scene(tmpname, tmptype, tmpid, tmpwidth, tmpheigth));
 }
 
 void SceneManager::DeleteScene(std::string scenename)
@@ -235,17 +287,39 @@ void SceneManager::_updateGUI()
 	if (ImGui::CollapsingHeader("Load scene"))
 	{
 		ImGui::Separator();
-		ImGui::Text("Scene list");
-		//Add scene names to list to choose from
-		std::vector<bool> selected;
-		for (auto sn : m_sceneNamesAndIDs)
+		if (ImGui::TreeNode("Scene list"))
 		{
-			selected.emplace_back(false);
-			ImGui::Selectable(sn.first.c_str(), selected.back());
+			ImGui::Separator();
+			//Add scene names to list to choose from
+			for (auto sn : m_sceneNamesAndIDs)
+			{
+				ImGui::Bullet();
+				if (ImGui::SmallButton(sn.first.c_str()))
+				{
+					LoadScene(sn.first);
+				}
+			}
+			//Check if scenename is double clicked
+			//for (SEint i = 0; i < selected.size(); i++)
+			//{
+			//	if (ImGui::IsMouseDoubleClicked(i))
+			//	{
+			//		Message(SceneMgr_id) << "Double click!";
+			//
+			//	}
+			//}
+			ImGui::TreePop();
 		}
 	}
 
 	//Handle pop ups
+	_handlePopups();
+
+	ImGui::End();
+}
+
+void SceneManager::_handlePopups()
+{
 	if (m_gui_addSceneNameConflict)
 	{
 		ImGui::OpenPopup("Name conflict!");
@@ -276,9 +350,21 @@ void SceneManager::_updateGUI()
 		}
 		ImGui::EndPopup();
 	}
-
-
-	ImGui::End();
+	if (m_gui_sceneAlreadyLoaded)
+	{
+		ImGui::OpenPopup("");
+		if (ImGui::BeginPopupModal("", &m_gui_sceneAlreadyLoaded, ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+		{
+			ImGui::Separator();
+			ImGui::Text("Scene already loaded to memory!");
+			if (ImGui::Button("OK"))
+			{
+				m_gui_sceneAlreadyLoaded = false;
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		ImGui::EndPopup();
+	}
 }
 
 }//namespace priv
