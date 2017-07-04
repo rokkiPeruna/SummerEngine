@@ -3,6 +3,7 @@
 
 ///STL includes:
 #include <vector>
+#include <map>
 #include <string>
 #include <istream>
 #include <ostream>
@@ -38,7 +39,7 @@ public:
 	void Update(bool showGUIwindow);
 
 	///Add new scene
-	void AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
+	bool AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
 
 	///Save current scene to json
 	void SaveScene(std::string scenename, SCENE_TYPE type, SEint width = 0, SEint heigth = 0);
@@ -57,11 +58,14 @@ private:
 	///Scene container
 	std::vector<Scene> m_scenes;
 	///Scene name container
-	std::vector<std::string> m_sceneNames;
+	std::map<std::string, SEuint> m_sceneNamesAndIDs;
+	///Current largest scene id found
+	SEuint m_curr_largest_sceneid;
+	
 
 	///Loads scene names from scenes.json so that user can see
-	/// and pick from names in SceneManager GUI
-	void _loadSceneNames();
+	/// and pick from names in SceneManager GUI. Also load scene ids to avoid id conflicts
+	void _loadSceneNamesAndIDs();
 
 	///If scenes.json is empty, create scene structure for json objects
 	void _createSceneStructureToJsonFile();
@@ -70,6 +74,12 @@ private:
 	///GUI
 	///Method for updating gui
 	void _updateGUI();
+
+	///GUI variables
+	SEfloat m_gui_width;
+	SEfloat m_gui_heigth;
+	bool m_gui_sceneAdded;
+	bool m_gui_addSceneNameConflict;
 
 };
 }//namespace priv

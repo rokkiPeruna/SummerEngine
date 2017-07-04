@@ -28,7 +28,6 @@ enum class SCENE_TYPE : SEint
 ///from/to json files.
 class Scene
 {
-	friend void to_json(nlohmann::json& j, const Scene& s);
 public:
 	///Default constructor. Takes in string for scene name
 	Scene(std::string sceneName, SCENE_TYPE type);

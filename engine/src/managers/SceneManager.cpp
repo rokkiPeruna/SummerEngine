@@ -11,7 +11,12 @@ namespace priv
 SceneManager::SceneManager()
 	: m_rel_filep_scenes("")
 	, m_scenes{}
-	, m_sceneNames{}
+	, m_sceneNamesAndIDs{}
+	, m_curr_largest_sceneid(0)
+	, m_gui_width(300.f)
+	, m_gui_heigth(300.f)
+	, m_gui_sceneAdded(false)
+	, m_gui_addSceneNameConflict(false)
 {
 
 }
@@ -27,7 +32,7 @@ void SceneManager::Initialize(std::string filepath_to_json_scenes)
 	m_rel_filep_scenes = filepath_to_json_scenes;
 
 	///Load scene names
-	_loadSceneNames();
+	_loadSceneNamesAndIDs();
 }
 
 void SceneManager::Uninitialize()
@@ -45,67 +50,70 @@ void SceneManager::Update(bool showGUIwindow)
 }
 
 
-void SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
+bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
 	//Check for name conflicts
-	for (auto sn : m_sceneNames)
+	if (m_sceneNamesAndIDs.find(scenename) != m_sceneNamesAndIDs.end())
 	{
-		if (scenename == sn)
-		{
-			MessageWarning(SceneMgr_id) << "Scene with name " + scenename + " already exists, scene not added to scenes.json";
-			ImGui::BeginPopupContextWindow();
-			ImGui::Text("Scenename already in use!");
-			ImGui::EndPopup();
-			return;
-		}
+		MessageWarning(SceneMgr_id) << "Scene with name " + scenename + " already exists, scene not added to scenes.json";
+		m_gui_addSceneNameConflict = true;
+		return false;
 	}
 	//If name is valid, add scene to scenes.json and add it's name to m_sceneNames
 	std::ifstream scenes(m_rel_filep_scenes + "scenes.json");
-	if (scenes.is_open())
+	if (!scenes.is_open())
 	{
-		//SE_TODO: Make this cleverer?
-		std::string type_as_string;
-		if (type == SCENE_TYPE::MENU) type_as_string = "menu";
-		else if (type == SCENE_TYPE::LEVEL) type_as_string = "level";
-		else if (type == SCENE_TYPE::CREDITS) type_as_string = "credits";
-		else type_as_string = "faulty_type";
-
-		auto& mainobj = nlohmann::json::parse(scenes);
-		scenes.close();
-		auto& s_obj = mainobj.find("scenes");
-		if (s_obj != mainobj.end())
-		{
-			const char* tmpname = scenename.c_str();
-			s_obj.value().object(
-			{
-				{tmpname,
-				{
-					{"name", scenename},
-					{"type", type_as_string},
-					{"width", width},
-					{"heigth", heigth},
-					{"entity_ids", 0}//No entities at adding
-				}
-				}
-			}
-			);
-			std::ofstream write(m_rel_filep_scenes + "scenes.json", std::ios::app);
-			if (write.is_open())
-			{
-				
-				write << mainobj << std::endl;
-			}
-		}
-
-		
+		MessageWarning(SceneMgr_id) << "Failed to open scenes.json in AddScene(), scene not added, returning..";
+		return false;
 	}
-	else
+	//SE_TODO: Make this cleverer?
+	std::string type_as_string;
+	if (type == SCENE_TYPE::MENU) type_as_string = "menu";
+	else if (type == SCENE_TYPE::LEVEL) type_as_string = "level";
+	else if (type == SCENE_TYPE::CREDITS) type_as_string = "credits";
+	else type_as_string = "faulty_type";
+
+	auto& main_obj = nlohmann::json::parse(scenes);
+	scenes.close();
+	auto& scenes_obj = main_obj.find("scenes");
+	if (scenes_obj == main_obj.end())
 	{
 		MessageWarning(SceneMgr_id) << "Failed to open scenes.json in AddScene, scene not added";
-		return;
+		return false;
 	}
 
-
+	const char* tmpname = scenename.c_str();
+	//Push empty object with scenename
+	scenes_obj.value().push_back({ tmpname, {} });
+	//Take iterator to the newly created scene object
+	auto& curr_scene_obj = scenes_obj.value().find(tmpname);
+	if (curr_scene_obj == scenes_obj.value().end())
+	{
+		MessageWarning(SceneMgr_id) << "Failed to find current scene object in scenes.json, scene name: " + scenename + ". Returning..";
+		return false;
+	}
+	//Add keys and values to the newly created object
+	curr_scene_obj.value() =
+	{
+			{"name", scenename},
+			{"type", type_as_string},
+			{"width", width},
+			{"heigth", heigth},
+			{"id", ++m_curr_largest_sceneid} //Increment m_curr_largest_sceneid before adding it to the new scene!!
+	};
+	//Open scenes.json for writing with ios::trunc flag so that the main_obj that now contains all old scenes and the newly added scene, overwrites
+	//the whole json file. //TODO: This can improved a lot
+	std::ofstream write(m_rel_filep_scenes + "scenes.json", std::ios::out | std::ios::trunc);
+	if (!write.is_open())
+	{
+		MessageWarning(SceneMgr_id) << "Failed to open scenes.json for writing in AddScene(). Scene not added, returning..";
+		return false;
+	}
+	//Write the main_obj (prettified) to the file and add scenename and id to m_sceneNamesAndIDs
+	write << std::setw(4) << main_obj << std::endl;
+	m_sceneNamesAndIDs.emplace(tmpname, m_curr_largest_sceneid);
+	m_gui_sceneAdded = true;
+	return true;
 }
 
 void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
@@ -124,7 +132,7 @@ void SceneManager::DeleteScene(std::string scenename)
 
 }
 
-void SceneManager::_loadSceneNames()
+void SceneManager::_loadSceneNamesAndIDs()
 {
 	///Load all scenes from scenes.json file
 	nlohmann::json loader;
@@ -138,19 +146,32 @@ void SceneManager::_loadSceneNames()
 			_createSceneStructureToJsonFile();
 			return;
 		}
-
 		loader = nlohmann::json::parse(data);
 		data.close();
-
+		//Be sure that "scenes" object exist
 		if (loader.find("scenes") != loader.end())
+			//Loop all scenes, take their name and id to container
 			for (auto itr = loader["scenes"].begin(); itr != loader["scenes"].end(); itr++)
 			{
-				m_sceneNames.emplace_back(itr.key());
+				//Find the "id" value
+				if (itr.value().find("id") != itr.value().end())
+				{
+					m_sceneNamesAndIDs.emplace(itr.key(), itr.value().at("id"));
+					//Check if id value is larger than current m_curr_largest_sceneid
+					SEuint tmp = itr.value().at("id");
+					if (tmp > m_curr_largest_sceneid)
+						m_curr_largest_sceneid = tmp;
+				}
+				//If not found, something is wrong with the scene object
+				else
+				{
+					MessageWarning(SceneMgr_id) << "Scene in scenes.json found with no valid \"id\" value!";
+				}
 			}
 	}
 	else
 	{
-		MessageError(SceneMgr_id) << "Failed to load and parse scenes.json in _loadSceneNames()";
+		MessageError(SceneMgr_id) << "Failed to load and parse scenes.json in loadSceneNamesAndIDs()";
 	}
 }
 
@@ -173,9 +194,10 @@ void SceneManager::_createSceneStructureToJsonFile()
 
 void SceneManager::_updateGUI()
 {
-
-	ImGui::SetNextWindowSize(ImVec2(300.f, 300.f), ImGuiSetCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(m_gui_width, m_gui_heigth), ImGuiSetCond_Appearing);
 	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
+
+	//Create new scene
 	if (ImGui::CollapsingHeader("Create scene"))
 	{
 		ImGui::Text("Scene name:");
@@ -204,7 +226,7 @@ void SceneManager::_updateGUI()
 			ImGui::Separator();
 			if (ImGui::Button("Add scene"))
 			{
-				AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
+				m_gui_sceneAdded = AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
 			}
 		}
 
@@ -216,14 +238,47 @@ void SceneManager::_updateGUI()
 		ImGui::Text("Scene list");
 		//Add scene names to list to choose from
 		std::vector<bool> selected;
-		for (auto sn : m_sceneNames)
+		for (auto sn : m_sceneNamesAndIDs)
 		{
 			selected.emplace_back(false);
-			ImGui::Selectable(sn.c_str(), selected.back());
+			ImGui::Selectable(sn.first.c_str(), selected.back());
 		}
 	}
-	ImGui::End();
 
+	//Handle pop ups
+	if (m_gui_addSceneNameConflict)
+	{
+		ImGui::OpenPopup("Name conflict!");
+		if (ImGui::BeginPopupModal("Name conflict!", &m_gui_addSceneNameConflict, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+		{
+			ImGui::Separator();
+			ImGui::Text("Scene with given name already exists!\nChange the name.");
+			if (ImGui::Button("OK"))
+			{
+				m_gui_addSceneNameConflict = false;
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		ImGui::EndPopup();
+	}
+	if (m_gui_sceneAdded)
+	{
+		ImGui::OpenPopup("");
+		if (ImGui::BeginPopupModal("", &m_gui_sceneAdded, ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+		{
+			ImGui::Separator();
+			ImGui::Text("Scene added successfully!");
+			if (ImGui::Button("OK"))
+			{
+				m_gui_sceneAdded = false;
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		ImGui::EndPopup();
+	}
+
+
+	ImGui::End();
 }
 
 }//namespace priv
