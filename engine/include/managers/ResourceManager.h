@@ -51,8 +51,7 @@ public:
 	///with it's name: textResources.at("resourceName")
 	std::map<std::string, std::shared_ptr<TextResource>> textResources;
 
-	SEuint LoadShaders();
-	
+	SEuint GetShaderProgram(std::string name);
 
 private:
 

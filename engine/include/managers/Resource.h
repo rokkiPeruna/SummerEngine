@@ -63,24 +63,24 @@ public:
 };
 
 
-class ShaderResource : public Resource
-{
-public:
-	
-	ShaderResource(std::string filepath, std::string shaderProgramName, std::string vertexShaderName, std::string fragmentShaderName)
-		: Resource(filepath, shaderProgramName)
-		, m_vertexShaderName(vertexShaderName)
-		, m_fragmentShaderName(fragmentShaderName)
-	{
-
-	}
-
-	std::string m_vertexShaderName;
-	std::string m_fragmentShaderName;
-
-private:
-
-};
+//class ShaderResource : public Resource
+//{
+//public:
+//	
+//	ShaderResource(std::string filepath, std::string shaderProgramName, std::string vertexShaderName, std::string fragmentShaderName)
+//		: Resource(filepath, shaderProgramName)
+//		, m_vertexShaderName(vertexShaderName)
+//		, m_fragmentShaderName(fragmentShaderName)
+//	{
+//
+//	}
+//
+//	std::string m_vertexShaderName;
+//	std::string m_fragmentShaderName;
+//
+//private:
+//
+//};
 
 
 }//namespace se

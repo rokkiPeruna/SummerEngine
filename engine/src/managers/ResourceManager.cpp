@@ -4,6 +4,7 @@ namespace se
 {
 namespace priv
 {
+
 ResourceManager::ResourceManager() 
 {
 
@@ -17,9 +18,7 @@ ResourceManager::~ResourceManager()
 //Recived path is where the actual shader files are.
 void ResourceManager::Initialize(const std::string sourcePath)
 {
-	//TODO: Do initialization for starting scene resources
 	_initializeShaders(sourcePath);
-	std::cout << "Hello world " << std::endl;
 	
 }
 
@@ -31,6 +30,19 @@ void ResourceManager::Uninitialize()
 void ResourceManager::Update()
 {
 	//TODO: If update is invoked, check if scene has changed and/or resources must be loaded
+}
+
+SEuint ResourceManager::GetShaderProgram(std::string name)
+{
+	std::map<std::string, SEuint>::iterator itr = m_shaderProgramContainer.find(name);
+	if (itr != m_shaderProgramContainer.end())
+	{
+		return itr->second;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string filepath, std::string name)
@@ -182,85 +194,6 @@ void ResourceManager::_initJConfigObject()
 	}
 }
 
-SEuint ResourceManager::LoadShaders()
-{
-	SEuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	SEuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-
-	std::shared_ptr<TextResource>(vertexData) = LoadTextResource("../../engine/shaders/defaultShader.vert", "defaultShader.vert");
-	if (vertexData == nullptr)
-	{
-		// TODO : change to our own messager log
-		std::cout << "Unableable to load vertex shader data" << std::endl;
-	}
-	// TODO : change to our own messager log
-	std::cout << "Compiling vertex shader " << std::endl;
-	
-	
-	 std::string strData = vertexData->GetTextData();
-	 const char* charData = strData.c_str();
-
-	glShaderSource(vertexShader, 1, &charData, NULL);
-	glCompileShader(vertexShader);
-
-	
-	if (_compileErrors(vertexShader))
-	{
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
-
-		return false;
-	}
-
-	std::shared_ptr<TextResource>(fragmentData) = LoadTextResource("../../engine/shaders/defaultShader.frag", "defaultShader.frag");
-	if (fragmentData == nullptr)
-	{
-		// TODO : change to our own messager log
-		std::cout << "Unableable to load fragment shader data" << std::endl;
-	}
-	// TODO : change to our own messager log
-	std::cout << "Compiling fragment shader " << std::endl;
-
-	strData = fragmentData->GetTextData();
-	charData = strData.c_str();
-
-	glShaderSource(fragmentShader, 1, &charData, NULL);
-	glCompileShader(fragmentShader);
-
-	if (_compileErrors(fragmentShader))
-	{
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
-		
-		return false;
-	}
-
-	std::cout << "Creating shader program " << std::endl;
-	SEuint shaderProgram = glCreateProgram();
-
-	std::cout << "Attaching shader to porgram " << std::endl;
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-
-	glLinkProgram(shaderProgram);
-
-	if (_compileErrors(shaderProgram))
-	{
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
-
-		return false;
-	}
-
-	glDetachShader(shaderProgram, vertexShader);
-	glDetachShader(shaderProgram, fragmentShader);
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	return shaderProgram;
-}
 
 SEbool ResourceManager::_compileErrors(SEuint shader)
 {

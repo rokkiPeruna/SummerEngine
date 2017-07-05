@@ -11,7 +11,7 @@
 
 //SE
 #include <utility/Typedefs.h>
-
+#include <core/Messages.h>
 
 // Debug stuff to be deleted ---
 #include <nlohmann_json/json.hpp>
@@ -26,6 +26,25 @@
 
 ///Brief : Render manager initializes glew and loads shaders.
 //TODO: updates sprites / models?
+
+struct vertexData
+{
+	struct Position
+	{
+		SEfloat x;
+		SEfloat y;
+
+	} position;
+
+	struct Color
+	{
+		GLubyte r;
+		GLubyte g;
+		GLubyte b;
+		GLubyte a;
+	} color;
+
+};
 
 
 namespace se
@@ -53,23 +72,27 @@ public:
 	void Initialize(SEuint shaderProgram);
 
 	///Update render manager
-	void UpdateRenderManager(SDL_Window* windowHandle);
+	void UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram);
 
+	///Use certain shader program
 	void Use(SEuint shaderProgram);
+	
+	///Unsue certain shader program (or use 0th)
 	void Unuse();
 
 private:
 
 	void _addAttribute(SEuint shaderProgram, const std::string& attributeName);
+	SEuint getUniformLocation(SEuint shaderProgram, const std::string& uniformName);
 
 	///Vertex buffer object
-	SEuint m_ebo;
+	SEuint VBO;
+	SEuint VAO;
 
 	//Number of attributes
 	SEint m_numAttributes;
 	
-
-	
+	float time;
 };
 
 

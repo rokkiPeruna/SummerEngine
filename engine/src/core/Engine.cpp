@@ -64,8 +64,8 @@ void Engine::InitializeEngine()
 		
 	}
 	
-
-
+	m_renderMgr.Initialize(m_resourceMgr.GetShaderProgram("defaultShader"));
+	
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
@@ -95,95 +95,93 @@ void Engine::UninitializeEngine()
 void Engine::EngineUpdate()
 {
 
-	while (1)
-	{
+	//Imgui test variables
+	bool show_test_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImColor(114, 144, 154);
 
+
+
+	bool loop = true;
+	while (loop)
+	{
+		//
+		m_frame_time = m_engine_clock.restart();
+		float deltaTime = m_frame_time.asSeconds();
+
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
+		{
+			//Send events to ImGui_SDL_GL3_implentation
+			ImGui_ImplSdlGL3_ProcessEvent(&event);
+
+			if (event.type == SDL_QUIT)
+				loop = false;
+
+			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_ESCAPE:
+					loop = false;
+					break;
+
+				case SDLK_F12:
+					//Switch if main window in editor is visible
+					_gui_show_main_window = (_gui_show_main_window) ? false : true;
+					break;
+
+				default:
+					break;
+				}
+			}
+
+
+		}
+		//New frame for imgui drawing
+		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+
+
+		///Update systems TODO: Thread these, mind the update order
+		m_movementSystem.Update(deltaTime);
+
+
+
+		//Engine window in editor //TODO: Move to own function
+		if (_gui_show_main_window)
+		{
+			ImGui::SetWindowSize(ImVec2(500, 300), ImGuiSetCond_FirstUseEver);
+			ImGui::Begin("Engine");
+			ImGui::Text("SE Engine, %s");
+			ImGui::Separator();
+			ImGui::ColorEdit3("clear color", (float*)&clear_color);
+			if (ImGui::Button("Scene manager"))
+			{
+				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
+			}
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+
+		///Update managers
+		m_sceneMgr.Update(_gui_show_scene_mgr_window);
+
+		///Messenger should be last to update before render
+		m_messenger.PrintMessages(_messageLogType_console);
+
+		// Rendering
+		
+		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle(), m_resourceMgr.GetShaderProgram("defaultShader"));
+
+	//	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+	//	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	//	glClear(GL_COLOR_BUFFER_BIT);
+	//	ImGui::Render();
+	//	SDL_GL_SwapWindow(m_window->GetWindowHandle());
 	}
 
-	//Imgui test variables
-//	bool show_test_window = true;
-//	bool show_another_window = false;
-//	ImVec4 clear_color = ImColor(114, 144, 154);
-//
-//
-//
-//	bool loop = true;
-//	while (loop)
-//	{
-//		//
-//		m_frame_time = m_engine_clock.restart();
-//		float deltaTime = m_frame_time.asSeconds();
-//
-//		SDL_Event event;
-//		while (SDL_PollEvent(&event))
-//		{
-//			//Send events to ImGui_SDL_GL3_implentation
-//			ImGui_ImplSdlGL3_ProcessEvent(&event);
-//
-//			if (event.type == SDL_QUIT)
-//				loop = false;
-//
-//			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
-//			{
-//				switch (event.key.keysym.sym)
-//				{
-//				case SDLK_ESCAPE:
-//					loop = false;
-//					break;
-//
-//				case SDLK_F12:
-//					//Switch if main window in editor is visible
-//					_gui_show_main_window = (_gui_show_main_window) ? false : true;
-//					break;
-//
-//				default:
-//					break;
-//				}
-//			}
-//
-//
-//		}
-//		//New frame for imgui drawing
-//		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
-//
-//
-//		///Update systems TODO: Thread these, mind the update order
-//		m_movementSystem.Update(deltaTime);
-//
-//
-//
-//		//Engine window in editor //TODO: Move to own function
-//		if (_gui_show_main_window)
-//		{
-//			ImGui::SetWindowSize(ImVec2(500, 300), ImGuiSetCond_FirstUseEver);
-//			ImGui::Begin("Engine");
-//			ImGui::Text("SE Engine, %s");
-//			ImGui::Separator();
-//			ImGui::ColorEdit3("clear color", (float*)&clear_color);
-//			if (ImGui::Button("Scene manager"))
-//			{
-//				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
-//			}
-//			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-//			ImGui::End();
-//		}
-//
-//		///Update managers
-//		m_sceneMgr.Update(_gui_show_scene_mgr_window);
-//
-//		///Messenger should be last to update before render
-//		m_messenger.PrintMessages(_messageLogType_console);
-//
-//		// Rendering
-//		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-//		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-//		glClear(GL_COLOR_BUFFER_BIT);
-//		ImGui::Render();
-//		SDL_GL_SwapWindow(m_window->GetWindowHandle());
-//	}
-//
-//	//Cleanup imgui
-//	ImGui_ImplSdlGL3_Shutdown();
+	//Cleanup imgui
+	ImGui_ImplSdlGL3_Shutdown();
 
 }
 
