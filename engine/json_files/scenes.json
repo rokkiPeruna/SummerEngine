@@ -42,6 +42,13 @@
             "type": "level",
             "width": 44
         },
+        "sd": {
+            "heigth": 75,
+            "id": 9,
+            "name": "sd",
+            "type": "level",
+            "width": 73
+        },
         "starting_level": {
             "heigth": 24,
             "id": 2,

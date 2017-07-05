@@ -16,8 +16,6 @@ SceneManager::SceneManager()
 	, m_currentScene(nullptr)
 	, m_sceneNamesAndIDs{}
 	, m_curr_largest_sceneid(0)
-	, m_gui_width(300.f)
-	, m_gui_heigth(300.f)
 	, m_gui_sceneAdded(false)
 	, m_gui_addSceneNameConflict(false)
 	, m_gui_sceneAlreadyLoaded(false)
@@ -258,9 +256,9 @@ void SceneManager::_createSceneStructureToJsonFile()
 
 void SceneManager::_updateGUI()
 {
-	ImGui::SetNextWindowSize(ImVec2(m_gui_width, m_gui_heigth), ImGuiSetCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width/2, _gui_heigth/2), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
-
 	//Create new scene
 	if (ImGui::CollapsingHeader("Create scene"))
 	{

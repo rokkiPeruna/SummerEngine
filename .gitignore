@@ -13,6 +13,8 @@
 
 #Ignore the whole build folder
 build/
+#except the imgui's .ini file from where gui window positions are read
+!build/**.ini
 
 #Ignore libs in external and libs folders
 external/**.lib

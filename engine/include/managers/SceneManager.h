@@ -87,8 +87,6 @@ private:
 	void _handlePopups();
 
 	///GUI variables
-	SEfloat m_gui_width;
-	SEfloat m_gui_heigth;
 	bool m_gui_sceneAdded;
 	bool m_gui_addSceneNameConflict;
 	bool m_gui_sceneAlreadyLoaded;

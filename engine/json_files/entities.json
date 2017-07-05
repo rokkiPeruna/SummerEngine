@@ -1,6 +1,7 @@
 {
-  "entities.json": {
-  },
-  "x_entities_res_ids": {
-  }
+    "entities": {
+        "entities_from_keijo": null,
+        "entities_from_sd": null
+    },
+    "x_entities_res_ids": {}
 }

@@ -54,7 +54,6 @@ void Engine::InitializeEngine()
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
 	//Init managers: //TODO: move to own method
-
 	
 
 	auto& fp_itr = j_config.find("relative_file_paths");
@@ -136,27 +135,16 @@ void Engine::EngineUpdate()
 		//New frame for imgui drawing
 		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
 
+		//Update gui
+		_updateGUI();
+
 
 		///Update systems TODO: Thread these, mind the update order
 		m_movementSystem.Update(deltaTime);
 
 
 
-		//Engine window in editor //TODO: Move to own function
-		if (_gui_show_main_window)
-		{
-			ImGui::SetWindowSize(ImVec2(500, 300), ImGuiSetCond_FirstUseEver);
-			ImGui::Begin("Engine");
-			ImGui::Text("SE Engine, %s");
-			ImGui::Separator();
-			ImGui::ColorEdit3("clear color", (float*)&clear_color);
-			if (ImGui::Button("Scenes"))
-				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
-			if (ImGui::Button("EntCompMgr"))
-				_gui_show_entity_comp_mgr_window = (_gui_show_entity_comp_mgr_window) ? false : true;
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		}
+		
 
 		//Update managers
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
@@ -165,8 +153,8 @@ void Engine::EngineUpdate()
 		//Messenger should be last to update before render
 		m_messenger.PrintMessages(_messageLogType_console);
 
-		//TODO: This is test, can we make gui logic elsewhere and still show in the main window(Engine)
-		ImGui::End();
+		//
+		
 
 		// Rendering
 		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
@@ -223,8 +211,36 @@ void Engine::_initAndApplyEngineSettings()
 			windata.sdl_settings_mask += SDL_WINDOW_FULLSCREEN;
 		if (stngs.find("window_borderless") != stngs.end() && stngs.at("window_borderless") != 0)
 			windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
+
+		//Set window size to global values for GUI
+		_gui_width = windata.width;
+		_gui_heigth = windata.heigth;
 	}
 
+	//Initialize imgui IO
+	ImGui::GetIO().IniFilename = "engine_gui_conf.ini";
+
+}
+
+void Engine::_updateGUI()
+{
+	//Engine window in editor //TODO: Move to own function
+	if (_gui_show_main_window)
+	{
+		ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Engine");
+		ImGui::Text("SE Engine, %s");
+		ImGui::Separator();
+		if (ImGui::Button("Scenes"))
+			_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
+
+		if (ImGui::Button("EntCompMgr"))
+			_gui_show_entity_comp_mgr_window = (_gui_show_entity_comp_mgr_window) ? false : true;
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+	}
 }
 
 }//namespace priv
