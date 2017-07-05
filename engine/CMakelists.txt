@@ -109,9 +109,15 @@ source_group("" FILES ${MAIN_CPP})
 #JSON files
 set(JSON_COMPONENT_TEMPLATES
 	json_files/component_templates.json)
+
+set(JSON_COMPONENTS
+	json_files/components.json)
 	
 set(JSON_ENTITY_TEMPLATES
 	json_files/entity_templates.json)
+
+set(JSON_ENTITIES
+	json_files/entities.json)
 
 set(JSON_SCENES
 	json_files/scenes.json)
@@ -122,7 +128,9 @@ set(JSON_ENGINE_CONFIG
 	
 set(JSON_FILES
 	${JSON_COMPONENT_TEMPLATES}
+	${JSON_COMPONENTS}
 	${JSON_ENTITY_TEMPLATES}
+	${JSON_ENTITIES}
 	${JSON_SCENES}
 	${JSON_ENGINE_CONFIG}
 	)

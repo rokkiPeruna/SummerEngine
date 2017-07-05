@@ -25,11 +25,6 @@ friend class EntityComponentManager;
 public:
 	///Default constructor. Takes in std::string as name of the entity.
 	Entity(std::string entityName);
-
-	///Build Entity from json file.
-	///First parameter is template entity's name in json file, second one is entity's name which user can decide
-	Entity(std::string jsonTemplateName, std::string entityName);
-
 	///Deleted copy constructor. Entities can be copied via EntityComponentManager
 	Entity(const Entity&);
 	///Assign operator deleted
@@ -38,8 +33,11 @@ public:
 	///Const name
 	const std::string name;
 	
-	///Const id
-	const SEuint id;
+	///Identifier
+	SEuint id;
+
+	///Owner scene's id
+	SEuint sceneId;
 
 	///Component mask telling what components Entity has
 	SEuint64 componentMask;
@@ -49,9 +47,6 @@ public:
 
 	///Number of childen
 	SEuint numOfChildren;
-
-private:
-	static SEuint entity_id_count;
 };
 }//namespace se
 

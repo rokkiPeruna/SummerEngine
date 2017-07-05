@@ -11,6 +11,7 @@ const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_co
 static bool _gui_show_main_window = true;
 static bool _gui_show_scene_mgr_window = true;
 static bool _gui_show_console_window = true;
+static bool _gui_show_entity_comp_mgr_window = true;
 
 
 //include STL
@@ -88,7 +89,7 @@ public:
 
 	///Manager getters
 	//
-	SceneManager* GetEntityCompMgr() { return &m_sceneMgr; }
+	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 
 	///Static dictionaries
 
@@ -113,6 +114,7 @@ private:
 
 
 	///Managers
+	EntityComponentManager m_entityCompMgr;
 	SceneManager m_sceneMgr;
 	ResourceManager m_resourceMgr;
 	RenderManager m_renderMgr;

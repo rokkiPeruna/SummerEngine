@@ -9,8 +9,11 @@ namespace se
 namespace priv
 {
 SceneManager::SceneManager()
-	: m_rel_filep_scenes("")
+	: m_ecm_ptr(nullptr)
+	, m_rel_filep_scenes("")
+	, m_scenes_json_file_name("scenes.json")
 	, m_scenes{}
+	, m_currentScene(nullptr)
 	, m_sceneNamesAndIDs{}
 	, m_curr_largest_sceneid(0)
 	, m_gui_width(300.f)
@@ -24,13 +27,17 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-
+	m_ecm_ptr = nullptr;
+	m_currentScene = nullptr;
 }
 
-void SceneManager::Initialize(std::string filepath_to_json_scenes)
+void SceneManager::Initialize(const std::string& filepath_to_json_scenes, EntityComponentManager* ecm_ptr)
 {
 	///Relative path to scenes.json file
 	m_rel_filep_scenes = filepath_to_json_scenes;
+
+	///EntityComponentManager pointer
+	m_ecm_ptr = ecm_ptr;
 
 	///Load scene names
 	_loadSceneNamesAndIDs();
@@ -47,7 +54,6 @@ void SceneManager::Update(bool showGUIwindow)
 	{
 		_updateGUI();
 	}
-
 }
 
 
@@ -61,7 +67,7 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 		return false;
 	}
 	//If name is valid, add scene to scenes.json and add it's name to m_sceneNames
-	std::ifstream scenes(m_rel_filep_scenes + "scenes.json");
+	std::ifstream scenes(m_rel_filep_scenes + m_scenes_json_file_name);
 	if (!scenes.is_open())
 	{
 		MessageWarning(SceneMgr_id) << "Failed to open scenes.json in AddScene(), scene not added, returning..";
@@ -90,7 +96,7 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 	auto& curr_scene_obj = scenes_obj.value().find(tmpname);
 	if (curr_scene_obj == scenes_obj.value().end())
 	{
-		MessageWarning(SceneMgr_id) << "Failed to find current scene object in scenes.json, scene name: " + scenename + ". Returning..";
+		MessageWarning(SceneMgr_id) << "Failed to find scene object in scenes.json, scene name: " + scenename + ". Returning..";
 		return false;
 	}
 	//Add keys and values to the newly created object
@@ -104,7 +110,7 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 	};
 	//Open scenes.json for writing with ios::trunc flag so that the main_obj that now contains all old scenes and the newly added scene, overwrites
 	//the whole json file. //TODO: This can improved a lot, currently we clear the whole file and rewrite it again
-	std::ofstream write(m_rel_filep_scenes + "scenes.json", std::ios::out | std::ios::trunc);
+	std::ofstream write(m_rel_filep_scenes + m_scenes_json_file_name, std::ios::out | std::ios::trunc);
 	if (!write.is_open())
 	{
 		MessageWarning(SceneMgr_id) << "Failed to open scenes.json for writing in AddScene(). Scene not added, returning..";
@@ -136,7 +142,7 @@ void SceneManager::LoadScene(std::string scenename)
 		}
 	}
 	//Create Scene object
-	std::ifstream data(m_rel_filep_scenes + "scenes.json");
+	std::ifstream data(m_rel_filep_scenes + m_scenes_json_file_name);
 	if (!data.is_open())
 	{
 		MessageWarning(SceneMgr_id) << "Could not open scenes.json for reading in LoadScene(). Returning!";
@@ -163,20 +169,25 @@ void SceneManager::LoadScene(std::string scenename)
 	auto& values = loaded_scene_obj.value();
 	//Fetch values from json object and emplace scene to m_scenes
 	std::string tmpname = values.at("name");
-	
+
 	//SE_TODO: Make this cleverer?
 	SCENE_TYPE tmptype;
 	std::string type_as_string = values.at("type");
 	if (type_as_string == "menu") tmptype = SCENE_TYPE::MENU;
 	else if (type_as_string == "level") tmptype = SCENE_TYPE::LEVEL;
 	else if (type_as_string == "credits") tmptype = SCENE_TYPE::CREDITS;
-	else if (type_as_string == "faulty") tmptype = SCENE_TYPE::FAULTY;
+	else tmptype = SCENE_TYPE::FAULTY;
 
 	SEint tmpid = values.at("id");
 	SEuint tmpwidth = values.at("width");
 	SEuint tmpheigth = values.at("heigth");
 
 	m_scenes.emplace_back(Scene(tmpname, tmptype, tmpid, tmpwidth, tmpheigth));
+	DebugMessageInfo(SceneMgr_id) << "New scene [" + scenename + "] loaded to memory";
+	m_currentScene = &m_scenes.back();
+
+	//Initialize EntityComponentManager with new scene's info
+	m_ecm_ptr->InitWithNewScene(m_currentScene);
 }
 
 void SceneManager::DeleteScene(std::string scenename)
@@ -188,13 +199,13 @@ void SceneManager::_loadSceneNamesAndIDs()
 {
 	///Load all scenes from scenes.json file
 	nlohmann::json loader;
-	std::ifstream data(m_rel_filep_scenes + "/scenes.json");
+	std::ifstream data(m_rel_filep_scenes + m_scenes_json_file_name);
 	if (data.is_open())
 	{
 		//Check if scenes.json is empty
 		if (data.peek() == std::ifstream::traits_type::eof())
 		{
-			MessageInfo(SceneMgr_id) << "scenes.json is empty, no scenes available, creating json structure";
+			MessageInfo(SceneMgr_id) << "scenes.json is empty, no basic json structure available, creating json structure";
 			_createSceneStructureToJsonFile();
 			return;
 		}
@@ -230,13 +241,14 @@ void SceneManager::_loadSceneNamesAndIDs()
 void SceneManager::_createSceneStructureToJsonFile()
 {
 	nlohmann::json j;
-	std::ofstream data(m_rel_filep_scenes + "scenes.json");
+	std::ofstream data(m_rel_filep_scenes + m_scenes_json_file_name);
 	if (data.is_open())
 	{
 		data << "{\n" <<
 			"\"scenes\":{\n" <<
 			"  }\n" <<
 			"}" << std::endl;
+		data.close();
 	}
 	else
 	{
@@ -256,32 +268,35 @@ void SceneManager::_updateGUI()
 		static SEchar scenename[64];
 		ImGui::InputText("", scenename, 64, ImGuiInputTextFlags_CharsNoBlank);
 
-		ImGui::Text("Scene type");
-		static SEint scenetype_picker = 0;
-		ImGui::RadioButton("Menu", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::MENU)); ImGui::SameLine();
-		ImGui::RadioButton("Level", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::LEVEL)); ImGui::SameLine();
-		ImGui::RadioButton("Credits", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::CREDITS));
-
-		//If level is chosen, show level size and other details
-		static SEint width = 0;
-		static SEint heigth = 0;
-		if (scenetype_picker == static_cast<SEint>(SCENE_TYPE::LEVEL))
+		if (std::strlen(scenename) != 0)
 		{
-			ImGui::Separator();
-			ImGui::SliderInt("Level width", &width, 2, 128);
-			ImGui::SliderInt("Level heigth", &heigth, 2, 128);
-		}
 
-		//Save created scene
-		if (scenetype_picker != 0 && scenename != "")
-		{
-			ImGui::Separator();
-			if (ImGui::Button("Add scene"))
+			ImGui::Text("Scene type");
+			static SEint scenetype_picker = 0;
+			ImGui::RadioButton("Menu", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::MENU)); ImGui::SameLine();
+			ImGui::RadioButton("Level", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::LEVEL)); ImGui::SameLine();
+			ImGui::RadioButton("Credits", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::CREDITS));
+
+			//If level is chosen, show level size and other details
+			static SEint width = 0;
+			static SEint heigth = 0;
+			if (scenetype_picker == static_cast<SEint>(SCENE_TYPE::LEVEL))
 			{
-				m_gui_sceneAdded = AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
+				ImGui::Separator();
+				ImGui::SliderInt("Level width", &width, 2, 128);
+				ImGui::SliderInt("Level heigth", &heigth, 2, 128);
+			}
+
+			//Save created scene
+			if (scenetype_picker != 0 && scenename != "")
+			{
+				ImGui::Separator();
+				if (ImGui::Button("Add scene"))
+				{
+					m_gui_sceneAdded = AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
+				}
 			}
 		}
-
 	}
 	//Load scene from json
 	if (ImGui::CollapsingHeader("Load scene"))

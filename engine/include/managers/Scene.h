@@ -8,7 +8,7 @@
 #include <nlohmann_json/json.hpp>
 
 ///SE includes:
-#include <managers/EntityComponentManager.h>
+#include <utility/Typedefs.h>
 
 namespace se
 {

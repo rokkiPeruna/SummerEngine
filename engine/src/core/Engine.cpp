@@ -25,6 +25,7 @@ Engine::Engine()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
 	, m_movementSystem()
+	, m_entityCompMgr()
 	, m_sceneMgr()
 	, m_messenger()
 {
@@ -52,19 +53,31 @@ void Engine::InitializeEngine()
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
-	///Init managers: //TODO: move to own method
+	//Init managers: //TODO: move to own method
+
+	
+
 	auto& fp_itr = j_config.find("relative_file_paths");
 	if (fp_itr != j_config.end())
 	{
 		auto& paths_itr = fp_itr.value();
 		if (paths_itr.find("json_files_file_path") != paths_itr.end())
 		{
-			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"));
+			//EntityComponentManager
+			m_entityCompMgr.Initialize(paths_itr.at("json_files_file_path"));
+
+			//SceneMgr
+			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityCompMgr);
 		}
 		else
 		{
-			MessageWarning(Engine_id) << "Could not find relative file path for scenes.json in InitializeEngine()";
+			MessageError(Engine_id) << "Could not find relative file path for scenes.json in InitializeEngine()\n SceneManager not initialized, won't work :(";
 		}
+	}
+	else
+	{
+		MessageError(Engine_id) << "Could find \"relative_file_paths\" json object in InitializeEngine. Engine won't work!";
+		return;
 	}
 
 }
@@ -138,16 +151,18 @@ void Engine::EngineUpdate()
 			ImGui::Separator();
 			ImGui::ColorEdit3("clear color", (float*)&clear_color);
 			if (ImGui::Button("Scenes"))
-			{
 				_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
-			}
+			if (ImGui::Button("EntCompMgr"))
+				_gui_show_entity_comp_mgr_window = (_gui_show_entity_comp_mgr_window) ? false : true;
+
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		}
 
-		///Update managers
+		//Update managers
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
+		m_entityCompMgr.Update();
 
-		///Messenger should be last to update before render
+		//Messenger should be last to update before render
 		m_messenger.PrintMessages(_messageLogType_console);
 
 		//TODO: This is test, can we make gui logic elsewhere and still show in the main window(Engine)
