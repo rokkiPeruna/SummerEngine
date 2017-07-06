@@ -53,31 +53,10 @@ void Engine::InitializeEngine()
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
-	//Init managers: //TODO: move to own method
+	//Init managers:
+	_initManagers();
+
 	
-
-	auto& fp_itr = j_config.find("relative_file_paths");
-	if (fp_itr != j_config.end())
-	{
-		auto& paths_itr = fp_itr.value();
-		if (paths_itr.find("json_files_file_path") != paths_itr.end())
-		{
-			//EntityComponentManager
-			m_entityCompMgr.Initialize(paths_itr.at("json_files_file_path"));
-
-			//SceneMgr
-			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityCompMgr);
-		}
-		else
-		{
-			MessageError(Engine_id) << "Could not find relative file path for scenes.json in InitializeEngine()\n SceneManager not initialized, won't work :(";
-		}
-	}
-	else
-	{
-		MessageError(Engine_id) << "Could find \"relative_file_paths\" json object in InitializeEngine. Engine won't work!";
-		return;
-	}
 
 }
 
@@ -220,6 +199,32 @@ void Engine::_initAndApplyEngineSettings()
 	//Initialize imgui IO
 	ImGui::GetIO().IniFilename = "engine_gui_conf.ini";
 
+}
+
+void Engine::_initManagers()
+{
+	auto& fp_itr = j_config.find("relative_file_paths");
+	if (fp_itr != j_config.end())
+	{
+		auto& paths_itr = fp_itr.value();
+		if (paths_itr.find("json_files_file_path") != paths_itr.end())
+		{
+			//EntityComponentManager
+			m_entityCompMgr.Initialize(paths_itr.at("json_files_file_path"));
+
+			//SceneMgr
+			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityCompMgr);
+		}
+		else
+		{
+			MessageError(Engine_id) << "Could not find relative file path for scenes.json in InitializeEngine()\n SceneManager not initialized, won't work :(";
+		}
+	}
+	else
+	{
+		MessageError(Engine_id) << "Could find \"relative_file_paths\" json object in InitializeEngine. Engine won't work!";
+		return;
+	}
 }
 
 void Engine::_updateGUI()

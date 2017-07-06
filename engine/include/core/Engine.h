@@ -97,6 +97,8 @@ private:
 	///Get settings from engine_config.json
 	void _initAndApplyEngineSettings();
 
+	///Init managers
+	void _initManagers();
 
 	///Clock and time
 	Clock m_engine_clock;
