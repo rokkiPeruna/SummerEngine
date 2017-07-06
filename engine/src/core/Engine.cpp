@@ -25,7 +25,7 @@ Engine::Engine()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
 	, m_movementSystem()
-	, m_entityCompMgr()
+	, m_entityMgr()
 	, m_sceneMgr()
 	, m_messenger()
 {
@@ -127,7 +127,7 @@ void Engine::EngineUpdate()
 
 		//Update managers
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
-		m_entityCompMgr.Update();
+		m_entityMgr.Update();
 
 		//Messenger should be last to update before render
 		m_messenger.PrintMessages(_messageLogType_console);
@@ -210,10 +210,10 @@ void Engine::_initManagers()
 		if (paths_itr.find("json_files_file_path") != paths_itr.end())
 		{
 			//EntityComponentManager
-			m_entityCompMgr.Initialize(paths_itr.at("json_files_file_path"));
+			m_entityMgr.Initialize(paths_itr.at("json_files_file_path"));
 
 			//SceneMgr
-			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityCompMgr);
+			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityMgr);
 		}
 		else
 		{

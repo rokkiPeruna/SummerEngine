@@ -12,7 +12,7 @@
 
 ///SE includes:
 #include <managers/Scene.h>
-#include <managers/EntityComponentManager.h>
+#include <managers/EntityManager.h>
 
 namespace se
 {
@@ -32,7 +32,7 @@ public:
 	void operator=(const SceneManager&) = delete;
 
 	///Init SceneManager
-	void Initialize(const std::string& filepath_to_json_scenes, EntityComponentManager* ecm_ptr);
+	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr);
 
 	///Uninit
 	void Uninitialize();
@@ -55,7 +55,7 @@ public:
 
 private:
 	///Pointer to EntityComponentManager
-	EntityComponentManager* m_ecm_ptr;
+	EntityManager* m_ecm_ptr;
 
 	///Relative file path to json folder
 	std::string m_rel_filep_scenes;

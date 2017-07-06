@@ -1,6 +1,6 @@
 #include <managers/Entity.h>
 #include <core/Engine.h>
-#include <managers/EntityComponentManager.h>
+#include <managers/EntityManager.h>
 
 namespace se
 {

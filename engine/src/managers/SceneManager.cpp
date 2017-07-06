@@ -29,7 +29,7 @@ SceneManager::~SceneManager()
 	m_currentScene = nullptr;
 }
 
-void SceneManager::Initialize(const std::string& filepath_to_json_scenes, EntityComponentManager* ecm_ptr)
+void SceneManager::Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr)
 {
 	///Relative path to scenes.json file
 	m_rel_filep_scenes = filepath_to_json_scenes;

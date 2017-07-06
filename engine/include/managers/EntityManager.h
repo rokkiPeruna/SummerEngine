@@ -1,5 +1,5 @@
-#ifndef SE_ENTITYCOMPONENTMANAGER_H
-#define SE_ENTITYCOMPONENTMANAGER_H
+#ifndef SE_EntityManager_H
+#define SE_EntityManager_H
 
 //STL includes:
 #include <string>
@@ -20,18 +20,18 @@ namespace se
 {
 namespace priv
 {
-///Brief: EntityComponentManager -class handless entities and pointer to them. It can create
+///Brief: EntityManager -class handless entities and pointer to them. It can create
 ///entities from scratch or read them from json files. 
-class EntityComponentManager
+class EntityManager
 {
 public:
 	///Default constructor
-	EntityComponentManager();
+	EntityManager();
 	///Destructor
-	~EntityComponentManager();
+	~EntityManager();
 	///No copies allowed
-	EntityComponentManager(const EntityComponentManager&) = delete;
-	void operator=(const EntityComponentManager&) = delete;
+	EntityManager(const EntityManager&) = delete;
+	void operator=(const EntityManager&) = delete;
 
 	///Init method, called by Engine at start up
 	void Initialize(std::string relativePathToEntitiesJson);
@@ -42,7 +42,7 @@ public:
 	///Update method
 	void Update();
 
-	///Initialize with EntityComponentManager with new current scene and it's entities. This is called by SceneManager.
+	///Initialize with EntityManager with new current scene and it's entities. This is called by SceneManager.
 	void InitWithNewScene(Scene* scene);
 
 
@@ -90,7 +90,7 @@ private:
 	///Const string naming the json object holding reserved entity id's
 	const std::string m_res_entity_ids_json_obj;
 
-	///Container holding pointers to entities and their access keys
+	///Container holding pointers to entities and their access keys (names)
 	std::unordered_map<std::string, Entity*> m_entities_map;
 	
 	///Loads scene's entities

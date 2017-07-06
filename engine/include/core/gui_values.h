@@ -29,6 +29,8 @@ static SEbool _gui_show_console_window = false;
 ///EntityComponent manager
 static SEbool _gui_show_entity_comp_mgr_window = false;
 
+///Component manager
+static SEbool _gui_show_component_mgr_window = false;
 
 }//namespace priv
 }//namespace se

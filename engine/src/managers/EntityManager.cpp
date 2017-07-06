@@ -1,4 +1,4 @@
-#include <managers/EntityComponentManager.h>
+#include <managers/EntityManager.h>
 #include <core/Engine.h>
 #include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
@@ -7,7 +7,7 @@ namespace se
 {
 namespace priv
 {
-EntityComponentManager::EntityComponentManager()
+EntityManager::EntityManager()
 	: m_clock()
 	, m_start_time()
 	, m_end_time()
@@ -26,12 +26,12 @@ EntityComponentManager::EntityComponentManager()
 {
 }
 
-EntityComponentManager::~EntityComponentManager()
+EntityManager::~EntityManager()
 {
 	m_currentScene = nullptr;
 }
 
-void EntityComponentManager::Initialize(std::string relativePathToEntitiesJson)
+void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 {
 	m_rel_path_to_entitiesJson = relativePathToEntitiesJson;
 
@@ -72,17 +72,17 @@ void EntityComponentManager::Initialize(std::string relativePathToEntitiesJson)
 	Message(EntityComponentMgr_id) << "Fetched reserved entity ids in " + std::to_string(time) + " microsecs!";
 }
 
-void EntityComponentManager::Uninitialize()
+void EntityManager::Uninitialize()
 {
 
 }
 
-void EntityComponentManager::Update()
+void EntityManager::Update()
 {
 	_updateGUI();
 }
 
-void EntityComponentManager::InitWithNewScene(Scene* scene)
+void EntityManager::InitWithNewScene(Scene* scene)
 {
 	if (scene)
 	{
@@ -98,7 +98,7 @@ void EntityComponentManager::InitWithNewScene(Scene* scene)
 }
 
 
-void EntityComponentManager::CreateEntity(std::string name)
+void EntityManager::CreateEntity(std::string name)
 {
 	//Check if container has already entity with that name
 	for (auto& m : m_entities)
@@ -168,14 +168,14 @@ void EntityComponentManager::CreateEntity(std::string name)
 	write.close();
 }
 
-void EntityComponentManager::CreateEntity(Entity& other, std::string name)
+void EntityManager::CreateEntity(Entity& other, std::string name)
 {
 
 }
 
 
 
-void EntityComponentManager::_loadSceneEntities(Scene& scene)
+void EntityManager::_loadSceneEntities(Scene& scene)
 {
 	//Load entities from entities.json: load global entities and entities from
 	//json object that has identifier "entities_from_" + scene's name
@@ -199,9 +199,12 @@ void EntityComponentManager::_loadSceneEntities(Scene& scene)
 		MessageError(EntityComponentMgr_id) << "Could not find json object " + m_main_json_obj + " in LoadSceneEntities().\nScene's entities not loaded, expect empty scene and crash!";
 		return;
 	}
+	//Load global entities//TODO: Do this
+
+
 	//Try to find json object holding scenes entities
-	auto& scene_for_entities_obj = entities_obj.value().find(m_prefix_for_json_objs + scene.GetName());
-	if (scene_for_entities_obj == entities_obj.value().end())
+	auto& entities_from_scene_obj = entities_obj.value().find(m_prefix_for_json_objs + scene.GetName());
+	if (entities_from_scene_obj == entities_obj.value().end())
 	{
 		//If we are here, this the first time that the scene is loaded. Lets create json object:
 		std::string tmp = m_prefix_for_json_objs + scene.GetName();
@@ -219,14 +222,18 @@ void EntityComponentManager::_loadSceneEntities(Scene& scene)
 		MessageInfo(EntityComponentMgr_id) << "Scene [" + scene.GetName() + "] loaded for the first time!";
 		return;
 	}
-	//Load global entities//TODO: Do this and do it before the above
-
 	//Load scene specific entities
+	for (auto& itr = entities_from_scene_obj.value().begin(); itr != entities_from_scene_obj.value().end(); itr++)
+	{
+		SEuint id = static_cast<SEuint>(itr.value());
+		m_entities.emplace_back(Entity(itr.key(), id));
+		m_entities_map.emplace(itr.key(), &m_entities.back());
+	}
 
-	//JUHO TÄNNE
+	//
 }
 
-void EntityComponentManager::_createEntitiesJsonBasicStructure()
+void EntityManager::_createEntitiesJsonBasicStructure()
 {
 	nlohmann::json j;
 	std::ofstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
@@ -247,7 +254,7 @@ void EntityComponentManager::_createEntitiesJsonBasicStructure()
 
 }
 
-void EntityComponentManager::_updateGUI()
+void EntityManager::_updateGUI()
 {
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
@@ -271,15 +278,27 @@ void EntityComponentManager::_updateGUI()
 	ImGui::Separator();
 	if (ImGui::CollapsingHeader("Entities"))
 	{
-		for (auto e : m_entities)
+		for (auto& e : m_entities)
 		{
 			ImGui::Bullet();
 			if (ImGui::SmallButton(e.name.c_str()))
 			{
-
+				m_currentEntity = &e;
 			}
 		}
 	}
+	ImGui::End();
+
+	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Component Editor", &_gui_show_component_mgr_window);
+	if (m_currentEntity)
+		ImGui::Text(m_currentEntity->name.c_str());
+	else
+		ImGui::Text("NO ACTIVE ENTITY");
+
+	ImGui::Separator();
 
 
 	ImGui::End();

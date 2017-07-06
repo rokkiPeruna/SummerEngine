@@ -8,7 +8,7 @@
 //SE includes:
 #include <utility/Typedefs.h>
 #include <components/Component.h>
-#include <managers/EntityComponentManager.h>
+#include <managers/EntityManager.h>
 
 namespace se
 {

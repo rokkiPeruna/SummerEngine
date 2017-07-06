@@ -108,7 +108,7 @@ private:
 
 
 	///Managers
-	EntityComponentManager m_entityCompMgr;
+	EntityManager m_entityMgr;
 	SceneManager m_sceneMgr;
 	ResourceManager m_resourceMgr;
 	RenderManager m_renderMgr;
