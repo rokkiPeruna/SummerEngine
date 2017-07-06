@@ -1,6 +1,6 @@
 {
   "relative_file_paths": {
-    "shader_file_path": "",
+	"shader_file_path": "../../engine/shaders/",
     "resources_file_path": "",
     "json_files_file_path": "../../engine/json_files/"
   },

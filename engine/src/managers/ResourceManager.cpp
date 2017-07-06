@@ -4,6 +4,7 @@ namespace se
 {
 namespace priv
 {
+
 ResourceManager::ResourceManager() 
 {
 
@@ -14,9 +15,10 @@ ResourceManager::~ResourceManager()
 
 }
 
-void ResourceManager::Initialize()
+//Recived path is where the actual shader files are.
+void ResourceManager::Initialize(const std::string sourcePath)
 {
-	//TODO: Do initialization for starting scene resources
+	_initializeShaders(sourcePath);
 	
 }
 
@@ -28,6 +30,19 @@ void ResourceManager::Uninitialize()
 void ResourceManager::Update()
 {
 	//TODO: If update is invoked, check if scene has changed and/or resources must be loaded
+}
+
+SEuint ResourceManager::GetShaderProgram(std::string name)
+{
+	std::map<std::string, SEuint>::iterator itr = m_shaderProgramContainer.find(name);
+	if (itr != m_shaderProgramContainer.end())
+	{
+		return itr->second;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string filepath, std::string name)
@@ -56,51 +71,76 @@ std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string file
 			MessageType::Error,
 			AttentionLevel::MEDIUM
 		);*/
-		std::cout << "Was not able to open file " + name << std::endl;
+		MessageError(ResourceMgr_id) << "Was not able to open file " + filepath + name;
 		return nullptr;
 	}
 
 }
 
-SEuint ResourceManager::LoadShaders()
+void ResourceManager::_initializeShaders(const std::string path)
+{
+	//First we should determine how many shaders must be created and for that we need the 
+	//data shader_conifg_json
+	_initJConfigObject();
+
+	//The json data is now stored in json_conif and will be read one by one into m_shaderProgramContainer
+	for (auto& allShaders = json_config["shader_data"].begin(); allShaders != json_config["shader_data"].end(); ++allShaders)
+	{
+		auto& spesificShader = allShaders.value();
+	//	m_shaderProgramContainer.emplace(allShaders.key(), ShaderResource(path, allShaders.key(), spesificShader.find("vertex_shader").value(), spesificShader.find("fragment_shader").value()));
+		
+		_createShaders(path, allShaders.key(), spesificShader.find("vertex_shader").value(), spesificShader.find("fragment_shader").value());
+
+		//Spesicid shader value will be the m_shaderProgramContainer name (string) henc this
+		// is the new shader.. 1st parameter is vertex, shader 2nd parameter is the fragment shader
+	}
+
+}
+
+void ResourceManager::_createShaders(const std::string path, const std::string name, const std::string vertexName, const std::string fragmentName)
 {
 	SEuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	SEuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-
-	std::shared_ptr<TextResource>(vertexData) = LoadTextResource("../../engine/shaders/defaultShader.vert", "defaultShader.vert");
+	std::shared_ptr<TextResource>(vertexData) = LoadTextResource(path + vertexName, vertexName);
 	if (vertexData == nullptr)
-	{
-		// TODO : change to our own messager log
-		std::cout << "Unableable to load vertex shader data" << std::endl;
+	{		
+		//Error message sohuld be sent by Load Texture Resource function. In case of failure
+		//this one has to realease memory and return.
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		
+		return;
 	}
-	// TODO : change to our own messager log
-	std::cout << "Compiling vertex shader " << std::endl;
-	
-	
-	 std::string strData = vertexData->GetTextData();
-	 const char* charData = strData.c_str();
+	// For debug delete after no longer needed
+	MessageInfo(ResourceMgr_id) << "Compiling " + vertexName;
 
+	std::string strData = vertexData->GetTextData();
+	const char* charData = strData.c_str();
+	
 	glShaderSource(vertexShader, 1, &charData, NULL);
 	glCompileShader(vertexShader);
 
-	
 	if (_compileErrors(vertexShader))
 	{
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
-
-		return false;
+		return;
 	}
 
-	std::shared_ptr<TextResource>(fragmentData) = LoadTextResource("../../engine/shaders/defaultShader.frag", "defaultShader.frag");
+	std::shared_ptr<TextResource>(fragmentData) = LoadTextResource(path + fragmentName, fragmentName);
+
 	if (fragmentData == nullptr)
 	{
-		// TODO : change to our own messager log
-		std::cout << "Unableable to load fragment shader data" << std::endl;
+		//Error message sohuld be sent by Load Texture Resource function. In case of failure
+		//this one has to realease memory and return.
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		
+		return;
 	}
-	// TODO : change to our own messager log
-	std::cout << "Compiling fragment shader " << std::endl;
+
+	MessageInfo(ResourceMgr_id) << "Compiling " + fragmentName;
 
 	strData = fragmentData->GetTextData();
 	charData = strData.c_str();
@@ -112,35 +152,48 @@ SEuint ResourceManager::LoadShaders()
 	{
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
-		
-		return false;
+		return;
 	}
 
-	std::cout << "Creating shader program " << std::endl;
-	SEuint shaderProgram = glCreateProgram();
+	SEuint shaderProgramId = glCreateProgram();
 
-	std::cout << "Attaching shader to porgram " << std::endl;
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
+	glAttachShader(shaderProgramId, vertexShader);
+	glAttachShader(shaderProgramId, fragmentShader);
 
-	glLinkProgram(shaderProgram);
-
-	if (_compileErrors(shaderProgram))
+	glLinkProgram(shaderProgramId);
+	
+	if (_compileErrors(shaderProgramId))
 	{
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
-		return false;
+		return;
 	}
 
-	glDetachShader(shaderProgram, vertexShader);
-	glDetachShader(shaderProgram, fragmentShader);
+	glDetachShader(shaderProgramId, vertexShader);
+	glDetachShader(shaderProgramId, fragmentShader);
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	return shaderProgram;
+	m_shaderProgramContainer.emplace(name, shaderProgramId);
 }
+
+void ResourceManager::_initJConfigObject()
+{
+	//Read shader_config.json file and store data into a single string
+	std::ifstream data(REL_PATH_TO_SHADER_CONFIG);
+	if (data.is_open())
+	{
+		json_config = nlohmann::json::parse(data);
+		data.close();
+	}
+	else
+	{
+		MessageError(ResourceMgr_id) << "Failed to initialize json object in _initJConfigObject()";
+	}
+}
+
 
 SEbool ResourceManager::_compileErrors(SEuint shader)
 {
@@ -154,7 +207,8 @@ SEbool ResourceManager::_compileErrors(SEuint shader)
 	{
 		std::vector<char> shaderErrorMessage(errLog + 1);
 		glGetShaderInfoLog(shader, errLog, NULL, &shaderErrorMessage[0]);
-		std::cout << "Error at compiling " << shader << "\n" << &shaderErrorMessage[0] << std::endl;
+		MessageError(ResourceMgr_id) << "Error at compiling " + shader;
+		MessageError(ResourceMgr_id) << &shaderErrorMessage[0];
 		return true;
 	}
 	return false;

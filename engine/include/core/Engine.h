@@ -12,12 +12,8 @@ const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_co
 
 //include external
 #include <SDL2/include/SDL.h>
-
 #include <GLES2/glew.h>
-
 #include <nlohmann_json/json.hpp>
-
-
 
 
 //SE includes:
