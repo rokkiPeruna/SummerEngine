@@ -12,8 +12,9 @@ namespace priv
 RenderManager::RenderManager()
 	: VBO(0)
 	, VAO(0)
+	, EBO(0)
 	, m_numAttributes(0)
-	, time(0)
+
 {
 
 }
@@ -25,83 +26,60 @@ RenderManager::~RenderManager()
 
 void RenderManager::Initialize(SEuint shaderProgram)
 {
-
-	_addAttribute(shaderProgram, "vertexPosition");
-	_addAttribute(shaderProgram, "vertexColor");
-
-	vertexData shape[6];
-
-	shape[0].position.x = 1.0f;
-	shape[0].position.y = 1.0f;
-
-	shape[1].position.x = 1.0f;
-	shape[1].position.y = -1.0f;
-
-	shape[2].position.x = -1.0f;
-	shape[2].position.y = 1.0f;
-
-	shape[3].position.x = -1.0f;
-	shape[3].position.y = -1.0f;
-
-	shape[4].position.x = -1.0f;
-	shape[4].position.y = 1.0f;
-
-	shape[5].position.x = 1.0f;
-	shape[5].position.y = -1.0f;
-
-	for (int i = 0; i < 6; ++i)
-	{
-		shape[i].color.r = 255;
-		shape[i].color.g = 0;
-		shape[i].color.b = 0;
-		shape[i].color.a = 255;
-	}
-	shape[0].color.r = 0;
-	shape[0].color.g = 255;
-	shape[0].color.b = 0;
-	shape[0].color.a = 255;
-
-	shape[3].color.r = 0;
-	shape[3].color.g = 0;
-	shape[3].color.b = 255;
-	shape[3].color.a = 255;
-
-
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
 	glBindVertexArray(VAO);
 
+	glGenBuffers(1, &VBO);
+
+
+	SEfloat vertecies[] =
+	{
+		-1.0f,  -1.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 
+		1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 
+		1.0f, -1.0f, 0.4f, 0.1f, 0.5f
+	};
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertecies), vertecies, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vertexData), (void*)offsetof(vertexData, position));
-	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(vertexData), (void*)offsetof(vertexData, color));
+	// Create an element array
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	glGenBuffers(1, &EBO);
+
+	SEuint elements[] =
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
 
+	_addAttribute(shaderProgram, "vertexPosition");
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), 0);
 	
+	_addAttribute(shaderProgram, "vertexColor");
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (void*)(2 * sizeof(GL_FLOAT)));
+	
+	Use(shaderProgram);
 }
 
 void RenderManager::UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram)
 {
-	GLuint timeLocation = getUniformLocation(shaderProgram, "time");
-	glUniform1f(timeLocation, time);
-	time += 0.01;
 
-	std::cout << time << std::endl;
+//	GLuint timeLocation = getUniformLocation(shaderProgram, "time");
+//	glUniform1f(timeLocation, time);
+//	time += 0.01;
 
-	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	std::cout << time << std::endl;
 
-	Use(shaderProgram);
-	
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	Unuse();
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	ImGui::Render();
 

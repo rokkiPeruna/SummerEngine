@@ -10,6 +10,6 @@
 		{
 			"vertex_shader"		: "test.vert",
 			"fragment_shader"	: "test.frag"
-		}	
+		}
 	}
 }

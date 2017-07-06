@@ -27,26 +27,6 @@
 ///Brief : Render manager initializes glew and loads shaders.
 //TODO: updates sprites / models?
 
-struct vertexData
-{
-	struct Position
-	{
-		SEfloat x;
-		SEfloat y;
-
-	} position;
-
-	struct Color
-	{
-		GLubyte r;
-		GLubyte g;
-		GLubyte b;
-		GLubyte a;
-	} color;
-
-};
-
-
 namespace se
 {
 namespace priv
@@ -76,7 +56,7 @@ public:
 
 	///Use certain shader program
 	void Use(SEuint shaderProgram);
-	
+
 	///Unsue certain shader program (or use 0th)
 	void Unuse();
 
@@ -88,11 +68,11 @@ private:
 	///Vertex buffer object
 	SEuint VBO;
 	SEuint VAO;
+	SEuint EBO;
 
 	//Number of attributes
 	SEint m_numAttributes;
-	
-	float time;
+
 };
 
 

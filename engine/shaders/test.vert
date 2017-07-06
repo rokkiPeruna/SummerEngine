@@ -1,6 +1,7 @@
 #version 150 core
 
 in vec2 vertexPosition;
+in vec2 textureCoordinates;
 
 void main()
 {
