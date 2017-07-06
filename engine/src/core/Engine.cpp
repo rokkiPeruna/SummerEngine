@@ -50,6 +50,19 @@ void Engine::InitializeEngine()
 	///Init messenger
 	m_messenger.Initialize();
 
+	auto& winset_json = j_config.find("relative_file_paths");
+	if (winset_json != j_config.end())
+	{
+		auto& stngs = winset_json.value();
+		//Send window size data to Window
+		if (stngs.find("shader_file_path") != stngs.end())
+		{
+			m_resourceMgr.Initialize(stngs.at("shader_file_path"));
+		}
+	}
+
+	m_renderMgr.Initialize(m_resourceMgr.GetShaderProgram("defaultShader"));
+
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
@@ -134,13 +147,13 @@ void Engine::EngineUpdate()
 
 		//
 		
-
+		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle());
 		// Rendering
-		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui::Render();
-		SDL_GL_SwapWindow(m_window->GetWindowHandle());
+	//	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+	//	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	//	glClear(GL_COLOR_BUFFER_BIT);
+	//	ImGui::Render();
+	//	SDL_GL_SwapWindow(m_window->GetWindowHandle());
 	}
 
 	//Cleanup imgui

@@ -66,7 +66,7 @@ void RenderManager::Initialize(SEuint shaderProgram)
 	Use(shaderProgram);
 }
 
-void RenderManager::UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram)
+void RenderManager::UpdateRenderManager(SDL_Window* windowHandle)
 {
 
 //	GLuint timeLocation = getUniformLocation(shaderProgram, "time");

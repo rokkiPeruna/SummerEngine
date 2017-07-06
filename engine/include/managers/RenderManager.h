@@ -52,7 +52,7 @@ public:
 	void Initialize(SEuint shaderProgram);
 
 	///Update render manager
-	void UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram);
+	void UpdateRenderManager(SDL_Window* windowHandle);
 
 	///Use certain shader program
 	void Use(SEuint shaderProgram);
