@@ -1,5 +1,6 @@
 #include <managers/ComponentManager.h>
 #include <imgui/imgui.h>
+#include <nlohmann_json/json.hpp>
 
 namespace se
 {
@@ -37,11 +38,11 @@ void ComponentManager::Initialize(std::string relativeFilePathToComponentsJson)
 		_createComponentsJsonBasicStructure();
 	}
 
-	YOU ARE HERE //Create some form of system that handles components memory allocation
-		//--> All components are stored in ComponentManager, refs are sent to system?
-		//--> Components are stored in their main system?
-		//--> Systems have packages which contain needed components (e.g. MovementSystem has movePackage which has position, velocity, acceleration etc. ?
-		//--> Handle handler??
+	//Create some form of system that handles components memory allocation
+	   //--> All components are stored in ComponentManager, refs are sent to system?
+	   //--> Components are stored in their main system?
+	   //--> Systems have packages which contain needed components (e.g. MovementSystem has movePackage which has position, velocity, acceleration etc. ?
+	   //--> Handle handler??
 
 }
 
@@ -58,6 +59,17 @@ void ComponentManager::Update()
 
 void ComponentManager::_createComponentsJsonBasicStructure()
 {
+	std::ofstream data(m_rel_path_to_compsJson + m_comps_json_file_name);
+	if (!data.is_open())
+	{
+		MessageError(EntityMgr_id) << "Failed to open " + m_comps_json_file_name + " for writing in\n _createComponentsJsonBasicStructure(). Undefined behaviour.";
+		return;
+	}
+	data << "{\n" <<
+		"\"" + m_main_json_obj + "\":{\n" <<
+		"  }\n" <<
+		"}" << std::endl;
+	data.close();
 
 }
 

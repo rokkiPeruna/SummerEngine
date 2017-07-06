@@ -58,7 +58,7 @@ private:
 	EntityManager* m_ecm_ptr;
 
 	///Relative file path to json folder
-	std::string m_rel_filep_scenes;
+	std::string m_rel_path_to_scenesJson;
 
 	///Const string naming the file containing scenes as json objects
 	const std::string m_scenes_json_file_name;

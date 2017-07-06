@@ -11,6 +11,7 @@
 
 int main(int argc, char *argv[])
 {
+
 	se::priv::Engine& GameEngine = se::priv::Engine::Instance();
 	GameEngine.InitializeEngine();
 	

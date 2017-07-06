@@ -11,6 +11,7 @@
 //SE includes:
 #include <utility/Typedefs.h>
 #include <core/Messages.h>
+#include <managers/Entity.h>
 
 namespace se
 {
@@ -37,6 +38,9 @@ public:
 
 	///Update method
 	void Update();
+
+
+	void AddComponent(Entity& entity);
 
 
 
