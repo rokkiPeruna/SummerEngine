@@ -8,15 +8,20 @@ namespace se
 namespace priv
 {
 EntityComponentManager::EntityComponentManager()
-	: m_currentScene(nullptr)
+	: m_clock()
+	, m_start_time()
+	, m_end_time()
+	, m_currentScene(nullptr)
 	, m_currentEntity(nullptr)
 	, m_prefix_for_json_objs("entities_from_")
 	, m_rel_path_to_entitiesJson("")
-	, m_entities_json_file_name("entities.json")
 	, m_main_json_obj("entities")
+	, m_entities{}
+	, m_entities_json_file_name("entities.json")
+	, m_res_entity_ids{}
+	, m_next_free_entity_id(0)
 	, m_res_entity_ids_json_obj("x_entities_res_ids")
 	, m_entities_map{}
-	, m_entities{}
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
 }
@@ -30,16 +35,41 @@ void EntityComponentManager::Initialize(std::string relativePathToEntitiesJson)
 {
 	m_rel_path_to_entitiesJson = relativePathToEntitiesJson;
 
-	//Create entities.json basic structure if it doesn't exist
 	std::ifstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
-	if (data.is_open())
+	if (!data.is_open())
 	{
-		if (data.peek() == std::ifstream::traits_type::eof())
-		{
-			MessageInfo(EntityComponentMgr_id) << "entities.json is empty, no basic json structure available, creating json structure";
-			_createEntitiesJsonBasicStructure();
-		}
+		MessageError(EntityComponentMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + " for\nreading, undefined behaviour!";
+		return;
 	}
+	//Create entities.json basic structure if it doesn't exist //SE_TODO: Is this the best way?
+	if (data.peek() == std::ifstream::traits_type::eof())
+	{
+		MessageInfo(EntityComponentMgr_id) << "entities.json is empty, no basic json structure available, creating json structure";
+		_createEntitiesJsonBasicStructure(); //SE_FIX: This causes crash on first launch if /entities/.json file is empty
+	}
+
+	//Get all reserved entity ids, find the largest and measure performance
+	m_clock.restart();
+	nlohmann::json j = nlohmann::json::parse(data);
+	data.close();
+	auto& entities_ids_obj = j.find(m_res_entity_ids_json_obj);
+	if (entities_ids_obj == j.end())
+	{
+		MessageError(EntityComponentMgr_id) << "Could not find \"" + m_res_entity_ids_json_obj + +"\" json object for\nreading, undefined behaviour!";
+		return;
+	}
+	//
+	for (auto& id : entities_ids_obj.value())
+	{
+		m_res_entity_ids.emplace_back(id);
+		if (static_cast<SEuint>(id) > m_next_free_entity_id)
+			m_next_free_entity_id = id;
+	}
+	++m_next_free_entity_id;
+	//
+	//Print out time
+	SEuint time = m_clock.getElapsedTime().asMicroSeconds();
+	Message(EntityComponentMgr_id) << "Fetched reserved entity ids in " + std::to_string(time) + " microsecs!";
 }
 
 void EntityComponentManager::Uninitialize()
@@ -62,7 +92,7 @@ void EntityComponentManager::InitWithNewScene(Scene* scene)
 	}
 	else
 	{
-		MessageWarning(EntityComponentMgr_id) << "Scene ptr was null in InitWithNewScene(). Scene was not switched!";
+		MessageWarning(EntityComponentMgr_id) << "Scene ptr was null in InitWithNewScene().\nScene was not switched!";
 		return;
 	}
 }
@@ -75,7 +105,7 @@ void EntityComponentManager::CreateEntity(std::string name)
 	{
 		if (m.name == name)
 		{
-			MessageInfo(EntityComponentMgr_id) << "Tried to create entity with name that already in use! Entity not created, returning..";
+			MessageInfo(EntityComponentMgr_id) << "Tried to create entity with name that already\n in use! Entity not created, returning..";
 			return;
 		}
 	}
@@ -83,32 +113,59 @@ void EntityComponentManager::CreateEntity(std::string name)
 	std::ifstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
 	if (!data.is_open())
 	{
-		MessageError(EntityComponentMgr_id) << "Unable to open " + m_entities_json_file_name + " in CreateEntity(). Entity[" + name + "] not created!";
+		MessageError(EntityComponentMgr_id) << "Unable to open " + m_entities_json_file_name + "\nin CreateEntity(). Entity[" + name + "] not created!";
 		return;
 	}
 	nlohmann::json j = nlohmann::json::parse(data);
 	data.close();
 
-	//Find our way to the desired json object
+	//Check that we can find entity ids
+	auto& ent_ids_obj = j.find(m_res_entity_ids_json_obj);
+	if (ent_ids_obj == j.end())
+	{
+		MessageError(EntityComponentMgr_id) << "Could not find \"" + m_res_entity_ids_json_obj + "\" json object in CreateEntity().\nEntity not created, returning";
+		return;
+	}
+	//Find our way to the desired entities json object
 	auto& entities_obj = j.find(m_main_json_obj);
 	if (entities_obj == j.end())
 	{
 		MessageError(EntityComponentMgr_id) << "Unable to find \"" + m_main_json_obj + "\" json object in CreateEntity(). Entity[" + name + "] not created!";
 		return;
 	}
-	auto& entities_from_scene_obj = entities_obj.value().find(m_prefix_for_json_objs + name);
+	auto& entities_from_scene_obj = entities_obj.value().find(m_prefix_for_json_objs + m_currentScene->GetName());
 	if (entities_from_scene_obj == entities_obj.value().end())
 	{
-		MessageError(EntityComponentMgr_id) << "Not able to find json object \"" + m_prefix_for_json_objs + name + "\" in CreateEntity(). Entity not created!";
+		MessageError(EntityComponentMgr_id) << "Not able to find json object \"" + m_prefix_for_json_objs + m_currentScene->GetName() + "\" in CreateEntity(). Entity not created!";
 		return;
 	}
 
-	m_entities.emplace_back(Entity(name));
+	//Open file for rewriting json object //SE_TODO: Create saving method that does the rewriting
+	std::ofstream write(m_rel_path_to_entitiesJson + m_entities_json_file_name);
+	if (!write.is_open())
+	{
+		MessageError(EntityComponentMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + "\nfor writing in CreateEntity()!. Entity not created!";
+		return;
+	}
+
+	//This first
+	//Emplace new entity to containers, id also
+	m_entities.emplace_back(Entity(name, m_next_free_entity_id));
+	++m_next_free_entity_id;
 	m_entities_map.emplace(name, &m_entities.back());
 	m_currentEntity = &m_entities.back();
 
+	//Then this
+	//Push new entity to json object
+	(*entities_from_scene_obj).emplace(m_currentEntity->name, m_currentEntity->id);
 
-	//entities_from_scene_obj.value().push_back();
+	//And then this
+	//Push id to json object
+	ent_ids_obj.value().push_back(m_currentEntity->id);
+
+	//Rewrite json file //SE_TODO: Save method should do this!!
+	write << std::setw(4) << j << std::endl;
+	write.close();
 }
 
 void EntityComponentManager::CreateEntity(Entity& other, std::string name)
@@ -166,7 +223,7 @@ void EntityComponentManager::_loadSceneEntities(Scene& scene)
 
 	//Load scene specific entities
 
-
+	//JUHO TÄNNE
 }
 
 void EntityComponentManager::_createEntitiesJsonBasicStructure()
@@ -178,8 +235,8 @@ void EntityComponentManager::_createEntitiesJsonBasicStructure()
 		data << "{\n" <<
 			"\"" << "entities" << "\":{\n" <<
 			"  },\n" <<
-			"\"" << m_res_entity_ids_json_obj << "\":{\n" <<
-			"  }\n"
+			"\"" << m_res_entity_ids_json_obj << "\":[\n" <<
+			"  ]\n"
 			"}" << std::endl;
 		data.close();
 	}

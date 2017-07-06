@@ -1,7 +1,40 @@
 {
     "entities": {
-        "entities_from_keijo": null,
-        "entities_from_sd": null
+        "entities_from_mainmenu": {
+            "pailer": 1,
+            "pailer1": 2,
+            "pailer11": 3,
+            "pailer111": 4,
+            "pailer1111": 5,
+            "pailer11111": 6
+        },
+        "entities_from_mainmenu33": {
+            "enimy": 7,
+            "enimy1": 8,
+            "enimy12": 9,
+            "enimy123": 10,
+            "enimy1234": 11,
+            "fuu": 12,
+            "fuu1": 13,
+            "fuu12": 14,
+            "fuu123": 15
+        }
     },
-    "x_entities_res_ids": {}
+    "x_entities_res_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+    ]
 }

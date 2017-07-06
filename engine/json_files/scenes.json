@@ -1,67 +1,18 @@
 {
     "scenes": {
-        "exe_scene": {
-            "heigth": 65,
-            "id": 6,
-            "name": "exe_scene",
-            "type": "level",
-            "width": 64
-        },
-        "janinscene": {
-            "heigth": 98,
-            "id": 7,
-            "name": "janinscene",
-            "type": "level",
-            "width": 97
-        },
-        "keijo": {
-            "heigth": 46,
-            "id": 3,
-            "name": "keijo",
-            "type": "level",
-            "width": 54
-        },
-        "kentta": {
-            "heigth": 89,
+        "mainmenu": {
+            "heigth": 0,
             "id": 1,
-            "name": "kentta",
-            "type": "level",
-            "width": 44
+            "name": "mainmenu",
+            "type": "menu",
+            "width": 0
         },
-        "level_four": {
-            "heigth": 50,
-            "id": 5,
-            "name": "level_four",
-            "type": "level",
-            "width": 72
-        },
-        "level_three": {
-            "heigth": 50,
-            "id": 4,
-            "name": "level_three",
-            "type": "level",
-            "width": 44
-        },
-        "sd": {
-            "heigth": 75,
-            "id": 9,
-            "name": "sd",
-            "type": "level",
-            "width": 73
-        },
-        "starting_level": {
-            "heigth": 24,
+        "mainmenu33": {
+            "heigth": 0,
             "id": 2,
-            "name": "starting_level",
-            "type": "level",
-            "width": 24
-        },
-        "teemu": {
-            "heigth": 80,
-            "id": 8,
-            "name": "teemu",
-            "type": "level",
-            "width": 80
+            "name": "mainmenu33",
+            "type": "credits",
+            "width": 0
         }
     }
 }

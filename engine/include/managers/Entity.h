@@ -24,14 +24,14 @@ class Entity
 friend class EntityComponentManager;
 public:
 	///Default constructor. Takes in std::string as name of the entity.
-	Entity(std::string entityName);
+	Entity(std::string entityName, SEuint id);
 	///Deleted copy constructor. Entities can be copied via EntityComponentManager
 	Entity(const Entity&);
 	///Assign operator deleted
 	Entity& operator=(const Entity&) = delete;
 
 	///Const name
-	const std::string name;
+	std::string name;
 	
 	///Identifier
 	SEuint id;

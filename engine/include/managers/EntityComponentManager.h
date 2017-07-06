@@ -12,6 +12,8 @@
 #include <managers/Entity.h>
 #include <managers/Scene.h>
 #include <core/Messages.h>
+#include <utility/Clock.h>
+#include <utility/Time.h>
 
 
 namespace se
@@ -53,10 +55,13 @@ public:
 	void CreateEntity(Entity& other, std::string name = "");
 
 private:
+	///Clock and times for measuring performance
+	Clock m_clock;
+	Time m_start_time;
+	Time m_end_time;
+
 	///Current scene
 	Scene* m_currentScene;
-
-	///Container holding
 
 	///Current entity
 	Entity* m_currentEntity;
@@ -67,17 +72,23 @@ private:
 	///Relative path to entities.json
 	std::string m_rel_path_to_entitiesJson;
 
-	///Const string naming the file containing entities as json objects
-	const std::string m_entities_json_file_name;
-
 	///Const string naming the main json object
 	const std::string m_main_json_obj;
 
-	///Const string naming the json object holding reserved entity id's
-	const std::string m_res_entity_ids_json_obj;
-
 	///Container holding Entities of the current scene
 	std::vector<Entity> m_entities;
+
+	///Const string naming the file containing entities as json objects
+	const std::string m_entities_json_file_name;
+
+	///Container holding all reserved entity ids
+	std::vector<SEuint> m_res_entity_ids;
+
+	///Next free entity id
+	SEuint m_next_free_entity_id;
+
+	///Const string naming the json object holding reserved entity id's
+	const std::string m_res_entity_ids_json_obj;
 
 	///Container holding pointers to entities and their access keys
 	std::unordered_map<std::string, Entity*> m_entities_map;
