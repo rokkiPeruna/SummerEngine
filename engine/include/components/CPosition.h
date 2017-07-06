@@ -11,12 +11,17 @@ class CPosition : public Component
 {
 public:
 	///Default constructor
-	CPosition(Vec2f position = Vec2f(0.0f)) 
+	CPosition(SEfloat _x = 0.0f, SEfloat _y = 0.0f, SEfloat _z = 0.0f) 
 		: Component(CPosition_id)
-		, position(position){}
+		, x(_x)
+		, y(_y)
+		, z(_z){}
 
 	///Position data as Vec2f
-	Vec2f position;
+	SEfloat x;
+	SEfloat y;
+	SEfloat z;
+//	Vec2f position;
 };
 }//namespace se
 

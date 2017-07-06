@@ -34,6 +34,8 @@ set(SYSTEMS_FILES
 	src/systems/ComponentSystem.cpp
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
+    include/systems/RenderSystem.h
+    src/systems/RenderSystem.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------

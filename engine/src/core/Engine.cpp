@@ -61,6 +61,13 @@ void Engine::InitializeEngine()
 		}
 	}
 
+	se::Vec2f pulikka[3] =
+	{
+		se::Vec2f(1.0, 1.0),
+		se::Vec2f(0.5, 0.5),
+		se::Vec2f(0.0, 0.0)
+	};
+
 	m_renderMgr.Initialize(m_resourceMgr.GetShaderProgram("defaultShader"));
 
 	//Init imgui using implementation provided in examples
@@ -69,7 +76,8 @@ void Engine::InitializeEngine()
 	//Init managers:
 	_initManagers();
 
-	
+ 	
+
 
 }
 

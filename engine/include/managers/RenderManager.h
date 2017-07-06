@@ -1,5 +1,5 @@
-#ifndef SE_RENDER_MANAGER
-#define SE_RENDER_MANAGER
+#ifndef SE_RENDER_MANAGER_H
+#define SE_RENDER_MANAGER_H
 
 //STL
 
@@ -19,13 +19,17 @@
 #include <fstream>
 #include <sstream>
 
+#include <components/CPosition.h>
 #include <components/CTriangleShape.h>
 #include <components/CRectangleShape.h>
 #include <components/CCircleShape.h>
 // -----------------------------
 
 ///Brief : Render manager initializes glew and loads shaders.
-//TODO: updates sprites / models?
+
+// should the basic idea be that, render manager initializes all vertex buffer objects
+// like dynamic, static, and possibly splits static drawables so that there are vbos for 
+// changeable values and left overs are push into another one..  --maybe--
 
 namespace se
 {
@@ -73,10 +77,15 @@ private:
 	//Number of attributes
 	SEint m_numAttributes;
 
+	std::vector<CPosition> m_positionContainer;
+	std::vector<CTriangleShape> m_triangleContainer;
+
+	
+
 };
 
 
 }//namespace priv
 }//namespace se
 
-#endif // !SE_RENDER_MANAGER
+#endif // !SE_RENDER_MANAGER_H
