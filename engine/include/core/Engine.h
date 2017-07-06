@@ -36,6 +36,7 @@ const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_co
 #include <managers/SceneManager.h>
 #include <managers/ResourceManager.h>
 #include <managers/RenderManager.h>
+#include <managers/ComponentManager.h>
 
 #include <core/Dictionaries.h>
 
@@ -112,6 +113,7 @@ private:
 	SceneManager m_sceneMgr;
 	ResourceManager m_resourceMgr;
 	RenderManager m_renderMgr;
+	ComponentManager m_compMgr;
 
 	///Messenger
 	Messenger m_messenger;

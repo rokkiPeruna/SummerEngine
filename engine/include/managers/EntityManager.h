@@ -96,7 +96,7 @@ private:
 	///Loads scene's entities
 	void _loadSceneEntities(Scene& scene);
 
-	///Creates main json structure to entities.json if one does not exist
+	///Creates main json structure to /entities/.json if one does not exist
 	void _createEntitiesJsonBasicStructure();
 
 

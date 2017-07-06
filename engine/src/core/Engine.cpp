@@ -27,6 +27,9 @@ Engine::Engine()
 	, m_movementSystem()
 	, m_entityMgr()
 	, m_sceneMgr()
+	, m_resourceMgr()
+	, m_renderMgr()
+	, m_compMgr()
 	, m_messenger()
 {
 
@@ -209,11 +212,14 @@ void Engine::_initManagers()
 		auto& paths_itr = fp_itr.value();
 		if (paths_itr.find("json_files_file_path") != paths_itr.end())
 		{
-			//EntityComponentManager
+			//EntityManager
 			m_entityMgr.Initialize(paths_itr.at("json_files_file_path"));
 
 			//SceneMgr
 			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityMgr);
+
+			//ComponentManager
+			m_compMgr.Initialize(paths_itr.at("json_files_file_path"));
 		}
 		else
 		{

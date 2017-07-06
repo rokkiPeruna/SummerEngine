@@ -15,12 +15,12 @@ namespace se
 ///uses these id's.
 const SEuint64 _nullSysMgr_id = 0x00000000;
 const SEuint64 ResourceMgr_id = 0x0000001;
-const SEuint64 EntityComponentMgr_id = 0x00000002;
+const SEuint64 EntityMgr_id = 0x00000002;
 const SEuint64 RenderMgr_id = 0x0000004;
 const SEuint64 SceneMgr_id = 0x0000008;
 const SEuint64 MovementSys_id = 0x0000010;
 const SEuint64 Engine_id = 0x0000020;
-const SEuint64 dummy_id_mgrsys_6 = 0x0000040;  //Remember to add id to map below!!!
+const SEuint64 ComponentMgr_id = 0x0000040;  
 const SEuint64 dummy_id_mgrsys_7 = 0x0000080;  //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_8 = 0x0000100;  //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_9 = 0x0000200;  //Remember to add id to map below!!!
@@ -51,11 +51,12 @@ static const std::map<SEuint64, std::string> sys_mgr_id_to_name
 {
 	{ _nullSysMgr_id, "" },
 	{ ResourceMgr_id, "resource_mgr" },
-	{ EntityComponentMgr_id, "entitycomp_mgr" },
+	{ EntityMgr_id, "entitycomp_mgr" },
 	{ RenderMgr_id, "render_mgr" },
 	{ SceneMgr_id, "scene_mgr" },
 	{ MovementSys_id, "movement_sys" },
-	{ Engine_id, "engine" }
+	{ Engine_id, "engine" },
+	{ ComponentMgr_id, "component_mgr"}
 };
 
 

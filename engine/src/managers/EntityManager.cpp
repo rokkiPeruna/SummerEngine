@@ -38,13 +38,13 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 	std::ifstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
 	if (!data.is_open())
 	{
-		MessageError(EntityComponentMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + " for\nreading, undefined behaviour!";
+		MessageError(EntityMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + " for\nreading, undefined behaviour!";
 		return;
 	}
 	//Create entities.json basic structure if it doesn't exist //SE_TODO: Is this the best way?
 	if (data.peek() == std::ifstream::traits_type::eof())
 	{
-		MessageInfo(EntityComponentMgr_id) << "entities.json is empty, no basic json structure available, creating json structure";
+		MessageInfo(EntityMgr_id) << m_entities_json_file_name + " is empty, no basic json structure available,\n creating json structure";
 		_createEntitiesJsonBasicStructure(); //SE_FIX: This causes crash on first launch if /entities/.json file is empty
 	}
 
@@ -55,7 +55,7 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 	auto& entities_ids_obj = j.find(m_res_entity_ids_json_obj);
 	if (entities_ids_obj == j.end())
 	{
-		MessageError(EntityComponentMgr_id) << "Could not find \"" + m_res_entity_ids_json_obj + +"\" json object for\nreading, undefined behaviour!";
+		MessageError(EntityMgr_id) << "Could not find \"" + m_res_entity_ids_json_obj + +"\" json object for\nreading, undefined behaviour!";
 		return;
 	}
 	//
@@ -69,7 +69,7 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 	//
 	//Print out time
 	SEuint time = m_clock.getElapsedTime().asMicroSeconds();
-	Message(EntityComponentMgr_id) << "Fetched reserved entity ids in " + std::to_string(time) + " microsecs!";
+	Message(EntityMgr_id) << "Fetched reserved entity ids in " + std::to_string(time) + " microsecs!";
 }
 
 void EntityManager::Uninitialize()
@@ -92,7 +92,7 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	}
 	else
 	{
-		MessageWarning(EntityComponentMgr_id) << "Scene ptr was null in InitWithNewScene().\nScene was not switched!";
+		MessageWarning(EntityMgr_id) << "Scene ptr was null in InitWithNewScene().\nScene was not switched!";
 		return;
 	}
 }
@@ -105,7 +105,7 @@ void EntityManager::CreateEntity(std::string name)
 	{
 		if (m.name == name)
 		{
-			MessageInfo(EntityComponentMgr_id) << "Tried to create entity with name that already\n in use! Entity not created, returning..";
+			MessageInfo(EntityMgr_id) << "Tried to create entity with name that already\n in use! Entity not created, returning..";
 			return;
 		}
 	}
@@ -113,7 +113,7 @@ void EntityManager::CreateEntity(std::string name)
 	std::ifstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
 	if (!data.is_open())
 	{
-		MessageError(EntityComponentMgr_id) << "Unable to open " + m_entities_json_file_name + "\nin CreateEntity(). Entity[" + name + "] not created!";
+		MessageError(EntityMgr_id) << "Unable to open " + m_entities_json_file_name + "\nin CreateEntity(). Entity[" + name + "] not created!";
 		return;
 	}
 	nlohmann::json j = nlohmann::json::parse(data);
@@ -123,20 +123,20 @@ void EntityManager::CreateEntity(std::string name)
 	auto& ent_ids_obj = j.find(m_res_entity_ids_json_obj);
 	if (ent_ids_obj == j.end())
 	{
-		MessageError(EntityComponentMgr_id) << "Could not find \"" + m_res_entity_ids_json_obj + "\" json object in CreateEntity().\nEntity not created, returning";
+		MessageError(EntityMgr_id) << "Could not find \"" + m_res_entity_ids_json_obj + "\" json object in CreateEntity().\nEntity not created, returning";
 		return;
 	}
 	//Find our way to the desired entities json object
 	auto& entities_obj = j.find(m_main_json_obj);
 	if (entities_obj == j.end())
 	{
-		MessageError(EntityComponentMgr_id) << "Unable to find \"" + m_main_json_obj + "\" json object in CreateEntity(). Entity[" + name + "] not created!";
+		MessageError(EntityMgr_id) << "Unable to find \"" + m_main_json_obj + "\" json object in CreateEntity(). Entity[" + name + "] not created!";
 		return;
 	}
 	auto& entities_from_scene_obj = entities_obj.value().find(m_prefix_for_json_objs + m_currentScene->GetName());
 	if (entities_from_scene_obj == entities_obj.value().end())
 	{
-		MessageError(EntityComponentMgr_id) << "Not able to find json object \"" + m_prefix_for_json_objs + m_currentScene->GetName() + "\" in CreateEntity(). Entity not created!";
+		MessageError(EntityMgr_id) << "Not able to find json object \"" + m_prefix_for_json_objs + m_currentScene->GetName() + "\" in CreateEntity(). Entity not created!";
 		return;
 	}
 
@@ -144,7 +144,7 @@ void EntityManager::CreateEntity(std::string name)
 	std::ofstream write(m_rel_path_to_entitiesJson + m_entities_json_file_name);
 	if (!write.is_open())
 	{
-		MessageError(EntityComponentMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + "\nfor writing in CreateEntity()!. Entity not created!";
+		MessageError(EntityMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + "\nfor writing in CreateEntity()!. Entity not created!";
 		return;
 	}
 
@@ -182,7 +182,7 @@ void EntityManager::_loadSceneEntities(Scene& scene)
 	std::ifstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
 	if (!data.is_open())
 	{
-		MessageError(EntityComponentMgr_id) << "Failed to open " + m_entities_json_file_name + " for reading in LoadSceneEntities().\nScene's entities not loaded, expect empty scene and crash!";
+		MessageError(EntityMgr_id) << "Failed to open " + m_entities_json_file_name + " for reading in LoadSceneEntities().\nScene's entities not loaded, expect empty scene and crash!";
 		return;
 	}
 	//Get json object for scene's entities. If one does not exist, aka this the first time the scene is loaded,
@@ -196,7 +196,7 @@ void EntityManager::_loadSceneEntities(Scene& scene)
 	auto& entities_obj = j.find(m_main_json_obj);
 	if (entities_obj == j.end())
 	{
-		MessageError(EntityComponentMgr_id) << "Could not find json object " + m_main_json_obj + " in LoadSceneEntities().\nScene's entities not loaded, expect empty scene and crash!";
+		MessageError(EntityMgr_id) << "Could not find json object " + m_main_json_obj + " in LoadSceneEntities().\nScene's entities not loaded, expect empty scene and crash!";
 		return;
 	}
 	//Load global entities//TODO: Do this
@@ -213,13 +213,13 @@ void EntityManager::_loadSceneEntities(Scene& scene)
 		std::ofstream write(m_rel_path_to_entitiesJson + m_entities_json_file_name, std::ios::out | std::ios::trunc);
 		if (!write.is_open())
 		{
-			MessageError(EntityComponentMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + " for writing in LoadSceneEntities!";
+			MessageError(EntityMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + m_entities_json_file_name + " for writing in LoadSceneEntities!";
 			return;
 		}
 		write << std::setw(4) << j << std::endl;
 
 		//Now we can return since there is not yet any entities to load.
-		MessageInfo(EntityComponentMgr_id) << "Scene [" + scene.GetName() + "] loaded for the first time!";
+		MessageInfo(EntityMgr_id) << "Scene [" + scene.GetName() + "] loaded for the first time!";
 		return;
 	}
 	//Load scene specific entities
@@ -249,7 +249,7 @@ void EntityManager::_createEntitiesJsonBasicStructure()
 	}
 	else
 	{
-		MessageWarning(EntityComponentMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + "entities.json for writing in _createEntitiesJsonBasicStructure(). Basic structure for entities.json not created!";
+		MessageWarning(EntityMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + "entities.json for writing in _createEntitiesJsonBasicStructure(). Basic structure for entities.json not created!";
 	}
 
 }
