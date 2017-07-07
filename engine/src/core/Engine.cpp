@@ -13,10 +13,6 @@ namespace se
 {
 namespace priv
 {
-//Static variables
-ComponentDictionary Engine::componentDictionary{};
-SystemForComponentDictionary Engine::systemForComponentDictionary{};
-
 
 Engine::Engine()
 	: j_config()
@@ -52,6 +48,8 @@ void Engine::InitializeEngine()
 
 	///Init messenger
 	m_messenger.Initialize();
+
+	m_movementSystem.Initialize();
 
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
@@ -212,11 +210,11 @@ void Engine::_initManagers()
 		auto& paths_itr = fp_itr.value();
 		if (paths_itr.find("json_files_file_path") != paths_itr.end())
 		{
-			//EntityManager
-			m_entityMgr.Initialize(paths_itr.at("json_files_file_path"));
-
 			//SceneMgr
 			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityMgr);
+
+			//EntityManager
+			m_entityMgr.Initialize(paths_itr.at("json_files_file_path"), &m_compMgr);
 
 			//ComponentManager
 			m_compMgr.Initialize(paths_itr.at("json_files_file_path"));

@@ -1,15 +1,16 @@
 #include <systems/MovementSystem.h>
 #include <core/Messages.h>
 #include <imgui/imgui.h>
-
+#include <ids/ComponentIDList.h>
 
 namespace se
 {
 namespace priv
 {
+
 MovementSystem::MovementSystem()
 {
-
+	
 }
 
 MovementSystem::~MovementSystem()
@@ -19,7 +20,7 @@ MovementSystem::~MovementSystem()
 
 void MovementSystem::Initialize()
 {
-
+	
 }
 
 void MovementSystem::Uninitialize()

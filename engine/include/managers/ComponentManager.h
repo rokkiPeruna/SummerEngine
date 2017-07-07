@@ -12,6 +12,7 @@
 #include <utility/Typedefs.h>
 #include <core/Messages.h>
 #include <managers/Entity.h>
+#include <managers/Scene.h>
 
 namespace se
 {
@@ -39,8 +40,11 @@ public:
 	///Update method
 	void Update();
 
+	///Initialize with new scene. Takes in const ref of std::vector containing scene's entities and current scene ptr
+	void InitWithNewScene(const std::vector<Entity>& entities, Scene& scene);
 
-	void AddComponent(Entity& entity);
+	///Add component of given type to given entity
+	void AddComponent(Entity& entity, SEuint64 component_id);
 
 
 
@@ -64,6 +68,9 @@ private:
 
 	///Creates main json structure to /components/.json file if one does not exist
 	void _createComponentsJsonBasicStructure();
+
+	///Loads and creates single entity's components
+	void _createEntitysComponents(SEuint entityid);
 
 };
 

@@ -55,6 +55,9 @@ public:
 	///Run through logic using components as values
 	void Update(float deltaTime) override final;
 
+	///test
+	void AddComponent(Component* c)  { Message(MovementSys_id) << "Added function to map"; }
+
 private:
 	///
 	CPosition* _createCPositionComponent(CPosition& component);

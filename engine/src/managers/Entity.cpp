@@ -7,7 +7,6 @@ namespace se
 Entity::Entity(std::string name, SEuint id)
 	: name(name)
 	, id(id)
-	, sceneId(0)
 	, componentMask(0)
 	, childrenIDs{}
 	, numOfChildren(0)
@@ -18,8 +17,7 @@ Entity::Entity(std::string name, SEuint id)
 Entity::Entity(const Entity& other)
 	: name(other.name)
 	, id(other.id)
-	, sceneId(0)
-	, componentMask(0)
+	, componentMask(other.componentMask)
 	, childrenIDs{}
 	, numOfChildren(0)
 {

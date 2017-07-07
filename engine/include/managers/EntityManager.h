@@ -20,6 +20,9 @@ namespace se
 {
 namespace priv
 {
+///Fordecl
+class ComponentManager;
+
 ///Brief: EntityManager -class handless entities and pointer to them. It can create
 ///entities from scratch or read them from json files. 
 class EntityManager
@@ -34,7 +37,7 @@ public:
 	void operator=(const EntityManager&) = delete;
 
 	///Init method, called by Engine at start up
-	void Initialize(std::string relativePathToEntitiesJson);
+	void Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr);
 
 	///Uninit method, called by Engine at quit
 	void Uninitialize();
@@ -55,6 +58,9 @@ public:
 	void CreateEntity(Entity& other, std::string name = "");
 
 private:
+	///Pointer to ComponentManager
+	ComponentManager* m_compMgr;
+
 	///Clock and times for measuring performance
 	Clock m_clock;
 	Time m_start_time;

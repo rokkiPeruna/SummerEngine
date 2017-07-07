@@ -284,7 +284,7 @@ void SceneManager::_updateGUI()
 			}
 
 			//Save created scene
-			if (scenetype_picker != 0 && scenename != "")
+			if (scenetype_picker != 0 && std::strlen(scenename) != 0)
 			{
 				ImGui::Separator();
 				if (ImGui::Button("Add scene"))

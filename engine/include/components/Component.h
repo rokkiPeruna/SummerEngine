@@ -11,13 +11,6 @@
 
 namespace se
 {
-///Brief: Component types as enumerations. TODO: This should be somewhere where user can modify it.
-enum class COMPONENT_TYPE : SEuint
-{
-	NULL_COMPONENT,
-	TRANSFORM,
-	PHYSICS
-};
 ///Forward declaring ComponentSystem to avoid linking errors
 class ComponentSystem;
 

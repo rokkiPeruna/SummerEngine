@@ -38,7 +38,6 @@ const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_co
 #include <managers/RenderManager.h>
 #include <managers/ComponentManager.h>
 
-#include <core/Dictionaries.h>
 
 namespace se
 {
@@ -72,8 +71,6 @@ public:
 	// Engine update 
 	void EngineUpdate();
 
-	static ComponentDictionary componentDictionary;
-	static SystemForComponentDictionary systemForComponentDictionary;
 	
 	///System getters
 	//

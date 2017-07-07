@@ -36,9 +36,6 @@ public:
 	///Identifier
 	SEuint id;
 
-	///Owner scene's id
-	SEuint sceneId;
-
 	///Component mask telling what components Entity has
 	SEuint64 componentMask;
 

@@ -56,6 +56,59 @@ void ComponentManager::Update()
 
 }
 
+void ComponentManager::InitWithNewScene(const std::vector<Entity>& entities, Scene& scene)
+{
+	//Init name for scene json object
+	m_curr_scene_json_obj = scene.GetName();
+
+	///Find correct json block
+	std::ifstream data(m_rel_path_to_compsJson + m_comps_json_file_name);
+	if (!data.is_open())
+	{
+		MessageError(ComponentMgr_id) << "Failed to open " + m_rel_path_to_compsJson + m_comps_json_file_name + " \nfor reading, component not loaded, undefined behaviour";
+		return;
+	}
+	nlohmann::json j = nlohmann::json::parse(data);
+	data.close();
+	auto& main_obj = j.find(m_main_json_obj);
+	if (main_obj == j.end())
+	{
+		MessageError(ComponentMgr_id) << "Failed to find \"" + m_main_json_obj + "\" json object in InitWithNewScene(),\ncomponents not loaded, undefined behaviour";
+		return;
+	}
+	auto& scene_obj = main_obj.value().find(m_curr_scene_json_obj);
+	if (scene_obj == main_obj.value().end())
+	{
+		//If this the first time the scene is loaded, create scene object and return, no components to load
+		MessageInfo(ComponentMgr_id) << "Could not find scene json object \"" + m_curr_scene_json_obj + "\",\ncreating json object for scene";
+		main_obj.value().push_back({ m_curr_scene_json_obj, {} });
+		std::ofstream write(m_rel_path_to_compsJson + m_comps_json_file_name);
+		if (!write.is_open())
+		{
+			MessageError(ComponentMgr_id) << "Failed to open " + m_rel_path_to_compsJson + m_comps_json_file_name + " \nfor writing, scene json object not created, undefined behaviour";
+			return;
+		}
+		write << std::setw(4) << j << std::endl;
+		return;
+	}
+	//Find all components from correct json block (from the right scene // SE_TODO: Is the smartest way????)
+	//->Loop through entities to get id
+	for (auto& e : entities)
+	{
+		//load and create all components that match entity's id
+		_createEntitysComponents(e.id); //<-- YOU ARE HERE
+	}
+
+
+	//Load components to correct systems
+
+}
+
+void ComponentManager::AddComponent(Entity& entity, SEuint64 component_id)
+{
+
+}
+
 
 void ComponentManager::_createComponentsJsonBasicStructure()
 {
@@ -70,9 +123,12 @@ void ComponentManager::_createComponentsJsonBasicStructure()
 		"  }\n" <<
 		"}" << std::endl;
 	data.close();
-
 }
 
+void ComponentManager::_createEntitysComponents(SEuint entityid)
+{
+
+}
 
 }//namespace priv
 }//namespace se

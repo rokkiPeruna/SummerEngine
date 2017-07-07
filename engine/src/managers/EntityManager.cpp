@@ -8,7 +8,8 @@ namespace se
 namespace priv
 {
 EntityManager::EntityManager()
-	: m_clock()
+	: m_compMgr(nullptr)
+	, m_clock()
 	, m_start_time()
 	, m_end_time()
 	, m_currentScene(nullptr)
@@ -28,12 +29,15 @@ EntityManager::EntityManager()
 
 EntityManager::~EntityManager()
 {
+	m_compMgr = nullptr;
 	m_currentScene = nullptr;
+
 }
 
-void EntityManager::Initialize(std::string relativePathToEntitiesJson)
+void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)
 {
 	m_rel_path_to_entitiesJson = relativePathToEntitiesJson;
+	m_compMgr = compMgr;
 
 	std::ifstream data(m_rel_path_to_entitiesJson + m_entities_json_file_name);
 	if (!data.is_open())
@@ -84,11 +88,17 @@ void EntityManager::Update()
 
 void EntityManager::InitWithNewScene(Scene* scene)
 {
+	//If scene is valid,
 	if (scene)
 	{
+		//we make it current,
 		m_currentScene = scene;
+		//give it to gui,
 		m_gui_scene_name = scene->GetName();
+		//load all scene's entities
 		_loadSceneEntities(*m_currentScene);
+		//and pass those entities to ComponentManager which loads components
+		m_compMgr->InitWithNewScene(m_entities, *m_currentScene);
 	}
 	else
 	{
@@ -229,8 +239,6 @@ void EntityManager::_loadSceneEntities(Scene& scene)
 		m_entities.emplace_back(Entity(itr.key(), id));
 		m_entities_map.emplace(itr.key(), &m_entities.back());
 	}
-
-	//
 }
 
 void EntityManager::_createEntitiesJsonBasicStructure()
