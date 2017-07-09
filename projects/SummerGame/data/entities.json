@@ -1,0 +1,22 @@
+{
+    "entities": {
+        "entities_from_faa": {
+            "sdfsd": 5,
+            "sdfsdsda": 6
+        },
+        "entities_from_kikki": {
+            "kukk": 1,
+            "kukki": 2,
+            "kukkii": 3,
+            "kukkiii": 4
+        }
+    },
+    "x_entities_res_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+    ]
+}

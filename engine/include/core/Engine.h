@@ -3,8 +3,8 @@
 #include <string>
 ///!!**********NOTE**********!!///
 ///String below must always be the relative path to engine_config.json file from .vcproj file.
-///That file contains relative paths to resources and other useful assets.
-const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_config.json";
+///That file contains relative paths to projects and other engine settings.
+//const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_config.json";
 ///!!**********NOTE**********!!///
 
 
@@ -63,10 +63,10 @@ public:
 	void operator=(const Engine&) = delete;
 
 	// Initialize engine 
-	void InitializeEngine();
+	void Initialize(const std::string& projectName);
 
 	// TODO: everything
-	void UninitializeEngine();
+	void Uninitialize();
 
 	// Engine update 
 	void EngineUpdate();
@@ -84,15 +84,39 @@ public:
 	///Static dictionaries
 
 private:
+	///Const string naming the json file containing Engine configurations 
+	const std::string m_eng_conf_file_name;
+
+	///Current active project. Name must match the one in 'projects/' folder
+	std::string m_current_project_name;
+
+	///Const string naming the folder in project folder that contains all json data files
+	const std::string m_json_data_files_fold_name;
+
+	///Relative file path to user's data files. This is passed to managers and it varies depenging if we are doing editor build or deploy build
+	std::string m_path_to_user_files;
+
 	///Initialize nlohmann::json object with engine_congif.json
 	nlohmann::json j_config;
-	void _initJConfigObject();
+	bool _initJConfigObject();
+
+	///Finds the path to user files
+	void _findPathToUserFiles();
 
 	///Get settings from engine_config.json
 	void _initAndApplyEngineSettings();
 
 	///Init managers
 	void _initManagers();
+
+	///Init systems
+	void _initSystems();
+
+	///Update managers
+	void _updateMgrs();
+
+	///Update systems
+	void _updateSystems(SEfloat deltaTime);
 
 	///Clock and time
 	Clock m_engine_clock;

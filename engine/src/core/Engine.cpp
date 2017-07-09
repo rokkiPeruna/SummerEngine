@@ -4,6 +4,7 @@
 #include <ostream>
 #include <fstream>
 #include <iomanip>
+#include <exception>
 //#include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
 #include <core/imgui_impl_sdl_gl3.h>
@@ -15,7 +16,11 @@ namespace priv
 {
 
 Engine::Engine()
-	: j_config()
+	: m_eng_conf_file_name("engine_config.json")
+	, m_current_project_name("")
+	, m_json_data_files_fold_name("data")
+	, m_path_to_user_files("")
+	, j_config()
 	, m_engine_clock()
 	, m_frame_time()
 	, m_input_coolDown()
@@ -33,35 +38,42 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-
+	
 }
 
 
-void Engine::InitializeEngine()
+void Engine::Initialize(const std::string& projectName)
 {
-	//Fetch engine settings from engine_config.json and apply them
-	_initJConfigObject();
-	_initAndApplyEngineSettings();
+	m_current_project_name = projectName;
 
-	//Initialize window and graphical context
+	//Create path from .vcproj or .exe to the json files containing game data.
+	_findPathToUserFiles();
+
+	//Read engine settings to json object for later use
+	if (_initJConfigObject())
+	{
+		_initAndApplyEngineSettings();
+	}
+	else
+	{
+		std::runtime_error("Failed to initialize json object in Engine::Initialize()");
+		return;
+	}
+
+
+
 	m_window->Initialize();
-
-	///Init messenger
+	
 	m_messenger.Initialize();
-
-	m_movementSystem.Initialize();
+	
+	_initManagers();
+	_initSystems();
 
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
-
-	//Init managers:
-	_initManagers();
-
-	
-
 }
 
-void Engine::UninitializeEngine()
+void Engine::Uninitialize()
 {
 
 
@@ -74,19 +86,16 @@ void Engine::EngineUpdate()
 	bool show_another_window = false;
 	ImVec4 clear_color = ImColor(114, 144, 154);
 
-
-
 	bool loop = true;
 	while (loop)
 	{
 		//
 		m_frame_time = m_engine_clock.restart();
-		float deltaTime = m_frame_time.asSeconds();
-
+		SEfloat deltaTime = m_frame_time.asSeconds();
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
-			//Send events to ImGui_SDL_GL3_implentation
+			//Send events to ImGui_SDL_GL3_implentation //SE_TODO: Switch by macro, bool, etc.
 			ImGui_ImplSdlGL3_ProcessEvent(&event);
 
 			if (event.type == SDL_QUIT)
@@ -112,32 +121,19 @@ void Engine::EngineUpdate()
 
 
 		}
-		//New frame for imgui drawing
+		//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
 		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+		_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
 
-		//Update gui
-		_updateGUI();
-
-
-		///Update systems TODO: Thread these, mind the update order
-		m_movementSystem.Update(deltaTime);
-
-
-
-		
-
-		//Update managers
-		m_sceneMgr.Update(_gui_show_scene_mgr_window);
-		m_entityMgr.Update();
+		_updateMgrs();
+		_updateSystems(deltaTime);
 
 		//Messenger should be last to update before render
 		m_messenger.PrintMessages(_messageLogType_console);
 
-		//
-		
-
 		// Rendering
-		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+		//glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+		glViewport(0, 0, _gui_width, _gui_heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui::Render();
@@ -149,20 +145,40 @@ void Engine::EngineUpdate()
 
 }
 
-void Engine::_initJConfigObject()
+bool Engine::_initJConfigObject()
 {
 	//Read engine_config.json file and set engine settings accordingly
-	std::ifstream data(REL_PATH_TO_ENGINE_CONFIG);
+	std::ifstream data(m_path_to_user_files + m_eng_conf_file_name);
 	if (data.is_open())
 	{
 		//Read data to single string
 		j_config = nlohmann::json::parse(data);
 		data.close();
+		return true;
 	}
 	else
 	{
 		MessageError(Engine_id) << "Failed to initialize json object in _initJConfigObject()";
+		return false;
 	}
+}
+
+void Engine::_findPathToUserFiles()
+{
+	//Find out where user files are located:
+	std::ifstream deploypath(m_json_data_files_fold_name);
+	if (deploypath.is_open())
+	{
+		m_path_to_user_files = m_json_data_files_fold_name + "/";
+		deploypath.close();
+		return;
+	}
+	else
+	{
+		m_path_to_user_files = "../../projects/" + m_current_project_name + "/" + m_json_data_files_fold_name + "/";
+	}
+
+
 }
 
 void Engine::_initAndApplyEngineSettings()
@@ -197,43 +213,42 @@ void Engine::_initAndApplyEngineSettings()
 		_gui_heigth = windata.heigth;
 	}
 
-	//Initialize imgui IO
+	//Initialize imgui IO. This file will hold users preference window positions and sizes. SE_TODO: Create switch for editor mode and deploy mode builds
 	ImGui::GetIO().IniFilename = "engine_gui_conf.ini";
 
 }
 
 void Engine::_initManagers()
 {
-	auto& fp_itr = j_config.find("relative_file_paths");
-	if (fp_itr != j_config.end())
-	{
-		auto& paths_itr = fp_itr.value();
-		if (paths_itr.find("json_files_file_path") != paths_itr.end())
-		{
-			//SceneMgr
-			m_sceneMgr.Initialize(paths_itr.at("json_files_file_path"), &m_entityMgr);
+	//SceneMgr
+	m_sceneMgr.Initialize(m_path_to_user_files, &m_entityMgr);
 
-			//EntityManager
-			m_entityMgr.Initialize(paths_itr.at("json_files_file_path"), &m_compMgr);
+	//EntityManager
+	m_entityMgr.Initialize(m_path_to_user_files, &m_compMgr);
 
-			//ComponentManager
-			m_compMgr.Initialize(paths_itr.at("json_files_file_path"));
-		}
-		else
-		{
-			MessageError(Engine_id) << "Could not find relative file path for scenes.json in InitializeEngine()\n SceneManager not initialized, won't work :(";
-		}
-	}
-	else
-	{
-		MessageError(Engine_id) << "Could find \"relative_file_paths\" json object in InitializeEngine. Engine won't work!";
-		return;
-	}
+	//ComponentManager
+	m_compMgr.Initialize(m_path_to_user_files);
+}
+
+void Engine::_initSystems()
+{
+	m_movementSystem.Initialize();
+}
+
+void Engine::_updateMgrs()
+{
+	m_sceneMgr.Update();
+	m_entityMgr.Update();
+}
+
+void Engine::_updateSystems(SEfloat deltaTime)
+{
+	m_movementSystem.Update(deltaTime);
 }
 
 void Engine::_updateGUI()
 {
-	//Engine window in editor //TODO: Move to own function
+	//Engine window in editor
 	if (_gui_show_main_window)
 	{
 		ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
@@ -250,6 +265,12 @@ void Engine::_updateGUI()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
+
+	//SE_TODO: Create better gui structure
+	m_entityMgr.ShowAndUpdateGUI();
+	m_sceneMgr.ShowAndUpdateGUI();
+	m_compMgr.ShowAndUpdateGUI();
+
 }
 
 }//namespace priv

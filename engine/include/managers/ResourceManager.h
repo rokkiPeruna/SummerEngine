@@ -14,6 +14,7 @@
 #include <nlohmann_json/json.hpp>
 
 //SE includes:
+#include <managers/Manager.h>
 #include <managers/Resource.h>
 #include <core/Messages.h>
 
@@ -24,7 +25,7 @@ namespace se
 namespace priv
 {
 
-class ResourceManager
+class ResourceManager : public Manager
 {
 public:
 	///Default constructor
@@ -39,10 +40,12 @@ public:
 	void Initialize(const std::string path);
 
 	///Delete all resources, uninitialize dependencies
-	void Uninitialize();
+	void Uninitialize() override final;
 
 	///Update resource manager. Checks if scene has changed and/or new resources must be loaded
-	void Update();
+	void Update() override final;
+
+	void ShowAndUpdateGUI() override final;
 
 	///Load text resource. Returns shared_ptr to TextResource object.
 	std::shared_ptr<TextResource> LoadTextResource(std::string filepath, std::string name);

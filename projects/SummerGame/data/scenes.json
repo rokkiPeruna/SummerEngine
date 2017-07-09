@@ -1,16 +1,16 @@
 {
     "scenes": {
-        "mainmenu": {
+        "faa": {
             "heigth": 0,
-            "id": 1,
-            "name": "mainmenu",
+            "id": 2,
+            "name": "faa",
             "type": "menu",
             "width": 0
         },
-        "mainmenu33": {
+        "kikki": {
             "heigth": 0,
-            "id": 2,
-            "name": "mainmenu33",
+            "id": 1,
+            "name": "kikki",
             "type": "credits",
             "width": 0
         }

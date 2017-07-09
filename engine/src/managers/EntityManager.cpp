@@ -83,7 +83,57 @@ void EntityManager::Uninitialize()
 
 void EntityManager::Update()
 {
-	_updateGUI();
+
+}
+
+void EntityManager::ShowAndUpdateGUI()
+{
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("EntityComponentMgr", &_gui_show_entity_comp_mgr_window); ImGui::SameLine();
+	ImGui::Text(m_gui_scene_name.c_str());
+	ImGui::Separator();
+
+	if (ImGui::CollapsingHeader("Create entity"))
+	{
+		static SEchar entityname[64];
+		ImGui::InputText("Name", entityname, 64, ImGuiInputTextFlags_CharsNoBlank);
+		if (std::strlen(entityname) != 0)
+		{
+			if (ImGui::Button("Create!"))
+			{
+				CreateEntity(entityname);
+			}
+		}
+
+	}
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader("Entities"))
+	{
+		for (auto& e : m_entities)
+		{
+			ImGui::Bullet();
+			if (ImGui::SmallButton(e.name.c_str()))
+			{
+				m_currentEntity = &e;
+			}
+		}
+	}
+	ImGui::End();
+
+	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Component Editor", &_gui_show_component_mgr_window);
+	if (m_currentEntity)
+		ImGui::Text(m_currentEntity->name.c_str());
+	else
+		ImGui::Text("NO ACTIVE ENTITY");
+
+	ImGui::Separator();
+
+
+	ImGui::End();
 }
 
 void EntityManager::InitWithNewScene(Scene* scene)
@@ -259,58 +309,6 @@ void EntityManager::_createEntitiesJsonBasicStructure()
 	{
 		MessageWarning(EntityMgr_id) << "Could not open " + m_rel_path_to_entitiesJson + "entities.json for writing in _createEntitiesJsonBasicStructure(). Basic structure for entities.json not created!";
 	}
-
-}
-
-void EntityManager::_updateGUI()
-{
-	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("EntityComponentMgr", &_gui_show_entity_comp_mgr_window); ImGui::SameLine();
-	ImGui::Text(m_gui_scene_name.c_str());
-	ImGui::Separator();
-
-	if (ImGui::CollapsingHeader("Create entity"))
-	{
-		static SEchar entityname[64];
-		ImGui::InputText("Name", entityname, 64, ImGuiInputTextFlags_CharsNoBlank);
-		if (std::strlen(entityname) != 0)
-		{
-			if (ImGui::Button("Create!"))
-			{
-				CreateEntity(entityname);
-			}
-		}
-
-	}
-	ImGui::Separator();
-	if (ImGui::CollapsingHeader("Entities"))
-	{
-		for (auto& e : m_entities)
-		{
-			ImGui::Bullet();
-			if (ImGui::SmallButton(e.name.c_str()))
-			{
-				m_currentEntity = &e;
-			}
-		}
-	}
-	ImGui::End();
-
-	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
-	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Component Editor", &_gui_show_component_mgr_window);
-	if (m_currentEntity)
-		ImGui::Text(m_currentEntity->name.c_str());
-	else
-		ImGui::Text("NO ACTIVE ENTITY");
-
-	ImGui::Separator();
-
-
-	ImGui::End();
-
 
 }
 

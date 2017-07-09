@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 //SE includes:
+#include <managers/Manager.h>
 #include <components/Component.h>
 #include <managers/Entity.h>
 #include <managers/Scene.h>
@@ -20,12 +21,11 @@ namespace se
 {
 namespace priv
 {
-///Fordecl
 class ComponentManager;
 
 ///Brief: EntityManager -class handless entities and pointer to them. It can create
 ///entities from scratch or read them from json files. 
-class EntityManager
+class EntityManager : public Manager
 {
 public:
 	///Default constructor
@@ -40,10 +40,12 @@ public:
 	void Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr);
 
 	///Uninit method, called by Engine at quit
-	void Uninitialize();
+	void Uninitialize() override final;
 
 	///Update method
-	void Update();
+	void Update() override final;
+
+	void ShowAndUpdateGUI() override final;
 
 	///Initialize with EntityManager with new current scene and it's entities. This is called by SceneManager.
 	void InitWithNewScene(Scene* scene);
@@ -108,8 +110,6 @@ private:
 
 	///GUI
 	std::string m_gui_scene_name;
-
-	void _updateGUI();
 
 };
 }//namespace priv

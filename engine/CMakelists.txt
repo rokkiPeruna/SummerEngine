@@ -40,6 +40,7 @@ source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
 #Managers
 set(MANAGERS_FILES
+	include/managers/Manager.h
 	include/managers/ResourceManager.h
 	src/managers/ResourceManager.cpp
 	include/managers/Resource.h
@@ -131,11 +132,6 @@ set(JSON_ENGINE_CONFIG
 	)
 	
 set(JSON_FILES
-	${JSON_COMPONENT_TEMPLATES}
-	${JSON_COMPONENTS}
-	${JSON_ENTITY_TEMPLATES}
-	${JSON_ENTITIES}
-	${JSON_SCENES}
 	${JSON_ENGINE_CONFIG}
 	)
 	

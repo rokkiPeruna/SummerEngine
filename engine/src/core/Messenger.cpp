@@ -85,6 +85,7 @@ void Messenger::_printToConsole()
 			ImGui::TextColored(textcolor, sender.c_str());
 			ImGui::TextColored(textcolor, message);
 		}
+#ifndef NDEBUG
 	if (m_print_debug_msgs)
 	{
 		for (auto m : m_debugMessages)
@@ -105,6 +106,7 @@ void Messenger::_printToConsole()
 			ImGui::TextColored(textcolor, message);
 		}
 	}
+#endif
 }
 
 }//namespace priv

@@ -32,6 +32,11 @@ void ResourceManager::Update()
 	//TODO: If update is invoked, check if scene has changed and/or resources must be loaded
 }
 
+void ResourceManager::ShowAndUpdateGUI()
+{
+
+}
+
 SEuint ResourceManager::GetShaderProgram(std::string name)
 {
 	std::map<std::string, SEuint>::iterator itr = m_shaderProgramContainer.find(name);

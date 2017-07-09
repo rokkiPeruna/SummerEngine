@@ -56,6 +56,11 @@ void ComponentManager::Update()
 
 }
 
+void ComponentManager::ShowAndUpdateGUI()
+{
+
+}
+
 void ComponentManager::InitWithNewScene(const std::vector<Entity>& entities, Scene& scene)
 {
 	//Init name for scene json object

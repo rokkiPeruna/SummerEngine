@@ -1,8 +1,9 @@
 {
   "relative_file_paths": {
-	"shader_file_path": "../../engine/shaders/",
+	  "shader_file_path": "../../engine/shaders/",
     "resources_file_path": "",
-    "json_files_file_path": "../../engine/json_files/"
+    "json_files_file_path": "../../engine/json_files/",
+    "projects_files": "../../projects/"
   },
   "window_settings": {
     "window_name": "SE_editor",

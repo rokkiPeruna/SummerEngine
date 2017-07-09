@@ -11,6 +11,7 @@
 
 
 ///SE includes:
+#include <managers/Manager.h>
 #include <managers/Scene.h>
 #include <managers/EntityManager.h>
 
@@ -20,7 +21,7 @@ namespace priv
 {
 ///Brief: SceneManager handles creation of scenes, reading and writing them from/to json files
 ///and scene changes.
-class SceneManager
+class SceneManager : public Manager
 {
 public:
 	///Default constructor
@@ -35,10 +36,13 @@ public:
 	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr);
 
 	///Uninit
-	void Uninitialize();
+	void Uninitialize() override final;
 
 	///Update manager and gui
-	void Update(bool showGUIwindow);
+	void Update() override final;
+
+	///
+	void ShowAndUpdateGUI() override final;
 
 	///Add new scene
 	bool AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
@@ -62,6 +66,9 @@ private:
 
 	///Const string naming the file containing scenes as json objects
 	const std::string m_scenes_json_file_name;
+
+	///Const string naming the main json object in json file ("scenes" etc)
+	const std::string m_main_json_obj_name;
 
 	///Scene container
 	std::vector<Scene> m_scenes;

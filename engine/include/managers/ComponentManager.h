@@ -9,8 +9,8 @@
 
 
 //SE includes:
+#include <managers/Manager.h>
 #include <utility/Typedefs.h>
-#include <core/Messages.h>
 #include <managers/Entity.h>
 #include <managers/Scene.h>
 
@@ -20,7 +20,7 @@ namespace priv
 {
 ///Brief: ComponentManager -class is responsible for handling all component related matters,
 ///such as assigning them to correct entity and running the component editor window
-class ComponentManager
+class ComponentManager : public Manager
 {
 public:
 	///Default constructor
@@ -35,10 +35,12 @@ public:
 	void Initialize(std::string relativeFilePathToComponentsJson);
 
 	///Uninit method
-	void Uninitialize();
+	void Uninitialize() override final;
 
 	///Update method
-	void Update();
+	void Update() override final;
+
+	void ShowAndUpdateGUI() override final;
 
 	///Initialize with new scene. Takes in const ref of std::vector containing scene's entities and current scene ptr
 	void InitWithNewScene(const std::vector<Entity>& entities, Scene& scene);

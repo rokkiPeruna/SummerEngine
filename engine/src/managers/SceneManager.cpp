@@ -12,6 +12,7 @@ SceneManager::SceneManager()
 	: m_ecm_ptr(nullptr)
 	, m_rel_path_to_scenesJson("")
 	, m_scenes_json_file_name("scenes.json")
+	, m_main_json_obj_name("scenes")
 	, m_scenes{}
 	, m_currentScene(nullptr)
 	, m_sceneNamesAndIDs{}
@@ -46,14 +47,69 @@ void SceneManager::Uninitialize()
 
 }
 
-void SceneManager::Update(bool showGUIwindow)
+void SceneManager::Update()
 {
-	if (showGUIwindow)
-	{
-		_updateGUI();
-	}
+
 }
 
+void SceneManager::ShowAndUpdateGUI()
+{
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
+
+	if (ImGui::CollapsingHeader("Create scene"))
+	{
+		ImGui::Text("Scene name:");
+		static SEchar scenename[64];
+		ImGui::InputText("", scenename, 64, ImGuiInputTextFlags_CharsNoBlank);
+		if (std::strlen(scenename) != 0)
+		{
+			ImGui::Text("Scene type");
+			static SEint scenetype_picker = 0;
+			ImGui::RadioButton("Menu", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::MENU)); ImGui::SameLine();
+			ImGui::RadioButton("Level", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::LEVEL)); ImGui::SameLine();
+			ImGui::RadioButton("Credits", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::CREDITS));
+
+			static SEint width = 0;
+			static SEint heigth = 0;
+			if (scenetype_picker == static_cast<SEint>(SCENE_TYPE::LEVEL))
+			{
+				ImGui::Separator();
+				ImGui::SliderInt("Level width", &width, 2, 128);
+				ImGui::SliderInt("Level heigth", &heigth, 2, 128);
+			}
+
+			if (scenetype_picker != 0 && std::strlen(scenename) != 0)
+			{
+				ImGui::Separator();
+				if (ImGui::Button("Add scene"))
+				{
+					m_gui_sceneAdded = AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
+				}
+			}
+		}
+	}
+	if (ImGui::CollapsingHeader("Load scene"))
+	{
+		ImGui::Separator();
+		if (ImGui::TreeNode("Scene list"))
+		{
+			ImGui::Separator();
+			for (auto sn : m_sceneNamesAndIDs)
+			{
+				ImGui::Bullet();
+				if (ImGui::SmallButton(sn.first.c_str()))
+				{
+					LoadScene(sn.first);
+				}
+			}
+			ImGui::TreePop();
+		}
+	}
+	_handlePopups();
+	ImGui::End();
+}
 
 bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
@@ -155,7 +211,7 @@ void SceneManager::LoadScene(std::string scenename)
 		return;
 	}
 	//Take itr to "scenes" object
-	auto& scenes_obj = main_obj.at("scenes");
+	auto& scenes_obj = main_obj.at(m_main_json_obj_name);
 
 	//Check that scene with parameter "scenename" can be found
 	if (scenes_obj.find(scenename) == scenes_obj.end())
@@ -246,7 +302,7 @@ void SceneManager::_createSceneStructureToJsonFile()
 	}
 	//
 	data << "{\n" <<
-		"\"" + m_scenes_json_file_name + "\":{\n" <<
+		"\"" + m_main_json_obj_name + "\":{\n" <<
 		"  }\n" <<
 		"}" << std::endl;
 	data.close();
@@ -254,79 +310,7 @@ void SceneManager::_createSceneStructureToJsonFile()
 
 void SceneManager::_updateGUI()
 {
-	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
-	//Create new scene
-	if (ImGui::CollapsingHeader("Create scene"))
-	{
-		ImGui::Text("Scene name:");
-		static SEchar scenename[64];
-		ImGui::InputText("", scenename, 64, ImGuiInputTextFlags_CharsNoBlank);
-
-		if (std::strlen(scenename) != 0)
-		{
-
-			ImGui::Text("Scene type");
-			static SEint scenetype_picker = 0;
-			ImGui::RadioButton("Menu", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::MENU)); ImGui::SameLine();
-			ImGui::RadioButton("Level", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::LEVEL)); ImGui::SameLine();
-			ImGui::RadioButton("Credits", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::CREDITS));
-
-			//If level is chosen, show level size and other details
-			static SEint width = 0;
-			static SEint heigth = 0;
-			if (scenetype_picker == static_cast<SEint>(SCENE_TYPE::LEVEL))
-			{
-				ImGui::Separator();
-				ImGui::SliderInt("Level width", &width, 2, 128);
-				ImGui::SliderInt("Level heigth", &heigth, 2, 128);
-			}
-
-			//Save created scene
-			if (scenetype_picker != 0 && std::strlen(scenename) != 0)
-			{
-				ImGui::Separator();
-				if (ImGui::Button("Add scene"))
-				{
-					m_gui_sceneAdded = AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
-				}
-			}
-		}
-	}
-	//Load scene from json
-	if (ImGui::CollapsingHeader("Load scene"))
-	{
-		ImGui::Separator();
-		if (ImGui::TreeNode("Scene list"))
-		{
-			ImGui::Separator();
-			//Add scene names to list to choose from
-			for (auto sn : m_sceneNamesAndIDs)
-			{
-				ImGui::Bullet();
-				if (ImGui::SmallButton(sn.first.c_str()))
-				{
-					LoadScene(sn.first);
-				}
-			}
-			//Check if scenename is double clicked
-			//for (SEint i = 0; i < selected.size(); i++)
-			//{
-			//	if (ImGui::IsMouseDoubleClicked(i))
-			//	{
-			//		Message(SceneMgr_id) << "Double click!";
-			//
-			//	}
-			//}
-			ImGui::TreePop();
-		}
-	}
-
-	//Handle pop ups
-	_handlePopups();
-
-	ImGui::End();
+	
 }
 
 void SceneManager::_handlePopups()
