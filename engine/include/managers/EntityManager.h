@@ -50,7 +50,6 @@ public:
 	///Initialize with EntityManager with new current scene and it's entities. This is called by SceneManager.
 	void InitWithNewScene(Scene* scene);
 
-
 	///Create new entity
 	void CreateEntity(std::string name);
 	
@@ -58,6 +57,9 @@ public:
 	///new Entity will be assigned as child of the other and will receive name
 	///from other appended with child count index, e.g "flying_enemy_1"
 	void CreateEntity(Entity& other, std::string name = "");
+
+	///Rewrites all entities to current scene json
+	void SaveProgress();
 
 private:
 	///Pointer to ComponentManager
@@ -77,8 +79,14 @@ private:
 	///Const string that is added in front of every json object containing entities. See entities.json
 	const std::string m_prefix_for_json_objs;
 
-	///Relative path to entities.json
-	std::string m_rel_path_to_entitiesJson;
+	///Relative path to scenes.json
+	std::string m_rel_path_to_json_scenes;
+
+	///Name of the subfolder where scenes exist
+	const std::string m_scenes_subfolder_name;
+
+	///Const string naming the suffix for scene files
+	const std::string m_scene_file_suffix;
 
 	///Const string naming the main json object
 	const std::string m_main_json_obj;
@@ -101,12 +109,11 @@ private:
 	///Container holding pointers to entities and their access keys (names)
 	std::unordered_map<std::string, Entity*> m_entities_map;
 	
-	///Loads scene's entities
-	void _loadSceneEntities(Scene& scene);
+	///Loads current scene's entities
+	void _loadSceneEntities();
 
-	///Creates main json structure to /entities/.json if one does not exist
-	void _createEntitiesJsonBasicStructure();
-
+	///Finds scene's next  free entity id
+	SEuint _findNextFreeEntityID();
 
 	///GUI
 	std::string m_gui_scene_name;

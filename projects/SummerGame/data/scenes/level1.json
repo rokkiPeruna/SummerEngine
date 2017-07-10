@@ -1,0 +1,16 @@
+{
+    "entities": {
+        "antti": 4,
+        "kalle": 1,
+        "keijo": 0,
+        "matti": 2,
+        "pena": 3,
+        "pentti_romppainen": 5
+    },
+    "scene_info": {
+        "heigth": 50,
+        "name": "level1",
+        "type": 2,
+        "width": 46
+    }
+}

@@ -38,12 +38,6 @@ public:
 
 	///Component mask telling what components Entity has
 	SEuint64 componentMask;
-
-	///Vector containing child entity ids
-	std::vector<SEuint> childrenIDs;
-
-	///Number of childen
-	SEuint numOfChildren;
 };
 }//namespace se
 

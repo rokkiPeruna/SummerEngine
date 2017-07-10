@@ -44,7 +44,7 @@ public:
 	///
 	void ShowAndUpdateGUI() override final;
 
-	///Add new scene
+	///Add new scene. To move to newly created scene, you must also load it with LoadScene()
 	bool AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
 
 	///Save current scene to json
@@ -56,41 +56,66 @@ public:
 	///Delete scene from json file
 	void DeleteScene(std::string scenename);
 
+	///Save progress. Calls EntityManager's SaveProgress
+	void SaveProgress();
+
 
 private:
 	///Pointer to EntityComponentManager
 	EntityManager* m_ecm_ptr;
 
-	///Relative file path to json folder
-	std::string m_rel_path_to_scenesJson;
+	///Json object for holding current scene. This gets send to EntityManager and ComponentManager
+	nlohmann::json m_sceneJsonObject;
 
-	///Const string naming the file containing scenes as json objects
-	const std::string m_scenes_json_file_name;
+	///Json object for holding scene names object
+	nlohmann::json m_sceneNamesJsonObject;
 
-	///Const string naming the main json object in json file ("scenes" etc)
-	const std::string m_main_json_obj_name;
+	///Relative file path to folder containing scenes as json files
+	std::string m_rel_path_to_json_scenes;
 
-	///Scene container
-	std::vector<Scene> m_scenes;
+	///Name of the subfolder where scenes exist
+	const std::string m_scenes_subfolder_name;
+
+	///Const string naming the suffix for scene files
+	const std::string m_scene_file_suffix;
+
+	///Const string naming the json file containing all scene names
+	const std::string m_scene_name_list_file;
+
+	///Const string naming the json object that holds scene names in array
+	const std::string m_scene_names_json_obj;
+
+	///Const string naming the json object that holds scene's info (type, size, etc.)
+	const std::string m_scene_struct_info_obj_name;
+
+	///Const string naming the json object that holds scene's data
+	const std::string m_scene_struct_main_obj_name;
+
 	///Current scene
-	Scene* m_currentScene;
+	Scene m_currentScene;
+
 	///Scene name container
-	std::map<std::string, SEuint> m_sceneNamesAndIDs;
-	///Current largest scene id found
-	SEuint m_curr_largest_sceneid;
-	
+	std::vector<std::string> m_sceneNames;
+
+	///Read file data to json object
+	bool _readFileToJson(nlohmann::json& j, std::string& filepath);
+
+	///Rewrite file with values from json object
+	bool _rewriteFile(nlohmann::json& j, std::string& filepath);
 
 	///Loads scene names from scenes.json so that user can see
 	/// and pick from names in SceneManager GUI. Also load scene ids to avoid id conflicts
-	void _loadSceneNamesAndIDs();
+	void _loadSceneNames();
 
-	///If scenes.json is empty, create scene structure for json objects
-	void _createSceneStructureToJsonFile();
+	///On adding new scene, create basic structure for the json file
+	void _createStructToNewScene(std::ofstream& file, std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
+
+	///If m_scene_name_list_file is empty, create basic structure
+	void _createStructToScnNamesJson();
 
 
 	///GUI
 	///Method for updating gui
-	void _updateGUI();
 	void _handlePopups();
 
 	///GUI variables

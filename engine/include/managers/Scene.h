@@ -30,13 +30,13 @@ class Scene
 {
 public:
 	///Default constructor. Takes in string for scene name
-	Scene(std::string sceneName, SCENE_TYPE type, SEint id, SEuint width, SEuint heigth);
+	Scene(std::string sceneName, SCENE_TYPE type, SEuint width, SEuint heigth);
 	///Destructor
 	~Scene();
 	///Copy constructor
 	Scene(const Scene&);
 	///Deleted assign operator
-	void operator=(const Scene&) = delete;
+	void operator=(const Scene&);
 
 	///Load resources to current scene
 
@@ -45,20 +45,22 @@ public:
 
 	///Getters for variables
 	std::string GetName();
+	nlohmann::json* GetData();
 	SCENE_TYPE GetType();
-	SEint GetID();
 	SEuint GetWidth();
 	SEuint GetHeigth();
+
+	void SetData(nlohmann::json* j);
 
 private:
 	///Name of the scene
 	std::string m_name;
 
+	///Json object holding scene data
+	nlohmann::json *m_data;
+
 	///Type of the scene
 	SCENE_TYPE m_type;
-
-	///Id as SEint
-	SEint m_id;
 
 	///Width and heigth
 	SEuint m_width;
