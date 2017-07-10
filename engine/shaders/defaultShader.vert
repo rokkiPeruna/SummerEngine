@@ -1,10 +1,12 @@
 #version 150 core
 
-in vec2 position;
-in vec3 color;
-out vec3 Color;
+in vec2 vertexPosition;
+
 void main()
 {
-    Color = color;
-    gl_Position = vec4(position, 0.0, 1.0);
+	gl_Position.xy = vertexPosition;
+	gl_Position.z = 0.0;
+	gl_Position.w = 1.0;
+	
 }
+

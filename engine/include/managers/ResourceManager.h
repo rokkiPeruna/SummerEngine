@@ -60,18 +60,21 @@ private:
 	///Stores shader ID's as 'shader name' & 'shader resource' pair
 	std::map<std::string, SEuint> m_shaderProgramContainer;
 
-	///Check for compile errors, returns true if there are any
-	SEbool _compileErrors(SEuint shader);
 	
 	void _initializeShaders(const std::string sourcePath);
 
-	void _createShaders(const std::string path, const std::string name, const std::string vertexName, const std::string fragmentName);
+	SEuint _compileShader(const std::string path, const std::string shaderName, GLenum type);
+
+	void _linkShaders(const std::string name, SEuint shaderProgramId, SEuint vertexShader, SEuint fragmentShader);
+
+	void _addAttribute(SEuint shaderProgram, const unsigned int currentAtrib, const std::string& attributeName);
 
 	void _initJConfigObject();
+	
+	///Check for compile errors, returns true if there are any
+	SEbool _compileErrors(SEuint shader);
 
 	nlohmann::json json_config;
-	
-
 
 };
 }//namespace priv

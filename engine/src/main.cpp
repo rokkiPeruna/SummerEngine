@@ -2,7 +2,7 @@
 
 //#undef main
 //For memory management
-#include <vld.h>
+//#include <vld.h>
 //For debug
 #include <Windows.h>
 #include <core/Engine.h>

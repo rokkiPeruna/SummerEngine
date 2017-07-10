@@ -43,6 +43,9 @@ namespace se
 {
 namespace priv
 {
+
+
+
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
 class Engine
@@ -73,7 +76,7 @@ public:
 
 	static ComponentDictionary componentDictionary;
 	static SystemForComponentDictionary systemForComponentDictionary;
-	
+
 	///System getters
 	//
 	///Returns ptr to Engine's TransformSystem
@@ -118,6 +121,9 @@ private:
 
 	///GUI
 	void _updateGUI();
+
+	//Testing
+	std::vector<TestEntity> m_testEntityContainer;
 
 };
 }//namespace priv

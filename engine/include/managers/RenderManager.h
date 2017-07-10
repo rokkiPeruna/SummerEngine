@@ -36,6 +36,28 @@ namespace se
 namespace priv
 {
 
+class TestEntity
+{
+public:
+
+	TestEntity(CPosition position, CTriangleShape shape, Vec4f color) :
+		m_position(position),
+		m_shape(shape),
+		m_color(color)
+	{
+
+	};
+
+	CPosition m_position;
+	CTriangleShape m_shape;
+	Vec4f m_color;
+
+private:
+
+
+};
+
+
 class RenderManager
 {
 public:
@@ -53,10 +75,10 @@ public:
 	void operator=(const RenderManager&) = delete;
 
 	///Initialize Render Manager
-	void Initialize(SEuint shaderProgram);
+	void Initialize();
 
 	///Update render manager
-	void UpdateRenderManager(SDL_Window* windowHandle);
+	void UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram, TestEntity entity);
 
 	///Use certain shader program
 	void Use(SEuint shaderProgram);
@@ -66,7 +88,6 @@ public:
 
 private:
 
-	void _addAttribute(SEuint shaderProgram, const std::string& attributeName);
 	SEuint getUniformLocation(SEuint shaderProgram, const std::string& uniformName);
 
 	///Vertex buffer object
@@ -76,10 +97,6 @@ private:
 
 	//Number of attributes
 	SEint m_numAttributes;
-
-	std::vector<CPosition> m_positionContainer;
-	std::vector<CTriangleShape> m_triangleContainer;
-
 	
 
 };

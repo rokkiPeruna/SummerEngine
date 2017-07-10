@@ -30,6 +30,12 @@ Engine::Engine()
 	, m_messenger()
 {
 
+	TestEntity Player(CPosition(0.0f, 0.0f, 0.0f), CTriangleShape(0.2), Vec4f(1.0, 0.0, 0.0, 1.0));
+
+
+
+	m_testEntityContainer.push_back(Player);
+
 }
 
 Engine::~Engine()
@@ -61,22 +67,13 @@ void Engine::InitializeEngine()
 		}
 	}
 
-	se::Vec2f pulikka[3] =
-	{
-		se::Vec2f(1.0, 1.0),
-		se::Vec2f(0.5, 0.5),
-		se::Vec2f(0.0, 0.0)
-	};
-
-	m_renderMgr.Initialize(m_resourceMgr.GetShaderProgram("defaultShader"));
+	m_renderMgr.Initialize();
 
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 
 	//Init managers:
 	_initManagers();
-
- 	
 
 
 }
@@ -143,9 +140,6 @@ void Engine::EngineUpdate()
 		m_movementSystem.Update(deltaTime);
 
 
-
-		
-
 		//Update managers
 		m_sceneMgr.Update(_gui_show_scene_mgr_window);
 		m_entityCompMgr.Update();
@@ -155,7 +149,7 @@ void Engine::EngineUpdate()
 
 		//
 		
-		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle());
+		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle(), m_resourceMgr.GetShaderProgram("defaultShader"), m_testEntityContainer.at(0));
 		// Rendering
 	//	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
 	//	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);

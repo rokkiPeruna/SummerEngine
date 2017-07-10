@@ -16,15 +16,6 @@ RenderManager::RenderManager()
 	, m_numAttributes(0)
 
 {
-	m_positionContainer.push_back(CPosition(0.2f, 0.2f, 0.0f));
-	m_positionContainer.push_back(CPosition(-0.2f, -0.4f, 0.0f));
-	m_positionContainer.push_back(CPosition(-0.4f, 0.2f, 0.0f));
-	m_positionContainer.push_back(CPosition(0.6f, 0.7f, 0.0f));
-
-	m_triangleContainer.push_back(CTriangleShape(0.2f));
-	m_triangleContainer.push_back(CTriangleShape(0.1f));
-	m_triangleContainer.push_back(CTriangleShape(se::Vec2f(0.0f, 0.0f), se::Vec2f(-1.0f, 1.0f), se::Vec2f(-1.0f, -1.0f)));
-	m_triangleContainer.push_back(CTriangleShape(se::Vec2f(0.0f, 0.0f), se::Vec2f(1.0f, 1.0f), se::Vec2f(1.0f, -1.0f)));
 
 }
 
@@ -33,80 +24,44 @@ RenderManager::~RenderManager()
 
 }
 
-void RenderManager::Initialize(SEuint shaderProgram)
+void RenderManager::Initialize()
 {
-	SEfloat vertecies_of_a_shape[] =
-	{
-		-0.9f, -0.5f, 0.0f,
-		-0.0f, -0.5f, 0.0f,
-		-0.45f, 0.5f, 0.0f,
-		 0.0f, -0.5f, 0.0f,
-		 0.9f, -0.5f, 0.0f,
-		 0.45f, 0.5f, 0.0f
-	};
 
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-
-
-	// what do we want? (a shape)
-
-	// contains positions and colors..
-//	SEfloat vertecies[] =
-//	{
-//		-1.0f,  -1.0f, 1.0f, 0.0f, 0.0f,
-//		-1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
-//		1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-//		1.0f, -1.0f, 0.4f, 0.1f, 0.5f
-//	};
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertecies_of_a_shape), vertecies_of_a_shape, GL_STATIC_DRAW);
-
-	// Create an element array
-
-//	glGenBuffers(1, &EBO);
-
-//	SEuint elements[] =
-//	{
-//		0, 1, 2,
-//		2, 3, 0
-//	};
-
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-
-
-	_addAttribute(shaderProgram, "vertexPosition");
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
-
-	//	_addAttribute(shaderProgram, "vertexColor");
-	//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GL_FLOAT), (void*)(2 * sizeof(GL_FLOAT)));
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	Use(shaderProgram);
 }
 
-void RenderManager::UpdateRenderManager(SDL_Window* windowHandle)
+void RenderManager::UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram, TestEntity entity)
 {
 
-	//	GLuint timeLocation = getUniformLocation(shaderProgram, "time");
-	//	glUniform1f(timeLocation, time);
-	//	time += 0.01;
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-	//	std::cout << time << std::endl;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glClearColor(0.0f, 0.4f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	SEfloat pos[] =
+	{
+		entity.m_shape.m_points_1.x + entity.m_position.x, entity.m_shape.m_points_1.y + entity.m_position.y,
+		entity.m_shape.m_points_2.x + entity.m_position.x, entity.m_shape.m_points_2.y + entity.m_position.y,
+		entity.m_shape.m_points_3.x + entity.m_position.x, entity.m_shape.m_points_3.y + entity.m_position.y
+	};
 
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	SEuint VBO;
+	glGenBuffers(1, &VBO);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pos), pos, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glEnableVertexAttribArray(0);
+
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
 
 	ImGui::Render();
 
@@ -114,10 +69,7 @@ void RenderManager::UpdateRenderManager(SDL_Window* windowHandle)
 }
 
 
-void RenderManager::_addAttribute(SEuint shaderProgram, const std::string& attributeName)
-{
-	glBindAttribLocation(shaderProgram, m_numAttributes++, attributeName.c_str());
-}
+
 
 
 void RenderManager::Use(SEuint shaderProgram)
