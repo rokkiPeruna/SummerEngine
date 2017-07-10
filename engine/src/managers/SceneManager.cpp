@@ -131,6 +131,7 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 			return false;
 		}
 	}
+
 	//If name passes, create a new file with std::ofstream
 	std::ofstream newScene(m_rel_path_to_json_scenes + scenename + m_scene_file_suffix);
 	if (!newScene.is_open())
@@ -145,7 +146,9 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 	m_sceneNamesJsonObject.clear(); //SE_TODO: Is there need to rewrite the object??
 	if (!_readFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file))
 		return false;
+
 	auto& names_obj = m_sceneNamesJsonObject.find(m_scene_names_json_obj);
+
 	if (names_obj == m_sceneNamesJsonObject.end())
 	{
 		MessageError(SceneMgr_id) << "Failed to open json object" + m_scene_names_json_obj + ",\n, scene name not added to " +
@@ -162,68 +165,6 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 	m_gui_sceneAdded = true;
 
 	return true;
-	////Check for name conflicts
-	//if (m_sceneNames.find(scenename) != m_sceneNames.end())
-	//{
-	//	MessageWarning(SceneMgr_id) << "Scene with name " + scenename + " already exists, scene not added to " + m_scenes_json_file_name;
-	//	m_gui_addSceneNameConflict = true;
-	//	return false;
-	//}
-	////If name is valid, add scene to scenes.json and add it's name to m_sceneNames
-	//std::ifstream scenes(m_rel_path_to_json_scenes + m_scenes_json_file_name);
-	//if (!scenes.is_open())
-	//{
-	//	MessageWarning(SceneMgr_id) << "Failed to open " + m_scenes_json_file_name + " in AddScene(), scene not added, returning..";
-	//	return false;
-	//}
-	////SE_TODO: Make this cleverer?
-	//std::string type_as_string;
-	//if (type == SCENE_TYPE::MENU) type_as_string = "menu";
-	//else if (type == SCENE_TYPE::LEVEL) type_as_string = "level";
-	//else if (type == SCENE_TYPE::CREDITS) type_as_string = "credits";
-	//else type_as_string = "faulty_type";
-	//
-	//auto& main_obj = nlohmann::json::parse(scenes);
-	//scenes.close();
-	//auto& scenes_obj = main_obj.find("scenes");
-	//if (scenes_obj == main_obj.end())
-	//{
-	//	MessageWarning(SceneMgr_id) << "Failed to open " + m_scenes_json_file_name + " in AddScene, scene not added";
-	//	return false;
-	//}
-	//
-	//const char* tmpname = scenename.c_str();
-	////Push empty object with scenename
-	//scenes_obj.value().push_back({ tmpname, {} });
-	////Take iterator to the newly created scene object
-	//auto& curr_scene_obj = scenes_obj.value().find(tmpname);
-	//if (curr_scene_obj == scenes_obj.value().end())
-	//{
-	//	MessageWarning(SceneMgr_id) << "Failed to find scene object in " + m_scenes_json_file_name + ", scene name: " + scenename + ". Returning..";
-	//	return false;
-	//}
-	////Add keys and values to the newly created object
-	//curr_scene_obj.value() =
-	//{
-	//		{"name", scenename},
-	//		{"type", type_as_string},
-	//		{"width", width},
-	//		{"heigth", heigth},
-	//		{"id", ++m_curr_largest_sceneid} //Increment m_curr_largest_sceneid before adding it to the new scene!!
-	//};
-	////Open scenes.json for writing with ios::trunc flag so that the main_obj that now contains all old scenes and the newly added scene, overwrites
-	////the whole json file. //TODO: This can improved a lot, currently we clear the whole file and rewrite it again
-	//std::ofstream write(m_rel_path_to_json_scenes + m_scenes_json_file_name, std::ios::out | std::ios::trunc);
-	//if (!write.is_open())
-	//{
-	//	MessageWarning(SceneMgr_id) << "Failed to open " + m_scenes_json_file_name + " for writing in AddScene(). Scene not added, returning..";
-	//	return false;
-	//}
-	////Write the main_obj (prettified) to the file and add scenename and id to m_sceneNames
-	//write << std::setw(4) << main_obj << std::endl;
-	//m_sceneNames.emplace(tmpname, m_curr_largest_sceneid);
-	//m_gui_sceneAdded = true;
-	//return true;
 }
 
 void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
@@ -269,6 +210,7 @@ void SceneManager::LoadScene(std::string scenename)
 	}
 	//And if it is, give it to m_currentScene and init new scene
 	m_currentScene.SetData(&m_sceneJsonObject);
+
 	m_ecm_ptr->InitWithNewScene(&m_currentScene);
 }
 

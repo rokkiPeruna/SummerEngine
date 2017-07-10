@@ -7,23 +7,25 @@ namespace se
 namespace priv
 {
 ComponentManager::ComponentManager()
-	: m_rel_path_to_compsJson("")
+	: m_rel_path_to_json_scenes("")
 	, m_comps_json_file_name("components.json")
+	, m_scenes_sub_folder("scenes")
 	, m_main_json_obj("components")
 	, m_curr_scene_json_obj("")
 	, m_curr_entity_json_obj("")
+	, m_curr_entity(nullptr)
 {
 
 }
 
 ComponentManager::~ComponentManager()
 {
-
+	m_curr_entity = nullptr;
 }
 
 void ComponentManager::Initialize(std::string relativeFilePathToComponentsJson)
 {
-	m_rel_path_to_compsJson = relativeFilePathToComponentsJson;
+	m_rel_path_to_json_scenes = relativeFilePathToComponentsJson + m_scenes_sub_folder;
 
 	//std::ifstream data(m_rel_path_to_compsJson + m_comps_json_file_name);
 	//if (!data.is_open())
@@ -63,6 +65,8 @@ void ComponentManager::ShowAndUpdateGUI()
 
 void ComponentManager::InitWithNewScene(const std::vector<Entity>& entities, Scene& scene)
 {
+
+
 	//Init name for scene json object
 	//m_curr_scene_json_obj = scene.GetName();
 
@@ -111,23 +115,7 @@ void ComponentManager::InitWithNewScene(const std::vector<Entity>& entities, Sce
 
 void ComponentManager::AddComponent(Entity& entity, SEuint64 component_id)
 {
-
-}
-
-
-void ComponentManager::_createComponentsJsonBasicStructure()
-{
-	/*std::ofstream data(m_rel_path_to_compsJson + m_comps_json_file_name);
-	if (!data.is_open())
-	{
-		MessageError(EntityMgr_id) << "Failed to open " + m_comps_json_file_name + " for writing in\n _createComponentsJsonBasicStructure(). Undefined behaviour.";
-		return;
-	}
-	data << "{\n" <<
-		"\"" + m_main_json_obj + "\":{\n" <<
-		"  }\n" <<
-		"}" << std::endl;
-	data.close();*/
+	AddComponent(component_id_to_type.at(component_id));
 }
 
 void ComponentManager::_createEntitysComponents(SEuint entityid)

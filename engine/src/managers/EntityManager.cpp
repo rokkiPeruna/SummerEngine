@@ -14,16 +14,12 @@ EntityManager::EntityManager()
 	, m_end_time()
 	, m_currentScene(nullptr)
 	, m_currentEntity(nullptr)
-	, m_prefix_for_json_objs("entities_from_")
 	, m_rel_path_to_json_scenes("")
 	, m_scenes_subfolder_name("scenes/")
 	, m_scene_file_suffix(".json")
 	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
 	, m_entities{}
-	, m_entities_json_file_name("entities.json")
-	, m_res_entity_ids{}
 	, m_next_free_entity_id(0)
-	, m_res_entity_ids_json_obj("x_entities_res_ids")
 	, m_entities_map{}
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
@@ -33,15 +29,15 @@ EntityManager::~EntityManager()
 {
 	m_compMgr = nullptr;
 	m_currentScene = nullptr;
-
+	m_currentEntity = nullptr;
 }
 
 void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)
 {
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + m_scenes_subfolder_name;
 	m_compMgr = compMgr;
-
-	
+	m_entities.clear();
+	m_entities_map.clear(); 
 }
 
 void EntityManager::Uninitialize()
@@ -112,8 +108,8 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	_loadSceneEntities();
 	m_next_free_entity_id = 0;
 	m_next_free_entity_id = _findNextFreeEntityID();	
-
 	m_gui_scene_name = scene->GetName();
+	m_compMgr->InitWithNewScene(m_entities, *scene);
 }
 
 
@@ -125,6 +121,7 @@ void EntityManager::CreateEntity(std::string name)
 	m_entities.emplace_back(Entity(name, m_next_free_entity_id));
 	m_entities_map.emplace(name, &m_entities.back());
 	m_next_free_entity_id++;
+	m_currentEntity = &m_entities.back();
 }
 
 void EntityManager::CreateEntity(Entity& other, std::string name)

@@ -36,6 +36,7 @@ public:
 	///Must be overridden in inheriting class.
 	virtual void Update(SEfloat deltaTime) = 0;
 
+
 };
 
 }//namespace priv

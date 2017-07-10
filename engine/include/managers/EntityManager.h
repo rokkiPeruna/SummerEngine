@@ -76,9 +76,6 @@ private:
 	///Current entity
 	Entity* m_currentEntity;
 
-	///Const string that is added in front of every json object containing entities. See entities.json
-	const std::string m_prefix_for_json_objs;
-
 	///Relative path to scenes.json
 	std::string m_rel_path_to_json_scenes;
 
@@ -94,17 +91,8 @@ private:
 	///Container holding Entities of the current scene
 	std::vector<Entity> m_entities;
 
-	///Const string naming the file containing entities as json objects
-	const std::string m_entities_json_file_name;
-
-	///Container holding all reserved entity ids
-	std::vector<SEuint> m_res_entity_ids;
-
 	///Next free entity id
 	SEuint m_next_free_entity_id;
-
-	///Const string naming the json object holding reserved entity id's
-	const std::string m_res_entity_ids_json_obj;
 
 	///Container holding pointers to entities and their access keys (names)
 	std::unordered_map<std::string, Entity*> m_entities_map;

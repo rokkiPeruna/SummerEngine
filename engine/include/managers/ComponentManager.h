@@ -51,11 +51,14 @@ public:
 
 
 private:
-	///Relative path to folder where /components/.json can be found
-	std::string m_rel_path_to_compsJson;
+	///Relative path to folder where com
+	std::string m_rel_path_to_json_scenes;
 
 	///Const string naming the file containing components
 	const std::string m_comps_json_file_name;
+
+	///Const string naming the sub folder containing
+	const std::string m_scenes_sub_folder;
 
 	///Const string naming the main json object (components, etc)
 	const std::string m_main_json_obj;
@@ -66,13 +69,13 @@ private:
 	///String naming the json object pointing t current entity
 	std::string m_curr_entity_json_obj;
 
-
-
-	///Creates main json structure to /components/.json file if one does not exist
-	void _createComponentsJsonBasicStructure();
-
 	///Loads and creates single entity's components
 	void _createEntitysComponents(SEuint entityid);
+
+
+
+	///For gui
+	Entity* m_curr_entity;
 
 };
 
