@@ -51,21 +51,21 @@ public:
 	///with it's name: textResources.at("resourceName")
 	std::map<std::string, std::shared_ptr<TextResource>> textResources;
 
-	SEuint GetShaderProgram(std::string name);
+	ShaderResource* GetShaderProgram(std::string name);
 
 private:
 
 	std::vector<TextResource> m_textResourcesContainer;
 	
 	///Stores shader ID's as 'shader name' & 'shader resource' pair
-	std::map<std::string, SEuint> m_shaderProgramContainer;
+	std::map<std::string, ShaderResource> m_shaderProgramContainer;
 
 	
 	void _initializeShaders(const std::string sourcePath);
 
 	SEuint _compileShader(const std::string path, const std::string shaderName, GLenum type);
 
-	void _linkShaders(const std::string name, SEuint shaderProgramId, SEuint vertexShader, SEuint fragmentShader);
+	SEuint _linkShaders(SEuint& shaderProgramId, SEuint vertexShader, SEuint fragmentShader);
 
 	void _addAttribute(SEuint shaderProgram, const unsigned int currentAtrib, const std::string& attributeName);
 

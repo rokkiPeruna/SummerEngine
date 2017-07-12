@@ -12,6 +12,7 @@
 //SE
 #include <utility/Typedefs.h>
 #include <core/Messages.h>
+#include <managers/Resource.h>
 
 // Debug stuff to be deleted ---
 #include <nlohmann_json/json.hpp>
@@ -36,11 +37,11 @@ namespace se
 namespace priv
 {
 
-class TestEntity
+class DummyEntity
 {
 public:
 
-	TestEntity(CPosition position, CTriangleShape shape, Vec4f color) :
+	DummyEntity(CPosition position, CTriangleShape shape, Vec4f color) :
 		m_position(position),
 		m_shape(shape),
 		m_color(color)
@@ -75,30 +76,25 @@ public:
 	void operator=(const RenderManager&) = delete;
 
 	///Initialize Render Manager
-	void Initialize();
+	void Initialize(ShaderResource* shaderProgram);
 
 	///Update render manager
-	void UpdateRenderManager(SDL_Window* windowHandle, SEuint shaderProgram, TestEntity entity);
+	void UpdateRenderManager(SDL_Window* windowHandle, ShaderResource* shaderProgram);
 
-	///Use certain shader program
-	void Use(SEuint shaderProgram);
-
-	///Unsue certain shader program (or use 0th)
-	void Unuse();
 
 private:
 
-	SEuint getUniformLocation(SEuint shaderProgram, const std::string& uniformName);
-
 	///Vertex buffer object
-	SEuint VBO;
+
+	void _enableAttributePointers(ShaderResource* shaderProgram);
+	SEuint _getUnifromLocation(const SEuint shaderProgram, const std::string& uniformName);
+
+
 	SEuint VAO;
+	SEuint VBO;
 	SEuint EBO;
 
-	//Number of attributes
-	SEint m_numAttributes;
-	
-
+	float _time;
 };
 
 

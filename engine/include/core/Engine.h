@@ -122,9 +122,7 @@ private:
 	///GUI
 	void _updateGUI();
 
-	//Testing
-	std::vector<TestEntity> m_testEntityContainer;
-
+	
 };
 }//namespace priv
 }//namespace se

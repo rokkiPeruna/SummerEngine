@@ -19,6 +19,7 @@ ResourceManager::~ResourceManager()
 void ResourceManager::Initialize(const std::string sourcePath)
 {
 	_initializeShaders(sourcePath);
+
 }
 
 void ResourceManager::Uninitialize()
@@ -31,16 +32,16 @@ void ResourceManager::Update()
 	//TODO: If update is invoked, check if scene has changed and/or resources must be loaded
 }
 
-SEuint ResourceManager::GetShaderProgram(std::string name)
+ShaderResource* ResourceManager::GetShaderProgram(std::string name)
 {
-	std::map<std::string, SEuint>::iterator itr = m_shaderProgramContainer.find(name);
+	std::map<std::string, ShaderResource>::iterator itr = m_shaderProgramContainer.find(name);
 	if (itr != m_shaderProgramContainer.end())
 	{
-		return itr->second;
+		return &itr->second;
 	}
 	else
 	{
-		return 0;
+		return nullptr;
 	}
 }
 
@@ -107,7 +108,9 @@ void ResourceManager::_initializeShaders(const std::string path)
 		}
 
 		// link shaders
-		_linkShaders(allShaders.key(), shaderProgramId, vertexShader, fragmenShader);
+		_linkShaders(shaderProgramId, vertexShader, fragmenShader);
+
+		m_shaderProgramContainer.emplace(allShaders.key(), ShaderResource(shaderProgramId, numAttribute));
 	}
 }
 
@@ -142,10 +145,8 @@ SEuint ResourceManager::_compileShader(const std::string path, const std::string
 	return shader;
 }
 
-void ResourceManager::_linkShaders(const std::string name, SEuint shaderProgramId, SEuint vertexShader, SEuint fragmentShader)
+SEuint ResourceManager::_linkShaders(SEuint& shaderProgramId, SEuint vertexShader, SEuint fragmentShader)
 {
-
-	// Linking shaders .. 
 
 	glAttachShader(shaderProgramId, vertexShader);
 	glAttachShader(shaderProgramId, fragmentShader);
@@ -157,7 +158,7 @@ void ResourceManager::_linkShaders(const std::string name, SEuint shaderProgramI
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
-		return;
+		return 0;
 	}
 
 	glDetachShader(shaderProgramId, vertexShader);
@@ -166,7 +167,7 @@ void ResourceManager::_linkShaders(const std::string name, SEuint shaderProgramI
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	m_shaderProgramContainer.emplace(name, shaderProgramId);
+	return shaderProgramId;
 }
 
 void ResourceManager::_addAttribute(SEuint shaderProgram, const unsigned int currentAtrib, const std::string& attributeName)

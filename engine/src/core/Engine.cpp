@@ -30,12 +30,7 @@ Engine::Engine()
 	, m_messenger()
 {
 
-	TestEntity Player(CPosition(0.0f, 0.0f, 0.0f), CTriangleShape(0.2), Vec4f(1.0, 0.0, 0.0, 1.0));
-
-
-
-	m_testEntityContainer.push_back(Player);
-
+	
 }
 
 Engine::~Engine()
@@ -67,7 +62,7 @@ void Engine::InitializeEngine()
 		}
 	}
 
-	m_renderMgr.Initialize();
+	m_renderMgr.Initialize(m_resourceMgr.GetShaderProgram("defaultShader"));
 
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
@@ -149,7 +144,7 @@ void Engine::EngineUpdate()
 
 		//
 		
-		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle(), m_resourceMgr.GetShaderProgram("defaultShader"), m_testEntityContainer.at(0));
+		m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle(), m_resourceMgr.GetShaderProgram("defaultShader"));
 		// Rendering
 	//	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
 	//	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
