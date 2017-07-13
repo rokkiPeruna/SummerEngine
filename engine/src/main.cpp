@@ -1,10 +1,8 @@
-
 //For memory management
 #include <vld.h>
 
-//
+//Essential include
 #include <core/Engine.h>
-
 
 int main(int argc, char *argv[])
 {
@@ -17,5 +15,4 @@ int main(int argc, char *argv[])
 	SE_Engine.EngineUpdate();
 	SE_Engine.Uninitialize();
 	return 0;
-
 }

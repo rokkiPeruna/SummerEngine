@@ -9,34 +9,12 @@
 
 namespace se
 {
-///Brief: User interface methods for MovementSystem. Implemantation in MovementSystemUiImpl.cpp
-///
-///Query CPosition -component with Entity's id. Returns pointer to component if found, nullptr otherwise
-CPosition* GetCPosition(SEuint owner_id);
-///Query CVelocity -component with Entity's id. Returns pointer to component if found, nullptr otherwise
-CVelocity* GetCVelocity(SEuint owner_id);
-
-///Add CPosition -component to Entity. Takes in Entity's id and built-in-place CPosition object
-CPosition* AddCPosition(SEuint owner_id, CPosition component);
-///Add CVelocity -component to Entity. Takes in Entity's id and built-in-place CVelocity object
-CVelocity* AddCVelocity(SEuint owner_id, CVelocity component);
-
-//void gui::UpdateMovementSystemGUI();
-
 namespace priv
 {
 ///Brief: MovementSystem handles components that are related to movement, such as CVelocity and CPosition. It has also
 ///containers for it's related components
 class MovementSystem : public ComponentSystem
 {
-	//Friend user interface functions. Note the namespace identifier!
-	friend CPosition* se::GetCPosition(SEuint owner_id);
-	friend CVelocity* se::GetCVelocity(SEuint owner_id);
-	friend CPosition* se::AddCPosition(SEuint owner_id, CPosition component);
-	friend CVelocity* se::AddCVelocity(SEuint owner_id, CVelocity component);
-
-	//friend void gui::UpdateMovementSystemGUI();
-	
 public:
 	///Default constructor
 	MovementSystem();
@@ -56,12 +34,9 @@ public:
 	void Update(float deltaTime) override final;
 
 	///test
-	void AddComponent(Component* c)  { Message(MovementSys_id) << "Added function to map"; }
+	SEuint AddComponent(Entity& entity, COMPONENT_TYPE component_type) override final;
 
 private:
-	///
-	CPosition* _createCPositionComponent(CPosition& component);
-	CVelocity* _createCVelocityComponent(CVelocity& component);
 
 	///Component containers
 	std::vector<CPosition> m_cpositions;

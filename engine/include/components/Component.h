@@ -7,7 +7,7 @@
 //SE includes:
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
-#include <ids/ComponentIDList.h>
+#include <ids/ComponentTypeList.h>
 
 namespace se
 {
@@ -20,7 +20,7 @@ class Component
 {
 public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
-	Component(SEuint64 type);
+	Component(COMPONENT_TYPE type = COMPONENT_TYPE::FAULTY_TYPE);
 	///Destructor
 	virtual ~Component();
 	///Copy constructor
@@ -28,11 +28,11 @@ public:
 	///Deleted assign operator
 	Component& operator=(const Component& other) = delete;
 
-	///Every component has it's type as SEuint64 bit (see ComponentList.h)
-	SEuint64 type;
+	///Every component has it's type as enum class COMPONENT_TYPE (see ComponentList.h)
+	COMPONENT_TYPE type;
 
 	///Component's unique id
-	SEuint64 id;
+	SEuint id;
 
 	///Boolean for defining if component can overridden in system's component container.
 	///Set to false by default.

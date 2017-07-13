@@ -64,7 +64,7 @@ private:
 	///Pointer to EntityComponentManager
 	EntityManager* m_ecm_ptr;
 
-	///Json object for holding current scene. This gets send to EntityManager and ComponentManager
+	///Json object for holding current scene. This gets send to EntityManager and ComponentManager inside current scene
 	nlohmann::json m_sceneJsonObject;
 
 	///Json object for holding scene names object

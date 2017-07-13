@@ -10,7 +10,7 @@
 //SE includes:
 #include <utility/Typedefs.h>
 #include <core/Messenger.h>
-#include <ids/ComponentIDList.h>
+#include <ids/ComponentTypeList.h>
 #include <ids/SystemAndManagerIDList.h>
 
 

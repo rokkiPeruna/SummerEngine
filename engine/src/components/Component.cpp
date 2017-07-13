@@ -2,7 +2,7 @@
 
 namespace se
 {
-Component::Component(SEuint64 type)
+Component::Component(COMPONENT_TYPE type)
 	: type(type)
 	, id(0)
 	, overwritable(false)

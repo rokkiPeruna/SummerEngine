@@ -21,7 +21,6 @@ class CTriangleShape : public Component
 {
 
 public:
-	
 	// TODO : change glm::vec2 to our typedef asap and delete this comment
 
 	//From either of these we can draw a simple triangle in renderer (I quess..)

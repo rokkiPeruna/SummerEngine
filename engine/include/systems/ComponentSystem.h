@@ -36,6 +36,9 @@ public:
 	///Must be overridden in inheriting class.
 	virtual void Update(SEfloat deltaTime) = 0;
 
+	///AddComponent adds default constructed component of given type to container and adds component's index in that container
+	///to Entity's components map. Returns component's index in container. See MovementSystem's implementation for details.
+	virtual SEuint AddComponent(Entity&, COMPONENT_TYPE) = 0;
 
 };
 

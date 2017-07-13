@@ -81,7 +81,8 @@ public:
 	//
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 
-	///Static dictionaries
+	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
+	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
 
 private:
 	///Const string naming the json file containing Engine configurations 

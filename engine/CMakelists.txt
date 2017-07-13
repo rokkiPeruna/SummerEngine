@@ -34,7 +34,6 @@ set(SYSTEMS_FILES
 	src/systems/ComponentSystem.cpp
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
-	src/systems/MovementSystemUiImpl.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -77,7 +76,7 @@ source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------
 #IDs
 set(IDS_FILES
-	include/ids/ComponentIDList.h
+	include/ids/ComponentTypeList.h
 	include/ids/SystemAndManagerIDList.h
 	)
 source_group("ids" FILES ${IDS_FILES})

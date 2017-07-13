@@ -97,7 +97,6 @@ static const std::map<SEuint64, std::string> sys_mgr_id_to_name
 	{ ComponentMgr_id, "component_mgr"}
 };
 
-
 }//namespace priv
 }//namespace se
 

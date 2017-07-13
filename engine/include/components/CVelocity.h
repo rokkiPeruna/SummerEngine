@@ -12,7 +12,7 @@ class CVelocity : public Component
 public:
 	///Default constructor
 	CVelocity(Vec2f velocity = Vec2f(0.0f)) 
-		: Component(CVelocity_id)
+		: Component(COMPONENT_TYPE::VELOCITY)
 		, velocity(velocity) {}
 
 	///Position data as Vec2f

@@ -4,9 +4,6 @@
 //STL includes:
 #include <string>
 #include <map>
-#include <memory>
-#include <typeindex>
-
 
 //SE includes:
 #include <utility/Typedefs.h>
@@ -21,7 +18,6 @@ namespace se
 ///Entities are made up from components which define their outlook, actions, etc.
 class Entity
 {
-friend class EntityComponentManager;
 public:
 	///Default constructor. Takes in std::string as name of the entity.
 	Entity(std::string entityName, SEuint id);
@@ -36,8 +32,11 @@ public:
 	///Identifier
 	SEuint id;
 
-	///Component mask telling what components Entity has
-	SEuint64 componentMask;
+	///Container holding entity's components as map:
+	///Key: COMPONENT_TYPE
+	///Value: Index in correct component system's component container 
+	///For component types, see ComponentTypeList.h
+	std::map<COMPONENT_TYPE, SEuint> components;
 };
 }//namespace se
 

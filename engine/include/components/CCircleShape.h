@@ -18,7 +18,6 @@ class CCircleShape : public Component
 {
 
 public:
-
 	CCircleShape();
 
 private:

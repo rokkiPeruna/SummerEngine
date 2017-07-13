@@ -3,6 +3,7 @@
 #include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
 
+
 namespace se
 {
 namespace priv
@@ -80,23 +81,11 @@ void EntityManager::ShowAndUpdateGUI()
 			if (ImGui::SmallButton(e.name.c_str()))
 			{
 				m_currentEntity = &e;
+				m_compMgr->SetCurrentEntity(&e);
+				_gui_show_component_mgr_window = true;
 			}
 		}
 	}
-	ImGui::End();
-
-	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
-	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Component Editor", &_gui_show_component_mgr_window);
-	if (m_currentEntity)
-		ImGui::Text(m_currentEntity->name.c_str());
-	else
-		ImGui::Text("NO ACTIVE ENTITY");
-
-	ImGui::Separator();
-
-
 	ImGui::End();
 }
 
@@ -129,7 +118,7 @@ void EntityManager::CreateEntity(Entity& other, std::string name)
 
 }
 
-void EntityManager::SaveProgress()
+void EntityManager::SaveProgress() //SE_TODO: THIS SHOULD BE SceneManager's job!!!!!!! Move there
 {
 	if (!m_currentScene)
 		return;

@@ -1,6 +1,10 @@
 #include <managers/ComponentManager.h>
 #include <imgui/imgui.h>
 #include <nlohmann_json/json.hpp>
+#include <systems/ComponentSystem.h>
+
+#include <core/Engine.h>
+
 
 namespace se
 {
@@ -8,8 +12,8 @@ namespace priv
 {
 ComponentManager::ComponentManager()
 	: m_rel_path_to_json_scenes("")
-	, m_comps_json_file_name("components.json")
 	, m_scenes_sub_folder("scenes")
+	, m_scene_file_suffix(".json")
 	, m_main_json_obj("components")
 	, m_curr_scene_json_obj("")
 	, m_curr_entity_json_obj("")
@@ -60,67 +64,48 @@ void ComponentManager::Update()
 
 void ComponentManager::ShowAndUpdateGUI()
 {
+	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Component Editor", &_gui_show_component_mgr_window);
+	if (m_curr_entity)
+		ImGui::Text(m_curr_entity->name.c_str());
+	else
+		ImGui::Text("NO ACTIVE ENTITY");
 
+	ImGui::Separator();
+
+	if (ImGui::CollapsingHeader("Add component"))
+	{
+		for (auto& component : gui_comp_type_as_string)
+		{
+			if (ImGui::Button(component.second.c_str()))
+			{
+				AddNewComponentToEntity(*m_curr_entity, component.first);
+			}
+		}
+	}
+	ImGui::End();
 }
 
 void ComponentManager::InitWithNewScene(const std::vector<Entity>& entities, Scene& scene)
-{
-
-
-	//Init name for scene json object
-	//m_curr_scene_json_obj = scene.GetName();
-
-	/////Find correct json block
-	//std::ifstream data(m_rel_path_to_compsJson + m_comps_json_file_name);
-	//if (!data.is_open())
-	//{
-	//	MessageError(ComponentMgr_id) << "Failed to open " + m_rel_path_to_compsJson + m_comps_json_file_name + " \nfor reading, component not loaded, undefined behaviour";
-	//	return;
-	//}
-	//nlohmann::json j = nlohmann::json::parse(data);
-	//data.close();
-	//auto& main_obj = j.find(m_main_json_obj);
-	//if (main_obj == j.end())
-	//{
-	//	MessageError(ComponentMgr_id) << "Failed to find \"" + m_main_json_obj + "\" json object in InitWithNewScene(),\ncomponents not loaded, undefined behaviour";
-	//	return;
-	//}
-	//auto& scene_obj = main_obj.value().find(m_curr_scene_json_obj);
-	//if (scene_obj == main_obj.value().end())
-	//{
-	//	//If this the first time the scene is loaded, create scene object and return, no components to load
-	//	MessageInfo(ComponentMgr_id) << "Could not find scene json object \"" + m_curr_scene_json_obj + "\",\ncreating json object for scene";
-	//	main_obj.value().push_back({ m_curr_scene_json_obj, {} });
-	//	std::ofstream write(m_rel_path_to_compsJson + m_comps_json_file_name);
-	//	if (!write.is_open())
-	//	{
-	//		MessageError(ComponentMgr_id) << "Failed to open " + m_rel_path_to_compsJson + m_comps_json_file_name + " \nfor writing, scene json object not created, undefined behaviour";
-	//		return;
-	//	}
-	//	write << std::setw(4) << j << std::endl;
-	//	return;
-	//}
-	////Find all components from correct json block (from the right scene // SE_TODO: Is the smartest way????)
-	////->Loop through entities to get id
-	//for (auto& e : entities)
-	//{
-	//	//load and create all components that match entity's id
-	//	_createEntitysComponents(e.id); //<-- YOU ARE HERE
-	//}
-
+{	
+	//SE_TODO: When scene is switched, all systems' component containers should be cleared!!
 
 	//Load components to correct systems
+	auto* scene_obj = scene.GetData();
 
+	
 }
 
-void ComponentManager::AddComponent(Entity& entity, SEuint64 component_id)
+void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE component_type)
 {
-	AddComponent(component_id_to_type.at(component_id));
+	Engine::ComponentTypeToSystemPtr.at(component_type)->AddComponent(entity, component_type);
 }
 
-void ComponentManager::_createEntitysComponents(SEuint entityid)
+void ComponentManager::SetCurrentEntity(Entity* e)
 {
-
+	m_curr_entity = e;
 }
 
 }//namespace priv

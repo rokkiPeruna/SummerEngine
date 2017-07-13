@@ -7,7 +7,7 @@ namespace se
 Entity::Entity(std::string name, SEuint id)
 	: name(name)
 	, id(id)
-	, componentMask(0)
+	, components{}
 {
 
 }
@@ -15,7 +15,7 @@ Entity::Entity(std::string name, SEuint id)
 Entity::Entity(const Entity& other)
 	: name(other.name)
 	, id(other.id)
-	, componentMask(other.componentMask)
+	, components(other.components)
 {
 
 }

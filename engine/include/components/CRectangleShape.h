@@ -20,7 +20,7 @@ class CRectangleShape : public Component
 {
 
 public:
-
+	CRectangleShape(){}
 
 	CRectangleShape(SEfloat size);
 	CRectangleShape(glm::vec2 point_1, glm::vec2 point_2, glm::vec2 point_3, glm::vec2 point_4);

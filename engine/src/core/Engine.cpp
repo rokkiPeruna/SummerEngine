@@ -14,6 +14,7 @@ namespace se
 {
 namespace priv
 {
+std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {};
 
 Engine::Engine()
 	: m_eng_conf_file_name("engine_config.json")
