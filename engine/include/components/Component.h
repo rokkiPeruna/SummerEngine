@@ -20,7 +20,7 @@ class Component
 {
 public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
-	Component(COMPONENT_TYPE type = COMPONENT_TYPE::FAULTY_TYPE);
+	Component(COMPONENT_TYPE type);
 	///Destructor
 	virtual ~Component();
 	///Copy constructor
@@ -28,15 +28,11 @@ public:
 	///Deleted assign operator
 	Component& operator=(const Component& other) = delete;
 
-	///Every component has it's type as enum class COMPONENT_TYPE (see ComponentList.h)
+	///Every component has it's type as enum from COMPONENT_TYPE (see ComponentTypeList.h)
 	COMPONENT_TYPE type;
 
 	///Component's unique id
 	SEuint id;
-
-	///Boolean for defining if component can overridden in system's component container.
-	///Set to false by default.
-	bool overwritable;
 
 	///Owner id
 	SEuint ownerID;

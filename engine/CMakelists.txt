@@ -20,11 +20,8 @@ set(COMPONENTS_FILES
 	include/components/CPosition.h
 	include/components/CVelocity.h
     include/components/CTriangleShape.h
-    src/components/CTriangleShape.cpp
     include/components/CRectangleShape.h
-    src/components/CRectangleShape.cpp
     include/components/CCircleShape.h
-    src/components/CCircleShape.cpp
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------

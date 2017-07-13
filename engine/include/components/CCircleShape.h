@@ -13,15 +13,14 @@
 
 namespace se
 {
-
 class CCircleShape : public Component
 {
-
 public:
-	CCircleShape();
+	CCircleShape()
+		: Component(COMPONENT_TYPE::SHAPE_CIRCLE)
+	{
 
-private:
-
+	}
 
 };
 

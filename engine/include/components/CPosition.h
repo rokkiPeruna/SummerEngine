@@ -24,17 +24,32 @@ public:
 
 };
 
-//Component's serializing method. They MUST be inline functions!!! OLET TÄSSÄ
-void inline to_json(nlohmann::json& j, const se::CPosition& pos)
+//Component's serializing methods. They MUST be inline functions!!!
+void inline to_json(nlohmann::json& j, const se::CPosition& comp)
 {
-	j = nlohmann::json{ {"x",pos.x}, {"y", pos.y}, {"z", pos.z} };
+	j = nlohmann::json
+	{
+		//Common component data
+		{"type", static_cast<SEint>(comp.type)},
+		{"id", comp.id},
+		{"ownerID", comp.ownerID},
+		//Component specific data
+		{"pos_x",comp.x},
+		{"pos_y", comp.y},
+		{"pos_z", comp.z} 
+	};
 }
 
-void inline from_json(const nlohmann::json& j, se::CPosition& pos)
+void inline from_json(const nlohmann::json& j, se::CPosition& comp)
 {
-	pos.x = j.at("x").get<SEfloat>();
-	pos.y = j.at("y").get<SEfloat>();
-	pos.z = j.at("z").get<SEfloat>();
+	//Common component data
+	comp.type = static_cast<COMPONENT_TYPE>(j.at("type").get<SEint>());
+	comp.id = j.at("id").get<SEint>();
+	comp.ownerID = j.at("ownerID").get<SEint>();
+	//Component specific data
+	comp.x = j.at("pos_x").get<SEfloat>();
+	comp.y = j.at("pos_y").get<SEfloat>();
+	comp.z = j.at("pos_z").get<SEfloat>();
 }
 }//namespace se
 

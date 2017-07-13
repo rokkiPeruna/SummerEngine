@@ -20,23 +20,27 @@ class CRectangleShape : public Component
 {
 
 public:
-	CRectangleShape(){}
+	CRectangleShape(SEfloat size = 1.0f)
+		: Component(COMPONENT_TYPE::SHAPE_RECTANGLE)
+	{
+		SEfloat halfsize = size / 2.0f;
+		points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
+		points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
+		points.emplace_back(Vec3f(halfsize, halfsize, 0.0f));
+		points.emplace_back(Vec3f(-halfsize, halfsize, 0.0f));
+		origin = Vec3f(0.0f);
+	}
+	CRectangleShape(Vec3f p1, Vec3f p2, Vec3f p3, Vec3f p4)
+		: Component(COMPONENT_TYPE::SHAPE_RECTANGLE)
+	{
+		points.emplace_back(p1);
+		points.emplace_back(p2);
+		points.emplace_back(p3);
+		points.emplace_back(p4);
+	}
 
-	CRectangleShape(SEfloat size);
-	CRectangleShape(glm::vec2 point_1, glm::vec2 point_2, glm::vec2 point_3, glm::vec2 point_4);
-
-	// TODO : Change to our typedef (se)
-	glm::vec2 m_point_1;
-	glm::vec2 m_point_2;
-	glm::vec2 m_point_3;
-	glm::vec2 m_point_4;
-
-
-	SEfloat m_size;
-	glm::vec2 m_origin;
-
-private:
-
+	std::vector<Vec3f> points;
+	Vec3f origin;
 };
 
 

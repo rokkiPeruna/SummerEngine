@@ -58,9 +58,6 @@ public:
 	///from other appended with child count index, e.g "flying_enemy_1"
 	void CreateEntity(Entity& other, std::string name = "");
 
-	///Rewrites all entities to current scene json
-	void SaveProgress();
-
 private:
 	///Pointer to ComponentManager
 	ComponentManager* m_compMgr;

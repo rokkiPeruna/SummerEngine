@@ -1,0 +1,14 @@
+{
+    "entities": {
+        "savetus": {
+            "components": null,
+            "id": 1
+        }
+    },
+    "scene_info": {
+        "heigth": 66,
+        "name": "level2",
+        "type": 2,
+        "width": 60
+    }
+}

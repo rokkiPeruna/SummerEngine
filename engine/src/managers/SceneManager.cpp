@@ -221,7 +221,18 @@ void SceneManager::DeleteScene(std::string scenename)
 
 void SceneManager::SaveProgress()
 {
-	m_ecm_ptr->SaveProgress();
+	if (m_currentScene.GetType() == SCENE_TYPE::FAULTY)
+		return;
+	std::string path = m_rel_path_to_json_scenes;
+	path += m_currentScene.GetName();
+	path += m_scene_file_suffix;
+	std::ofstream file(path, std::ios::trunc);
+	if (!file.is_open())
+	{
+		MessageError(EntityMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_currentScene.GetName() + "\n, entities not saved";
+		return;
+	}
+	file << std::setw(4) << *m_currentScene.GetData() << std::endl;
 }
 
 bool SceneManager::_readFileToJson(nlohmann::json& j, std::string& filepath)
