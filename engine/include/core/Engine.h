@@ -74,7 +74,6 @@ public:
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
 	///Manager getters
-	//
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 
 	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
@@ -115,6 +114,14 @@ private:
 	///Update systems
 	void _updateSystems(SEfloat deltaTime);
 
+	///GUI
+	void _updateGUI();
+
+	//Game loop and editor loop
+	bool _gameLoop();
+	void _editorLoop(SEbool& exitProgram);
+	bool m_inEditorLoop;
+
 	///Clock and time
 	Clock m_engine_clock;
 	Time m_frame_time;
@@ -138,9 +145,6 @@ private:
 
 	///Messenger
 	Messenger m_messenger;
-
-	///GUI
-	void _updateGUI();
 
 };
 }//namespace priv

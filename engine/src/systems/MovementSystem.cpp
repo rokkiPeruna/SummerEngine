@@ -40,7 +40,14 @@ void MovementSystem::Uninitialize()
 
 void MovementSystem::Update(float deltaTime)
 {
-	std::cout << m_cpositions.size();
+	if ( SDLK_p)
+	{
+
+		for (auto& c : m_cpositions)
+		{
+			std::cout << c.x << " " << c.y << " " << c.z << std::endl;
+		}
+	}
 }
 
 void MovementSystem::ClearComponentContainers()
@@ -53,24 +60,11 @@ void MovementSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_ob
 {
 	if (e.components.count(COMPONENT_TYPE::POSITION))
 	{
-		//OLET TÄSSÄ: Create helper function (template, to ComponentSystem) that handles this
-
-		//Create component from json
-		CPosition cpos = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::POSITION));
-
-		//Place at back
-		m_cpositions.emplace_back(cpos);
-
-		//Get index //SE_TODO: This must be changed if we want to fill gaps left by removed entities and their components
-		e.components.at(COMPONENT_TYPE::POSITION) = m_cpositions.size() - 1;
-		
+		_onEntityAdded_helper(e, COMPONENT_TYPE::POSITION, entity_obj, m_cpositions);
 	}
 	if (e.components.count(COMPONENT_TYPE::VELOCITY))
 	{
-		CVelocity cvel = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::VELOCITY));
-		m_cvelocities.emplace_back(cvel);
-
-		e.components.at(COMPONENT_TYPE::VELOCITY) = m_cvelocities.size() - 1;
+		_onEntityAdded_helper(e, COMPONENT_TYPE::VELOCITY, entity_obj, m_cvelocities);
 	}
 }
 

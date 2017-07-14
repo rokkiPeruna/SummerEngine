@@ -55,12 +55,24 @@ public:
 	virtual SEuint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
 
 protected:
-	///Template helper method that adds component to given container, binds it to given entity and writes it to given SceneFileFormatIterator
+	///Template helper method that creates component from file and adds it to container and binds it to entity.
+	//Returns pointer to newly created component if more measures need to be done in system's OnEntityAdded
+	template<typename T>
+	T* _onEntityAdded_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& itr, std::vector<T>& container)
+	{
+		T component = itr.value().at(CompTypeAsString.at(type));
+		container.emplace_back(component);
+		SEint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
+		e.components.at(type) = index;
+		return &container.back();
+	}
+
+	///Template helper method that creates component to given container, binds it to given entity and writes it to given SceneFileFormatIterator
 	template<typename T>
 	SEuint _createComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& itr, std::vector<T>& container)
 	{
 		container.emplace_back(T());
-		SEuint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill gaps!!
+		SEint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
 		e.components.emplace(type, index);
 		itr.value().push_back({ CompTypeAsString.at(type), container.back() });
 		return index;

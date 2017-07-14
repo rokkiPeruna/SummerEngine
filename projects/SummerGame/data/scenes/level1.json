@@ -24,9 +24,9 @@
             "position": {
                 "id": 0,
                 "ownerID": 0,
-                "pos_x": 0.0,
+                "pos_x": 2.0,
                 "pos_y": 0.0,
-                "pos_z": 0.0,
+                "pos_z": 2.0,
                 "type": 0
             },
             "velocity": {
@@ -43,8 +43,8 @@
             "position": {
                 "id": 0,
                 "ownerID": 0,
-                "pos_x": 0.0,
-                "pos_y": 0.0,
+                "pos_x": 0.9,
+                "pos_y": 5.0,
                 "pos_z": 0.0,
                 "type": 0
             },

@@ -22,6 +22,7 @@ Engine::Engine()
 	, m_json_data_files_fold_name("data")
 	, m_path_to_user_files("")
 	, j_config()
+	, m_inEditorLoop(false)
 	, m_engine_clock()
 	, m_frame_time()
 	, m_input_coolDown()
@@ -39,14 +40,16 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	
+
 }
 
 
 void Engine::Initialize(const std::string& projectName)
 {
-	m_current_project_name = projectName;
+	//Set to start at editor loop //SE_TODO: Create switch(macro, etc.) to decide loop mode
+	m_inEditorLoop = true;
 
+	m_current_project_name = projectName;
 	//Create path from .vcproj or .exe to the json files containing game data.
 	_findPathToUserFiles();
 
@@ -64,9 +67,9 @@ void Engine::Initialize(const std::string& projectName)
 
 
 	m_window->Initialize();
-	
+
 	m_messenger.Initialize();
-	
+
 	_initManagers();
 	_initSystems();
 
@@ -82,62 +85,13 @@ void Engine::Uninitialize()
 
 void Engine::EngineUpdate()
 {
-	//Imgui test variables
-	bool show_test_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImColor(114, 144, 154);
-
-	bool loop = true;
-	while (loop)
+	bool exitProgram = false;
+	while (!exitProgram)
 	{
-		m_frame_time = m_engine_clock.restart();
-		SEfloat deltaTime = m_frame_time.asSeconds();
-		SDL_Event event;
-		while (SDL_PollEvent(&event))
-		{
-			//Send events to ImGui_SDL_GL3_implentation //SE_TODO: Switch by macro, bool, etc.
-			ImGui_ImplSdlGL3_ProcessEvent(&event);
-
-			if (event.type == SDL_QUIT)
-				loop = false;
-
-			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
-			{
-				switch (event.key.keysym.sym)
-				{
-				case SDLK_ESCAPE:
-					loop = false;
-					break;
-
-				case SDLK_F12:
-					//Switch if main window in editor is visible
-					_gui_show_main_window = (_gui_show_main_window) ? false : true;
-					break;
-
-				default:
-					break;
-				}
-			}
-
-
-		}
-		//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
-		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
-		_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
-
-		_updateMgrs();
-		_updateSystems(deltaTime);
-
-		//Messenger should be last to update before render
-		m_messenger.PrintMessages(_messageLogType_console);
-
-		// Rendering
-		//glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-		glViewport(0, 0, _gui_width, _gui_heigth);
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui::Render();
-		SDL_GL_SwapWindow(m_window->GetWindowHandle());
+		if (!m_inEditorLoop)
+			m_inEditorLoop = _gameLoop();
+		else
+			_editorLoop(exitProgram);
 	}
 
 	//Cleanup imgui
@@ -272,6 +226,112 @@ void Engine::_updateGUI()
 	m_sceneMgr.ShowAndUpdateGUI();
 	m_compMgr.ShowAndUpdateGUI();
 
+}
+
+bool Engine::_gameLoop()
+{
+	ImVec4 clear_color = ImColor(114, 144, 154);
+
+	m_frame_time = m_engine_clock.restart();
+	SEfloat deltaTime = m_frame_time.asSeconds();
+	SDL_Event event;
+	bool gameloop = true;
+	while (gameloop)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_QUIT)
+				gameloop = false;
+
+			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_ESCAPE:
+					gameloop = false;
+					break;
+				case SDLK_F11:
+					m_inEditorLoop = true;
+				case SDLK_F12:
+					//Switch if main window in editor is visible
+					_gui_show_main_window = (_gui_show_main_window) ? false : true;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		_updateMgrs();
+
+		_updateSystems(deltaTime);
+
+		//Messenger should be last to update before render
+		//m_messenger.PrintMessages(_messageLogType_console);
+
+		// Rendering
+		glViewport(0, 0, _gui_width, _gui_heigth);
+		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		glClear(GL_COLOR_BUFFER_BIT);
+		SDL_GL_SwapWindow(m_window->GetWindowHandle());
+	}
+	return true;
+}
+
+void Engine::_editorLoop(SEbool& exitProgram)
+{
+	ImVec4 clear_color = ImColor(114, 144, 154);
+
+	m_frame_time = m_engine_clock.restart();
+	SEfloat deltaTime = m_frame_time.asSeconds();
+	SDL_Event event;
+	bool editorloop = true;
+	while (editorloop)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			//Send events to ImGui_SDL_GL3_implentation //SE_TODO: Switch by macro, bool, etc.
+			ImGui_ImplSdlGL3_ProcessEvent(&event);
+
+			if (event.type == SDL_QUIT)
+				editorloop = false;
+
+			if (event.type == SDL_KEYDOWN && m_input_coolDown.asMilliSeconds() < 100)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_ESCAPE:
+					editorloop = false; exitProgram = true;
+					break;
+				case SDLK_F11:
+					editorloop = false; m_inEditorLoop = false;
+					break;
+				case SDLK_F12:
+					//Switch if main window in editor is visible
+					_gui_show_main_window = (_gui_show_main_window) ? false : true;
+					break;
+
+				default:
+					break;
+				}
+			}
+
+
+		}
+		//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
+		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+		_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
+		_updateMgrs();
+
+		//Messenger should be last to update before render
+		m_messenger.PrintMessages(_messageLogType_console);
+
+		// Rendering
+		glViewport(0, 0, _gui_width, _gui_heigth);
+		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		glClear(GL_COLOR_BUFFER_BIT);
+		ImGui::Render();
+		SDL_GL_SwapWindow(m_window->GetWindowHandle());
+	}
 }
 
 }//namespace priv

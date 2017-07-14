@@ -13,7 +13,7 @@
 namespace se
 {
 ///Brief: COMPONENT_TYPE enum contains all components as SEints. When adding new component to engine, add it here also.
-///REMEMBER: Also add enumeration value and proper name to the map below, so that using gui is possible and serialization/deserialization works properly
+///REMEMBER: Also add enumeration value and proper name to the map below, so that using gui is possible and serialization/deserialization of data works properly
 enum class COMPONENT_TYPE : SEint
 {
 	FAULTY_TYPE = -1,
