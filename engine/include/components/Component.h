@@ -15,7 +15,7 @@ namespace se
 class ComponentSystem;
 
 ///Brief: Component -class is a base class for all components.
-///Components are POD -classes.
+///Components are POD -classes. Every deriving component must be DefaultConstructable.
 class Component
 {
 public:

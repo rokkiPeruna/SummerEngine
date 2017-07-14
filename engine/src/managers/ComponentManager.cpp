@@ -17,6 +17,7 @@ ComponentManager::ComponentManager()
 	, m_main_json_obj("components")
 	, m_curr_scene_json_obj("")
 	, m_curr_entity_json_obj("")
+	, m_curr_scene(nullptr)
 	, m_curr_entity(nullptr)
 {
 
@@ -25,6 +26,7 @@ ComponentManager::ComponentManager()
 ComponentManager::~ComponentManager()
 {
 	m_curr_entity = nullptr;
+	m_curr_scene = nullptr;
 }
 
 void ComponentManager::Initialize(std::string relativeFilePathToComponentsJson)
@@ -77,8 +79,11 @@ void ComponentManager::ShowAndUpdateGUI()
 
 	if (ImGui::CollapsingHeader("Add component"))
 	{
-		for (auto& component : gui_comp_type_as_string)
+		for (auto& component : CompTypeAsString)
 		{
+			if (m_curr_entity->components.count(component.first))
+				continue;
+
 			if (ImGui::Button(component.second.c_str()))
 			{
 				AddNewComponentToEntity(*m_curr_entity, component.first);
@@ -88,19 +93,82 @@ void ComponentManager::ShowAndUpdateGUI()
 	ImGui::End();
 }
 
-void ComponentManager::InitWithNewScene(const std::vector<Entity>& entities, Scene& scene)
-{	
-	//SE_TODO: When scene is switched, all systems' component containers should be cleared!!
+void ComponentManager::InitWithNewScene(std::vector<Entity>& entities, Scene* scene)
+{
+	//SE_TODO: Move to logic separate functions
 
 	//Load components to correct systems
-	auto* scene_obj = scene.GetData();
+	m_curr_scene = scene;
+	auto* scene_obj = m_curr_scene->GetData();
+	auto& entities_obj = scene_obj->find("entities"); //SE_TODO: Change these names in structure to be set in one place (SceneFileStructure -struct?..)
 
-	
+	//Loop all entities and COMPONENT_TYPEs to their map
+	for (auto& e : entities)
+	{
+		//Find match from scene file. Shouldn't fail because entities have been picked from that file just a moment ago
+		if (entities_obj.value().count(e.name))
+		{
+			auto& entity_obj = entities_obj.value().at(e.name);
+			//Loop all components from entity_obj and add COMPONENT_TYPEs to entity's component map
+			for (auto& itr = entity_obj.begin(); itr != entity_obj.end(); itr++)
+			{
+				if (itr.value().count("type"))
+				{
+					SEint type_as_int = itr.value().at("type");
+					e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), 0); //Index of component is set to 0, systems will modify that
+				}
+			}
+		}
+		else
+		{
+			MessageError(ComponentMgr_id) << "Could not find entity " + e.name + " from\n" + m_curr_scene->GetName();
+		}
+	}
+	//Send all entities to systems for component creation
+	for (auto s : Engine::Instance().GetSystemsContainer())
+	{
+		for (auto& e : entities)
+		{
+			auto& entity_obj = entities_obj.value().find(e.name);
+			s->OnEntityAdded(e, entity_obj);
+		}
+	}
+
 }
 
 void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE component_type)
 {
-	Engine::ComponentTypeToSystemPtr.at(component_type)->AddComponent(entity, component_type);
+	//Check that entity doesn't already have component
+	if (entity.components.count(component_type) != 0)
+	{
+		DebugMessageInfo(ComponentMgr_id) << "Entity [" + entity.name + "] already has that component!";
+		return;
+	}
+
+	if (!m_curr_scene)
+	{
+		MessageError(ComponentMgr_id) << "Pointer to current scene was nullptr in AddNewComponentToEntity(),\ncomponent not added to " + entity.name + "!";
+		return;
+	}
+
+	//Find correct json object, aka correct entity
+	auto* scene_obj = m_curr_scene->GetData();
+	auto& entities_obj = scene_obj->find("entities"); //SE_TODO: Change these names in structure to be set in one place (SceneFileStructure -struct?..)
+	if (entities_obj == scene_obj->end())
+	{
+		MessageError(ComponentMgr_id) << "Could not open json object [entities] in AddNewComponentToEntity(),\ncomponent not added to " + entity.name + "!";
+		return;
+	}
+	auto& entity_obj = entities_obj.value().find(entity.name);
+	if (entity_obj == entities_obj.value().end())
+	{
+		MessageError(ComponentMgr_id) << "Could not open json object [" + entity.name + "] in AddNewComponentToEntity(),\ncomponent not added to " + entity.name + "!";
+		return;
+	}
+
+	//Add to run-time system and entity. Note that the system responsible for handling component to be added, is also
+	//responsible for writing it to the json object. This way we avoid pointer casting.
+	Engine::ComponentTypeToSystemPtr.at(component_type)->CreateComponent(entity, component_type, entity_obj);
 }
 
 void ComponentManager::SetCurrentEntity(Entity* e)

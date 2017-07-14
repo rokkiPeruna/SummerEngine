@@ -13,7 +13,7 @@
 namespace se
 {
 ///Brief: COMPONENT_TYPE enum contains all components as SEints. When adding new component to engine, add it here also.
-///Also add enumeration value and proper name to the map below, so that using gui is possible
+///REMEMBER: Also add enumeration value and proper name to the map below, so that using gui is possible and serialization/deserialization works properly
 enum class COMPONENT_TYPE : SEint
 {
 	FAULTY_TYPE = -1,
@@ -28,14 +28,13 @@ namespace priv
 {
 ///Brief: Const static map that has COMPONENT_TYPE as key and std::string as value. Used by graphical user interface for showing
 ///component list of an entity.
-
-static const std::unordered_map<COMPONENT_TYPE, std::string> gui_comp_type_as_string =
+static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 {
-	{ COMPONENT_TYPE::POSITION, "Position" },
-	{ COMPONENT_TYPE::VELOCITY, "Velocity" },
-	{ COMPONENT_TYPE::SHAPE_CIRCLE, "ShapeCircle" },
-	{ COMPONENT_TYPE::SHAPE_RECTANGLE, "ShapeRectangle" },
-	{ COMPONENT_TYPE::SHAPE_TRIANGLE, "ShapeTriangle" }
+	{ COMPONENT_TYPE::POSITION, "position" },
+	{ COMPONENT_TYPE::VELOCITY, "velocity" },
+	{ COMPONENT_TYPE::SHAPE_CIRCLE, "shape_circle" },
+	{ COMPONENT_TYPE::SHAPE_RECTANGLE, "shape_rectangle" },
+	{ COMPONENT_TYPE::SHAPE_TRIANGLE, "shape_triangle" }
 };
 }//namespace priv
 }//namespace se

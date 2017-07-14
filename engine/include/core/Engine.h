@@ -1,12 +1,6 @@
 #ifndef SE_ENGINE_H
 #define SE_ENGINE_H
 #include <string>
-///!!**********NOTE**********!!///
-///String below must always be the relative path to engine_config.json file from .vcproj file.
-///That file contains relative paths to projects and other engine settings.
-//const std::string REL_PATH_TO_ENGINE_CONFIG = "../../engine/json_files/engine_config.json";
-///!!**********NOTE**********!!///
-
 
 //include STL
 
@@ -77,6 +71,8 @@ public:
 	///Returns ptr to Engine's TransformSystem
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
 
+	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
+
 	///Manager getters
 	//
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
@@ -110,7 +106,7 @@ private:
 	///Init managers
 	void _initManagers();
 
-	///Init systems
+	///Init systems and add pointer to them in m_systemContainer
 	void _initSystems();
 
 	///Update managers
@@ -126,9 +122,12 @@ private:
 
 	std::shared_ptr<Window> m_window;
 
-	///Declared systems and pointers to them
+	///Systems
 	MovementSystem m_movementSystem;
 
+
+	///System ptr container
+	std::vector<ComponentSystem*> m_systemContainer;
 
 	///Managers
 	EntityManager m_entityMgr;

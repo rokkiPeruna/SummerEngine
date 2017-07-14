@@ -40,46 +40,61 @@ void MovementSystem::Uninitialize()
 
 void MovementSystem::Update(float deltaTime)
 {
-
+	std::cout << m_cpositions.size();
 }
 
-SEuint MovementSystem::AddComponent(Entity& entity, COMPONENT_TYPE component_type)
+void MovementSystem::ClearComponentContainers()
 {
-	//Check that entity doesn't already have component
-	if (entity.components.count(component_type) != 0)
-	{
-		DebugMessageInfo(MovementSys_id) << "Entity [" + entity.name + "] already has that component!";
-		return 0;
-	}
+	m_cpositions.clear();
+	m_cvelocities.clear();
+}
 
+void MovementSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+{
+	if (e.components.count(COMPONENT_TYPE::POSITION))
+	{
+		//OLET TÄSSÄ: Create helper function (template, to ComponentSystem) that handles this
+
+		//Create component from json
+		CPosition cpos = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::POSITION));
+
+		//Place at back
+		m_cpositions.emplace_back(cpos);
+
+		//Get index //SE_TODO: This must be changed if we want to fill gaps left by removed entities and their components
+		e.components.at(COMPONENT_TYPE::POSITION) = m_cpositions.size() - 1;
+		
+	}
+	if (e.components.count(COMPONENT_TYPE::VELOCITY))
+	{
+		CVelocity cvel = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::VELOCITY));
+		m_cvelocities.emplace_back(cvel);
+
+		e.components.at(COMPONENT_TYPE::VELOCITY) = m_cvelocities.size() - 1;
+	}
+}
+
+void MovementSystem::OnEntityRemoved(Entity& e, SceneFileFormatIterator& entity_obj)
+{
+	//SE_TODO: Logic!
+}
+
+SEuint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& itr)
+{
 	SEuint index = 0;
 	//Since movement system is responsible for multiple different components, check which this is:
 	if (component_type == COMPONENT_TYPE::POSITION)
 	{
-		//Emplace new CPosition component
-		m_cpositions.emplace_back(CPosition());
-		//Calculate it's index in vector
-		index = (m_cpositions.end() - 1) - m_cpositions.begin();
-		//Add component type and it's index in container to entity 
-		entity.components.emplace(component_type, index);
-		DebugMessage(MovementSys_id) << "Added PositionComponent!";
-		return index;
+		return _createComponent_helper<CPosition>(entity, component_type, itr, m_cpositions);
 	}
 	else if (component_type == COMPONENT_TYPE::VELOCITY)
 	{
-		//Emplace new CPosition component
-		m_cvelocities.emplace_back(CVelocity());
-		//Calculate it's index in vector
-		index = (m_cvelocities.end() - 1) - m_cvelocities.begin();
-		//Add component type and it's index in container to entity 
-		entity.components.emplace(component_type, index);
-		DebugMessage(MovementSys_id) << "Added VelocityComponent!";
-		return index;
+		return _createComponent_helper<CVelocity>(entity, component_type, itr, m_cvelocities);
 	}
 	else
 	{
-		MessageWarning(MovementSys_id) << "Somehow tried to add component that doesn't belong to this system!!";
-		return 0;
+		MessageWarning(MovementSys_id) << "Somehow tried to add component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";
+		return -1;
 	}
 }
 

@@ -1,24 +1,61 @@
 {
     "entities": {
-        "bugi": {
-            "components": null,
-            "id": 4
-        },
-        "juu": {
-            "components": null,
-            "id": 1
-        },
-        "kalle": {
-            "components": null,
-            "id": 2
-        },
         "keijo": {
-            "components": null,
-            "id": 3
+            "id": 1,
+            "position": {
+                "id": 0,
+                "ownerID": 0,
+                "pos_x": 1.0,
+                "pos_y": 2.5,
+                "pos_z": 0.4,
+                "type": 0
+            },
+            "velocity": {
+                "id": 0,
+                "ownerID": 0,
+                "type": 1,
+                "velo_x": 0.0,
+                "velo_y": 0.0,
+                "velo_z": 0.0
+            }
         },
-        "savetus": {
-            "components": null,
-            "id": 5
+        "masa": {
+            "id": 2,
+            "position": {
+                "id": 0,
+                "ownerID": 0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "type": 0
+            },
+            "velocity": {
+                "id": 0,
+                "ownerID": 0,
+                "type": 1,
+                "velo_x": 0.0,
+                "velo_y": 0.0,
+                "velo_z": 0.0
+            }
+        },
+        "pena": {
+            "id": 3,
+            "position": {
+                "id": 0,
+                "ownerID": 0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "type": 0
+            },
+            "velocity": {
+                "id": 0,
+                "ownerID": 0,
+                "type": 1,
+                "velo_x": 0.0,
+                "velo_y": 0.0,
+                "velo_z": 0.0
+            }
         }
     },
     "scene_info": {

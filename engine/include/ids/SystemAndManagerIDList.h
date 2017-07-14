@@ -22,7 +22,7 @@ const SEuint64 SceneMgr_id =					oOo << 3;
 const SEuint64 MovementSys_id =					oOo << 4;
 const SEuint64 Engine_id =						oOo << 5;
 const SEuint64 ComponentMgr_id =				oOo << 6;  
-const SEuint64 dummy_id_mgrsys_7 =				oOo << 7;  //Remember to add id to map below!!!
+const SEuint64 ComponentSys_id =				oOo << 7;  
 const SEuint64 dummy_id_mgrsys_8 =				oOo << 8;  //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_9 =				oOo << 9;  //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_10 =				oOo << 10; //Remember to add id to map below!!!
@@ -94,7 +94,8 @@ static const std::map<SEuint64, std::string> sys_mgr_id_to_name
 	{ SceneMgr_id, "scene_mgr" },
 	{ MovementSys_id, "movement_sys" },
 	{ Engine_id, "engine" },
-	{ ComponentMgr_id, "component_mgr"}
+	{ ComponentMgr_id, "component_mgr"},
+	{ ComponentSys_id, "component_sys" }
 };
 
 }//namespace priv

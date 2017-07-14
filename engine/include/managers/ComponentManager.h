@@ -43,7 +43,7 @@ public:
 	void ShowAndUpdateGUI() override final;
 
 	///Initialize with new scene. Takes in const ref of std::vector containing scene's entities and current scene ptr
-	void InitWithNewScene(const std::vector<Entity>& entities, Scene& scene);
+	void InitWithNewScene(std::vector<Entity>& entities, Scene* scene);
 
 	///Add component of given type to given entity
 	void AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE component_type);
@@ -69,9 +69,14 @@ private:
 	///String naming the json object pointing t current entity
 	std::string m_curr_entity_json_obj;
 
+	///Pointer to current scene
+	Scene* m_curr_scene;
 
 	///For gui
 	Entity* m_curr_entity;
+
+	
+	///Loads entity's component
 
 };
 

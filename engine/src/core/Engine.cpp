@@ -90,7 +90,6 @@ void Engine::EngineUpdate()
 	bool loop = true;
 	while (loop)
 	{
-		//
 		m_frame_time = m_engine_clock.restart();
 		SEfloat deltaTime = m_frame_time.asSeconds();
 		SDL_Event event;
@@ -234,6 +233,7 @@ void Engine::_initManagers()
 void Engine::_initSystems()
 {
 	m_movementSystem.Initialize();
+	m_systemContainer.emplace_back(&m_movementSystem);
 }
 
 void Engine::_updateMgrs()

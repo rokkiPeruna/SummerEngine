@@ -106,7 +106,7 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_gui_scene_name = scene->GetName();
 
 	//Inform ComponentManager of scene change
-	m_compMgr->InitWithNewScene(m_entities, *scene);
+	m_compMgr->InitWithNewScene(m_entities, scene);
 }
 
 
@@ -121,13 +121,14 @@ void EntityManager::CreateEntity(std::string name)
 	});
 
 	auto& entity_obj = entities_obj.value().find(name);
-	entity_obj.value().push_back({ "components", nlohmann::json() });
+	//entity_obj.value().push_back({ "components", nlohmann::json() });
 
 	m_entities.emplace_back(Entity(name, m_next_free_entity_id));
 	m_entities_map.emplace(name, &m_entities.back());
 
 	m_next_free_entity_id++;
 	m_currentEntity = &m_entities.back();
+	m_compMgr->SetCurrentEntity(m_currentEntity);
 }
 
 void EntityManager::CreateEntity(Entity& other, std::string name)
@@ -147,7 +148,6 @@ void EntityManager::_loadSceneEntities()
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
 	{
 		m_entities.emplace_back(Entity(itr.key(), itr.value().at("id")));
-		
 	}
 }
 

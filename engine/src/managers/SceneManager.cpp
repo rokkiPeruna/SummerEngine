@@ -208,8 +208,13 @@ void SceneManager::LoadScene(std::string scenename)
 		MessageError(SceneMgr_id) << "Could not find " + m_scene_struct_main_obj_name + " in " + scenename + m_scene_file_suffix + "\n, scene not loaded!";
 		return;
 	}
-	//And if it is, give it to m_currentScene and init new scene
+	//And if it is, give it to m_currentScene, empty systems component containers and init new scene
 	m_currentScene.SetData(&m_sceneJsonObject);
+
+	for (auto& s : Engine::Instance().GetSystemsContainer())
+	{
+		s->ClearComponentContainers();
+	}
 
 	m_ecm_ptr->InitWithNewScene(&m_currentScene);
 }
