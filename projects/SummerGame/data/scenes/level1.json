@@ -1,5 +1,24 @@
 {
     "entities": {
+        "kalle": {
+            "id": 4,
+            "position": {
+                "id": 0,
+                "ownerID": 0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "type": 0
+            },
+            "velocity": {
+                "id": 0,
+                "ownerID": 0,
+                "type": 1,
+                "velo_x": 0.0,
+                "velo_y": 0.0,
+                "velo_z": 0.0
+            }
+        },
         "keijo": {
             "id": 1,
             "position": {
@@ -43,8 +62,8 @@
             "position": {
                 "id": 0,
                 "ownerID": 0,
-                "pos_x": 0.9,
-                "pos_y": 5.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
                 "pos_z": 0.0,
                 "type": 0
             },

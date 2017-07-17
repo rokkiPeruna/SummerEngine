@@ -48,6 +48,9 @@ public:
 	///Add component of given type to given entity
 	void AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE component_type);
 
+	///Remove component of given type from entity
+	void RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type);
+
 	void SetCurrentEntity(Entity* e);
 
 private:

@@ -20,13 +20,10 @@ class Component
 {
 public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
-	Component(COMPONENT_TYPE type);
-	///Destructor
-	virtual ~Component();
-	///Copy constructor
-	Component(const Component& other);
-	///Deleted assign operator
-	Component& operator=(const Component& other) = delete;
+	Component(COMPONENT_TYPE type)
+		: type(type)
+		, id(0)
+		, ownerID(0) {}
 
 	///Every component has it's type as enum from COMPONENT_TYPE (see ComponentTypeList.h)
 	COMPONENT_TYPE type;

@@ -4,6 +4,7 @@
 //STL includes:
 #include <vector>
 #include <unordered_map>
+#include <queue>
 
 //SE includes:
 #include <utility/Typedefs.h>
@@ -54,28 +55,76 @@ public:
 	///Returns component's index in container. See MovementSystem's implementation for details.
 	virtual SEuint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
 
+	///RemoveComponent "removes" component from entity and system(marks component as free to be replaced)
+	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
+
 protected:
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
 	//Returns pointer to newly created component if more measures need to be done in system's OnEntityAdded
 	template<typename T>
-	T* _onEntityAdded_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& itr, std::vector<T>& container)
+	inline T* _onEntityAdded_helper(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
 	{
-		T component = itr.value().at(CompTypeAsString.at(type));
-		container.emplace_back(component);
-		SEint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
-		e.components.at(type) = index;
-		return &container.back();
+		T component = entity_obj.value().at(CompTypeAsString.at(component_type));
+		//If there is available free indice
+		if (!free_indices.empty())
+		{
+			SEint free_index = free_indices.front();
+			free_indices.pop();
+			container.at(free_index) = component;
+			e.components.at(component_type) = free_index;
+			return &container.at(free_index);
+		}
+		//If not, emplace back
+		else
+		{
+			container.emplace_back(component);
+			SEint index = container.size() - 1;
+			e.components.at(component_type) = index;
+			return &container.back();
+		}
+	}
+
+	///Template helper method that removes component from container, unbinds from entity, rewrites changes to given SceneFileFormatIterator
+	///and adds removed component's index to free indices
+	template<typename T>
+	inline void _onEntityRemoved_helper(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj, std::queue<SEint>& free_indices)
+	{
+		free_indices.push(e.components.at(component_type));
+		
 	}
 
 	///Template helper method that creates component to given container, binds it to given entity and writes it to given SceneFileFormatIterator
 	template<typename T>
-	SEuint _createComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& itr, std::vector<T>& container)
+	inline SEint _createComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
 	{
-		container.emplace_back(T());
-		SEint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
-		e.components.emplace(type, index);
-		itr.value().push_back({ CompTypeAsString.at(type), container.back() });
-		return index;
+		if (!free_indices.empty())
+		{
+			SEint free_index = free_indices.front();
+			free_indices.pop();
+			container.at(free_index) = T();
+			e.components.emplace(type, free_index);
+			entity_obj.value().push_back({ CompTypeAsString.at(type), container.at(free_index) });
+			return free_index;
+		}
+		else
+		{
+			container.emplace_back(T());
+			SEint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
+			e.components.emplace(type, index);
+			entity_obj.value().push_back({ CompTypeAsString.at(type), container.back() });
+			return index;
+		}
+	}
+
+	///Helper method that removes component from given container, unbinds from given entity and writes changes to given SceneFileFormatIterator.
+	///Returns index of the freed component to be stored in container holding free indices
+	inline SEint _removeComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj)
+	{
+		//Get component's index
+		SEint free_index = e.components.at(type);
+		e.components.erase(type);
+		entity_obj.value().erase(CompTypeAsString.at(type));
+		return free_index;
 	}
 };
 

@@ -42,17 +42,18 @@ public:
 	void OnEntityRemoved(Entity& e, SceneFileFormatIterator& entity_obj) override final;
 
 	///Creates component to entity and add it to container and json object
-	SEuint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& itr) override final;
+	SEuint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
+
+	///Removes component from entity and container and json object
+	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
 private:
 
-	///Component containers
+	///Component containers(vectors) and free index containers(queues)
 	std::vector<CPosition> m_cpositions;
+	std::queue<SEint> m_free_cposition_indices;
 	std::vector<CVelocity> m_cvelocities;
-
-	///Components maps. Store component pointers in maps with owner ids as keys
-	std::unordered_map<SEuint, CPosition*> m_cpositions_map;
-	std::unordered_map<SEuint, CVelocity*> m_cvelocities_map;
+	std::queue<SEint> m_free_cvelocity_indices;
 
 };
 }//namespace priv

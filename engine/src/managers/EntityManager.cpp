@@ -136,6 +136,16 @@ void EntityManager::CreateEntity(Entity& other, std::string name)
 
 }
 
+void EntityManager::DeleteEntity(std::string entity_name)
+{
+	auto json = m_currentScene->GetData();
+	auto& entities_obj = json->find(m_main_json_obj);
+
+	entities_obj.value().erase(entity_name);
+
+	//m_en
+}
+
 void EntityManager::_loadSceneEntities()
 {
 	auto json = m_currentScene->GetData();

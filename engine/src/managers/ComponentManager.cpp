@@ -73,7 +73,11 @@ void ComponentManager::ShowAndUpdateGUI()
 	if (m_curr_entity)
 		ImGui::Text(m_curr_entity->name.c_str());
 	else
+	{
 		ImGui::Text("NO ACTIVE ENTITY");
+		ImGui::End();
+		return;
+	}
 
 	ImGui::Separator();
 
@@ -87,6 +91,17 @@ void ComponentManager::ShowAndUpdateGUI()
 			if (ImGui::Button(component.second.c_str()))
 			{
 				AddNewComponentToEntity(*m_curr_entity, component.first);
+			}
+		}
+	}
+	if (ImGui::CollapsingHeader("Remove component"))
+	{
+		for (auto& component : m_curr_entity->components)
+		{
+			if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
+			{
+				RemoveComponentFromEntity(*m_curr_entity, component.first);
+				break;
 			}
 		}
 	}
@@ -141,7 +156,7 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 	//Check that entity doesn't already have component
 	if (entity.components.count(component_type) != 0)
 	{
-		DebugMessageInfo(ComponentMgr_id) << "Entity [" + entity.name + "] already has that component!";
+		DebugMessageInfo(ComponentMgr_id) << "Entity [" + entity.name + "] already has that component in AddNewComponentToEntity()!";
 		return;
 	}
 
@@ -150,7 +165,7 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 		MessageError(ComponentMgr_id) << "Pointer to current scene was nullptr in AddNewComponentToEntity(),\ncomponent not added to " + entity.name + "!";
 		return;
 	}
-
+	
 	//Find correct json object, aka correct entity
 	auto* scene_obj = m_curr_scene->GetData();
 	auto& entities_obj = scene_obj->find("entities"); //SE_TODO: Change these names in structure to be set in one place (SceneFileStructure -struct?..)
@@ -166,9 +181,44 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 		return;
 	}
 
-	//Add to run-time system and entity. Note that the system responsible for handling component to be added, is also
+	//Add to run-time system and entity. Note that the system responsible for handling the component to be added, is also
 	//responsible for writing it to the json object. This way we avoid pointer casting.
 	Engine::ComponentTypeToSystemPtr.at(component_type)->CreateComponent(entity, component_type, entity_obj);
+}
+
+void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type)
+{
+	//Check that entity has that component
+	if (entity.components.count(component_type) == 0)
+	{
+		DebugMessageInfo(ComponentMgr_id) << "Entity [" + entity.name + "] doesn't have that component in RemoveComponentFromEntity()!";
+		return;
+	}
+
+	if (!m_curr_scene)
+	{
+		MessageError(ComponentMgr_id) << "Pointer to current scene was nullptr in RemoveComponentFromEntity(),\ncomponent not removed from " + entity.name + "!";
+		return;
+	}
+
+	//Find correct json object, aka correct entity
+	auto* scene_obj = m_curr_scene->GetData();
+	auto& entities_obj = scene_obj->find("entities"); //SE_TODO: Change these names in structure to be set in one place (SceneFileStructure -struct?..)
+	if (entities_obj == scene_obj->end())
+	{
+		MessageError(ComponentMgr_id) << "Could not open json object [entities] in RemoveComponentFromEntity(),\ncomponent not removed from " + entity.name + "!";
+		return;
+	}
+	auto& entity_obj = entities_obj.value().find(entity.name);
+	if (entity_obj == entities_obj.value().end())
+	{
+		MessageError(ComponentMgr_id) << "Could not open json object [" + entity.name + "] in RemoveComponentFromEntity(),\ncomponent not removed from " + entity.name + "!";
+		return;
+	}
+
+	//Remove from run-time system and entity. Note that system responsible for handling the component to be added, is also
+	//responsible for writing changes to json object. This way we avoid pointer casting.
+	Engine::ComponentTypeToSystemPtr.at(component_type)->RemoveComponent(entity, component_type, entity_obj);
 }
 
 void ComponentManager::SetCurrentEntity(Entity* e)

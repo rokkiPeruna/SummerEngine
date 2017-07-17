@@ -36,7 +36,7 @@ public:
 	///Key: COMPONENT_TYPE
 	///Value: Index in correct component system's component container 
 	///For component types, see ComponentTypeList.h
-	std::map<COMPONENT_TYPE, SEuint> components;
+	std::map<COMPONENT_TYPE, SEint> components;
 };
 }//namespace se
 

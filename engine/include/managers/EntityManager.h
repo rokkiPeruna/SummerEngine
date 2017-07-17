@@ -58,6 +58,9 @@ public:
 	///from other appended with child count index, e.g "flying_enemy_1"
 	void CreateEntity(Entity& other, std::string name = "");
 
+	///Delete entity from scene
+	void DeleteEntity(std::string entity_name);
+
 private:
 	///Pointer to ComponentManager
 	ComponentManager* m_compMgr;
