@@ -51,15 +51,15 @@ public:
 	void InitWithNewScene(Scene* scene);
 
 	///Create new entity
-	void CreateEntity(std::string name);
+	void CreateEntityOnEditor(std::string name);
 	
 	///Create new from other Entity. If name is left to default (""),
 	///new Entity will be assigned as child of the other and will receive name
 	///from other appended with child count index, e.g "flying_enemy_1"
-	void CreateEntity(Entity& other, std::string name = "");
+	void CreateEntityOnEditor(Entity& other, std::string name = "");
 
 	///Delete entity from scene
-	void DeleteEntity(std::string entity_name);
+	void DeleteEntityOnEditor(std::string entity_name);
 
 private:
 	///Pointer to ComponentManager
@@ -88,14 +88,11 @@ private:
 	///Const string naming the main json object
 	const std::string m_main_json_obj;
 
-	///Container holding Entities of the current scene
-	std::vector<Entity> m_entities;
-
 	///Next free entity id
 	SEuint m_next_free_entity_id;
 
-	///Container holding pointers to entities and their access keys (names)
-	std::unordered_map<std::string, Entity*> m_entities_map;
+	///Container holding entities and their access keys (names)
+	std::unordered_map<std::string, Entity> m_entities_map;
 	
 	///Loads current scene's entities
 	void _loadSceneEntities();

@@ -108,7 +108,7 @@ void ComponentManager::ShowAndUpdateGUI()
 	ImGui::End();
 }
 
-void ComponentManager::InitWithNewScene(std::vector<Entity>& entities, Scene* scene)
+void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>& entities, Scene* scene)
 {
 	//SE_TODO: Move to logic separate functions
 
@@ -121,22 +121,22 @@ void ComponentManager::InitWithNewScene(std::vector<Entity>& entities, Scene* sc
 	for (auto& e : entities)
 	{
 		//Find match from scene file. Shouldn't fail because entities have been picked from that file just a moment ago
-		if (entities_obj.value().count(e.name))
+		if (entities_obj.value().count(e.first))
 		{
-			auto& entity_obj = entities_obj.value().at(e.name);
+			auto& entity_obj = entities_obj.value().at(e.first);
 			//Loop all components from entity_obj and add COMPONENT_TYPEs to entity's component map
 			for (auto& itr = entity_obj.begin(); itr != entity_obj.end(); itr++)
 			{
-				if (itr.value().count("type"))
+				if (itr.value().count("_type"))
 				{
-					SEint type_as_int = itr.value().at("type");
-					e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), 0); //Index of component is set to 0, systems will modify that
+					SEint type_as_int = itr.value().at("_type");
+					e.second.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1); //Index of component is set to -1, systems will modify that
 				}
 			}
 		}
 		else
 		{
-			MessageError(ComponentMgr_id) << "Could not find entity " + e.name + " from\n" + m_curr_scene->GetName();
+			MessageError(ComponentMgr_id) << "Could not find entity " + e.first + " from\n" + m_curr_scene->GetName();
 		}
 	}
 	//Send all entities to systems for component creation
@@ -144,8 +144,8 @@ void ComponentManager::InitWithNewScene(std::vector<Entity>& entities, Scene* sc
 	{
 		for (auto& e : entities)
 		{
-			auto& entity_obj = entities_obj.value().find(e.name);
-			s->OnEntityAdded(e, entity_obj);
+			auto& entity_obj = entities_obj.value().find(e.first);
+			s->OnEntityAdded(e.second, entity_obj);
 		}
 	}
 

@@ -15,9 +15,11 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
+	include/components/CMovable.h
 	include/components/Component.h
 	include/components/CPosition.h
 	include/components/CVelocity.h
+	include/components/CAcceleration.h
     include/components/CTriangleShape.h
     include/components/CRectangleShape.h
     include/components/CCircleShape.h

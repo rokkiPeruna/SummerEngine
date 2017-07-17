@@ -4,8 +4,12 @@
 
 //SE includes:
 #include <systems/ComponentSystem.h>
+
+#include <components/CMovable.h>
+
 #include <components/CPosition.h>
 #include <components/CVelocity.h>
+#include <components/CAcceleration.h>
 
 namespace se
 {
@@ -39,7 +43,7 @@ public:
 	///OnEntityAdded checks if entity has components that need to be builded to this system
 	void OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e, SceneFileFormatIterator& entity_obj) override final;
+	void OnEntityRemoved(Entity& e) override final;
 
 	///Creates component to entity and add it to container and json object
 	SEuint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
@@ -50,11 +54,17 @@ public:
 private:
 
 	///Component containers(vectors) and free index containers(queues)
+	std::vector<CMovable> m_cMovables;
+	std::queue<SEint> m_free_cMovables_indices;
+
+
 	std::vector<CPosition> m_cpositions;
 	std::queue<SEint> m_free_cposition_indices;
 	std::vector<CVelocity> m_cvelocities;
 	std::queue<SEint> m_free_cvelocity_indices;
-
+	std::vector<CAcceleration> m_caccelerations;
+	std::queue<SEint> m_free_cacceleration_indices;
+	
 };
 }//namespace priv
 }//namespace se

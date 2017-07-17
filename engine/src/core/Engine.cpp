@@ -231,13 +231,14 @@ void Engine::_updateGUI()
 bool Engine::_gameLoop()
 {
 	ImVec4 clear_color = ImColor(114, 144, 154);
-
-	m_frame_time = m_engine_clock.restart();
-	SEfloat deltaTime = m_frame_time.asSeconds();
 	SDL_Event event;
 	bool gameloop = true;
+	m_engine_clock.restart();
 	while (gameloop)
 	{
+		m_frame_time = m_engine_clock.restart();
+		SEfloat deltaTime = m_frame_time.asSeconds();
+
 		while (SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_QUIT)

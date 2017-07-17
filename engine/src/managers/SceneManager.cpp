@@ -221,7 +221,7 @@ void SceneManager::LoadScene(std::string scenename)
 
 void SceneManager::DeleteScene(std::string scenename)
 {
-
+	//SE_TODO: Logic!
 }
 
 void SceneManager::SaveProgress()

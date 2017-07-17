@@ -1,76 +1,17 @@
 {
     "entities": {
-        "kalle": {
-            "id": 4,
-            "position": {
-                "id": 0,
-                "ownerID": 0,
-                "pos_x": 0.0,
-                "pos_y": 0.0,
-                "pos_z": 0.0,
-                "type": 0
-            },
-            "velocity": {
-                "id": 0,
-                "ownerID": 0,
-                "type": 1,
-                "velo_x": 0.0,
-                "velo_y": 0.0,
-                "velo_z": 0.0
-            }
-        },
-        "keijo": {
+        "moveble_player": {
             "id": 1,
-            "position": {
-                "id": 0,
-                "ownerID": 0,
-                "pos_x": 1.0,
-                "pos_y": 2.5,
-                "pos_z": 0.4,
-                "type": 0
-            },
-            "velocity": {
-                "id": 0,
-                "ownerID": 0,
-                "type": 1,
-                "velo_x": 0.0,
-                "velo_y": 0.0,
-                "velo_z": 0.0
-            }
-        },
-        "masa": {
-            "id": 2,
-            "position": {
-                "id": 0,
-                "ownerID": 0,
-                "pos_x": 2.0,
-                "pos_y": 0.0,
-                "pos_z": 2.0,
-                "type": 0
-            },
-            "velocity": {
-                "id": 0,
-                "ownerID": 0,
-                "type": 1,
-                "velo_x": 0.0,
-                "velo_y": 0.0,
-                "velo_z": 0.0
-            }
-        },
-        "pena": {
-            "id": 3,
-            "position": {
-                "id": 0,
-                "ownerID": 0,
+            "movable": {
+                "_id": 0,
+                "_ownerID": 0,
+                "_type": 0,
+                "acc_x": 0.0,
+                "acc_y": 0.0,
+                "acc_z": 0.0,
                 "pos_x": 0.0,
                 "pos_y": 0.0,
                 "pos_z": 0.0,
-                "type": 0
-            },
-            "velocity": {
-                "id": 0,
-                "ownerID": 0,
-                "type": 1,
                 "velo_x": 0.0,
                 "velo_y": 0.0,
                 "velo_z": 0.0

@@ -19,7 +19,6 @@ EntityManager::EntityManager()
 	, m_scenes_subfolder_name("scenes/")
 	, m_scene_file_suffix(".json")
 	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
-	, m_entities{}
 	, m_next_free_entity_id(0)
 	, m_entities_map{}
 	, m_gui_scene_name("NO ACTIVE SCENE")
@@ -37,7 +36,6 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson, Component
 {
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + m_scenes_subfolder_name;
 	m_compMgr = compMgr;
-	m_entities.clear();
 	m_entities_map.clear();
 }
 
@@ -67,21 +65,32 @@ void EntityManager::ShowAndUpdateGUI()
 		{
 			if (ImGui::Button("Create!"))
 			{
-				CreateEntity(entityname);
+				CreateEntityOnEditor(entityname);
 			}
 		}
 
 	}
+	if (ImGui::CollapsingHeader("Delete entity"))
+	{
+		for (auto& e : m_entities_map)
+		{
+			if (ImGui::Button(e.first.c_str()))
+			{
+				DeleteEntityOnEditor(e.first);
+				break;
+			}
+		}
+	}
 	ImGui::Separator();
 	if (ImGui::CollapsingHeader("Entities"))
 	{
-		for (auto& e : m_entities)
+		for (auto& e : m_entities_map)
 		{
 			ImGui::Bullet();
-			if (ImGui::SmallButton(e.name.c_str()))
+			if (ImGui::SmallButton(e.second.name.c_str()))
 			{
-				m_currentEntity = &e;
-				m_compMgr->SetCurrentEntity(&e);
+				m_currentEntity = &e.second;
+				m_compMgr->SetCurrentEntity(m_currentEntity);
 				_gui_show_component_mgr_window = true;
 			}
 		}
@@ -92,7 +101,6 @@ void EntityManager::ShowAndUpdateGUI()
 void EntityManager::InitWithNewScene(Scene* scene)
 {
 	//Clear containers
-	m_entities.clear();
 	m_entities_map.clear();
 
 	m_currentScene = scene;
@@ -106,11 +114,11 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_gui_scene_name = scene->GetName();
 
 	//Inform ComponentManager of scene change
-	m_compMgr->InitWithNewScene(m_entities, scene);
+	m_compMgr->InitWithNewScene(m_entities_map, scene);
 }
 
 
-void EntityManager::CreateEntity(std::string name)
+void EntityManager::CreateEntityOnEditor(std::string name)
 {
 	//Get json object holding entities
 	auto json = m_currentScene->GetData();
@@ -120,30 +128,38 @@ void EntityManager::CreateEntity(std::string name)
 		nlohmann::json({{"id", m_next_free_entity_id}}),
 	});
 
-	auto& entity_obj = entities_obj.value().find(name);
-	//entity_obj.value().push_back({ "components", nlohmann::json() });
+	m_entities_map.emplace(name, Entity(name, m_next_free_entity_id));
 
-	m_entities.emplace_back(Entity(name, m_next_free_entity_id));
-	m_entities_map.emplace(name, &m_entities.back());
 
 	m_next_free_entity_id++;
-	m_currentEntity = &m_entities.back();
+	m_currentEntity = &m_entities_map.at(name);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 }
 
-void EntityManager::CreateEntity(Entity& other, std::string name)
+void EntityManager::CreateEntityOnEditor(Entity& other, std::string name)
 {
 
 }
 
-void EntityManager::DeleteEntity(std::string entity_name)
+void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 {
 	auto json = m_currentScene->GetData();
 	auto& entities_obj = json->find(m_main_json_obj);
 
 	entities_obj.value().erase(entity_name);
 
-	//m_en
+	for (auto& s : Engine::Instance().GetSystemsContainer())
+	{
+		s->OnEntityRemoved(m_entities_map.at(entity_name));
+	}
+	
+	if (m_currentEntity == &m_entities_map.at(entity_name))
+	{
+		m_currentEntity = nullptr;
+		m_compMgr->SetCurrentEntity(nullptr);
+	}
+
+	m_entities_map.erase(entity_name);
 }
 
 void EntityManager::_loadSceneEntities()
@@ -157,7 +173,7 @@ void EntityManager::_loadSceneEntities()
 	}
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
 	{
-		m_entities.emplace_back(Entity(itr.key(), itr.value().at("id")));
+		m_entities_map.emplace(itr.key(), Entity(itr.key(), itr.value().at("id")));
 	}
 }
 

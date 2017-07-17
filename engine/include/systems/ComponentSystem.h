@@ -44,8 +44,8 @@ public:
 	///them to run-time containers and bind to entity
 	virtual void OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj) = 0;
 
-	///Check if removed entity has components that are in system's container. If it has, marks those components as free to replace and doesn't update them.
-	virtual void OnEntityRemoved(Entity& e, SceneFileFormatIterator& entity_obj) = 0;
+	///Check if removed entity has components that are in system's container. If it has, marks those components as free to replace (pushes them to free_indices container) and doesn't update them.
+	virtual void OnEntityRemoved(Entity& e) = 0;
 
 
 	//EDITOR METHODS
@@ -82,15 +82,6 @@ protected:
 			e.components.at(component_type) = index;
 			return &container.back();
 		}
-	}
-
-	///Template helper method that removes component from container, unbinds from entity, rewrites changes to given SceneFileFormatIterator
-	///and adds removed component's index to free indices
-	template<typename T>
-	inline void _onEntityRemoved_helper(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj, std::queue<SEint>& free_indices)
-	{
-		free_indices.push(e.components.at(component_type));
-		
 	}
 
 	///Template helper method that creates component to given container, binds it to given entity and writes it to given SceneFileFormatIterator
