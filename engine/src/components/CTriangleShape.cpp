@@ -6,8 +6,8 @@ namespace se
 CTriangleShape::CTriangleShape(SEfloat size)
 	: Component(CTriangleShape_id)
 	, m_points_1(0, size)
-	, m_points_2(size, size)
-	, m_points_3(-size, size)
+	, m_points_2(size, -size)
+	, m_points_3(-size, -size)
 {
 	
 }
