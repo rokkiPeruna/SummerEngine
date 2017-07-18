@@ -25,6 +25,7 @@
 //Systems
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
+#include <systems/RenderSystem.h>
 
 //Managers
 #include <managers/IOManager.h>
@@ -132,7 +133,7 @@ private:
 
 	///Systems
 	MovementSystem m_movementSystem;
-
+	RenderSystem m_renderSystem;
 
 	///System ptr container
 	std::vector<ComponentSystem*> m_systemContainer;

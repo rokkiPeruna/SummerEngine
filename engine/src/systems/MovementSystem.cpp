@@ -20,9 +20,9 @@ MovementSystem::MovementSystem()
 	//This links components to correct systems! Must be done in every new system
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::MOVABLE, this);
 
-	/*Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::POSITION, this);
+	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::POSITION, this);
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::VELOCITY, this);
-	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::ACCELERATION, this);*/
+	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::ACCELERATION, this);
 
 	//Reserve space for vectors, SE_TODO: The amount to be reserved should come from user!!
 	//m_cpositions.reserve(20);
@@ -73,7 +73,7 @@ void MovementSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_ob
 	}
 
 
-	/*if (e.components.count(COMPONENT_TYPE::POSITION))
+	if (e.components.count(COMPONENT_TYPE::POSITION))
 	{
 		_onEntityAdded_helper(e, COMPONENT_TYPE::POSITION, entity_obj, m_cpositions, m_free_cposition_indices);
 	}
@@ -84,7 +84,7 @@ void MovementSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_ob
 	if (e.components.count(COMPONENT_TYPE::ACCELERATION))
 	{
 		_onEntityAdded_helper(e, COMPONENT_TYPE::ACCELERATION, entity_obj, m_caccelerations, m_free_cacceleration_indices);
-	}*/
+	}
 }
 
 void MovementSystem::OnEntityRemoved(Entity& e)
@@ -94,7 +94,7 @@ void MovementSystem::OnEntityRemoved(Entity& e)
 		m_free_cMovables_indices.push(e.components.at(COMPONENT_TYPE::MOVABLE));
 	}
 
-	/*if (e.components.count(COMPONENT_TYPE::POSITION))
+	if (e.components.count(COMPONENT_TYPE::POSITION))
 	{
 		m_free_cposition_indices.push(e.components.at(COMPONENT_TYPE::POSITION));
 	}
@@ -105,7 +105,7 @@ void MovementSystem::OnEntityRemoved(Entity& e)
 	if (e.components.count(COMPONENT_TYPE::ACCELERATION))
 	{
 		m_free_cacceleration_indices.push(e.components.at(COMPONENT_TYPE::ACCELERATION));
-	}*/
+	}
 }
 
 SEuint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
@@ -115,19 +115,19 @@ SEuint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 		return _createComponent_helper<CMovable>(entity, component_type, entity_obj, m_cMovables, m_free_cMovables_indices);
 	}
 
-	////Since movement system is responsible for multiple different components, check which this is:
-	//if (component_type == COMPONENT_TYPE::POSITION)
-	//{
-	//	return _createComponent_helper<CPosition>(entity, component_type, entity_obj, m_cpositions, m_free_cposition_indices);
-	//}
-	//else if (component_type == COMPONENT_TYPE::VELOCITY)
-	//{
-	//	return _createComponent_helper<CVelocity>(entity, component_type, entity_obj, m_cvelocities, m_free_cvelocity_indices);
-	//}
-	//else if (component_type == COMPONENT_TYPE::ACCELERATION)
-	//{
-	//	return _createComponent_helper<CAcceleration>(entity, component_type, entity_obj, m_caccelerations, m_free_cacceleration_indices);
-	//}
+	//Since movement system is responsible for multiple different components, check which this is:
+	if (component_type == COMPONENT_TYPE::POSITION)
+	{
+		return _createComponent_helper<CPosition>(entity, component_type, entity_obj, m_cpositions, m_free_cposition_indices);
+	}
+	else if (component_type == COMPONENT_TYPE::VELOCITY)
+	{
+		return _createComponent_helper<CVelocity>(entity, component_type, entity_obj, m_cvelocities, m_free_cvelocity_indices);
+	}
+	else if (component_type == COMPONENT_TYPE::ACCELERATION)
+	{
+		return _createComponent_helper<CAcceleration>(entity, component_type, entity_obj, m_caccelerations, m_free_cacceleration_indices);
+	}
 	else
 	{
 		MessageWarning(MovementSys_id) << "Somehow tried to add component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";
@@ -143,19 +143,19 @@ void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_ty
 	}
 
 
-	////Since movement system is responsible for multiple different components, check which this is:
-	//if (component_type == COMPONENT_TYPE::POSITION)
-	//{
-	//	m_free_cposition_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
-	//}
-	//else if (component_type == COMPONENT_TYPE::VELOCITY)
-	//{
-	//	m_free_cvelocity_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
-	//}
-	//else if (component_type == COMPONENT_TYPE::ACCELERATION)
-	//{
-	//	m_free_cacceleration_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
-	//}
+	//Since movement system is responsible for multiple different components, check which this is:
+	if (component_type == COMPONENT_TYPE::POSITION)
+	{
+		m_free_cposition_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
+	}
+	else if (component_type == COMPONENT_TYPE::VELOCITY)
+	{
+		m_free_cvelocity_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
+	}
+	else if (component_type == COMPONENT_TYPE::ACCELERATION)
+	{
+		m_free_cacceleration_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
+	}
 	else
 	{
 		MessageWarning(MovementSys_id) << "Somehow tried to remove component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";

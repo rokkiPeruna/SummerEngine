@@ -34,6 +34,8 @@ Engine::Engine()
 	, m_renderMgr()
 	, m_compMgr()
 	, m_messenger()
+	, m_renderSystem()
+	
 {
 
 }
@@ -63,9 +65,7 @@ void Engine::Initialize(const std::string& projectName)
 		std::runtime_error("Failed to initialize json object in Engine::Initialize()");
 		return;
 	}
-
-
-
+	
 	m_window->Initialize();
 
 	m_messenger.Initialize();
@@ -182,12 +182,20 @@ void Engine::_initManagers()
 
 	//ComponentManager
 	m_compMgr.Initialize(m_path_to_user_files);
+
+	//Resource Manager | default path to shaders.. todo: change so that it can be read fomr the engine_config.json or delete that part from json
+	m_resourceMgr.Initialize("../../engine/shaders/");
+
+	
+//	m_renderMgr.Initialize();
 }
 
 void Engine::_initSystems()
 {
 	m_movementSystem.Initialize();
 	m_systemContainer.emplace_back(&m_movementSystem);
+	m_renderSystem.Initialize();
+	m_systemContainer.emplace_back(&m_renderSystem);
 }
 
 void Engine::_updateMgrs()
@@ -231,6 +239,7 @@ void Engine::_updateGUI()
 bool Engine::_gameLoop()
 {
 	ImVec4 clear_color = ImColor(114, 144, 154);
+
 	SDL_Event event;
 	bool gameloop = true;
 	m_engine_clock.restart();
@@ -241,6 +250,7 @@ bool Engine::_gameLoop()
 
 		while (SDL_PollEvent(&event))
 		{
+
 			if (event.type == SDL_QUIT)
 				gameloop = false;
 
@@ -290,6 +300,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 	{
 		while (SDL_PollEvent(&event))
 		{
+			
+		
 			//Send events to ImGui_SDL_GL3_implentation //SE_TODO: Switch by macro, bool, etc.
 			ImGui_ImplSdlGL3_ProcessEvent(&event);
 
@@ -330,6 +342,10 @@ void Engine::_editorLoop(SEbool& exitProgram)
 		glViewport(0, 0, _gui_width, _gui_heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
+		
+	//	m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle(), m_resourceMgr.GetShaderProgram("testShader"));
+		m_renderSystem.Update(deltaTime);
+
 		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 	}

@@ -23,7 +23,9 @@ set(COMPONENTS_FILES
     include/components/CTriangleShape.h
     include/components/CRectangleShape.h
     include/components/CCircleShape.h
-	)
+	include/components/CTransform.h
+    include/components/CShape.h
+    )
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
 #Systems
@@ -34,7 +36,9 @@ set(SYSTEMS_FILES
 	src/systems/MovementSystem.cpp
     include/systems/RenderSystem.h
     src/systems/RenderSystem.cpp
-	)
+	include/systems/TransformSystem.h
+    src/systems/TransformSystem.cpp
+    )
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
 #Managers
@@ -58,6 +62,8 @@ set(MANAGERS_FILES
 	include/managers/IOManager.h
 	src/managers/IOManager.cpp
 	include/managers/IOLowLevelInputBinding.h
+	include/managers/Batch.h
+	src/managers/Batch.cpp
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
