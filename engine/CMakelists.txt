@@ -53,6 +53,9 @@ set(MANAGERS_FILES
 	src/managers/Scene.cpp
 	include/managers/RenderManager.h
 	src/managers/RenderManager.cpp
+	include/managers/IOManager.h
+	src/managers/IOManager.cpp
+	include/managers/IOLowLevelInputBinding.h
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------

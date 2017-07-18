@@ -248,12 +248,12 @@ bool Engine::_gameLoop()
 			{
 				switch (event.key.keysym.sym)
 				{
-				case SDLK_ESCAPE:
+				case Key_Escape:
 					gameloop = false;
 					break;
-				case SDLK_F11:
+				case Key_F11:
 					m_inEditorLoop = true;
-				case SDLK_F12:
+				case Key_F12:
 					//Switch if main window in editor is visible
 					_gui_show_main_window = (_gui_show_main_window) ? false : true;
 					break;
@@ -300,13 +300,13 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			{
 				switch (event.key.keysym.sym)
 				{
-				case SDLK_ESCAPE:
+				case Key_Escape:
 					editorloop = false; exitProgram = true;
 					break;
-				case SDLK_F11:
+				case Key_F11:
 					editorloop = false; m_inEditorLoop = false;
 					break;
-				case SDLK_F12:
+				case Key_F12:
 					//Switch if main window in editor is visible
 					_gui_show_main_window = (_gui_show_main_window) ? false : true;
 					break;
