@@ -1,10 +1,20 @@
 #version 150 core
 
-in vec2 position;
-in vec3 color;
-out vec3 Color;
+in vec3 vertexPosition;
+in vec4 vertexColor;
+
+out vec3 fragmentPosition;
+out vec4 fragmentColor;
+
+uniform mat4 transform;
+
+
 void main()
 {
-    Color = color;
-    gl_Position = vec4(position, 0.0, 1.0);
+	
+	gl_Position = vec4(vertexPosition, 1.0);
+
+	fragmentPosition = vertexPosition;
+	fragmentColor = vertexColor;
 }
+

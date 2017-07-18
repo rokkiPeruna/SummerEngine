@@ -4,12 +4,26 @@
 		"defaultShader" :
 		{
 			"vertex_shader"		: "defaultShader.vert",
-			"fragment_shader"	: "defaultShader.frag"
+			"fragment_shader"	: "defaultShader.frag",
+			
+			"attributes" : 
+			{
+				"0" : "inputPosition",
+				"1" : "inputColor"
+			}
 		},
 		"testShader" :
 		{
 			"vertex_shader"		: "test.vert",
-			"fragment_shader"	: "test.frag"
+			"fragment_shader"	: "test.frag",
+		
+			"attributes" :
+			{
+				"0" : "vertexPosition",
+				"1" : "vertexColor"
+			}
+			
+
 		}
 	}
 }
