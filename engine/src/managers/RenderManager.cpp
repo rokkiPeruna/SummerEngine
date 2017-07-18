@@ -24,8 +24,8 @@ RenderManager::~RenderManager()
 
 void RenderManager::Initialize(ShaderResource* shaderProgram)
 {
-	dummyContainer.push_back(DummyEntity(CPosition(-0.2, -0.4, 0.0), CTriangleShape(Vec2f(0.0, -0.1), Vec2f(0.2, 0.2), Vec2f(-0.3, 0.3)), Vec4f(0.2, 0.3, 0.7, 1.0)));
-	dummyContainer.push_back(DummyEntity(CPosition(-0.1, 0.5, 0.0), CTriangleShape(0.2), Vec4f(0.7, 0.2, 0.1, 1.0)));
+	//dummyContainer.push_back(DummyEntity(CPosition(-0.2, -0.4, 0.0), CTriangleShape(Vec2f(0.0, -0.1), Vec2f(0.2, 0.2), Vec2f(-0.3, 0.3)), Vec4f(0.2, 0.3, 0.7, 1.0)));
+	//dummyContainer.push_back(DummyEntity(CPosition(-0.1, 0.5, 0.0), CTriangleShape(0.2), Vec4f(0.7, 0.2, 0.1, 1.0)));
 
 }
 
@@ -38,13 +38,13 @@ void RenderManager::UpdateRenderManager(SDL_Window* windowHandle, ShaderResource
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (int i = 0; i < dummyContainer.size(); ++i)
+	/*for (int i = 0; i < dummyContainer.size(); ++i)
 	{
 		glUseProgram(shaderProgram->GetShaderID());
 		glBindVertexArray(dummyContainer.at(i).GetVertexArrayObject());
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-	}
+	}*/
 
 	ImGui::Render();
 	SDL_GL_SwapWindow(windowHandle);

@@ -45,7 +45,7 @@ public:
 	///Update resource manager. Checks if scene has changed and/or new resources must be loaded
 	void Update() override final;
 
-	void ShowAndUpdateGUI() override final;
+	void ShowAndUpdateGUI() override final {};
 
 	///Load text resource. Returns shared_ptr to TextResource object.
 	std::shared_ptr<TextResource> LoadTextResource(std::string filepath, std::string name);
