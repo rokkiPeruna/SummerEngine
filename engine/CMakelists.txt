@@ -92,6 +92,7 @@ set(UTILITY_FILES
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
+	include/utility/JsonUtilFunctions.h
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------

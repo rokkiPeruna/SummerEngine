@@ -124,7 +124,7 @@ void ComponentManager::ShowAndUpdateGUI()
 		}
 		if (m_curr_component)
 		{
-			Engine::ComponentTypeToSystemPtr.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_curr_component_itr);
+			ModifyComponentFromEntity();
 		}
 	}
 
@@ -244,7 +244,7 @@ void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE 
 	Engine::ComponentTypeToSystemPtr.at(component_type)->RemoveComponent(entity, component_type, entity_obj);
 }
 
-void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container)
+void ComponentManager::ModifyComponentFromEntity()
 {
 	//Find component json object
 	auto json = m_curr_scene->GetData();
@@ -260,14 +260,19 @@ void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_c
 		MessageWarning(ComponentMgr_id) << "Failed to find " + m_curr_entity->name + " json object in SetCurrentComponent()";
 		return;
 	}
-	m_curr_component_itr = &entity_obj.value().find(CompTypeAsString.at(type));
-	if (m_curr_component_itr == &entity_obj.value().end())
+	auto& component_obj = entity_obj.value().find(CompTypeAsString.at(m_curr_component->type));
+	if (component_obj == entity_obj.value().end())
 	{
-		MessageWarning(ComponentMgr_id) << "Failed to find " + CompTypeAsString.at(type) + " json object in SetCurrentComponent()";
+		MessageWarning(ComponentMgr_id) << "Failed to find " + CompTypeAsString.at(m_curr_component->type) + " json object in SetCurrentComponent()";
 		return;
 	}
 
-	m_curr_component = Engine::ComponentTypeToSystemPtr.at(type)->ModifyComponent(type, index_in_container, m_curr_component_itr);
+	Engine::ComponentTypeToSystemPtr.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, component_obj);
+}
+
+void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container)
+{
+	m_curr_component = Engine::ComponentTypeToSystemPtr.at(type)->GetPlainComponentPtr(type, index_in_container);
 	m_curr_comp_index = index_in_container;
 }
 

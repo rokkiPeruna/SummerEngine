@@ -97,12 +97,6 @@ private:
 	///Scene name container
 	std::vector<std::string> m_sceneNames;
 
-	///Read file data to json object
-	bool _readFileToJson(nlohmann::json& j, std::string& filepath);
-
-	///Rewrite file with values from json object
-	bool _rewriteFile(nlohmann::json& j, std::string& filepath);
-
 	///Loads scene names from scenes.json so that user can see
 	/// and pick from names in SceneManager GUI. Also load scene ids to avoid id conflicts
 	void _loadSceneNames();

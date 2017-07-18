@@ -53,6 +53,8 @@ public:
 	///Remove component of given type from entity
 	void RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type);
 
+	void ModifyComponentFromEntity();
+
 	void SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container);
 
 	///Set pointer to current entity. Mostly called by EntityManager.

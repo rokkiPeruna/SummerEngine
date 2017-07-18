@@ -2,7 +2,7 @@
 #include <imgui/imgui.h>
 #include <core/Engine.h>
 #include <core/Messages.h>
-#include <nlohmann_json/json.hpp>
+#include <utility/JsonUtilFunctions.h>
 
 namespace se
 {
@@ -144,7 +144,7 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 
 	//Rewrite m_scene_name_list_file
 	m_sceneNamesJsonObject.clear(); //SE_TODO: Is there need to rewrite the object??
-	if (!_readFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file))
+	if(!util::ReadFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file, SceneMgr_id))
 		return false;
 
 	auto& names_obj = m_sceneNamesJsonObject.find(m_scene_names_json_obj);
@@ -157,7 +157,8 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 		return false;
 	}
 	names_obj.value().push_back(scenename);
-	_rewriteFile(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file);
+
+	util::RewriteFileWithJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file, SceneMgr_id);
 
 	//Add name to runtime container
 	m_sceneNames.emplace_back(scenename);
@@ -182,7 +183,8 @@ void SceneManager::LoadScene(std::string scenename)
 		return;
 	}
 	m_sceneJsonObject.clear(); //SE_TODO: Is there need to rewrite the object??
-	if (!_readFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix))
+
+	if(!util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id))
 		return;
 	
 	//Read scene's info to json object and create new current scene
@@ -234,40 +236,10 @@ void SceneManager::SaveProgress()
 	std::ofstream file(path, std::ios::trunc);
 	if (!file.is_open())
 	{
-		MessageError(EntityMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_currentScene.GetName() + "\n, entities not saved";
+		MessageError(SceneMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_currentScene.GetName() + "\n, scene not saved";
 		return;
 	}
 	file << std::setw(4) << *m_currentScene.GetData() << std::endl;
-}
-
-bool SceneManager::_readFileToJson(nlohmann::json& j, std::string& filepath)
-{
-	std::ifstream data(filepath);
-	if (!data.is_open())
-	{
-		MessageError(SceneMgr_id) << "Failed to open " + filepath + " for\nreading in _readFileToJson()";
-		return false;
-	}
-	j = nlohmann::json::parse(data);
-	data.close();
-	return true;
-}
-
-bool SceneManager::_rewriteFile(nlohmann::json& j, std::string& filepath)
-{
-	std::ofstream file(filepath, std::ios::trunc);
-	if (!file.is_open())
-	{
-		MessageError(SceneMgr_id) << "Failed to open " + filepath + " for rewriting in _rewriteFile()";
-		return false;
-	}
-	else
-	{
-		file << std::setw(4) << j << std::endl;
-		file.close();
-		return true;
-	}
-	return false;
 }
 
 void SceneManager::_loadSceneNames()

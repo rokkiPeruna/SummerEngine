@@ -60,7 +60,10 @@ public:
 	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
 
 	///ModifyComponent provides gui interface for user to to apply changes to given entity's component's values
-	virtual Component* ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator*) = 0;
+	virtual void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator&) = 0;
+
+	///GetPlainComponentPtr returns plain Component* to be used in editor function. Can't be used for alternating data in game logic
+	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
 
 protected:
 	///Template helper method that creates component from file and adds it to container and binds it to entity.

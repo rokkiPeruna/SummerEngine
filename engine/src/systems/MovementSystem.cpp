@@ -168,7 +168,7 @@ void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_ty
 	}
 }
 
-Component* MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator* component_obj)
+void MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
 {
 	static bool open = true;
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
@@ -179,36 +179,67 @@ Component* MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_c
 		//SE_TODO: Check somehow that index is valid component!
 		auto& comp = m_cMovables.at(index_in_container);
 
-		if (ImGui::CollapsingHeader(""))
+		if (ImGui::CollapsingHeader("Position"))
 		{
 			static SEbool showEditor = true;
-			static SEfloat pos_x = comp.position.x;
-			static SEfloat pos_y = comp.position.y;
-			static SEfloat pos_z = comp.position.z;
-
-			//ImGui::SliderFloat("position_x", &pos_x, 0.0f, 200.0f);
-			//ImGui::SliderFloat("position_y", &pos_y, 0.0f, 200.0f);
-			//ImGui::SliderFloat("position_z", &pos_z, 0.0f, 200.0f);
-
 			ImGui::SliderFloat("position_x", &comp.position.x, 0.0f, 200.0f);
 			ImGui::SliderFloat("position_y", &comp.position.y, 0.0f, 200.0f);
 			ImGui::SliderFloat("position_z", &comp.position.z, 0.0f, 200.0f);
 
 			std::cout << comp.position.z << std::endl;
 
-			if (ImGui::Button("Save changes"))
+			if (ImGui::Button("Apply changes"))
 			{
-				//std::cout << component_obj->value..at("pos_x") << std::endl;
-				component_obj->value().push_back({ "valid", 1.0f });				//OLET TÄSSÄ, json itr not valid!
-				//component_obj->value().at("pos_x") = comp.position.x;
-				//component_obj->value().at("pos_y") = comp.position.y;
-				//component_obj->value().at("pos_z") = comp.position.z;
+				component_obj.value().at("pos_x") = comp.position.x;
+				component_obj.value().at("pos_y") = comp.position.y;
+				component_obj.value().at("pos_z") = comp.position.z;
+			}
+		}
+		if (ImGui::CollapsingHeader("Velocity"))
+		{
+			static SEbool showEditor = true;
+			ImGui::SliderFloat("velocity_x", &comp.velocity.x, 0.0f, 200.0f);
+			ImGui::SliderFloat("velocity_y", &comp.velocity.y, 0.0f, 200.0f);
+			ImGui::SliderFloat("velocity_z", &comp.velocity.z, 0.0f, 200.0f);
+
+			std::cout << comp.position.z << std::endl;
+
+			if (ImGui::Button("Apply changes"))
+			{
+				component_obj.value().at("velo_x") = comp.velocity.x;
+				component_obj.value().at("velo_y") = comp.velocity.y;
+				component_obj.value().at("velo_z") = comp.velocity.z;
+			}
+		}
+		if (ImGui::CollapsingHeader("Acceleration"))
+		{
+			static SEbool showEditor = true;
+			ImGui::SliderFloat("acceleration_x", &comp.acceleration.x, 0.0f, 200.0f);
+			ImGui::SliderFloat("acceleration_y", &comp.acceleration.y, 0.0f, 200.0f);
+			ImGui::SliderFloat("acceleration_z", &comp.acceleration.z, 0.0f, 200.0f);
+
+			std::cout << comp.position.z << std::endl;
+
+			if (ImGui::Button("Apply changes"))
+			{
+				component_obj.value().at("acc_x") = comp.acceleration.x;
+				component_obj.value().at("acc_y") = comp.acceleration.y;
+				component_obj.value().at("acc_z") = comp.acceleration.z;
 			}
 		}
 		ImGui::End();
-		return &m_cMovables.at(index_in_container);
 	}
 
+}
+
+Component* MovementSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
+{
+	if (type == COMPONENT_TYPE::MOVABLE)
+	{
+		return &m_cMovables.at(index_in_container);
+	}
+	else
+		return nullptr;
 }
 
 }//namespace priv

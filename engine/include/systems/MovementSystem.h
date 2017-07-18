@@ -61,7 +61,10 @@ public:
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
 	///Modifies component from entity
-	Component* ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator* component_obj);
+	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
+
+	///Returns plain Component* used in editor function.
+	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container);
 
 private:
 	///Component containers(vectors) and free index containers(queues)
