@@ -11,11 +11,13 @@
 //SE includes:
 #include <managers/Manager.h>
 #include <utility/Typedefs.h>
-#include <managers/Entity.h>
 #include <managers/Scene.h>
 
 namespace se
 {
+class Entity;
+class Component;
+
 namespace priv
 {
 ///Brief: ComponentManager -class is responsible for handling all component related matters,
@@ -51,6 +53,9 @@ public:
 	///Remove component of given type from entity
 	void RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type);
 
+	void SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container);
+
+	///Set pointer to current entity. Mostly called by EntityManager.
 	void SetCurrentEntity(Entity* e);
 
 private:
@@ -69,8 +74,13 @@ private:
 	///String naming the json object pointing to current scene
 	std::string m_curr_scene_json_obj;
 
-	///String naming the json object pointing t current entity
+	///String naming the json object pointing to current entity
 	std::string m_curr_entity_json_obj;
+
+	///String naming the json object pointing to current component
+	std::string m_curr_component_json_obj_name;
+
+	SceneFileFormatIterator* m_curr_component_itr;
 
 	///Pointer to current scene
 	Scene* m_curr_scene;
@@ -78,9 +88,9 @@ private:
 	///For gui
 	Entity* m_curr_entity;
 
-	
-	///Loads entity's component
-
+	///Pointer to current component for editor
+	Component* m_curr_component;
+	SEint m_curr_comp_index;
 };
 
 

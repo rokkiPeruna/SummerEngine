@@ -7,8 +7,8 @@
 
 //SE includes:
 #include <utility/Typedefs.h>
-#include <components/Component.h>
-
+//#include <components/Component.h>
+#include <ids/ComponentTypeList.h>
 
 namespace se
 {

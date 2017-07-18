@@ -16,7 +16,8 @@ namespace se
 namespace priv
 {
 ///Brief: ComponentSystem -class works as a abstract interface class for other
-///systems that are responsible for updating components
+///systems that are responsible for updating components. 
+///NOTE!!: Every system should friend method that enables getting component of given type. See MovementSystem.h and .cpp for details.
 class ComponentSystem
 {
 public:
@@ -46,7 +47,7 @@ public:
 
 	///Check if removed entity has components that are in system's container. If it has, marks those components as free to replace (pushes them to free_indices container) and doesn't update them.
 	virtual void OnEntityRemoved(Entity& e) = 0;
-
+	
 
 	//EDITOR METHODS
 
@@ -57,6 +58,9 @@ public:
 
 	///RemoveComponent "removes" component from entity and system(marks component as free to be replaced)
 	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
+
+	///ModifyComponent provides gui interface for user to to apply changes to given entity's component's values
+	virtual Component* ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator*) = 0;
 
 protected:
 	///Template helper method that creates component from file and adds it to container and binds it to entity.

@@ -18,7 +18,7 @@ enum class COMPONENT_TYPE : SEint
 {
 	FAULTY_TYPE = -1,
 	MOVABLE = 0,
-	NONMOVABLE = 0, //By defining  nomovable component to same enum as movable, we can prevent entity from having both components! OLET TÄSSÄ
+	NONMOVABLE = 0, //By defining  nomovable component to same enum as movable, we can prevent entity from having both components!
 	POSITION,
 	VELOCITY,
 	ACCELERATION,

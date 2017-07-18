@@ -1,8 +1,9 @@
 #include <managers/ComponentManager.h>
+#include <components/Component.h>
 #include <imgui/imgui.h>
 #include <nlohmann_json/json.hpp>
 #include <systems/ComponentSystem.h>
-
+#include <managers/Entity.h>
 #include <core/Engine.h>
 
 
@@ -17,14 +18,19 @@ ComponentManager::ComponentManager()
 	, m_main_json_obj("components")
 	, m_curr_scene_json_obj("")
 	, m_curr_entity_json_obj("")
+	, m_curr_component_json_obj_name("")
+	, m_curr_component_itr(nullptr)
 	, m_curr_scene(nullptr)
 	, m_curr_entity(nullptr)
+	, m_curr_component(nullptr)
+	, m_curr_comp_index(-1)
 {
 
 }
 
 ComponentManager::~ComponentManager()
 {
+	m_curr_component = nullptr;
 	m_curr_entity = nullptr;
 	m_curr_scene = nullptr;
 }
@@ -74,6 +80,7 @@ void ComponentManager::ShowAndUpdateGUI()
 		ImGui::Text(m_curr_entity->name.c_str());
 	else
 	{
+		//If no active entity, skip rest
 		ImGui::Text("NO ACTIVE ENTITY");
 		ImGui::End();
 		return;
@@ -105,6 +112,22 @@ void ComponentManager::ShowAndUpdateGUI()
 			}
 		}
 	}
+	if (ImGui::CollapsingHeader("Modify component"))
+	{
+		for (auto& component : m_curr_entity->components)
+		{
+			if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
+			{		
+				SetCurrentComponent(component.first, component.second);
+				break;
+			}
+		}
+		if (m_curr_component)
+		{
+			Engine::ComponentTypeToSystemPtr.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_curr_component_itr);
+		}
+	}
+
 	ImGui::End();
 }
 
@@ -219,6 +242,33 @@ void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE 
 	//Remove from run-time system and entity. Note that system responsible for handling the component to be added, is also
 	//responsible for writing changes to json object. This way we avoid pointer casting.
 	Engine::ComponentTypeToSystemPtr.at(component_type)->RemoveComponent(entity, component_type, entity_obj);
+}
+
+void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container)
+{
+	//Find component json object
+	auto json = m_curr_scene->GetData();
+	auto& entities_obj = json->find("entities"); //SE_TODO: Change to some constant
+	if (entities_obj == json->end())
+	{
+		MessageWarning(ComponentMgr_id) << "Failed to find [entities] json object in SetCurrentComponent()";
+		return;
+	}
+	auto& entity_obj = entities_obj.value().find(m_curr_entity->name);
+	if (entity_obj == entities_obj.value().end())
+	{
+		MessageWarning(ComponentMgr_id) << "Failed to find " + m_curr_entity->name + " json object in SetCurrentComponent()";
+		return;
+	}
+	m_curr_component_itr = &entity_obj.value().find(CompTypeAsString.at(type));
+	if (m_curr_component_itr == &entity_obj.value().end())
+	{
+		MessageWarning(ComponentMgr_id) << "Failed to find " + CompTypeAsString.at(type) + " json object in SetCurrentComponent()";
+		return;
+	}
+
+	m_curr_component = Engine::ComponentTypeToSystemPtr.at(type)->ModifyComponent(type, index_in_container, m_curr_component_itr);
+	m_curr_comp_index = index_in_container;
 }
 
 void ComponentManager::SetCurrentEntity(Entity* e)

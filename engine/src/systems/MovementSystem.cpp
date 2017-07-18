@@ -7,9 +7,13 @@
 
 namespace se
 {
+std::vector<CMovable>* GetMovablesComponent(SEint index)
+{
+	return &priv::Engine::Instance().GetMovementSystem()->m_cMovables;
+}
+
 namespace priv
 {
-
 MovementSystem::MovementSystem()
 	: m_cpositions{}
 	, m_free_cposition_indices{}
@@ -17,8 +21,9 @@ MovementSystem::MovementSystem()
 	, m_free_cvelocity_indices{}
 {
 	//THIS IS VERY IMPORTANT:
-	//This links components to correct systems! Must be done in every new system
+	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::MOVABLE, this);
+
 
 	/*Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::POSITION, this);
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::VELOCITY, this);
@@ -163,6 +168,48 @@ void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_ty
 	}
 }
 
+Component* MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator* component_obj)
+{
+	static bool open = true;
+	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("MovementSystemComponentEditor", &open);
+	if (type == COMPONENT_TYPE::MOVABLE)
+	{
+		//SE_TODO: Check somehow that index is valid component!
+		auto& comp = m_cMovables.at(index_in_container);
+
+		if (ImGui::CollapsingHeader(""))
+		{
+			static SEbool showEditor = true;
+			static SEfloat pos_x = comp.position.x;
+			static SEfloat pos_y = comp.position.y;
+			static SEfloat pos_z = comp.position.z;
+
+			//ImGui::SliderFloat("position_x", &pos_x, 0.0f, 200.0f);
+			//ImGui::SliderFloat("position_y", &pos_y, 0.0f, 200.0f);
+			//ImGui::SliderFloat("position_z", &pos_z, 0.0f, 200.0f);
+
+			ImGui::SliderFloat("position_x", &comp.position.x, 0.0f, 200.0f);
+			ImGui::SliderFloat("position_y", &comp.position.y, 0.0f, 200.0f);
+			ImGui::SliderFloat("position_z", &comp.position.z, 0.0f, 200.0f);
+
+			std::cout << comp.position.z << std::endl;
+
+			if (ImGui::Button("Save changes"))
+			{
+				//std::cout << component_obj->value..at("pos_x") << std::endl;
+				component_obj->value().push_back({ "valid", 1.0f });				//OLET TÄSSÄ, json itr not valid!
+				//component_obj->value().at("pos_x") = comp.position.x;
+				//component_obj->value().at("pos_y") = comp.position.y;
+				//component_obj->value().at("pos_z") = comp.position.z;
+			}
+		}
+		ImGui::End();
+		return &m_cMovables.at(index_in_container);
+	}
+
+}
 
 }//namespace priv
 }//namespace se

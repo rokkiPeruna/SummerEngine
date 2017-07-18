@@ -3,6 +3,7 @@
 #include <string>
 
 //include STL
+#include <typeindex>
 
 //include external
 #include <SDL2/include/SDL.h>
@@ -77,7 +78,7 @@ public:
 	///Manager getters
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 
-	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
+	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
 
 private:
