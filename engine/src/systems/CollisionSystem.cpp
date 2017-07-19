@@ -37,7 +37,12 @@ void CollisionSystem::Uninitialize()
 
 void CollisionSystem::Update(SEfloat deltaTime)
 {
+	for (auto& c : m_cCollidables)
+	{
+		//Check for broad phase collision (AABB)
 
+			//If true, check for narrow phase collision
+	}
 }
 
 void CollisionSystem::ClearComponentContainers()
@@ -96,13 +101,13 @@ void CollisionSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 	{
 		auto& comp = m_cCollidables.at(index_in_container);
 
-		ImGui::SliderFloat("aabb_x", &comp.aabb.x, 0.0f, 10.0f);
-		ImGui::SliderFloat("aabb_y", &comp.aabb.y, 0.0f, 10.0f);
+		ImGui::SliderFloat("aabb_min", &comp.aabb.x, -10.0f, 10.0f);
+		ImGui::SliderFloat("aabb_max", &comp.aabb.y, -10.0f, 10.0f);
 
 		if (ImGui::Button("Apply changes"))
 		{
-			component_obj.value().at("aabb_x") = comp.aabb.x;
-			component_obj.value().at("aabb_y") = comp.aabb.y;
+			component_obj.value().at("min") = comp.aabb.x;
+			component_obj.value().at("max") = comp.aabb.y;
 		}
 	}
 }
