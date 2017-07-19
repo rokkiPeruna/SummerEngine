@@ -24,7 +24,7 @@ class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat siz = 1.0, Vec3f orig = Vec3f(0.0f), Vec3f rot = Vec3f(0.0f), Vec3f scal = Vec3f(1.0f))
+	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat siz = 0.1, Vec3f orig = Vec3f(0.0f), Vec3f rot = Vec3f(0.0f), Vec3f scal = Vec3f(1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
 		, size(siz)
 		, origin(orig)
@@ -95,8 +95,8 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "scal_y",comp.scale.y },
 		{ "scal_z",comp.scale.z }
 	};
-	
-	
+
+
 	j.push_back({ "points", {} });
 	auto& itr = j.find("points");
 
@@ -127,18 +127,28 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.scale.y = j.at("scal_y").get<SEfloat>();
 	comp.scale.z = j.at("scal_z").get<SEfloat>();
 
-	
-	auto i = j.at("points").begin();
-	int index = 0;
 
-	while (i != j.at("points").end())
+	auto& itr = j.find("points");
+	auto data = j["points"];
+	int index = 0;
+	// Itr is now spesicid points "attribute"
+
+	for (auto it = data.begin(); it != data.end(); it += 3)
 	{
-		comp.points.emplace_back(Vec3f(
-			j.at(index),
-			j.at(index + 1),
-			j.at(index + 2)));
-		index += 3;
+		std::cout << it.value() << std::endl;
 	}
+
+//		comp.points.emplace_back(Vec3f(i, i + ));
+	
+	index += 3;
+
+
+	//	comp.points.emplace_back(Vec3f(
+	//		
+	//		j.at(index),
+	//		j.at(index + 1), 
+	//		j.at(index + 2)));
+
 
 }
 

@@ -3,14 +3,12 @@
 
 //Standard library includes
 
-// WIP will come back for this
-
 
 //External includes
-
+#include <OpenGL/GLES3/glew.h>
 
 //SE includes
-
+#include <utility/Typedefs.h>
 
 
 namespace se
@@ -28,6 +26,9 @@ public:
 	void operator=(const Batch&) = delete;
 
 private:
+
+	SEuint VBO;
+
 
 };
 

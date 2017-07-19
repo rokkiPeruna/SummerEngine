@@ -20,7 +20,7 @@ namespace priv
 
 class TransformSystem : public ComponentSystem
 {
-
+	friend class RenderSystem;
 public:
 
 	///Default constructor

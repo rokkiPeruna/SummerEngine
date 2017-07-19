@@ -27,6 +27,8 @@ public:
 		origin = Vec3f(0.0f);
 	}
 
+	
+
 	std::vector<Vec3f> points;
 	Vec3f origin;
 };

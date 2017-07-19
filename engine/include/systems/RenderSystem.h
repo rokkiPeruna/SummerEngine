@@ -9,6 +9,8 @@
 
 //Include SE
 #include <systems/ComponentSystem.h>
+#include <systems/TransformSystem.h>
+#include <managers/ResourceManager.h>
 
 
 
@@ -65,8 +67,12 @@ public:
 
 private:
 
-	std::vector<Entity*> m_renderableEntities;
+	TransformSystem* m_fransform_system;
 
+	//testing
+	ShaderResource* CurrentShader;
+
+	std::vector<SEuint> bufferObjects;
 
 };
 
