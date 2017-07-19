@@ -18,9 +18,6 @@ enum class COMPONENT_TYPE : SEint
 {
 	FAULTY_TYPE = -1,
 	MOVABLE = 0,
-	POSITION,
-	VELOCITY,
-	ACCELERATION,
 	TRANSFORMABLE,
 	COLLIDABLE
 };
@@ -32,9 +29,6 @@ namespace priv
 static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 {
 	{ COMPONENT_TYPE::MOVABLE, "movable" },
-	{ COMPONENT_TYPE::POSITION, "position" },
-	{ COMPONENT_TYPE::VELOCITY, "velocity" },
-	{ COMPONENT_TYPE::ACCELERATION, "acceleration"},
 	{ COMPONENT_TYPE::TRANSFORMABLE, "transformable" },
 	{ COMPONENT_TYPE::COLLIDABLE, "collidable" }
 };
