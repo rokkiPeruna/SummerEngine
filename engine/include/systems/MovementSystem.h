@@ -7,10 +7,6 @@
 
 #include <components/CMovable.h>
 
-#include <components/CPosition.h>
-#include <components/CVelocity.h>
-#include <components/CAcceleration.h>
-
 namespace se
 {
 ///Getter method for CMovable components

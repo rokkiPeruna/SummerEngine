@@ -24,8 +24,8 @@ RenderManager::~RenderManager()
 
 void RenderManager::Initialize()
 {
-	dummyContainer.push_back(DummyEntity(CPosition(-0.2, -0.4, 0.0), CTriangleShape(0.1), Vec4f(0.2, 0.3, 0.7, 1.0)));
-	dummyContainer.push_back(DummyEntity(CPosition(-0.1, 0.5, 0.0), CTriangleShape(0.2), Vec4f(0.7, 0.2, 0.1, 1.0)));
+	dummyContainer.push_back(DummyEntity(Vec3f(-0.2, -0.4, 0.0), CTriangleShape(0.1), Vec4f(0.2, 0.3, 0.7, 1.0)));
+	dummyContainer.push_back(DummyEntity(Vec3f(-0.1, 0.5, 0.0), CTriangleShape(0.2), Vec4f(0.7, 0.2, 0.1, 1.0)));
 
 }
 

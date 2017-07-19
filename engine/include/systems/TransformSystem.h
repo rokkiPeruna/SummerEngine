@@ -53,6 +53,10 @@ public:
 	///Removes component from entity and container and json object
 	void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
 
+	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final {}
+
+	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) { return nullptr; }
+
 private:
 
 	///Component containers(vectors) and free index containers(queues)

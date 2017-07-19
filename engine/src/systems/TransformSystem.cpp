@@ -53,7 +53,7 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 {
 	if (e.components.count(COMPONENT_TYPE::TRANSFORMABLE))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::MOVABLE, entity_obj, m_cTransformables, m_free_cTransformables_indices);
+		_onEntityAdded_helper(e, COMPONENT_TYPE::TRANSFORMABLE, entity_obj, m_cTransformables, m_free_cTransformables_indices);
 	}
 }
 

@@ -85,15 +85,15 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "_ownerID", comp.ownerID },
 		//Component specific data
 		{ "size", comp.size },
-		{ "orig.x", comp.origin.x},
-		{ "orig.y", comp.origin.y},
-		{ "orig.z", comp.origin.z},
+		{ "orig_x", comp.origin.x},
+		{ "orig_y", comp.origin.y},
+		{ "orig_z", comp.origin.z},
 		{ "rot_x", comp.rotation.x},
 		{ "rot_y", comp.rotation.y },
 		{ "rot_z", comp.rotation.z },
-		{ "scal.x",comp.scale.x },
-		{ "scal.y",comp.scale.y },
-		{ "scal_z",comp.scale.z },
+		{ "scal_x",comp.scale.x },
+		{ "scal_y",comp.scale.y },
+		{ "scal_z",comp.scale.z }
 	};
 	
 	
@@ -117,14 +117,14 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.ownerID = j.at("_ownerID").get<SEint>();
 	//Component specific data
 	comp.size = j.at("size").get<SEfloat>();
-	comp.origin.x = j.at("orig.x").get<SEfloat>();
-	comp.origin.y = j.at("orig.y").get<SEfloat>();
-	comp.origin.z = j.at("orig.z").get<SEfloat>();
+	comp.origin.x = j.at("orig_x").get<SEfloat>();
+	comp.origin.y = j.at("orig_y").get<SEfloat>();
+	comp.origin.z = j.at("orig_z").get<SEfloat>();
 	comp.rotation.x = j.at("rot_x").get<SEfloat>();
 	comp.rotation.y = j.at("rot_y").get<SEfloat>();
 	comp.rotation.z = j.at("rot_z").get<SEfloat>();
-	comp.scale.x = j.at("scal.x").get<SEfloat>();
-	comp.scale.y = j.at("scal.y").get<SEfloat>();
+	comp.scale.x = j.at("scal_x").get<SEfloat>();
+	comp.scale.y = j.at("scal_y").get<SEfloat>();
 	comp.scale.z = j.at("scal_z").get<SEfloat>();
 
 	

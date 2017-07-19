@@ -27,6 +27,7 @@
 #include <systems/MovementSystem.h>
 #include <systems/RenderSystem.h>
 #include <systems/TransformSystem.h>
+#include <systems/CollisionSystem.h>
 
 //Managers
 #include <managers/IOManager.h>
@@ -73,11 +74,14 @@ public:
 	//
 	///Returns ptr to Engine's TransformSystem
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
+	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
+	TransformSystem* GetTransformSystem() { return &m_transformSystem; }
 
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
 	///Manager getters
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
+
 
 	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
@@ -136,6 +140,7 @@ private:
 	MovementSystem m_movementSystem;
 	RenderSystem m_renderSystem;
 	TransformSystem m_transformSystem;
+	CollisionSystem m_collisionSystem;
 
 	///System ptr container
 	std::vector<ComponentSystem*> m_systemContainer;

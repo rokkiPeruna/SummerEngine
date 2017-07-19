@@ -18,11 +18,11 @@ enum class COMPONENT_TYPE : SEint
 {
 	FAULTY_TYPE = -1,
 	MOVABLE = 0,
-	NONMOVABLE = 0, //By defining  nomovable component to same enum as movable, we can prevent entity from having both components! OLET TÄSSÄ
 	POSITION,
 	VELOCITY,
 	ACCELERATION,
-	TRANSFORMABLE
+	TRANSFORMABLE,
+	COLLIDABLE
 };
 
 namespace priv
@@ -35,7 +35,8 @@ static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 	{ COMPONENT_TYPE::POSITION, "position" },
 	{ COMPONENT_TYPE::VELOCITY, "velocity" },
 	{ COMPONENT_TYPE::ACCELERATION, "acceleration"},
-	{ COMPONENT_TYPE::TRANSFORMABLE, "transformable" }
+	{ COMPONENT_TYPE::TRANSFORMABLE, "transformable" },
+	{ COMPONENT_TYPE::COLLIDABLE, "collidable" }
 };
 }//namespace priv
 }//namespace se

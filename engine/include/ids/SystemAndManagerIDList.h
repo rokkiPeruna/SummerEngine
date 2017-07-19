@@ -24,7 +24,7 @@ const SEuint64 Engine_id =						oOo << 5;
 const SEuint64 ComponentMgr_id =				oOo << 6;  
 const SEuint64 ComponentSys_id =				oOo << 7;  
 const SEuint64 CollisionSys_id =				oOo << 8;
-const SEuint64 dummy_id_mgrsys_9 =				oOo << 9;  //Remember to add id to map below!!!
+const SEuint64 TransformSys_id =				oOo << 9;  
 const SEuint64 dummy_id_mgrsys_10 =				oOo << 10; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_11 =				oOo << 11; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_12 =				oOo << 12; //Remember to add id to map below!!!
@@ -96,7 +96,8 @@ static const std::map<SEuint64, std::string> sys_mgr_id_to_name
 	{ Engine_id, "engine" },
 	{ ComponentMgr_id, "component_mgr"},
 	{ ComponentSys_id, "component_sys" },
-	{ CollisionSys_id, "collision_sys"}
+	{ CollisionSys_id, "collision_sys"},
+	{ TransformSys_id, "transform_sys" }
 };
 
 }//namespace priv

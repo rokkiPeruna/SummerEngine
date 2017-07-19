@@ -20,10 +20,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <components/CPosition.h>
 #include <components/CTriangleShape.h>
-#include <components/CRectangleShape.h>
-#include <components/CCircleShape.h>
 // -----------------------------
 
 ///Brief : Render manager initializes glew and loads shaders.
@@ -48,7 +45,7 @@ class DummyEntity
 {
 public:
 
-	DummyEntity(CPosition position, CTriangleShape shape, Vec4f color)
+	DummyEntity(Vec3f position, CTriangleShape shape, Vec4f color)
 		: m_position(position)
 		, m_shape(shape)
 		, m_color(color)
@@ -112,7 +109,7 @@ public:
 
 private:
 
-	CPosition m_position;
+	Vec3f m_position;
 	CTriangleShape m_shape;
 	Vec4f m_color;
 

@@ -15,15 +15,10 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
-	include/components/CMovable.h
 	include/components/Component.h
-	include/components/CPosition.h
-	include/components/CVelocity.h
-	include/components/CAcceleration.h
+	include/components/CMovable.h
+	include/components/CCollidable.h
     include/components/CTriangleShape.h
-    include/components/CRectangleShape.h
-    include/components/CCircleShape.h
-	include/components/CTransform.h
     include/components/CShape.h
     include/components/CTransformable.h
     )
@@ -33,12 +28,15 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
+	include/systems/DummySystemCPP.txt
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
     include/systems/RenderSystem.h
     src/systems/RenderSystem.cpp
 	include/systems/TransformSystem.h
     src/systems/TransformSystem.cpp
+	include/systems/CollisionSystem.h
+    src/systems/CollisionSystem.cpp
     )
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -99,6 +97,7 @@ set(UTILITY_FILES
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
+	include/utility/JsonUtilFunctions.h
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
