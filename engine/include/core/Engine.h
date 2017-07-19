@@ -3,7 +3,6 @@
 #include <string>
 
 //include STL
-#include <typeindex>
 
 //include external
 #include <SDL2/include/SDL.h>
@@ -26,7 +25,8 @@
 //Systems
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
-#include <systems/CollisionSystem.h>
+#include <systems/RenderSystem.h>
+#include <systems/TransformSystem.h>
 
 //Managers
 #include <managers/IOManager.h>
@@ -71,15 +71,15 @@ public:
 	
 	///System getters
 	//
+	///Returns ptr to Engine's TransformSystem
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
-	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
 
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
 	///Manager getters
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 
-	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
+	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
 
 private:
@@ -134,8 +134,8 @@ private:
 
 	///Systems
 	MovementSystem m_movementSystem;
-	CollisionSystem m_collisionSystem;
-
+	RenderSystem m_renderSystem;
+	TransformSystem m_transformSystem;
 
 	///System ptr container
 	std::vector<ComponentSystem*> m_systemContainer;

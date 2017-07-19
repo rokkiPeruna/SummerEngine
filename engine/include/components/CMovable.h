@@ -2,7 +2,7 @@
 #define SE_CMOVABLE_H
 
 //SE includes:
-#include <components/CMovable.h>
+#include <components/Component.h>
 
 namespace se
 {
