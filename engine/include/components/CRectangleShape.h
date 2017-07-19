@@ -21,7 +21,7 @@ class CRectangleShape : public Component
 
 public:
 	CRectangleShape(SEfloat size = 1.0f)
-		: Component(COMPONENT_TYPE::SHAPE)
+		: Component(COMPONENT_TYPE::FAULTY_TYPE)
 	{
 		SEfloat halfsize = size / 2.0f;
 		points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
@@ -31,7 +31,7 @@ public:
 		origin = Vec3f(0.0f);
 	}
 	CRectangleShape(Vec3f p1, Vec3f p2, Vec3f p3, Vec3f p4)
-		: Component(COMPONENT_TYPE::SHAPE)
+		: Component(COMPONENT_TYPE::FAULTY_TYPE)
 	{
 		points.emplace_back(p1);
 		points.emplace_back(p2);

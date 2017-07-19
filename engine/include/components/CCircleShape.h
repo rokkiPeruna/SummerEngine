@@ -17,7 +17,7 @@ class CCircleShape : public Component
 {
 public:
 	CCircleShape()
-		: Component(COMPONENT_TYPE::SHAPE)
+		: Component(COMPONENT_TYPE::FAULTY_TYPE)
 	{
 
 	}

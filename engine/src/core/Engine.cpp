@@ -194,6 +194,8 @@ void Engine::_initSystems()
 {
 	m_movementSystem.Initialize();
 	m_systemContainer.emplace_back(&m_movementSystem);
+	m_transformSystem.Initialize();
+	m_systemContainer.emplace_back(&m_transformSystem);
 	m_renderSystem.Initialize();
 	m_systemContainer.emplace_back(&m_renderSystem);
 }

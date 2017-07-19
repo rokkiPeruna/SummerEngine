@@ -22,8 +22,7 @@ enum class COMPONENT_TYPE : SEint
 	POSITION,
 	VELOCITY,
 	ACCELERATION,
-	SHAPE,
-	TRANSFORM
+	TRANSFORMABLE
 };
 
 namespace priv
@@ -36,7 +35,7 @@ static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 	{ COMPONENT_TYPE::POSITION, "position" },
 	{ COMPONENT_TYPE::VELOCITY, "velocity" },
 	{ COMPONENT_TYPE::ACCELERATION, "acceleration"},
-	{ COMPONENT_TYPE::TRANSFORM, "transform"}
+	{ COMPONENT_TYPE::TRANSFORMABLE, "transformable" }
 };
 }//namespace priv
 }//namespace se
