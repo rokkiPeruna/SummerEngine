@@ -53,9 +53,15 @@ void EntityManager::ShowAndUpdateGUI()
 {
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("EntityComponentMgr", &_gui_show_entity_comp_mgr_window); ImGui::SameLine();
+	ImGui::Begin("Entity editor", &_gui_show_entity_comp_mgr_window); ImGui::SameLine();
 	ImGui::Text(m_gui_scene_name.c_str());
 	ImGui::Separator();
+
+	if (!m_currentScene)
+	{
+		ImGui::End();
+		return;
+	}
 
 	if (ImGui::CollapsingHeader("Create entity"))
 	{

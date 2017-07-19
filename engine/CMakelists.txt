@@ -23,6 +23,7 @@ set(COMPONENTS_FILES
     include/components/CTriangleShape.h
     include/components/CRectangleShape.h
     include/components/CCircleShape.h
+	include/components/CCollidable.h
 	)
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -30,10 +31,13 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
+	include/systems/DummySystemCPP.txt
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
     include/systems/RenderSystem.h
     src/systems/RenderSystem.cpp
+	include/systems/CollisionSystem.h
+	src/systems/CollisionSystem.cpp
 	)
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------

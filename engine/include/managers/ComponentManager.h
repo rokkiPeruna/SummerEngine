@@ -82,8 +82,6 @@ private:
 	///String naming the json object pointing to current component
 	std::string m_curr_component_json_obj_name;
 
-	SceneFileFormatIterator* m_curr_component_itr;
-
 	///Pointer to current scene
 	Scene* m_curr_scene;
 

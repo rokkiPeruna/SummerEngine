@@ -1,0 +1,101 @@
+namespace se
+{
+std::vector<component>* get component(SEint index)
+{
+	return &priv::Engine::Instance().GetDummySystem()->container.at(index);
+}
+
+namespace priv
+{
+DummySystem::DummySystem()
+	: init containers
+{
+	//THIS IS VERY IMPORTANT:
+	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
+	Engine::ComponentTypeToSystemPtr.emplace(component types, this);
+}
+
+DummySystem::~DummySystem()
+{
+
+}
+
+void DummySystem::Initialize()
+{
+
+}
+
+void DummySystem::Uninitialize()
+{
+
+}
+
+void DummySystem::Update(SEfloat deltaTime)
+{
+
+}
+
+void DummySystem::ClearComponentContainers()
+{
+	clear containers
+}
+
+void DummySystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+{
+	if (e.components.count(component type)
+	{
+		_onEntityAdded_helper(e, COMPONENT_TYPE::MOVABLE, entity_obj, container, free indice container);
+	}
+}
+
+void DummySystem::OnEntityRemoved(Entity& e)
+{
+	if (e.components.count(component type)
+	{
+		free indices container.push(e.components.at(component type);
+	}
+}
+
+SEuint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+{
+	if (component_type == component type)
+	{
+		return _createComponent_helper<CMovable>(entity, component_type, entity_obj, container, free indices container);
+	}
+	else
+	{
+		MessageWarning( id ) << "Somehow tried to add component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";
+		return -1;
+	}
+}
+
+void DummySystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+{
+	if (component_type == component type)
+	{
+		free indices container.push(_removeComponent_helper(entity, component_type, entity_obj));
+	}
+	else
+	{
+		MessageWarning( id ) << "Somehow tried to remove component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";
+		return;
+	}
+}
+
+void DummySystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
+{
+
+}
+
+Component* DummySystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
+{
+	if (type == component type)
+	{
+		return &container.at(index_in_container);
+	}
+	else
+		return nullptr;
+}
+
+}//namespace priv
+}//namespace se

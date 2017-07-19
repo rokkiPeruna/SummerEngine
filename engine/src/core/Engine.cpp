@@ -188,6 +188,9 @@ void Engine::_initSystems()
 {
 	m_movementSystem.Initialize();
 	m_systemContainer.emplace_back(&m_movementSystem);
+
+	m_collisionSystem.Initialize();
+	m_systemContainer.emplace_back(&m_collisionSystem);
 }
 
 void Engine::_updateMgrs()

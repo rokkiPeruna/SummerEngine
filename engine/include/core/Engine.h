@@ -26,6 +26,7 @@
 //Systems
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
+#include <systems/CollisionSystem.h>
 
 //Managers
 #include <managers/IOManager.h>
@@ -70,8 +71,8 @@ public:
 	
 	///System getters
 	//
-	///Returns ptr to Engine's TransformSystem
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
+	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
 
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
@@ -133,6 +134,7 @@ private:
 
 	///Systems
 	MovementSystem m_movementSystem;
+	CollisionSystem m_collisionSystem;
 
 
 	///System ptr container
