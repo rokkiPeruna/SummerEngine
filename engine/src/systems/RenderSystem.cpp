@@ -1,6 +1,7 @@
 #include <systems/RenderSystem.h>
 #include <core/Engine.h>
 
+
 namespace se
 {
 namespace priv
@@ -41,26 +42,37 @@ void RenderSystem::Update(SEfloat deltaTime)
 				//Find other related component if 
 			}
 
-			const auto& trns_comp = m_fransform_system->m_cTransformables.at(entity.second.components.at(COMPONENT_TYPE::TRANSFORMABLE));
+			auto& trns_comp = m_fransform_system->m_cTransformables.at(entity.second.components.at(COMPONENT_TYPE::TRANSFORMABLE));
 			
 			SEuint VAO;
 			SEuint VBO;
+			SEuint EBO;
 
 			glGenVertexArrays(1, &VAO);
 			glGenBuffers(1, &VBO);
+			glGenBuffers(1, &EBO);
 
 			glBindVertexArray(VAO);
+			
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(trns_comp.points), trns_comp.points.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(trns_comp.points.at(0)) * trns_comp.points.size(), trns_comp.points.data(), GL_STATIC_DRAW);
 
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(trns_comp.indices), trns_comp.indices.data(), GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 			glEnableVertexAttribArray(0);
+	
 			glBindVertexArray(0);
-
+			
 
 			glUseProgram(CurrentShader->GetShaderID());
+
+			unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
+			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &trns_comp.rotationMatrix[0][0]);
+
 			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawElements(GL_TRIANGLES, trns_comp.indices.size(), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 
 		}
