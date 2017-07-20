@@ -65,11 +65,11 @@ void TransformSystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEuint TransformSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEuint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
-		return _createComponent_helper<CTransformable>(entity, COMPONENT_TYPE::TRANSFORMABLE, entity_obj, m_cTransformables, m_free_cTransformables_indices);
+		return _createComponent_helper<CTransformable>(e, COMPONENT_TYPE::TRANSFORMABLE, entity_obj, m_cTransformables, m_free_cTransformables_indices);
 	}
 	else
 	{

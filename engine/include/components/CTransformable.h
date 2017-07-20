@@ -24,13 +24,21 @@ class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat siz = 0.1, Vec3f orig = Vec3f(0.0f), Vec3f rot = Vec3f(0.0f), Vec3f scal = Vec3f(1.0f))
+	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat siz = 1.0f, Vec3f orig = Vec3f(0.0f), Vec3f rot = Vec3f(0.0f, 0.0f, 0.0f), Vec3f scal = Vec3f(2.0f, 1.0f, 1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
 		, size(siz)
 		, origin(orig)
 		, rotation(rot)
 		, scale(scal)
+		, points {}
 	{
+
+		Mat4f scaleMatrix = {
+			scale.x, 0.0f, 0.0f, 0.0f,
+			0.0f, scale.y, 0.0f, 0.0f,
+			0.0f, 0.0f, scale.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
 
 		switch (type)
 		{
@@ -38,10 +46,20 @@ public:
 		case BASIC_SHAPE::TRIANGLE: default:
 		{
 			SEfloat halfsize = size / 2.0f;
-			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
+			points.emplace_back(Vec3f(-halfsize * 0.5, -halfsize, 0.0f));
+			points.emplace_back(Vec3f(halfsize * 0.5, -halfsize, 0.0f));
 			points.emplace_back(Vec3f(0.0f, halfsize, 0.0f));
 			origin = Vec3f(0.0f);
+			
+			for (int i = 0; i < points.size(); ++i)
+			{
+				Vec4f result = Vec4f(points.at(i).x, points.at(i).y, points.at(i).z, 1.0) * scaleMatrix;
+				points.at(i).x = result.x;
+				points.at(i).y = result.y;
+				points.at(i).z = result.z;
+			}
+			
+			
 			break;
 		}
 
@@ -128,20 +146,20 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.scale.z = j.at("scal_z").get<SEfloat>();
 
 
-	auto& itr = j.find("points");
-	auto data = j["points"];
-	int index = 0;
-	// Itr is now spesicid points "attribute"
+	// this works thought it's not so smooth.. (1 extra copy) but the data seems to be there already.
+	// ask Juho about this.
 
-	for (auto it = data.begin(); it != data.end(); it += 3)
-	{
-		std::cout << it.value() << std::endl;
-	}
+	//std::vector<SEfloat> temp = j["points"];
+	//for (int i = 0; i < temp.size(); i += 3)
+	//{
+	//	//comp.points.emplace_back(Vec3f(temp.at(i), temp.at(i + 1), temp.at(i + 2)));
+	//	
+	//}
+
+
 
 //		comp.points.emplace_back(Vec3f(i, i + ));
 	
-	index += 3;
-
 
 	//	comp.points.emplace_back(Vec3f(
 	//		

@@ -26,11 +26,11 @@ class CShape : public Component
 public:
 
 	CShape(SEfloat size, BASIC_SHAPE type)
-		: Component(COMPONENT_TYPE::SHAPE)
+		: Component(COMPONENT_TYPE::FAULTY_TYPE)
 	{
 		switch (type)
 		{
-		case BASIC_SHAPE::TRIANGLE :
+		case BASIC_SHAPE::TRIANGLE:
 		{
 			SEfloat halfsize = size / 2.0f;
 			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
@@ -39,7 +39,7 @@ public:
 			origin = Vec3f(0.0f);
 		}
 
-		case BASIC_SHAPE::RECTANGLE :
+		case BASIC_SHAPE::RECTANGLE:
 		{
 			SEfloat halfsize = size / 2.0f;
 			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
@@ -57,12 +57,14 @@ public:
 
 		}
 
-		std::vector<Vec3f> points;
-		Vec3f origin;
+		}
+	}
+	std::vector<Vec3f> points;
+	Vec3f origin;
 
-	private:
+private:
 
-	};
+};
 
 
 } // !namespace se
