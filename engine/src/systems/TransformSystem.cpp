@@ -103,21 +103,12 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("orig_x", &comp.origin.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_y", &comp.origin.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_z", &comp.origin.z, 0.0f, 200.0f);
-		ImGui::SliderFloat("rot", &comp.rotation, 0.0f, 200.0f);
+		ImGui::SliderFloat("rot", &comp.rotation, 0.0f, 360.0f);
 		ImGui::SliderFloat("scal_x", &comp.scale.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
 
-		auto lcalc_trans = [&]() {
-			comp.rotationMatrix =
-			{
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, cos(comp.rotation), -sin(comp.rotation), 0.0f,
-				0.0f, sin(comp.rotation), cos(comp.rotation), 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f
-			};
-		};
-		lcalc_trans();
+		comp.rotationMatrix = glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f));
 
 		if (ImGui::Button("Apply changes"))
 		{
