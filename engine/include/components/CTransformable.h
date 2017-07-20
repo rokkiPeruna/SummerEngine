@@ -7,6 +7,7 @@
 
 //Include se
 #include <components/Component.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace se
 {
@@ -24,13 +25,22 @@ class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat siz = 1.0, Vec3f orig = Vec3f(0.0f), Vec3f rot = Vec3f(0.0f), Vec3f scal = Vec3f(1.0f))
+	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat p_size = 1.0f, Vec3f orig = Vec3f(0.0f), SEfloat rot = 10.0f, Vec3f scal = Vec3f(0.5f, 0.5f, 1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
-		, size(siz)
+		, size(p_size)
 		, origin(orig)
 		, rotation(rot)
 		, scale(scal)
+		, points {}
 	{
+
+		scaleMatrix = 
+		{
+			scale.x, 0.0f, 0.0f, 0.0f,
+			0.0f, scale.y, 0.0f, 0.0f,
+			0.0f, 0.0f, scale.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
 
 		switch (type)
 		{
@@ -38,10 +48,18 @@ public:
 		case BASIC_SHAPE::TRIANGLE: default:
 		{
 			SEfloat halfsize = size / 2.0f;
-			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
+
 			points.emplace_back(Vec3f(0.0f, halfsize, 0.0f));
+			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
+			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
+
 			origin = Vec3f(0.0f);
+			
+			rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
+			
+			indices.push_back(0);
+			indices.push_back(1);
+			indices.push_back(2);
 			break;
 		}
 
@@ -68,11 +86,16 @@ public:
 	};
 
 	SEfloat size;
+	SEfloat rotation;
 	Vec3f origin;
-	Vec3f rotation;
 	Vec3f scale;
 
+	Mat4f rotationMatrix;
+	Mat4f scaleMatrix;
+
 	std::vector<Vec3f> points;
+	std::vector<SEuint> indices;
+
 };
 
 void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
@@ -87,15 +110,13 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "orig_x", comp.origin.x},
 		{ "orig_y", comp.origin.y},
 		{ "orig_z", comp.origin.z},
-		{ "rot_x", comp.rotation.x},
-		{ "rot_y", comp.rotation.y },
-		{ "rot_z", comp.rotation.z },
+		{ "rot_x", comp.rotation},
 		{ "scal_x",comp.scale.x },
 		{ "scal_y",comp.scale.y },
 		{ "scal_z",comp.scale.z }
 	};
-	
-	
+
+
 	j.push_back({ "points", {} });
 	auto& itr = j.find("points");
 
@@ -118,24 +139,24 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.origin.x = j.at("orig_x").get<SEfloat>();
 	comp.origin.y = j.at("orig_y").get<SEfloat>();
 	comp.origin.z = j.at("orig_z").get<SEfloat>();
-	comp.rotation.x = j.at("rot_x").get<SEfloat>();
-	comp.rotation.y = j.at("rot_y").get<SEfloat>();
-	comp.rotation.z = j.at("rot_z").get<SEfloat>();
+	comp.rotation = j.at("rot").get<SEfloat>();
 	comp.scale.x = j.at("scal_x").get<SEfloat>();
 	comp.scale.y = j.at("scal_y").get<SEfloat>();
 	comp.scale.z = j.at("scal_z").get<SEfloat>();
 
-	
-	auto i = j.at("points").begin();
-	int index = 0;
-
-	while (i != j.at("points").end())
+	comp.rotationMatrix =
 	{
-		comp.points.emplace_back(Vec3f(
-			j.at(index),
-			j.at(index + 1),
-			j.at(index + 2)));
-		index += 3;
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, cos(comp.rotation), -sin(comp.rotation), 0.0f,
+		0.0f, sin(comp.rotation), cos(comp.rotation), 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+	
+	comp.points.clear();
+	std::vector<SEfloat> temp = j["points"];
+	for (int i = 0; i < temp.size(); i += 3)
+	{
+		comp.points.emplace_back(Vec3f(temp.at(i), temp.at(i + 1), temp.at(i + 2)));
 	}
 
 }

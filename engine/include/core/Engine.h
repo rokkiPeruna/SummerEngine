@@ -83,7 +83,10 @@ public:
 
 	///Manager getters
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
+	EntityManager* GetEntityMgr() { return &m_entityMgr; }
 
+	//Test delete afterwards
+	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 
 	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;

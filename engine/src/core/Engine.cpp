@@ -215,6 +215,7 @@ void Engine::_updateMgrs()
 void Engine::_updateSystems(SEfloat deltaTime)
 {
 	m_movementSystem.Update(deltaTime);
+	m_transformSystem.Update(deltaTime);
 }
 
 void Engine::_updateGUI()
@@ -288,10 +289,15 @@ bool Engine::_gameLoop()
 		//m_messenger.PrintMessages(_messageLogType_console);
 
 		// Rendering
+
+
 		glViewport(0, 0, _gui_width, _gui_heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
+		
+		m_renderSystem.Update(deltaTime);
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
+
 	}
 	return true;
 }

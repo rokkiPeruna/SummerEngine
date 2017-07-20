@@ -1,5 +1,5 @@
 //For memory management
-#include <vld.h>
+//#include <vld.h>
 
 //Essential include
 #include <core/Engine.h>

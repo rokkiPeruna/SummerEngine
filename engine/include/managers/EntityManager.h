@@ -52,7 +52,7 @@ public:
 
 	///Create new entity
 	void CreateEntityOnEditor(std::string name);
-	
+
 	///Create new from other Entity. If name is left to default (""),
 	///new Entity will be assigned as child of the other and will receive name
 	///from other appended with child count index, e.g "flying_enemy_1"
@@ -60,6 +60,11 @@ public:
 
 	///Delete entity from scene
 	void DeleteEntityOnEditor(std::string entity_name);
+
+	const std::unordered_map<std::string, Entity>& GetEntities()
+	{
+		return m_entities_map;
+	}
 
 private:
 	///Pointer to ComponentManager
@@ -93,7 +98,7 @@ private:
 
 	///Container holding entities and their access keys (names)
 	std::unordered_map<std::string, Entity> m_entities_map;
-	
+
 	///Loads current scene's entities
 	void _loadSceneEntities();
 

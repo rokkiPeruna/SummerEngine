@@ -20,7 +20,7 @@ namespace priv
 
 class TransformSystem : public ComponentSystem
 {
-
+	friend class RenderSystem;
 public:
 
 	///Default constructor
@@ -47,15 +47,18 @@ public:
 
 	void OnEntityRemoved(Entity& e) override final;
 
-	///Creates component to entity and add it to container and json object
+
+	/*-----------------EDITOR METHODS--------------------*/
+
+	///Creates component to entity and add it to container and jsonobject
 	SEuint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
 	
 	///Removes component from entity and container and json object
 	void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
 
-	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final {}
+	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
 
-	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) { return nullptr; }
+	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
 private:
 
