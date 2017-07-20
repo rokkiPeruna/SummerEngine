@@ -1,5 +1,6 @@
 #include <systems/PositionSystem.h>
 #include <core/Engine.h>
+#include <imgui/imgui.h>
 
 namespace se
 {
@@ -84,7 +85,15 @@ void PositionSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_ty
 
 void PositionSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
 {
+	if (type == COMPONENT_TYPE::POSITION)
+	{
+		auto& c = PositionComponents.at(index_in_container);
+		ImGui::SliderFloat("Position x", &c.x,-100.f, 100.f);
+		ImGui::SliderFloat("Position y", &c.y, -100.f, 100.f);
+		ImGui::SliderFloat("Position z", &c.z, -100.f, 100.f);
 
+
+	}
 }
 
 Component* PositionSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
