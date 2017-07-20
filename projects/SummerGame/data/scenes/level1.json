@@ -1,5 +1,46 @@
 {
-    "entities": {},
+    "entities": {
+        "end": {
+            "id": 3,
+            "position": {
+                "_ownerID": 0,
+                "_type": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "f": {
+            "id": 0,
+            "position": {
+                "_ownerID": 0,
+                "_type": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "s": {
+            "id": 0,
+            "position": {
+                "_ownerID": 0,
+                "_type": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        "t": {
+            "id": 2,
+            "position": {
+                "_ownerID": 0,
+                "_type": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    },
     "scene_info": {
         "heigth": 50,
         "name": "level1",

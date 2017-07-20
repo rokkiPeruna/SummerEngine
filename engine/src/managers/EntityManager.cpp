@@ -21,6 +21,7 @@ EntityManager::EntityManager()
 	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
 	, m_next_free_entity_id(0)
 	, m_entities_map{}
+	, m_possibleGapInEntityIDs(true)
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
 }
@@ -114,7 +115,6 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	_loadSceneEntities();
 
 	//Find free ids
-	m_next_free_entity_id = 0;
 	m_next_free_entity_id = _findNextFreeEntityID();
 
 	m_gui_scene_name = scene->GetName();
@@ -134,10 +134,10 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 		nlohmann::json({{"id", m_next_free_entity_id}}),
 	});
 
+	if (m_possibleGapInEntityIDs)
+		_findNextFreeEntityID(); m_possibleGapInEntityIDs = false;
+
 	m_entities_map.emplace(name, Entity(name, m_next_free_entity_id));
-
-
-	m_next_free_entity_id++;
 	m_currentEntity = &m_entities_map.at(name);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::POSITION);
@@ -159,7 +159,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	{
 		s->OnEntityRemoved(m_entities_map.at(entity_name));
 	}
-	
+
 	if (m_currentEntity == &m_entities_map.at(entity_name))
 	{
 		m_currentEntity = nullptr;
@@ -167,6 +167,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	}
 
 	m_entities_map.erase(entity_name);
+	m_possibleGapInEntityIDs = true;
 }
 
 void EntityManager::_loadSceneEntities()
@@ -193,13 +194,18 @@ SEuint EntityManager::_findNextFreeEntityID()
 		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _findNextFreeEntityID()\nscene's entities not loaded!";
 		return 0;
 	}
-	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
+	m_next_free_entity_id = 0;
+	SEbool gap_found = false;
+	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); ++itr)
 	{
-		SEuint id = itr.value().at("id");
-		if (id >= m_next_free_entity_id)
-			m_next_free_entity_id = id;
+		//Check for gap
+		if (m_next_free_entity_id != itr.value().at("id"))
+			break;
+
+		m_next_free_entity_id = itr.value().at("id") + 1;
 	}
-	return ++m_next_free_entity_id;
+	
+	return m_next_free_entity_id;
 }
 
 }//namespace priv

@@ -50,6 +50,8 @@ public:
 	///Load text resource. Returns shared_ptr to TextResource object.
 	std::shared_ptr<TextResource> LoadTextResource(std::string filepath, std::string name);
 	
+	///Load image resource
+
 	///Container holding shared pointers to text resources. Find text resource
 	///with it's name: textResources.at("resourceName")
 	std::map<std::string, std::shared_ptr<TextResource>> textResources;

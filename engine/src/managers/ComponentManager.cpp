@@ -270,6 +270,8 @@ void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_c
 void ComponentManager::SetCurrentEntity(Entity* e)
 {
 	m_curr_entity = e;
+	//When current entity is set, make m_curr_component point to null!
+	SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
 }
 
 }//namespace priv

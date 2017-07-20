@@ -25,7 +25,7 @@ class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat p_size = 1.0f, Vec3f orig = Vec3f(0.0f), SEfloat rot = 10.0f, Vec3f scal = Vec3f(0.5f, 0.5f, 1.0f))
+	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat p_size = 1.0f, Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f scal = Vec3f(0.5f, 0.5f, 1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
 		, size(p_size)
 		, origin(orig)
@@ -110,7 +110,7 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "orig_x", comp.origin.x},
 		{ "orig_y", comp.origin.y},
 		{ "orig_z", comp.origin.z},
-		{ "rot_x", comp.rotation},
+		{ "rot", comp.rotation},
 		{ "scal_x",comp.scale.x },
 		{ "scal_y",comp.scale.y },
 		{ "scal_z",comp.scale.z }
@@ -144,13 +144,7 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.scale.y = j.at("scal_y").get<SEfloat>();
 	comp.scale.z = j.at("scal_z").get<SEfloat>();
 
-	comp.rotationMatrix =
-	{
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, cos(comp.rotation), -sin(comp.rotation), 0.0f,
-		0.0f, sin(comp.rotation), cos(comp.rotation), 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
-	};
+	comp.rotationMatrix = glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f));
 	
 	comp.points.clear();
 	std::vector<SEfloat> temp = j["points"];

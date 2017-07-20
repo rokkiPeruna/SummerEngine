@@ -38,10 +38,10 @@ void CollisionSystem::Uninitialize()
 
 void CollisionSystem::Update(SEfloat deltaTime)
 {
-	for (auto& c : m_cCollidables)
+	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end()-1) ; ++itr)
 	{
 		//Check for broad phase collision (AABB)
-		PositionSystem::PositionComponents.at(c.ownerID);
+		//PositionSystem::PositionComponents.at(c.ownerID);
 
 			//If true, check for narrow phase collision
 	}

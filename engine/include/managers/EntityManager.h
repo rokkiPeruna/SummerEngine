@@ -103,6 +103,7 @@ private:
 	void _loadSceneEntities();
 
 	///Finds scene's next  free entity id
+	SEbool m_possibleGapInEntityIDs;
 	SEuint _findNextFreeEntityID();
 
 	///GUI
