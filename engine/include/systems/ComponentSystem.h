@@ -47,7 +47,7 @@ public:
 
 	///Check if removed entity has components that are in system's container. If it has, marks those components as free to replace (pushes them to free_indices container) and doesn't update them.
 	virtual void OnEntityRemoved(Entity& e) = 0;
-	
+
 
 	//EDITOR METHODS
 
@@ -79,6 +79,7 @@ protected:
 			free_indices.pop();
 			container.at(free_index) = component;
 			e.components.at(component_type) = free_index;
+			_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(free_index)));
 			return &container.at(free_index);
 		}
 		//If not, emplace back
@@ -87,6 +88,7 @@ protected:
 			container.emplace_back(component);
 			SEint index = container.size() - 1;
 			e.components.at(component_type) = index;
+			_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(index)));
 			return &container.back();
 		}
 	}
@@ -95,34 +97,45 @@ protected:
 	template<typename T>
 	inline SEint _createComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
 	{
+		SEint index = -1;
 		if (!free_indices.empty())
 		{
-			SEint free_index = free_indices.front();
+			index = free_indices.front();
 			free_indices.pop();
-			container.at(free_index) = T();
-			e.components.emplace(type, free_index);
-			entity_obj.value().push_back({ CompTypeAsString.at(type), container.at(free_index) });
-			return free_index;
+			container.at(index) = T();
+			e.components.emplace(type, index);
+			entity_obj.value().push_back({ CompTypeAsString.at(type), container.at(index) });
 		}
 		else
 		{
 			container.emplace_back(T());
-			SEint index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
+			index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
 			e.components.emplace(type, index);
 			entity_obj.value().push_back({ CompTypeAsString.at(type), container.back() });
-			return index;
 		}
+		_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(index)));
+		return index;
 	}
 
-	///Helper method that removes component from given container, unbinds from given entity and writes changes to given SceneFileFormatIterator.
+	///Template helper method that removes component from given container, unbinds from given entity and writes changes to given SceneFileFormatIterator.
 	///Returns index of the freed component to be stored in container holding free indices
-	inline SEint _removeComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj)
+	template<typename T>
+	inline SEint _removeComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj, std::vector<T>& container)
 	{
 		//Get component's index
 		SEint free_index = e.components.at(type);
+		//Mark component's owner id to -1, this prevents component to not be updated in system's Update()
+		_addOwnerIDToComp(-1, static_cast<Component*>(&container.at(free_index)));
 		e.components.erase(type);
 		entity_obj.value().erase(CompTypeAsString.at(type));
 		return free_index;
+	}
+
+private:
+	//Adds entity's id to component.
+	inline void _addOwnerIDToComp(SEint entityid, Component* c)
+	{
+		c->ownerID = entityid;
 	}
 };
 

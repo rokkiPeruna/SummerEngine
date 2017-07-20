@@ -140,6 +140,7 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	m_next_free_entity_id++;
 	m_currentEntity = &m_entities_map.at(name);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
+	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::POSITION);
 }
 
 void EntityManager::CreateEntityOnEditor(Entity& other, std::string name)

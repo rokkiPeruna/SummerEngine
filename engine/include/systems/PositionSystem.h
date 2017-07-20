@@ -1,34 +1,26 @@
-#ifndef SE_MOVEMENTSYSTEM_H
-#define SE_MOVEMENTSYSTEM_H
+#ifndef SE_POSITIONSYSTEM_H
+#define SE_POSITIONSYSTEM_H
 
-
-//SE includes:
+//SE includes
 #include <systems/ComponentSystem.h>
-
-#include <components/CDynamic.h>
+#include <components/CPosition.h>
 
 namespace se
 {
-///Getter method for CMovable components
-CDynamic* GetDynamicComponent(SEint index);
-
 namespace priv
 {
-///Brief: MovementSystem handles components that are related to movement, such as CVelocity and CPosition. It has also
-///containers for it's related components
-class MovementSystem : public ComponentSystem
+///Brief: PositionSystem handles CPosition components. Since position components are used through out different systems,
+///PositionSystem reveals it's component container to public access as static 
+class PositionSystem : public ComponentSystem
 {
-	//Friend getter method for CMovables components
-	friend CDynamic* se::GetDynamicComponent(SEint index);
-
 public:
 	///Default constructor
-	MovementSystem();
+	PositionSystem();
 	///Destructor
-	~MovementSystem();
+	~PositionSystem();
 	///Deleted copy constructor and assign operator
-	MovementSystem(const MovementSystem&) = delete;
-	void operator=(const MovementSystem&) = delete;
+	PositionSystem(const PositionSystem&) = delete;
+	void operator=(const PositionSystem&) = delete;
 
 	///Initialize system
 	void Initialize() override final;
@@ -60,13 +52,14 @@ public:
 	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
 
 	///Returns plain Component* used in editor function.
-	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container);
+	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
+
+	static std::vector<CPosition> PositionComponents;
 
 private:
-	///Component containers(vectors) and free index containers(queues)
-	std::vector<CDynamic> m_cDynamics;
-	std::queue<SEint> m_free_cDynamics_indices;
+	std::queue<SEint> m_free_cPos_indices;
 };
+
 }//namespace priv
 }//namespace se
 

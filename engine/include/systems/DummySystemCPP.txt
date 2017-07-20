@@ -44,7 +44,7 @@ void DummySystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
 {
 	if (e.components.count(component type)
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::MOVABLE, entity_obj, container, free indice container);
+		_onEntityAdded_helper(e, COMPONENT_TYPE::type, entity_obj, container, free indice container);
 	}
 }
 
@@ -60,7 +60,7 @@ SEuint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_typ
 {
 	if (component_type == component type)
 	{
-		return _createComponent_helper<CMovable>(entity, component_type, entity_obj, container, free indices container);
+		return _createComponent_helper<type>(entity, component_type, entity_obj, container, free indices container);
 	}
 	else
 	{
@@ -73,7 +73,7 @@ void DummySystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type,
 {
 	if (component_type == component type)
 	{
-		free indices container.push(_removeComponent_helper(entity, component_type, entity_obj));
+		free indices container.push(_removeComponent_helper(entity, component_type, entity_obj, container));
 	}
 	else
 	{

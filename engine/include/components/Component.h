@@ -22,14 +22,10 @@ public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
 	Component(COMPONENT_TYPE type)
 		: type(type)
-		, id(0)
 		, ownerID(0) {}
 
 	///Every component has it's type as enum from COMPONENT_TYPE (see ComponentTypeList.h)
 	COMPONENT_TYPE type;
-
-	///Component's unique id
-	SEuint id;
 
 	///Owner id
 	SEuint ownerID;

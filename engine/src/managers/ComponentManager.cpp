@@ -84,6 +84,9 @@ void ComponentManager::ShowAndUpdateGUI()
 	{
 		for (auto& component : m_curr_entity->components)
 		{
+			//Can't delete position component
+			if (component.first == COMPONENT_TYPE::POSITION)
+				continue;
 			if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
 			{
 				RemoveComponentFromEntity(*m_curr_entity, component.first);
@@ -188,6 +191,12 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 
 void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type)
 {
+	//Can't remove position component from entity
+	if (component_type == COMPONENT_TYPE::POSITION)
+	{
+		DebugMessageInfo(ComponentMgr_id) << "Can't remove CPosition from entity, returning..";
+		return;
+	}
 	//Check that entity has that component
 	if (entity.components.count(component_type) == 0)
 	{

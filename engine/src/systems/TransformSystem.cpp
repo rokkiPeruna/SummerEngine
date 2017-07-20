@@ -59,7 +59,7 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 
 void TransformSystem::OnEntityRemoved(Entity& e)
 {
-	if (e.components.count(COMPONENT_TYPE::MOVABLE))
+	if (e.components.count(COMPONENT_TYPE::TRANSFORMABLE))
 	{
 		m_free_cTransformables_indices.push(e.components.at(COMPONENT_TYPE::TRANSFORMABLE));
 	}
@@ -82,7 +82,7 @@ void TransformSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
-		m_free_cTransformables_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
+		m_free_cTransformables_indices.push(_removeComponent_helper(entity, component_type, entity_obj, m_cTransformables));
 	}
 	else
 	{

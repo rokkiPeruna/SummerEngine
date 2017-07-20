@@ -17,7 +17,8 @@ namespace se
 enum class COMPONENT_TYPE : SEint
 {
 	FAULTY_TYPE = -1,
-	MOVABLE = 0,
+	POSITION = 0,
+	DYNAMIC,
 	TRANSFORMABLE,
 	COLLIDABLE
 };
@@ -28,7 +29,8 @@ namespace priv
 ///component list of an entity.
 static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 {
-	{ COMPONENT_TYPE::MOVABLE, "movable" },
+	{ COMPONENT_TYPE::POSITION, "position" },
+	{ COMPONENT_TYPE::DYNAMIC, "dynamic" },
 	{ COMPONENT_TYPE::TRANSFORMABLE, "transformable" },
 	{ COMPONENT_TYPE::COLLIDABLE, "collidable" }
 };

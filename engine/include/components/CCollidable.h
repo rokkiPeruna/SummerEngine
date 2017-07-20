@@ -38,7 +38,6 @@ void inline to_json(nlohmann::json& j, const se::CCollidable& comp)
 	{
 		//Common component data
 		{ "_type", static_cast<SEint>(comp.type) },
-		{ "_id", comp.id },
 		{ "_ownerID", comp.ownerID },
 		//Component specific data
 		{ "min", comp.aabb.x },
@@ -57,7 +56,6 @@ void inline from_json(const nlohmann::json& j, se::CCollidable& comp)
 {
 	//Common component data
 	comp.type = static_cast<COMPONENT_TYPE>(j.at("_type").get<SEint>());
-	comp.id = j.at("_id").get<SEint>();
 	comp.ownerID = j.at("_ownerID").get<SEint>();
 	//Component specific data
 	comp.aabb.x = j.at("min").get<SEfloat>();

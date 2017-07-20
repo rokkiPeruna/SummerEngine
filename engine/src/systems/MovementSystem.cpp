@@ -7,20 +7,20 @@
 
 namespace se
 {
-CMovable* GetMovableComponent(SEint index)
+CDynamic* GetDynamicComponent(SEint index)
 {
-	return &priv::Engine::Instance().GetMovementSystem()->m_cMovables.at(index);
+	return &priv::Engine::Instance().GetMovementSystem()->m_cDynamics.at(index);
 }
 
 namespace priv
 {
 MovementSystem::MovementSystem()
-	: m_cMovables{}
-	, m_free_cMovables_indices{}
+	: m_cDynamics{}
+	, m_free_cDynamics_indices{}
 {
 	//THIS IS VERY IMPORTANT:
 	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
-	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::MOVABLE, this);
+	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::DYNAMIC, this);
 }
 
 MovementSystem::~MovementSystem()
@@ -40,41 +40,40 @@ void MovementSystem::Uninitialize()
 
 void MovementSystem::Update(SEfloat deltaTime)
 {
-	for (auto& movable_comp : m_cMovables)
+	for (auto& dynamic_comp : m_cDynamics)
 	{
-		movable_comp.velocity += movable_comp.acceleration * deltaTime;
-		movable_comp.position += movable_comp.velocity * deltaTime;
+		dynamic_comp.velocity += dynamic_comp.acceleration * deltaTime;
 	}
 
 }
 
 void MovementSystem::ClearComponentContainers()
 {
-	m_cMovables.clear();
-	m_free_cMovables_indices = {};
+	m_cDynamics.clear();
+	m_free_cDynamics_indices = {};
 }
 
 void MovementSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
 {
-	if (e.components.count(COMPONENT_TYPE::MOVABLE))
+	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::MOVABLE, entity_obj, m_cMovables, m_free_cMovables_indices);
+		_onEntityAdded_helper(e, COMPONENT_TYPE::DYNAMIC, entity_obj, m_cDynamics, m_free_cDynamics_indices);
 	}
 }
 
 void MovementSystem::OnEntityRemoved(Entity& e)
 {
-	if (e.components.count(COMPONENT_TYPE::MOVABLE))
+	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		m_free_cMovables_indices.push(e.components.at(COMPONENT_TYPE::MOVABLE));
+		m_free_cDynamics_indices.push(e.components.at(COMPONENT_TYPE::DYNAMIC));
 	}
 }
 
 SEuint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
-	if (component_type == COMPONENT_TYPE::MOVABLE)
+	if (component_type == COMPONENT_TYPE::DYNAMIC)
 	{
-		return _createComponent_helper<CMovable>(entity, component_type, entity_obj, m_cMovables, m_free_cMovables_indices);
+		return _createComponent_helper<CDynamic>(entity, component_type, entity_obj, m_cDynamics, m_free_cDynamics_indices);
 	}
 	else
 	{
@@ -85,9 +84,9 @@ SEuint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 
 void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
-	if (component_type == COMPONENT_TYPE::MOVABLE)
+	if (component_type == COMPONENT_TYPE::DYNAMIC)
 	{
-		m_free_cMovables_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
+		m_free_cDynamics_indices.push(_removeComponent_helper(entity, component_type, entity_obj, m_cDynamics));
 	}
 	else
 	{
@@ -99,14 +98,10 @@ void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_ty
 void MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
 {
 
-	if (type == COMPONENT_TYPE::MOVABLE)
+	if (type == COMPONENT_TYPE::DYNAMIC)
 	{
 		//SE_TODO: Check somehow that index is valid component!
-		auto& comp = m_cMovables.at(index_in_container);
-
-		ImGui::SliderFloat("position_x", &comp.position.x, 0.0f, 200.0f);
-		ImGui::SliderFloat("position_y", &comp.position.y, 0.0f, 200.0f);
-		ImGui::SliderFloat("position_z", &comp.position.z, 0.0f, 200.0f);
+		auto& comp = m_cDynamics.at(index_in_container);
 		ImGui::SliderFloat("velocity_x", &comp.velocity.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("velocity_y", &comp.velocity.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("velocity_z", &comp.velocity.z, 0.0f, 200.0f);
@@ -116,9 +111,6 @@ void MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 
 		if (ImGui::Button("Apply changes"))
 		{
-			component_obj.value().at("pos_x") = comp.position.x;
-			component_obj.value().at("pos_y") = comp.position.y;
-			component_obj.value().at("pos_z") = comp.position.z;
 			component_obj.value().at("velo_x") = comp.velocity.x;
 			component_obj.value().at("velo_y") = comp.velocity.y;
 			component_obj.value().at("velo_z") = comp.velocity.z;
@@ -131,9 +123,9 @@ void MovementSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 
 Component* MovementSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
 {
-	if (type == COMPONENT_TYPE::MOVABLE)
+	if (type == COMPONENT_TYPE::DYNAMIC)
 	{
-		return &m_cMovables.at(index_in_container);
+		return &m_cDynamics.at(index_in_container);
 	}
 	else
 		return nullptr;

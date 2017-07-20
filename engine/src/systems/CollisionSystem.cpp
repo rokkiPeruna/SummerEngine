@@ -1,6 +1,7 @@
 #include <systems/CollisionSystem.h>
 #include <core/Engine.h>
 #include <imgui/imgui.h>
+#include <systems/PositionSystem.h>
 
 namespace se
 {
@@ -40,6 +41,7 @@ void CollisionSystem::Update(SEfloat deltaTime)
 	for (auto& c : m_cCollidables)
 	{
 		//Check for broad phase collision (AABB)
+		PositionSystem::PositionComponents.at(c.ownerID);
 
 			//If true, check for narrow phase collision
 	}
@@ -86,7 +88,7 @@ void CollisionSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 {
 	if (component_type == COMPONENT_TYPE::COLLIDABLE)
 	{
-		m_free_cCollidables_indices.push(_removeComponent_helper(entity, component_type, entity_obj));
+		m_free_cCollidables_indices.push(_removeComponent_helper(entity, component_type, entity_obj, m_cCollidables));
 	}
 	else
 	{

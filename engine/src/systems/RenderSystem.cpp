@@ -39,10 +39,7 @@ void RenderSystem::OnEntityAdded(Entity& entity, SceneFileFormatIterator& entity
 {
 	//TBH propanly every component will have a movable but may lack some sort of shae
 	//but for now this will do
-	if (entity.components.count(COMPONENT_TYPE::MOVABLE))
-	{
-		
-	}
+	
 }
 
 void RenderSystem::OnEntityRemoved(Entity& entity)
