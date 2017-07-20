@@ -10,7 +10,12 @@ namespace se
 namespace priv
 {
 ///Brief: PositionSystem handles CPosition components. Since position components are used through out different systems,
-///PositionSystem reveals it's component container to public access as static 
+///PositionSystem reveals it's component container to public access as static. 
+///Because entities are tightly coupled with CPosition components (every entity has one), CPosition components
+///are arranged in a way that ensures that CPosition component's index in container is the same as it's owner's id.
+///This enables easy search for entity's position: PositionComponents.at(myComponent.ownerID) returns a reference to correct CPosition component.
+///Downside for this is that PositionComponent container is partly handled in EntityManager. EntityManager reserves enough space for container
+///to fit all scene's entities' CPositionComponents plus some extra. See EntityManager.cpp InitWithNewScene for details.
 class PositionSystem : public ComponentSystem
 {
 public:

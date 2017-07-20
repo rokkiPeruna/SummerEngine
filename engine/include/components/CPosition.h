@@ -6,7 +6,8 @@
 
 namespace se
 {
-///Brief: CPosition is the smallest common nominator for entities. Every entity has to have one.
+///Brief: CPosition is the smallest common nominator for entities. Every entity has one.
+///Because of tight coupling with entity, CPosition is automatically added to every entity on creation and is deleted only when entity is.
 class CPosition : public Component
 {
 public:

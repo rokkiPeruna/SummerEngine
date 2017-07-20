@@ -6,6 +6,8 @@
 #include <fstream>
 #include <memory>
 #include <unordered_map>
+#include <stack>
+
 
 //SE includes:
 #include <managers/Manager.h>
@@ -93,18 +95,21 @@ private:
 	///Const string naming the main json object
 	const std::string m_main_json_obj;
 
-	///Next free entity id
-	SEuint m_next_free_entity_id;
-
 	///Container holding entities and their access keys (names)
 	std::unordered_map<std::string, Entity> m_entities_map;
 
-	///Loads current scene's entities
-	void _loadSceneEntities();
+	///Loads current scene's entities. Returns largest id found.
+	SEint _loadSceneEntities();
 
-	///Finds scene's next  free entity id
-	SEbool m_possibleGapInEntityIDs;
-	SEuint _findNextFreeEntityID();
+	///Reserves space for PositionComponents container located in PositionSystem based on the largest id
+	///found from entities.
+	void _res_space_PositionComponents(SEint largest_id);
+
+	///Finds scene's next  free entity id and returns first free index
+	SEint _findFreeEntityID();
+	SEint m_curr_free_entity_id;
+	SEbool m_posb_gap_in_free_entity_ids;
+	std::stack<SEint> m_free_entity_ids;
 
 	///GUI
 	std::string m_gui_scene_name;

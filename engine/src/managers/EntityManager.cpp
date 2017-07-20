@@ -2,7 +2,7 @@
 #include <core/Engine.h>
 #include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
-
+#include <systems/PositionSystem.h>
 
 namespace se
 {
@@ -19,9 +19,10 @@ EntityManager::EntityManager()
 	, m_scenes_subfolder_name("scenes/")
 	, m_scene_file_suffix(".json")
 	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
-	, m_next_free_entity_id(0)
 	, m_entities_map{}
-	, m_possibleGapInEntityIDs(true)
+	, m_posb_gap_in_free_entity_ids(true)
+	, m_curr_free_entity_id(-1)
+	, m_free_entity_ids{}
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
 }
@@ -38,6 +39,8 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson, Component
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + m_scenes_subfolder_name;
 	m_compMgr = compMgr;
 	m_entities_map.clear();
+	while (!m_free_entity_ids.empty())
+		m_free_entity_ids.pop();
 }
 
 void EntityManager::Uninitialize()
@@ -73,6 +76,7 @@ void EntityManager::ShowAndUpdateGUI()
 			if (ImGui::Button("Create!"))
 			{
 				CreateEntityOnEditor(entityname);
+				memset(&entityname[0], 0, sizeof(entityname));
 			}
 		}
 
@@ -107,15 +111,17 @@ void EntityManager::ShowAndUpdateGUI()
 
 void EntityManager::InitWithNewScene(Scene* scene)
 {
-	//Clear containers
 	m_entities_map.clear();
 
 	m_currentScene = scene;
 
-	_loadSceneEntities();
+	SEint largest_id_found = _loadSceneEntities();
+	_res_space_PositionComponents(largest_id_found);
 
 	//Find free ids
-	m_next_free_entity_id = _findNextFreeEntityID();
+	while (!m_free_entity_ids.empty())
+		m_free_entity_ids.pop();
+	m_curr_free_entity_id = _findFreeEntityID();
 
 	m_gui_scene_name = scene->GetName();
 
@@ -131,16 +137,15 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	auto& entities_obj = json->find(m_main_json_obj);
 
 	entities_obj.value().push_back({ name,
-		nlohmann::json({{"id", m_next_free_entity_id}}),
+		nlohmann::json({{"id", m_curr_free_entity_id }}),
 	});
 
-	if (m_possibleGapInEntityIDs)
-		_findNextFreeEntityID(); m_possibleGapInEntityIDs = false;
-
-	m_entities_map.emplace(name, Entity(name, m_next_free_entity_id));
+	m_entities_map.emplace(name, Entity(name, m_curr_free_entity_id));
 	m_currentEntity = &m_entities_map.at(name);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::POSITION);
+
+	m_curr_free_entity_id = _findFreeEntityID();
 }
 
 void EntityManager::CreateEntityOnEditor(Entity& other, std::string name)
@@ -160,6 +165,8 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 		s->OnEntityRemoved(m_entities_map.at(entity_name));
 	}
 
+	m_free_entity_ids.push(m_entities_map.at(entity_name).id);
+
 	if (m_currentEntity == &m_entities_map.at(entity_name))
 	{
 		m_currentEntity = nullptr;
@@ -167,45 +174,93 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	}
 
 	m_entities_map.erase(entity_name);
-	m_possibleGapInEntityIDs = true;
 }
 
-void EntityManager::_loadSceneEntities()
+SEint EntityManager::_loadSceneEntities()
 {
 	auto json = m_currentScene->GetData();
 	auto& entities_obj = json->find(m_main_json_obj);
 	if (entities_obj == json->end())
 	{
 		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _loadSceneEntities()\nscene's entities not loaded!";
-		return;
+		return -1;
 	}
+	SEint largestID = 0;
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
 	{
-		m_entities_map.emplace(itr.key(), Entity(itr.key(), itr.value().at("id")));
+		SEint id = itr.value().at("id");
+		m_entities_map.emplace(itr.key(), Entity(itr.key(), id));
+		if (id > largestID)
+			largestID = id;
 	}
+	return largestID;
 }
 
-SEuint EntityManager::_findNextFreeEntityID()
+void EntityManager::_res_space_PositionComponents(SEint largest_id)
 {
+	SEint safetyFactor = 2.0f;
+	//PositionSystem::PositionComponents.reserve(largest_id * safetyFactor);
+	PositionSystem::PositionComponents.resize(largest_id * safetyFactor);
+}
+
+SEint EntityManager::_findFreeEntityID()
+{
+	//If we have values in free entity ids, just return top of the stack and pop it
+	if (!m_free_entity_ids.empty())
+	{
+		SEint ret = m_free_entity_ids.top();
+		m_free_entity_ids.pop();
+		return ret;
+	}
+
+	//Else we have to loop through all entities, and push possible gap values to stack
 	auto json = m_currentScene->GetData();
 	auto& entities_obj = json->find(m_main_json_obj);
 	if (entities_obj == json->end())
 	{
-		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _findNextFreeEntityID()\nscene's entities not loaded!";
+		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _findFreeEntityID()\nscene's entities not loaded!";
 		return 0;
 	}
-	m_next_free_entity_id = 0;
-	SEbool gap_found = false;
+
+	//Find current largest id
+	//For nlohmann::json (lack of know-how/bug?) we have to push values to temporary container
+	std::vector<SEint> tmp;
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); ++itr)
 	{
-		//Check for gap
-		if (m_next_free_entity_id != itr.value().at("id"))
-			break;
-
-		m_next_free_entity_id = itr.value().at("id") + 1;
+		tmp.emplace_back(static_cast<SEint>(itr.value().at("id")));
 	}
-	
-	return m_next_free_entity_id;
+	//Sort vector
+	std::sort(tmp.begin(), tmp.end(), [&tmp](SEint a, SEint b) {return a < b; });
+
+	//Check for possible empty scene
+	if (!tmp.empty())
+	{
+		//Push indices larger than current largest index with proper marginal
+		SEint curr_larg_id = tmp.back();
+		for (SEint i = 10; i > 0; --i)
+		{
+			m_free_entity_ids.push(curr_larg_id + i);
+		}
+
+		//Find and fill (possible) gaps
+		for (SEint i = 0; i < tmp.size() - 1; ++i)
+		{
+			if (tmp.at(i) + 1 != tmp.at(i + 1))
+				m_free_entity_ids.push(tmp.at(i) + 1);
+		}
+		SEint id = m_free_entity_ids.top();
+		m_free_entity_ids.pop();
+		return id;
+	}
+	//If scene is really empty of entities, push proper amount of values to free ids and return first id
+	else
+	{
+		for (SEint i = 10; i > 0; --i)
+		{
+			m_free_entity_ids.push(i);
+		}
+		return 0;
+	}
 }
 
 }//namespace priv

@@ -44,7 +44,10 @@ void PositionSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_ob
 {
 	if (e.components.count(COMPONENT_TYPE::POSITION))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::POSITION, entity_obj, PositionComponents, m_free_cPos_indices);
+		CPosition component = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::POSITION));
+		component.ownerID = e.id;
+		e.components.at(COMPONENT_TYPE::POSITION) = component.ownerID;
+		PositionComponents.emplace(PositionComponents.begin() + e.id, component);
 	}
 }
 
@@ -52,7 +55,7 @@ void PositionSystem::OnEntityRemoved(Entity& e)
 {
 	if (e.components.count(COMPONENT_TYPE::POSITION))
 	{
-		m_free_cPos_indices.push(e.components.at(COMPONENT_TYPE::POSITION));
+		PositionComponents.at(e.id).ownerID = -1;
 	}
 }
 
@@ -60,20 +63,23 @@ SEuint PositionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::POSITION)
 	{
-		return _createComponent_helper<CPosition>(entity, component_type, entity_obj, PositionComponents, m_free_cPos_indices);
+		PositionComponents.emplace(PositionComponents.begin() + entity.id, CPosition());
+		entity_obj.value().push_back({ CompTypeAsString.at(COMPONENT_TYPE::POSITION), PositionComponents.at(entity.id) });
 	}
 	else
 	{
 		MessageWarning(PositionSys_id) << "Somehow tried to add component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";
 		return -1;
 	}
+	return entity.id;
 }
 
 void PositionSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::POSITION)
 	{
-		m_free_cPos_indices.push(_removeComponent_helper(entity, component_type, entity_obj, PositionComponents));
+		MessageError(PositionSys_id) << "Tried to remove position component from entity, not possible!!!";
+		return;
 	}
 	else
 	{

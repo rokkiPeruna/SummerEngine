@@ -109,7 +109,7 @@ protected:
 		else
 		{
 			container.emplace_back(T());
-			index = container.size() - 1; //SE_TODO: This must be changed if we are going to fill the gaps created when entity is removed!!
+			index = container.size() - 1; 
 			e.components.emplace(type, index);
 			entity_obj.value().push_back({ CompTypeAsString.at(type), container.back() });
 		}
