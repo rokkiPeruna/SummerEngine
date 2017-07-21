@@ -15,9 +15,13 @@ namespace se
 {
 namespace priv
 {
-
-///Brief : TransformSystem handels components rotation, scale and pivot related things.
-
+///Brief: TransformSystem handles CTransformables components. Since transform components are used through out different systems,
+///TransformSystem reveals it's component container to public access as static container. 
+///Because entities are tightly coupled with CTransformables components (every entity has one), CTransformables components
+///are arranged in a way that ensures that CTransformables component's index in container is the same as it's owner's id.
+///This enables easy search for entity's transform: TransformableComponents.at(myComponent.ownerID) returns a reference to correct CTransformable component.
+///Downside for this is that CTransformable container is partly handled in EntityManager. EntityManager reserves enough space for container
+///to fit all scene's entities' CTransformables plus some extra. See EntityManager.cpp InitWithNewScene for details.
 class TransformSystem : public ComponentSystem
 {
 	friend class RenderSystem;
@@ -60,12 +64,8 @@ public:
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
-private:
-
-	///Component containers(vectors) and free index containers(queues)
-	std::vector<CTransformable> m_cTransformables;
-	std::queue<SEint> m_free_cTransformables_indices;
-
+	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
+	static std::vector<CTransformable> TransformableComponents;
 };
 
 

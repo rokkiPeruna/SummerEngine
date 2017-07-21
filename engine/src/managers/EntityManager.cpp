@@ -2,7 +2,7 @@
 #include <core/Engine.h>
 #include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
-#include <systems/PositionSystem.h>
+#include <systems/TransformSystem.h>
 
 namespace se
 {
@@ -116,7 +116,7 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_currentScene = scene;
 
 	SEint largest_id_found = _loadSceneEntities();
-	_res_space_PositionComponents(largest_id_found);
+	_res_space_CTransfComponents(largest_id_found);
 
 	//Find free ids
 	while (!m_free_entity_ids.empty())
@@ -143,7 +143,7 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	m_entities_map.emplace(name, Entity(name, m_curr_free_entity_id));
 	m_currentEntity = &m_entities_map.at(name);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
-	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::POSITION);
+	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::TRANSFORMABLE);
 
 	m_curr_free_entity_id = _findFreeEntityID();
 }
@@ -196,11 +196,11 @@ SEint EntityManager::_loadSceneEntities()
 	return largestID;
 }
 
-void EntityManager::_res_space_PositionComponents(SEint largest_id)
+void EntityManager::_res_space_CTransfComponents(SEint largest_id)
 {
 	SEint safetyFactor = 2.0f;
 	//PositionSystem::PositionComponents.reserve(largest_id * safetyFactor);
-	PositionSystem::PositionComponents.resize(largest_id * safetyFactor);
+	TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
 }
 
 SEint EntityManager::_findFreeEntityID()

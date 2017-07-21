@@ -85,7 +85,7 @@ void ComponentManager::ShowAndUpdateGUI()
 		for (auto& component : m_curr_entity->components)
 		{
 			//Can't delete position component
-			if (component.first == COMPONENT_TYPE::POSITION)
+			if (component.first == COMPONENT_TYPE::TRANSFORMABLE)
 				continue;
 			if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
 			{
@@ -192,9 +192,9 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type)
 {
 	//Can't remove position component from entity
-	if (component_type == COMPONENT_TYPE::POSITION)
+	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
-		DebugMessageInfo(ComponentMgr_id) << "Can't remove CPosition from entity, returning..";
+		DebugMessageInfo(ComponentMgr_id) << "Can't remove CTransformable from entity, returning..";
 		return;
 	}
 	//Check that entity has that component

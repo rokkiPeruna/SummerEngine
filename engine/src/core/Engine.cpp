@@ -192,15 +192,11 @@ void Engine::_initManagers()
 
 void Engine::_initSystems()
 {
-	m_positionSystem.Initialize();
-	m_systemContainer.emplace_back(&m_positionSystem);
-
-	m_movementSystem.Initialize();
-	m_systemContainer.emplace_back(&m_movementSystem);
-
 	m_transformSystem.Initialize();
 	m_systemContainer.emplace_back(&m_transformSystem);
 
+	m_movementSystem.Initialize();
+	m_systemContainer.emplace_back(&m_movementSystem);
 
 	m_renderSystem.Initialize();
 	m_systemContainer.emplace_back(&m_renderSystem);

@@ -103,7 +103,7 @@ private:
 
 	///Reserves space for PositionComponents container located in PositionSystem based on the largest id
 	///found from entities.
-	void _res_space_PositionComponents(SEint largest_id);
+	void _res_space_CTransfComponents(SEint largest_id);
 
 	///Finds scene's next  free entity id and returns first free index
 	SEint _findFreeEntityID();

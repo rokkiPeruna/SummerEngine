@@ -22,13 +22,13 @@ public:
 	///Default constructor. Takes COMPONENT_TYPE as parameter.
 	Component(COMPONENT_TYPE type)
 		: type(type)
-		, ownerID(0) {}
+		, ownerID(-1) {}
 
 	///Every component has it's type as enum from COMPONENT_TYPE (see ComponentTypeList.h)
 	COMPONENT_TYPE type;
 
 	///Owner id
-	SEuint ownerID;
+	SEint ownerID;
 };
 }//namespace se
 #endif

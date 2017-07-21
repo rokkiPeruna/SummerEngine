@@ -16,7 +16,6 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 #Components
 set(COMPONENTS_FILES
 	include/components/Component.h
-	include/components/CPosition.h
 	include/components/CDynamic.h
 	include/components/CCollidable.h
     include/components/CTriangleShape.h
@@ -30,8 +29,6 @@ set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
 	include/systems/DummySystemCPP.txt
-	include/systems/PositionSystem.h
-	src/systems/PositionSystem.cpp
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
     include/systems/RenderSystem.h

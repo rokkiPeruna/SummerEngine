@@ -42,7 +42,7 @@ void RenderSystem::Update(SEfloat deltaTime)
 				//Find other related component if 
 			}
 
-			auto& trns_comp = m_fransform_system->m_cTransformables.at(entity.second.components.at(COMPONENT_TYPE::TRANSFORMABLE));
+			auto& trns_comp = m_fransform_system->TransformableComponents.at(entity.second.components.at(COMPONENT_TYPE::TRANSFORMABLE));
 			
 			SEuint VAO;
 			SEuint VBO;

@@ -25,15 +25,15 @@ class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat p_size = 1.0f, Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f scal = Vec3f(0.5f, 0.5f, 1.0f))
+	CTransformable(Vec3f _pos = Vec3f(0.0f), BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat p_size = 1.0f, Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f scal = Vec3f(1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
+		, position(_pos)
 		, size(p_size)
 		, origin(orig)
 		, rotation(rot)
 		, scale(scal)
 		, points {}
 	{
-
 		scaleMatrix = 
 		{
 			scale.x, 0.0f, 0.0f, 0.0f,
@@ -41,7 +41,6 @@ public:
 			0.0f, 0.0f, scale.z, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 		};
-
 		switch (type)
 		{
 
@@ -76,8 +75,6 @@ public:
 
 		case BASIC_SHAPE::CIRCLE:
 		{
-
-
 			break;
 		}
 
@@ -85,6 +82,8 @@ public:
 
 	};
 
+	
+	Vec3f position;
 	SEfloat size;
 	SEfloat rotation;
 	Vec3f origin;
@@ -106,6 +105,9 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "_type", static_cast<SEint>(comp.type) },
 		{ "_ownerID", comp.ownerID },
 		//Component specific data
+		{ "pos_x", comp.position.x },
+		{ "pos_y", comp.position.y },
+		{ "pos_z", comp.position.z },
 		{ "size", comp.size },
 		{ "orig_x", comp.origin.x},
 		{ "orig_y", comp.origin.y},
@@ -116,7 +118,6 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "scal_z",comp.scale.z }
 	};
 
-
 	j.push_back({ "points", {} });
 	auto& itr = j.find("points");
 
@@ -126,7 +127,6 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		(*itr).push_back(comp.points.at(i).y);
 		(*itr).push_back(comp.points.at(i).z);
 	}
-
 }
 
 void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
@@ -135,6 +135,9 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.type = static_cast<COMPONENT_TYPE>(j.at("_type").get<SEint>());
 	comp.ownerID = j.at("_ownerID").get<SEint>();
 	//Component specific data
+	comp.position.x = j.at("pos_x").get<SEfloat>();
+	comp.position.y = j.at("pos_y").get<SEfloat>();
+	comp.position.z = j.at("pos_z").get<SEfloat>();
 	comp.size = j.at("size").get<SEfloat>();
 	comp.origin.x = j.at("orig_x").get<SEfloat>();
 	comp.origin.y = j.at("orig_y").get<SEfloat>();
@@ -152,11 +155,7 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	{
 		comp.points.emplace_back(Vec3f(temp.at(i), temp.at(i + 1), temp.at(i + 2)));
 	}
-
 }
-
-
-
 }// !namespace se
 
 #endif

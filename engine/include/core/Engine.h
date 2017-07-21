@@ -24,7 +24,6 @@
 
 //Systems
 #include <systems/ComponentSystem.h>
-#include <systems/PositionSystem.h>
 #include <systems/MovementSystem.h>
 #include <systems/RenderSystem.h>
 #include <systems/TransformSystem.h>
@@ -74,7 +73,6 @@ public:
 	///System getters
 	//
 	///Returns ptr to Engine's TransformSystem
-	PositionSystem* GetPositionSystem() { return &m_positionSystem; }
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
 	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
 	TransformSystem* GetTransformSystem() { return &m_transformSystem; }
@@ -142,7 +140,6 @@ private:
 	std::shared_ptr<Window> m_window;
 
 	///Systems
-	PositionSystem m_positionSystem;
 	MovementSystem m_movementSystem;
 	RenderSystem m_renderSystem;
 	TransformSystem m_transformSystem;

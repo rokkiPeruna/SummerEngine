@@ -2,7 +2,6 @@
 #include <core/Messages.h>
 #include <imgui/imgui.h>
 #include <ids/ComponentTypeList.h>
-
 #include <core/Engine.h>
 
 namespace se
@@ -40,9 +39,11 @@ void MovementSystem::Uninitialize()
 
 void MovementSystem::Update(SEfloat deltaTime)
 {
-	for (auto& dynamic_comp : m_cDynamics)
+	auto& transforms = TransformSystem::TransformableComponents;
+	for (auto& c : m_cDynamics)
 	{
-		dynamic_comp.velocity += dynamic_comp.acceleration * deltaTime;
+		c.velocity += c.acceleration * deltaTime;
+		transforms.at(c.ownerID).position += c.velocity * deltaTime;
 	}
 
 }

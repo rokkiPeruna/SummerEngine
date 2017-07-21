@@ -10,11 +10,12 @@ namespace se
 {
 namespace priv
 {
+std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
 TransformSystem::TransformSystem() 
-	: m_cTransformables{}
-	, m_free_cTransformables_indices{}
 {
+	//THIS IS VERY IMPORTANT:
+	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::TRANSFORMABLE, this);
 }
 
@@ -36,16 +37,12 @@ void TransformSystem::Uninitialize()
 
 void TransformSystem::Update(SEfloat deltaTime)
 {
-	for (auto& transformable_comp : m_cTransformables)
-	{
-		
-	}
+
 }
 
 void TransformSystem::ClearComponentContainers()
 {
-	m_cTransformables.clear();
-	m_free_cTransformables_indices = {};
+	TransformableComponents.clear();
 }
 
 
@@ -53,7 +50,13 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 {
 	if (e.components.count(COMPONENT_TYPE::TRANSFORMABLE))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::TRANSFORMABLE, entity_obj, m_cTransformables, m_free_cTransformables_indices);
+		//Build component from json object and mark it's owner
+		CTransformable component = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TRANSFORMABLE));
+		component.ownerID = e.id;
+		//Give entity a component's index which in this particular case is the same as entity's own id
+		e.components.at(COMPONENT_TYPE::TRANSFORMABLE) = component.ownerID;
+		//Build run-time component on the index that matches owning entity's id
+		TransformableComponents.emplace(TransformableComponents.begin() + component.ownerID, component);
 	}
 }
 
@@ -61,7 +64,7 @@ void TransformSystem::OnEntityRemoved(Entity& e)
 {
 	if (e.components.count(COMPONENT_TYPE::TRANSFORMABLE))
 	{
-		m_free_cTransformables_indices.push(e.components.at(COMPONENT_TYPE::TRANSFORMABLE));
+		TransformableComponents.at(e.id) = CTransformable();
 	}
 }
 
@@ -70,7 +73,16 @@ SEuint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
 		
-		return _createComponent_helper<CTransformable>(e, COMPONENT_TYPE::TRANSFORMABLE, entity_obj, m_cTransformables, m_free_cTransformables_indices);
+		//Build run-time component on the index that matches owning entity's id
+		TransformableComponents.emplace(TransformableComponents.begin() + e.id, CTransformable());
+		//Add owner's id to component
+		TransformableComponents.at(e.id).ownerID = e.id;
+		//Add type and index to owning entity
+		e.components.emplace(COMPONENT_TYPE::TRANSFORMABLE, e.id);
+		//Add component to json object
+		entity_obj.value().push_back({ CompTypeAsString.at(COMPONENT_TYPE::TRANSFORMABLE), TransformableComponents.at(e.id) });
+
+		return e.id;
 	}
 	else
 	{
@@ -83,7 +95,8 @@ void TransformSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
-		m_free_cTransformables_indices.push(_removeComponent_helper(entity, component_type, entity_obj, m_cTransformables));
+		MessageError(TransformSys_id) << "Tried to remove transform component from entity, not possible!!!";
+		return;
 	}
 	else
 	{
@@ -97,8 +110,11 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 	if (type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
 		//SE_TODO: Check somehow that index is valid component!
-		auto& comp = m_cTransformables.at(index_in_container);
+		auto& comp = TransformableComponents.at(index_in_container);
 
+		ImGui::SliderFloat("pos_x", &comp.position.x, 0.0f, 200.0f);
+		ImGui::SliderFloat("pos_y", &comp.position.y, 0.0f, 200.0f);
+		ImGui::SliderFloat("pos_z", &comp.position.z, 0.0f, 200.0f);
 		ImGui::SliderFloat("size", &comp.size, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_x", &comp.origin.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_y", &comp.origin.y, 0.0f, 200.0f);
@@ -108,10 +124,13 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
 
-		comp.rotationMatrix = glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f));
+		comp.rotationMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f));
 
 		if (ImGui::Button("Apply changes"))
 		{
+			component_obj.value().at("pos_x") = comp.position.x;
+			component_obj.value().at("pos_y") = comp.position.y;
+			component_obj.value().at("pos_z") = comp.position.z;
 			component_obj.value().at("size") = comp.size;
 			component_obj.value().at("orig_x") = comp.origin.x;
 			component_obj.value().at("orig_y") = comp.origin.y;
@@ -130,7 +149,7 @@ Component* TransformSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 	{
 		if (type == COMPONENT_TYPE::TRANSFORMABLE)
 		{
-			return &m_cTransformables.at(index_in_container);
+			return &TransformableComponents.at(index_in_container);
 		}
 		else
 			return nullptr;
