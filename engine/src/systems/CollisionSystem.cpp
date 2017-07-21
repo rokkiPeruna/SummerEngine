@@ -1,7 +1,7 @@
 #include <systems/CollisionSystem.h>
 #include <core/Engine.h>
 #include <imgui/imgui.h>
-#include <systems/PositionSystem.h>
+//#include <systems/PositionSystem.h>
 
 namespace se
 {
