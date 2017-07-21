@@ -19,21 +19,23 @@ enum BASIC_SHAPE
 	CIRCLE
 };
 
-///Brief : Transformable ia a sort of shape class with additional information considering the shape (orientation, scale and size)
+///Brief : Position, rotation and scale. Every object has transformable component
 
 class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(Vec3f _pos = Vec3f(0.0f), BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, SEfloat _size = 1.0f, Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f _scale = Vec3f(1.0f))
+	CTransformable(Vec3f _pos = Vec3f(0.0f), BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f _scale = Vec3f(1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
 		, position(_pos)
-		, size(_size)
 		, origin(orig)
 		, rotation(rot)
 		, scale(_scale)
+		, shape_index(-1)
 		, points {}
 	{
+		SEfloat size = 0.5;
+
 		switch (type)
 		{
 
@@ -41,11 +43,10 @@ public:
 
 		case BASIC_SHAPE::TRIANGLE: default:
 		{
-			SEfloat halfsize = size / 2.0f;
 
-			points.emplace_back(Vec3f(0.0f, halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
+			points.emplace_back(Vec3f(0.0f, size, 0.0f));
+			points.emplace_back(Vec3f(size, -size, 0.0f));
+			points.emplace_back(Vec3f(-size, -size, 0.0f));
 
 			origin = Vec3f(0.0f);
 			
@@ -57,7 +58,6 @@ public:
 
 			Mat4f scaleMatrix(1.0f);
 			scaleMatrix = glm::scale(scaleMatrix, scale);
-
 			modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 			
 			indices.emplace_back(0);
@@ -68,11 +68,10 @@ public:
 
 		case BASIC_SHAPE::RECTANGLE:
 		{
-			SEfloat halfsize = size / 2.0f;
-			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, halfsize, 0.0f));
-			points.emplace_back(Vec3f(-halfsize, halfsize, 0.0f));
+			points.emplace_back(Vec3f(-size, -size, 0.0f));
+			points.emplace_back(Vec3f(size, -size, 0.0f));
+			points.emplace_back(Vec3f(size, size, 0.0f));
+			points.emplace_back(Vec3f(-size, size, 0.0f));
 			origin = Vec3f(0.0f);
 			
 			Mat4f translationMatrix(
@@ -110,13 +109,14 @@ public:
 
 	
 	Vec3f position;
-	SEfloat size;
 	SEfloat rotation;
-	Vec3f origin;
 	Vec3f scale;
 
-	Mat4f modelMatrix;
+	Vec3f origin;
 
+	SEint shape_index;
+
+	Mat4f modelMatrix;
 	std::vector<Vec3f> points;
 	std::vector<SEuint> indices;
 
@@ -133,7 +133,6 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "pos_x", comp.position.x },
 		{ "pos_y", comp.position.y },
 		{ "pos_z", comp.position.z },
-		{ "size", comp.size },
 		{ "orig_x", comp.origin.x},
 		{ "orig_y", comp.origin.y},
 		{ "orig_z", comp.origin.z},
@@ -163,7 +162,6 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 	comp.position.x = j.at("pos_x").get<SEfloat>();
 	comp.position.y = j.at("pos_y").get<SEfloat>();
 	comp.position.z = j.at("pos_z").get<SEfloat>();
-	comp.size = j.at("size").get<SEfloat>();
 	comp.origin.x = j.at("orig_x").get<SEfloat>();
 	comp.origin.y = j.at("orig_y").get<SEfloat>();
 	comp.origin.z = j.at("orig_z").get<SEfloat>();

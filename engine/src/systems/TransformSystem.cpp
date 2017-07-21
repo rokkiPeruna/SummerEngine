@@ -17,6 +17,7 @@ TransformSystem::TransformSystem()
 	//THIS IS VERY IMPORTANT:
 	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::TRANSFORMABLE, this);
+	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::SHAPE, this);
 }
 
 
@@ -71,7 +72,7 @@ void TransformSystem::OnEntityRemoved(Entity& e)
 SEuint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
-	{
+	{	
 		
 		//Build run-time component on the index that matches owning entity's id
 		TransformableComponents.emplace(TransformableComponents.begin() + e.id, CTransformable());
@@ -84,6 +85,12 @@ SEuint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type
 
 		return e.id;
 	}
+
+	if (component_type == COMPONENT_TYPE::SHAPE)
+	{
+		return _createComponent_helper(e, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
+	}
+
 	else
 	{
 		MessageWarning(MovementSys_id) << "Somehow tried to add component that doesn't belong to this system!!\n Check that correct system takes responsibility!!";
@@ -115,7 +122,6 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("pos_x", &comp.position.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("pos_y", &comp.position.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("pos_z", &comp.position.z, 0.0f, 200.0f);
-		ImGui::SliderFloat("size", &comp.size, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_x", &comp.origin.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_y", &comp.origin.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_z", &comp.origin.z, 0.0f, 200.0f);
@@ -131,7 +137,6 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 			component_obj.value().at("pos_x") = comp.position.x;
 			component_obj.value().at("pos_y") = comp.position.y;
 			component_obj.value().at("pos_z") = comp.position.z;
-			component_obj.value().at("size") = comp.size;
 			component_obj.value().at("orig_x") = comp.origin.x;
 			component_obj.value().at("orig_y") = comp.origin.y;
 			component_obj.value().at("orig_z") = comp.origin.z;
@@ -150,7 +155,6 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 						component_obj.value().at("pos_y"),
 						component_obj.value().at("pos_z")),
 					BASIC_SHAPE::TRIANGLE,
-					component_obj.value().at("size"),
 					Vec3f(component_obj.value().at("orig_x"),
 						component_obj.value().at("orig_y"),
 						component_obj.value().at("orig_z")),
@@ -171,7 +175,6 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 						component_obj.value().at("pos_y"),
 						component_obj.value().at("pos_z")),
 					BASIC_SHAPE::RECTANGLE,
-					component_obj.value().at("size"),
 					Vec3f(component_obj.value().at("orig_x"),
 						component_obj.value().at("orig_y"),
 						component_obj.value().at("orig_z")),

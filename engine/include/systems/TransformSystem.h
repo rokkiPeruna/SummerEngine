@@ -8,7 +8,7 @@
 //Include SE
 #include <systems/ComponentSystem.h>
 #include <components/CTransformable.h>
-
+#include <components/CShape.h>
 
 
 namespace se
@@ -66,6 +66,13 @@ public:
 
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
+
+	
+private:
+
+	std::vector<CShape> m_cShapes;
+	std::queue<SEint> m_free_cShape_indices;
+
 };
 
 

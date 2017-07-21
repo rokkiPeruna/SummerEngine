@@ -33,7 +33,6 @@
 #include <managers/IOManager.h>
 #include <managers/SceneManager.h>
 #include <managers/ResourceManager.h>
-#include <managers/RenderManager.h>
 #include <managers/ComponentManager.h>
 
 
