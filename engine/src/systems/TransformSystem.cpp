@@ -130,7 +130,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		}
 		if (ImGui::Button("Triangle"))
 		{
-			CTransformable(BASIC_SHAPE::TRIANGLE, component_obj.value().at("size"),
+			m_cTransformables.at(index_in_container) = CTransformable(BASIC_SHAPE::TRIANGLE, component_obj.value().at("size"),
 				Vec3f(component_obj.value().at("orig_x"),
 					component_obj.value().at("orig_y"),
 					component_obj.value().at("orig_z")),
@@ -142,7 +142,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		if (ImGui::Button("Rectangle"))
 		{	
 		
-			CTransformable(BASIC_SHAPE::RECTANGLE, component_obj.value().at("size"),
+			m_cTransformables.at(index_in_container) = CTransformable(BASIC_SHAPE::RECTANGLE, component_obj.value().at("size"),
 				Vec3f(component_obj.value().at("orig_x"),
 					component_obj.value().at("orig_y"),
 					component_obj.value().at("orig_z")),

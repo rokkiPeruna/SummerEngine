@@ -90,6 +90,16 @@ public:
 		case BASIC_SHAPE::CIRCLE:
 		{
 
+			SEfloat tehta = 2 * 3.1415 / SEfloat(30);
+			SEfloat tangential_factor = tanf(tehta);
+			SEfloat radial_factor = cosf(tehta);
+
+			SEfloat x = size;
+			SEfloat y = 0;
+
+
+
+
 
 			break;
 		}
