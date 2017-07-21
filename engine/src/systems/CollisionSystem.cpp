@@ -37,10 +37,14 @@ void CollisionSystem::Uninitialize()
 
 void CollisionSystem::Update(SEfloat deltaTime)
 {
+	//Doesn't modify transform components, should be thread safe?
+	auto& transforms = TransformSystem::TransformableComponents;
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end()-1) ; ++itr)
 	{
 		//Check for broad phase collision (AABB)
-		//PositionSystem::PositionComponents.at(c.ownerID);
+		//for(auto& next)
+
+		transforms.at((*itr).ownerID);
 
 			//If true, check for narrow phase collision
 	}

@@ -1,4 +1,5 @@
 #include <managers/ResourceManager.h>
+#include <STB/stb_image.h>
 
 namespace se
 {
@@ -65,13 +66,7 @@ std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string file
 	}
 	else
 	{
-		//TODO: Add message
-		/*Message msg(
-			"File opening in ResourceManager::LoadTextResource() failed with filepath: " + filepath,
-			MessageType::Error,
-			AttentionLevel::MEDIUM
-		);*/
-		MessageError(ResourceMgr_id) << "Was not able to open file " + filepath + name;
+		MessageError(ResourceMgr_id) << "Failed to open " + filepath + name + " in LoadTextResource()";
 		return nullptr;
 	}
 
