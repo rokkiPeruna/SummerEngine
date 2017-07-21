@@ -27,14 +27,18 @@ Engine::Engine()
 	, m_frame_time()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
+	, m_messenger()
+	/*SYSTEMS*/
 	, m_movementSystem()
+	, m_animationSystem()
+	, m_renderSystem()
+	, m_collisionSystem()
+	/*MANAGERS*/
 	, m_entityMgr()
 	, m_sceneMgr()
 	, m_resourceMgr()
 	, m_renderMgr()
 	, m_compMgr()
-	, m_messenger()
-	, m_renderSystem()
 	
 {
 
@@ -184,7 +188,7 @@ void Engine::_initManagers()
 	m_compMgr.Initialize(m_path_to_user_files);
 
 	//Resource Manager | default path to shaders.. todo: change so that it can be read fomr the engine_config.json or delete that part from json
-	m_resourceMgr.Initialize("../../engine/shaders/");
+	m_resourceMgr.Initialize("../../engine/shaders/", m_path_to_user_files);
 
 	
 //	m_renderMgr.Initialize();
@@ -203,6 +207,9 @@ void Engine::_initSystems()
 
 	m_collisionSystem.Initialize();
 	m_systemContainer.emplace_back(&m_collisionSystem);
+
+	m_animationSystem.Initialize();
+	m_systemContainer.emplace_back(&m_animationSystem);
 }
 
 void Engine::_updateMgrs()

@@ -1,14 +1,14 @@
 #ifndef SE_ENGINE_H
 #define SE_ENGINE_H
+#define STB_IMAGE_IMPLEMENTATION	//This is needed for stb_image.h to reveal function implementations
+
+//STL includes:
 #include <string>
 
-//include STL
-
-//include external
+//External includes:
 #include <SDL2/include/SDL.h>
 #include <GLES2/glew.h>
 #include <nlohmann_json/json.hpp>
-
 
 //SE includes:
 #include <utility/Clock.h>
@@ -28,6 +28,7 @@
 #include <systems/RenderSystem.h>
 #include <systems/TransformSystem.h>
 #include <systems/CollisionSystem.h>
+#include <systems/AnimationSystem.h>
 
 //Managers
 #include <managers/IOManager.h>
@@ -76,6 +77,8 @@ public:
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
 	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
 	TransformSystem* GetTransformSystem() { return &m_transformSystem; }
+	RenderSystem* GetRenderSystem() { return &m_renderSystem; }
+	AnimationSystem* GetAnimationSystem() { return &m_animationSystem; }
 
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
@@ -144,6 +147,7 @@ private:
 	RenderSystem m_renderSystem;
 	TransformSystem m_transformSystem;
 	CollisionSystem m_collisionSystem;
+	AnimationSystem m_animationSystem;
 
 	///System ptr container
 	std::vector<ComponentSystem*> m_systemContainer;

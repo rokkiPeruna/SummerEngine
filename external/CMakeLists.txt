@@ -9,7 +9,6 @@ add_subdirectory(SDL2)
 #Include directories
 include_directories(SDL2/include)
 include_directories(Box2D)
-include_directories(STB)
 include_directories(glm)
 include_directories(nlohmann_json)
 include_directories(OpenGL)

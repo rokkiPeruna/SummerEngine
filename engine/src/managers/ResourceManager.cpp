@@ -1,5 +1,6 @@
 #include <managers/ResourceManager.h>
-#include <STB/stb_image.h>
+#include <core/Engine.h>
+#include <stb_image.h>
 
 namespace se
 {
@@ -7,6 +8,11 @@ namespace priv
 {
 
 ResourceManager::ResourceManager()
+	: m_rel_path_to_user_files("")
+	, m_res_fold_name("resources")
+	, m_textResourcesContainer{}
+	, m_imageResContainer{}
+	, m_shaderProgramContainer{}
 {
 
 }
@@ -17,9 +23,10 @@ ResourceManager::~ResourceManager()
 }
 
 //Recived path is where the actual shader files are.
-void ResourceManager::Initialize(const std::string sourcePath)
+void ResourceManager::Initialize(const std::string& sourcePath, const std::string& rel_path_to_user_files)
 {
 	_initializeShaders(sourcePath);
+	m_rel_path_to_user_files = rel_path_to_user_files;
 
 }
 
@@ -46,12 +53,12 @@ ShaderResource* ResourceManager::GetShaderProgram(std::string name)
 	}
 }
 
-std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string filepath, std::string name)
+TextResource* ResourceManager::LoadTextResource(std::string filepath, std::string name)
 {
 	std::ifstream file(filepath);
 	if (file.is_open())
 	{
-		TextResource res(filepath, name);
+		TextResource res(name);
 		std::string data;
 		std::string str;
 		while (std::getline(file, str))
@@ -61,7 +68,7 @@ std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string file
 		file.close();
 		res.SetTextData(data);
 		m_textResourcesContainer.emplace_back(res);
-		textResources.emplace(res.GetName(), std::make_shared<TextResource>(m_textResourcesContainer.back()));
+		textResources.emplace(name, &m_textResourcesContainer.back());
 		return textResources.at(name);
 	}
 	else
@@ -69,7 +76,31 @@ std::shared_ptr<TextResource> ResourceManager::LoadTextResource(std::string file
 		MessageError(ResourceMgr_id) << "Failed to open " + filepath + name + " in LoadTextResource()";
 		return nullptr;
 	}
+	
+}
 
+ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_vertically)
+{
+	if (imageResources.count(name))
+		return imageResources.at(name);
+
+	SEint w, h, bpp = 0;
+	std::string filepath(m_rel_path_to_user_files + m_res_fold_name);
+
+	stbi_set_flip_vertically_on_load(flip_vertically);
+
+	SEuchar* tmp = stbi_load(
+		filepath.c_str(),
+		&w,
+		&h,
+		&bpp, //This will tell if we have GL_RGB or GL_RGBA
+		0     //This is compression level, keep in 0
+	);
+	m_imageResContainer.emplace_back(ImageResource(name));
+	
+	m_imageResContainer.back().SetData(w, h, bpp, tmp);
+
+	return &m_imageResContainer.back();
 }
 
 void ResourceManager::_initializeShaders(const std::string path)
@@ -114,7 +145,7 @@ SEuint ResourceManager::_compileShader(const std::string path, const std::string
 	SEuint shader = glCreateShader(type);
 
 
-	std::shared_ptr<TextResource>(shaderData) = LoadTextResource(path + shaderName, shaderName);
+	TextResource* shaderData = LoadTextResource(path + shaderName, shaderName);
 	if (shaderData == nullptr)
 	{
 		//Error message sohuld be sent by Load Texture Resource function. In case of failure

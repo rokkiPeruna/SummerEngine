@@ -2,6 +2,7 @@
 #define SE_RESOURCEMANAGER_H
 
 //STL includes:
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -12,6 +13,7 @@
 //External includes:
 #include <OpenGL/GLES3/glew.h>
 #include <nlohmann_json/json.hpp>
+
 
 //SE includes:
 #include <managers/Manager.h>
@@ -37,7 +39,7 @@ public:
 	void operator=(const ResourceManager&) = delete;
 
 	///Initialize resource manager with starting scene's loadable resources
-	void Initialize(const std::string path);
+	void Initialize(const std::string& shaderpath, const std::string& rel_path_to_user_files);
 
 	///Delete all resources, uninitialize dependencies
 	void Uninitialize() override final;
@@ -47,20 +49,30 @@ public:
 
 	void ShowAndUpdateGUI() override final {};
 
-	///Load text resource. Returns shared_ptr to TextResource object.
-	std::shared_ptr<TextResource> LoadTextResource(std::string filepath, std::string name);
+	///Load text resource. Returns const pointer to TextResource object.
+	TextResource* LoadTextResource(std::string filepath, std::string name);
 	
-	///Load texture resource. Retunrs
+	///Load image resource. Returns const pointer to ImageResource object
+	ImageResource* LoadImageResource(std::string name, SEbool flip_vertically = false);
 
-	///Container holding shared pointers to text resources. Find text resource
-	///with it's name: textResources.at("resourceName")
-	std::map<std::string, std::shared_ptr<TextResource>> textResources;
+	///Map holding pointers to text resources. Resource name as key.
+	std::map<std::string, TextResource*> textResources;
+
+	///Map holding pointers to image resources. Resource name as key.
+	std::map<std::string, ImageResource*> imageResources;
 
 	ShaderResource* GetShaderProgram(std::string name);
 
 private:
+	///String naming the path to project's user files
+	std::string m_rel_path_to_user_files;
+
+	///Const string naming the folder containing resources
+	const std::string m_res_fold_name;
 
 	std::vector<TextResource> m_textResourcesContainer;
+
+	std::vector<ImageResource> m_imageResContainer;
 	
 	///Stores shader ID's as 'shader name' & 'shader resource' pair
 	std::map<std::string, ShaderResource> m_shaderProgramContainer;

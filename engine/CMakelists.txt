@@ -1,6 +1,7 @@
 #root/engine
 
 #Add include directories
+include_directories(${PROJECT_SOURCE_DIR}/external/STB)
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
 include_directories(${PROJECT_SOURCE_DIR}/engine/src)
 include_directories(${PROJECT_SOURCE_DIR}/external)
@@ -11,7 +12,6 @@ include_directories(${PROJECT_SOURCE_DIR}/libs)
 #Add library directories
 link_directories(${PROJECT_SOURCE_DIR}/libs)
 
-
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
@@ -21,6 +21,7 @@ set(COMPONENTS_FILES
     include/components/CTriangleShape.h
     include/components/CShape.h
     include/components/CTransformable.h
+	include/components/CTexture.h
     )
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -37,6 +38,8 @@ set(SYSTEMS_FILES
     src/systems/TransformSystem.cpp
 	include/systems/CollisionSystem.h
     src/systems/CollisionSystem.cpp
+	include/systems/AnimationSystem.h
+    src/systems/AnimationSystem.cpp
     )
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -112,6 +115,12 @@ set(IMGUI_FILES
 	)
 source_group("imgui" FILES ${IMGUI_FILES})
 #-----------------------------------------------------------------
+#STB
+set(STB_FILES
+	${PROJECT_SOURCE_DIR}/external/STB/stb_image.h
+	)
+source_group("stb" FILES ${STB_FILES})
+#-----------------------------------------------------------------
 #Main.cpp
 set(MAIN_CPP
 	src/main.cpp
@@ -156,6 +165,7 @@ add_executable(engine
 	${IDS_FILES}
 	${UTILITY_FILES}
 	${IMGUI_FILES}
+	${STB_FILES}
 	${MAIN_CPP}
 	#${JSON_FILES}
 	)
