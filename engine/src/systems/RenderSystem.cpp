@@ -69,7 +69,7 @@ void RenderSystem::Update(SEfloat deltaTime)
 			glUseProgram(CurrentShader->GetShaderID());
 
 			unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
-			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &trns_comp.modelMatrix[0][0]);
+			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &trns_comp.rotationMatrix[0][0]);
 
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, trns_comp.indices.size(), GL_UNSIGNED_INT, 0);

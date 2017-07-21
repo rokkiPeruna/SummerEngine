@@ -18,6 +18,8 @@ set(COMPONENTS_FILES
 	include/components/Component.h
 	include/components/CDynamic.h
 	include/components/CCollidable.h
+    include/components/CTriangleShape.h
+    include/components/CShape.h
     include/components/CTransformable.h
     )
 source_group("components" FILES ${COMPONENTS_FILES})
@@ -54,6 +56,8 @@ set(MANAGERS_FILES
 	src/managers/SceneManager.cpp
 	include/managers/Scene.h
 	src/managers/Scene.cpp
+	include/managers/RenderManager.h
+	src/managers/RenderManager.cpp
 	include/managers/IOManager.h
 	src/managers/IOManager.cpp
 	include/managers/IOLowLevelInputBinding.h
