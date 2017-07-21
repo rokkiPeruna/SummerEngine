@@ -124,7 +124,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
 
-		comp.rotationMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f));
+		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
 
 		if (ImGui::Button("Apply changes"))
 		{
@@ -139,6 +139,47 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 			component_obj.value().at("scal_x") = comp.scale.x;
 			component_obj.value().at("scal_y") = comp.scale.y;
 			component_obj.value().at("scal_z") = comp.scale.z;
+		}
+
+		if (ImGui::Button("Triangle"))
+		{
+			TransformableComponents.at(index_in_container) =
+				CTransformable
+				(
+					Vec3f(component_obj.value().at("pos_x"),
+						component_obj.value().at("pos_y"),
+						component_obj.value().at("pos_z")),
+					BASIC_SHAPE::TRIANGLE,
+					component_obj.value().at("size"),
+					Vec3f(component_obj.value().at("orig_x"),
+						component_obj.value().at("orig_y"),
+						component_obj.value().at("orig_z")),
+					component_obj.value().at("rot"),
+					Vec3f(component_obj.value().at("scal_x"),
+						component_obj.value().at("scal_y"),
+						component_obj.value().at("scal_z"))
+				);
+		}
+
+		if (ImGui::Button("Rectangle"))
+		{
+			
+			TransformableComponents.at(index_in_container) =
+				CTransformable
+				(
+					Vec3f(component_obj.value().at("pos_x"),
+						component_obj.value().at("pos_y"),
+						component_obj.value().at("pos_z")),
+					BASIC_SHAPE::RECTANGLE,
+					component_obj.value().at("size"),
+					Vec3f(component_obj.value().at("orig_x"),
+						component_obj.value().at("orig_y"),
+						component_obj.value().at("orig_z")),
+					component_obj.value().at("rot"),
+					Vec3f(component_obj.value().at("scal_x"),
+						component_obj.value().at("scal_y"),
+						component_obj.value().at("scal_z"))
+				);
 		}
 	}
 }
