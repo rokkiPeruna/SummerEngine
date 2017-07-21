@@ -39,14 +39,31 @@ void CollisionSystem::Update(SEfloat deltaTime)
 {
 	//Doesn't modify transform components, should be thread safe?
 	auto& transforms = TransformSystem::TransformableComponents;
-	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end()-1) ; ++itr)
+	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{
-		//Check for broad phase collision (AABB)
-		//for(auto& next)
+		//Translate bounding box to world coordinates
+		auto f_world_aabb = (*itr).aabb + Vec2f(transforms.at((*itr).ownerID).position);
+		for (auto& next = itr + 1; next != m_cCollidables.end(); ++next)
+		{
+			//Check for broad phase collision (AABB)
+			auto s_world_aabb = (*next).aabb + Vec2f(transforms.at((*next).ownerID).position);
 
-		transforms.at((*itr).ownerID);
-
-			//If true, check for narrow phase collision
+			if (
+				f_world_aabb.y > s_world_aabb.x &&
+				f_world_aabb.x < s_world_aabb.y &&
+				f_world_aabb.y > s_world_aabb.x &&
+				f_world_aabb.x < s_world_aabb.y
+				||
+				s_world_aabb.y > f_world_aabb.x &&
+				s_world_aabb.x < f_world_aabb.y &&
+				s_world_aabb.y > f_world_aabb.x &&
+				s_world_aabb.x < f_world_aabb.y
+				)
+			{
+				//If true, check for narrow phase collision
+				std::cout << "Colliding!" << std::endl;
+			}
+		}
 	}
 }
 
@@ -124,7 +141,7 @@ Component* CollisionSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 		return &m_cCollidables.at(index_in_container);
 	}
 	else
-		return nullptr;	
+		return nullptr;
 }
 
 }//namespace priv

@@ -24,7 +24,6 @@ public:
 
 	///Contains axis aligned bounding boxes min and max value. Used for broad phase collision check
 	Vec2f aabb;
-	Vec2f aabb_max;
 
 	///Contains points for collision polygon. Used for narrow phase collision check
 	std::vector<Vec2f> collision_polygon;
@@ -61,13 +60,13 @@ void inline from_json(const nlohmann::json& j, se::CCollidable& comp)
 	comp.aabb.x = j.at("min").get<SEfloat>();
 	comp.aabb.y = j.at("max").get<SEfloat>();
 
-	
-	SEint index = 0;
-	for(auto i = j.at("col_pol").begin(); i != j.at("col_pol").end(); i+2)
+	comp.collision_polygon.clear();
+	for(SEint i = 0; i < j.at("col_pol").size();)
 	{
 		comp.collision_polygon.emplace_back(Vec2f(
-			static_cast<SEfloat>(*i), static_cast<SEfloat>(*(i + 1))
+			static_cast<SEfloat>(j.at("col_pol").at(i)), static_cast<SEfloat>(j.at("col_pol").at(i+1))
 		));
+		i += 2;
 	}
 }
 

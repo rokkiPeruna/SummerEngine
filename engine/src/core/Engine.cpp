@@ -200,6 +200,9 @@ void Engine::_initSystems()
 
 	m_renderSystem.Initialize();
 	m_systemContainer.emplace_back(&m_renderSystem);
+
+	m_collisionSystem.Initialize();
+	m_systemContainer.emplace_back(&m_collisionSystem);
 }
 
 void Engine::_updateMgrs()
@@ -212,6 +215,7 @@ void Engine::_updateSystems(SEfloat deltaTime)
 {
 	m_movementSystem.Update(deltaTime);
 	m_transformSystem.Update(deltaTime);
+	m_collisionSystem.Update(deltaTime);
 }
 
 void Engine::_updateGUI()
