@@ -144,8 +144,18 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 
 	//Rewrite m_scene_name_list_file
 	m_sceneNamesJsonObject.clear(); //SE_TODO: Is there need to rewrite the object??
-	if(!util::ReadFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file, SceneMgr_id))
+	try { util::ReadFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file, SceneMgr_id); }
+	catch (const se_exc_file_open_failed& exc)
+	{
+		MessageError(SceneMgr_id) << exc.msg + ",\nreturning, scene not added, delete empty file in scene folder";
 		return false;
+	}
+	catch (const se_exc_json_parse_failed& exc)
+	{
+		MessageError(SceneMgr_id) << exc.msg + ",\nreturning, scene not added, delete empty file in scene folder";
+		return false;
+	}
+
 
 	auto& names_obj = m_sceneNamesJsonObject.find(m_scene_names_json_obj);
 
@@ -182,28 +192,28 @@ void SceneManager::LoadScene(std::string scenename)
 		m_gui_sceneAlreadyLoaded = true;
 		return;
 	}
-	m_sceneJsonObject.clear(); //SE_TODO: Is there need to rewrite the object??
+	m_sceneJsonObject.clear();
 
-	if(!util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id))
+	if (!util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id))
 		return;
-	
+
 	//Read scene's info to json object and create new current scene
 	auto& info_obj = m_sceneJsonObject.find(m_scene_struct_info_obj_name);
 	if (info_obj == m_sceneJsonObject.end())
 	{
 		MessageError(SceneMgr_id) << "Failed to open json object " + m_scene_struct_info_obj_name + "\nin LoadScene, scene not loaded!";
 		return;
-	}	
+	}
 	auto& name = info_obj.value().at("name");
 	SEint type_as_int = info_obj.value().at("type");
 	auto& w = info_obj.value().at("width");
 	auto& h = info_obj.value().at("heigth");
-	m_currentScene = { 
+	m_currentScene = {
 		name,
 		static_cast<SCENE_TYPE>(type_as_int),
 		w, h
 	};
-	//Check that m_scene_struct_main_obj_name is valid a
+	//Check that m_scene_struct_main_obj_name is valid
 	auto& main_obj = m_sceneJsonObject.find(m_scene_struct_main_obj_name);
 	if (main_obj == m_sceneJsonObject.end())
 	{
@@ -230,10 +240,8 @@ void SceneManager::SaveProgress()
 {
 	if (m_currentScene.GetType() == SCENE_TYPE::FAULTY)
 		return;
-	std::string path = m_rel_path_to_json_scenes;
-	path += m_currentScene.GetName();
-	path += m_scene_file_suffix;
-	std::ofstream file(path, std::ios::trunc);
+
+	std::ofstream file(m_rel_path_to_json_scenes + m_currentScene.GetName() + m_scene_file_suffix, std::ios::trunc);
 	if (!file.is_open())
 	{
 		MessageError(SceneMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_currentScene.GetName() + "\n, scene not saved";
@@ -257,7 +265,13 @@ void SceneManager::_loadSceneNames()
 		_createStructToScnNamesJson();
 		return;
 	}
-	nlohmann::json j = nlohmann::json::parse(data);
+	nlohmann::json j;
+	try { j = nlohmann::json::parse(data); }
+	catch (...) 
+	{
+		MessageError(SceneMgr_id) << "Failed to parse scene names file to json object in _loadSceneNames()";
+		return;
+	}
 
 	auto& names_obj = j.find(m_scene_names_json_obj);
 	if (names_obj == j.end())

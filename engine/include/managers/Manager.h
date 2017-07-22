@@ -4,6 +4,7 @@
 
 //SE includes:
 #include <core/Messages.h>
+#include <core/SE_exceptions.h>
 
 
 namespace se

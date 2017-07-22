@@ -21,21 +21,20 @@ namespace util
 ///2.param: ref to filepath (MUST include filename and file suffix, e.g. path/playerdata.json)
 ///3.param: OPTIONAL id of the sender. See SystemAndManagerIDList.h
 ///--
+///Throws se_exc_file_open_failed - exception if opening the file fails.
 ///Throws se_exc_json_parse_failed - exception if parsing fails.
 inline bool ReadFileToJson(nlohmann::json& j, std::string& filepath, SEuint64 sender = _nullSysMgr_id)
 {
 	std::ifstream data(filepath);
-	if (!data.is_open())
-	{
-		MessageError(sender) << "Failed to open " + filepath + " for\nreading in util::ReadFileToJson()";
-		return false;
-	}
 	try
-	{
+	{	
+		if (!data.is_open())
+			throw(priv::se_exc_file_open_failed("Failed to open " + filepath + " for\nreading in util::ReadFileToJson()"));	
 		j = nlohmann::json::parse(data);
 	}
-	catch (...)
+	catch (...) //Catch all exceptions nlohman::json::parse might throw and pass on simple se_exception
 	{
+		data.close();
 		throw(priv::se_exc_json_parse_failed("Failed to parse " + filepath + " to json object [" + j.type_name() + "]"));
 	}
 	data.close();

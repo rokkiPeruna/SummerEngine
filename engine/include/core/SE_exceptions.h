@@ -27,6 +27,21 @@ struct se_exc_json_parse_failed : public se_exception
 	se_exc_json_parse_failed(std::string _msg) : se_exception(_msg) {}
 };
 
+///se_exc_json_obj_faulty -exception can be used if finding json object from file or
+///another json object fails. If used, the message should contain json object/file from where the search was taking place
+///and name of the object failed to found.
+struct se_exc_json_obj_faulty : public se_exception
+{
+	se_exc_json_obj_faulty(std::string _msg) : se_exception(_msg) {}
+};
+
+///se_exc_file_open_failed -exception should be thrown if std::ifstream or std::ofstream fails to open given file.
+///If used, the message should be the filepath and filename which failed to open.
+struct se_exc_file_open_failed : public se_exception
+{
+	se_exc_file_open_failed(std::string _msg) : se_exception(_msg) {}
+};
+
 }//namespace priv
 }//namespace se
 

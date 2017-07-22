@@ -106,10 +106,7 @@ void Engine::EngineUpdate()
 
 bool Engine::_initJConfigObject()
 {
-	try
-	{
-		util::ReadFileToJson(j_config, m_path_to_user_files + m_eng_conf_file_name, Engine_id);
-	}
+	try { util::ReadFileToJson(j_config, m_path_to_user_files + m_eng_conf_file_name, Engine_id); }
 	catch (se_exc_json_parse_failed& exc)
 	{
 		std::cout << exc.msg << std::endl;
@@ -262,7 +259,7 @@ bool Engine::_gameLoop()
 		SEfloat deltaTime = m_frame_time.asSeconds();
 
 		_handleGameLoopEvents(gameloop);
-		
+
 		_updateMgrs();
 
 		_updateSystems(deltaTime);
@@ -290,7 +287,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 
 	m_frame_time = m_engine_clock.restart();
 	SEfloat deltaTime = m_frame_time.asSeconds();
-	
+
 	bool editorloop = true;
 	try
 	{
