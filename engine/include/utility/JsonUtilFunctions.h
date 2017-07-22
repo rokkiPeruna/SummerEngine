@@ -32,10 +32,11 @@ inline bool ReadFileToJson(nlohmann::json& j, std::string& filepath, SEuint64 se
 			throw(priv::se_exc_file_open_failed("Failed to open " + filepath + " for\nreading in util::ReadFileToJson()"));	
 		j = nlohmann::json::parse(data);
 	}
-	catch (...) //Catch all exceptions nlohman::json::parse might throw and pass on simple se_exception
+	catch (const std::exception& exc) //Catch all std::exceptions nlohman::json::parse might throw and pass on simple se_exception appended with exc.what()
 	{
 		data.close();
-		throw(priv::se_exc_json_parse_failed("Failed to parse " + filepath + " to json object [" + j.type_name() + "]"));
+		
+		throw(priv::se_exc_json_parse_failed("Failed to parse " + filepath + " to json object [" + j.type_name() + "],\nexception message: " + exc.what()));
 	}
 	data.close();
 	return true;

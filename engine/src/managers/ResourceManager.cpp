@@ -209,9 +209,10 @@ void ResourceManager::_initJConfigObject()
 	{
 
 		try { json_config = nlohmann::json::parse(data); }
-		catch (...) 
+		catch (const std::exception& exc)
 		{
-			MessageError(ResourceMgr_id) << "Failed to parse json object in _initJConfigObject()";
+			std::string what(exc.what());
+			MessageError(ResourceMgr_id) << "Failed to parse json object in _initJConfigObject(),\nexception message: " + what;
 			data.close();
 		}
 		data.close();

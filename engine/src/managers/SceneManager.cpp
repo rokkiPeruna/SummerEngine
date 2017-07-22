@@ -267,9 +267,10 @@ void SceneManager::_loadSceneNames()
 	}
 	nlohmann::json j;
 	try { j = nlohmann::json::parse(data); }
-	catch (...) 
+	catch (const std::exception& exc) 
 	{
-		MessageError(SceneMgr_id) << "Failed to parse scene names file to json object in _loadSceneNames()";
+		std::string what(exc.what());
+		MessageError(SceneMgr_id) << "Failed to parse scene names file to json object in _loadSceneNames(),\nexception message: " + what;
 		return;
 	}
 
