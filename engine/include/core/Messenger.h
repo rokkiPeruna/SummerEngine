@@ -44,7 +44,12 @@ public:
 	///Prints messages to  given log types
 	void PrintMessages(SEint flags);
 
-
+	///Prints all messages to file. Newest messages first. Debug messages printed after regulal messages.
+	///Messages and debug messages(if defined) are separated by /*------DEBUG STARTS------*/ in file.
+	///1.param: relative path to log file. Must have '/' as final chararacter.
+	///2.param: filename without suffix
+	///3.param: file's type (suffix: .txt, etc.)
+	void CrashDumbToFile(std::string& filepath, std::string& filename, std::string& suffix);
 
 private:
 	///Prints console messages

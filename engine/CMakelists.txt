@@ -81,6 +81,7 @@ set(CORE_FILES
 	include/core/Messenger.h
 	src/core/Messenger.cpp
 	include/core/gui_values.h
+	include/core/SE_exceptions.h
 	)
 source_group("core" FILES ${CORE_FILES})
 

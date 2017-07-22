@@ -1,0 +1,20 @@
+MESSAGE TYPE: INFO
+Compiling test.frag
+---
+MESSAGE TYPE: INFO
+Compiling test.vert
+---
+MESSAGE TYPE: INFO
+Compiling defaultShader.frag
+---
+MESSAGE TYPE: INFO
+Compiling defaultShader.vert
+---
+MESSAGE TYPE: INFO
+Applying window settings..
+---
+
+
+
+/*------DEBUG STARTS------*/
+

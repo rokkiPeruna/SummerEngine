@@ -4,6 +4,7 @@
 
 //STL includes:
 #include <string>
+#include <cassert>
 
 //External includes:
 #include <SDL2/include/SDL.h>
@@ -14,6 +15,8 @@
 #include <utility/Clock.h>
 #include <utility/Time.h>
 #include <core/Messages.h>
+
+#include <core/SE_exceptions.h>
 
 #include <core/gui_values.h>
 
@@ -131,9 +134,13 @@ private:
 	void _updateGUI();
 
 	//Game loop and editor loop
-	bool _gameLoop();
+	SEbool _gameLoop();
 	void _editorLoop(SEbool& exitProgram);
-	bool m_inEditorLoop;
+	SEbool m_inEditorLoop;
+
+	SEbool _handleEditorEvents(SEbool& editorloop);
+
+	SEbool _handleGameLoopEvents(SEbool& gameloop);
 
 	///Clock and time
 	Clock m_engine_clock;

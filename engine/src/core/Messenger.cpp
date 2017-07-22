@@ -58,6 +58,49 @@ void Messenger::PrintMessages(SEint flags)
 	ImGui::End();
 }
 
+void Messenger::CrashDumbToFile(std::string& filepath, std::string& filename, std::string& suffix)
+{
+	std::ofstream file_to_write(filepath + filename + suffix, std::ios::trunc);
+	if (!file_to_write.is_open())
+	{
+		std::cout << "Failed to open " + filepath + filename + suffix + " for crash dumb!!";
+		return;
+	}
+	for (auto& m = m_messages.rbegin(); m != m_messages.rend(); ++m)
+	{
+		std::string type = "MESSAGE TYPE: ";
+		if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_NO_TYPE)
+			type += "NO_TYPE\n";
+		else if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_INFO)
+			type += "INFO\n";
+		else if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_WARNING)
+			type += "WARNING\n";
+		else if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_ERROR)
+			type += "ERROR\n";
+
+		file_to_write << type << (*m)->msg << "\n---\n";
+	}
+
+#ifndef NDEBUG
+	file_to_write << "\n\n\n/*------DEBUG STARTS------*/\n\n";
+	for (auto& m = m_debugMessages.rbegin(); m != m_debugMessages.rend(); ++m)
+	{
+		std::string type = "[DEBUG]MESSAGE TYPE: ";
+		if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_NO_TYPE)
+			type += "NO_TYPE\n";
+		else if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_INFO)
+			type += "INFO\n";
+		else if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_WARNING)
+			type += "WARNING\n";
+		else if ((*m)->msgtype == MESSAGE_TYPE_INTERNAL::_ERROR)
+			type += "ERROR\n";
+
+		file_to_write << type << (*m)->msg << "\n---";
+	}
+#endif
+	file_to_write.close();
+}
+
 void Messenger::_printToConsole()
 {
 	ImGui::Checkbox("No type", &m_msgtype_default_checkbox); ImGui::SameLine();

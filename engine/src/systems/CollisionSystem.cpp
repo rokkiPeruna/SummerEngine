@@ -38,6 +38,9 @@ void CollisionSystem::Uninitialize()
 void CollisionSystem::Update(SEfloat deltaTime)
 {
 	//Doesn't modify transform components, should be thread safe?
+	if (m_cCollidables.empty())
+		return;
+
 	auto& transforms = TransformSystem::TransformableComponents;
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{
