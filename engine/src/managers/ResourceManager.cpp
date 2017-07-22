@@ -207,7 +207,13 @@ void ResourceManager::_initJConfigObject()
 	std::ifstream data(REL_PATH_TO_SHADER_CONFIG);
 	if (data.is_open())
 	{
-		json_config = nlohmann::json::parse(data);
+
+		try { json_config = nlohmann::json::parse(data); }
+		catch (...) 
+		{
+			MessageError(ResourceMgr_id) << "Failed to parse json object in _initJConfigObject()";
+			data.close();
+		}
 		data.close();
 	}
 	else
