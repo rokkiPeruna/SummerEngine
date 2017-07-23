@@ -12,12 +12,6 @@
 namespace se
 {
 
-enum BASIC_SHAPE
-{
-	TRIANGLE = 1,
-	RECTANGLE,
-	CIRCLE
-};
 
 ///Brief : Position, rotation and scale. Every object has transformable component
 
@@ -25,30 +19,14 @@ class CTransformable : public Component
 {
 public:
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
-	CTransformable(Vec3f _pos = Vec3f(0.0f), BASIC_SHAPE type = BASIC_SHAPE::TRIANGLE, Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f _scale = Vec3f(1.0f))
+	CTransformable(Vec3f _pos = Vec3f(0.0f), Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f _scale = Vec3f(1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)
 		, position(_pos)
 		, origin(orig)
 		, rotation(rot)
 		, scale(_scale)
-		, shape_index(-1)
 		, points {}
 	{
-		SEfloat size = 0.5;
-
-		switch (type)
-		{
-
-		
-
-		case BASIC_SHAPE::TRIANGLE: default:
-		{
-
-			points.emplace_back(Vec3f(0.0f, size, 0.0f));
-			points.emplace_back(Vec3f(size, -size, 0.0f));
-			points.emplace_back(Vec3f(-size, -size, 0.0f));
-
-			origin = Vec3f(0.0f);
 			
 			Mat4f translationMatrix(1.0f);
 			translationMatrix = glm::translate(translationMatrix, position);
@@ -58,53 +36,9 @@ public:
 
 			Mat4f scaleMatrix(1.0f);
 			scaleMatrix = glm::scale(scaleMatrix, scale);
+						
 			modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 			
-			indices.emplace_back(0);
-			indices.emplace_back(1);
-			indices.emplace_back(2);
-			break;
-		}
-
-		case BASIC_SHAPE::RECTANGLE:
-		{
-			points.emplace_back(Vec3f(-size, -size, 0.0f));
-			points.emplace_back(Vec3f(size, -size, 0.0f));
-			points.emplace_back(Vec3f(size, size, 0.0f));
-			points.emplace_back(Vec3f(-size, size, 0.0f));
-			origin = Vec3f(0.0f);
-			
-			Mat4f translationMatrix(
-				1.0f);
-			translationMatrix = glm::translate(translationMatrix, position);
-
-			Mat4f rotationMatrix(1.0f);
-			rotationMatrix = glm::rotate(rotationMatrix, rotation, Vec3f(0.0f, 0.0f, 1.0f));
-
-			Mat4f scaleMatrix(1.0f);
-			scaleMatrix = glm::scale(scaleMatrix, scale);
-
-			modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
-
-			indices.emplace_back(0);
-			indices.emplace_back(1);
-			indices.emplace_back(2);
-
-			indices.emplace_back(2);
-			indices.emplace_back(3);
-			indices.emplace_back(0);
-
-
-			break;
-		}
-
-		case BASIC_SHAPE::CIRCLE:
-		{
-			break;
-		}
-
-		}
-
 	};
 
 	
@@ -113,8 +47,6 @@ public:
 	Vec3f scale;
 
 	Vec3f origin;
-
-	SEint shape_index;
 
 	Mat4f modelMatrix;
 	std::vector<Vec3f> points;

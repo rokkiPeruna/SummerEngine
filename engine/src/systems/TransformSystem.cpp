@@ -67,6 +67,10 @@ void TransformSystem::OnEntityRemoved(Entity& e)
 	{
 		TransformableComponents.at(e.id) = CTransformable();
 	}
+	if (e.components.count(COMPONENT_TYPE::SHAPE))
+	{
+		m_free_cShape_indices.push(e.components.at(COMPONENT_TYPE::SHAPE));
+	}
 }
 
 SEuint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
@@ -98,12 +102,16 @@ SEuint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type
 	}
 }
 
-void TransformSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+void TransformSystem::RemoveComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
 		MessageError(TransformSys_id) << "Tried to remove transform component from entity, not possible!!!";
 		return;
+	}
+	if (component_type == COMPONENT_TYPE::SHAPE)
+	{
+		m_free_cShape_indices.push(_removeComponent_helper(e, component_type, entity_obj, m_cShapes));
 	}
 	else
 	{
@@ -130,7 +138,15 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
 
-		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
+		for (auto shapeComponent : m_cShapes)
+		{
+			if (shapeComponent.ownerID == comp.ownerID)
+			{
+				
+			}
+		}
+		
+//		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
 
 		if (ImGui::Button("Apply changes"))
 		{
@@ -146,44 +162,31 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 			component_obj.value().at("scal_z") = comp.scale.z;
 		}
 
-		if (ImGui::Button("Triangle"))
-		{
-			TransformableComponents.at(index_in_container) =
-				CTransformable
-				(
-					Vec3f(component_obj.value().at("pos_x"),
-						component_obj.value().at("pos_y"),
-						component_obj.value().at("pos_z")),
-					BASIC_SHAPE::TRIANGLE,
-					Vec3f(component_obj.value().at("orig_x"),
-						component_obj.value().at("orig_y"),
-						component_obj.value().at("orig_z")),
-					component_obj.value().at("rot"),
-					Vec3f(component_obj.value().at("scal_x"),
-						component_obj.value().at("scal_y"),
-						component_obj.value().at("scal_z"))
-				);
-		}
+	}
 
+	if (type == COMPONENT_TYPE::SHAPE)
+	{
+		if (ImGui::Button("Triangle")) 
+		{
+			m_cShapes.at(index_in_container) = CShape();
+		}
 		if (ImGui::Button("Rectangle"))
 		{
-			
-			TransformableComponents.at(index_in_container) =
-				CTransformable
-				(
-					Vec3f(component_obj.value().at("pos_x"),
-						component_obj.value().at("pos_y"),
-						component_obj.value().at("pos_z")),
-					BASIC_SHAPE::RECTANGLE,
-					Vec3f(component_obj.value().at("orig_x"),
-						component_obj.value().at("orig_y"),
-						component_obj.value().at("orig_z")),
-					component_obj.value().at("rot"),
-					Vec3f(component_obj.value().at("scal_x"),
-						component_obj.value().at("scal_y"),
-						component_obj.value().at("scal_z"))
-				);
+			m_cShapes.at(index_in_container) = CShape(4);
 		}
+		if (ImGui::Button("Circle"))
+		{
+			m_cShapes.at(index_in_container) = CShape(30);
+		}
+		if (ImGui::Button("Add indie"))
+		{
+			m_cShapes.at(index_in_container) = CShape(++m_cShapes.at(index_in_container).num_points);
+		}
+		if (ImGui::Button("Remove indice") && m_cShapes.at(index_in_container).num_points > 3)
+		{
+			m_cShapes.at(index_in_container) = CShape(--m_cShapes.at(index_in_container).num_points);
+		}
+
 	}
 }
 
@@ -194,6 +197,10 @@ Component* TransformSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 		if (type == COMPONENT_TYPE::TRANSFORMABLE)
 		{
 			return &TransformableComponents.at(index_in_container);
+		}
+		if (type == COMPONENT_TYPE::SHAPE)
+		{
+			return &m_cShapes.at(index_in_container);
 		}
 		else
 			return nullptr;
