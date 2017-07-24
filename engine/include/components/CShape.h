@@ -12,60 +12,95 @@
 namespace se
 {
 
-enum BASIC_SHAPE
-{
-	TRIANGLE = 1,
-	RECTANGLE,
-	SQUARE
-};
-
 
 class CShape : public Component
 {
 
 public:
 
-	CShape(SEfloat size, BASIC_SHAPE type)
-		: Component(COMPONENT_TYPE::FAULTY_TYPE)
+	CShape(SEushort num_points = 3)
+		: Component(COMPONENT_TYPE::SHAPE)
 	{
-		switch (type)
+
+		SEfloat theta = 2 * 3.1415926 / SEfloat(num_points);
+		SEfloat tangential_factor = tanf(theta);
+		SEfloat radial_factor = cosf(theta);
+
+		SEfloat x = 0.25;
+		SEfloat y = 0.25;
+
+		if (num_points < 4)
 		{
-		case BASIC_SHAPE::TRIANGLE:
-		{
-			SEfloat halfsize = size / 2.0f;
-			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(0.0f, halfsize, 0.0f));
-			origin = Vec3f(0.0f);
+			x = 0;
+			y = 0.5;
 		}
 
-		case BASIC_SHAPE::RECTANGLE:
+		for (SEushort i = 0; i < num_points; ++i)
 		{
-			SEfloat halfsize = size / 2.0f;
-			points.emplace_back(Vec3f(-halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, -halfsize, 0.0f));
-			points.emplace_back(Vec3f(halfsize, halfsize, 0.0f));
-			points.emplace_back(Vec3f(-halfsize, halfsize, 0.0f));
-			origin = Vec3f(0.0f);
+			points.emplace_back(x, y, 0.0);
 
+			SEfloat tx = -y;
+			SEfloat ty = x;
+
+			x += tx * tangential_factor;
+			y += ty * tangential_factor;
+
+			x *= radial_factor;
+			y *= radial_factor;
 		}
 
-		case BASIC_SHAPE::SQUARE:
+		for (SEushort i = 0; i < num_points - 2; ++i)
 		{
-
-
-
+			indices.emplace_back(0);
+			indices.emplace_back(i + 1);
+			indices.emplace_back(i + 2);
 		}
+	};
 
-		}
-	}
+	SEuint my_Transform;
+
 	std::vector<Vec3f> points;
-	Vec3f origin;
+	std::vector<SEushort> indices;
 
 private:
-
 };
 
+
+void inline to_json(nlohmann::json& j, const se::CShape& comp)
+{
+	j = nlohmann::json
+	{
+		//Common component data
+		{ "_type", static_cast<SEint>(comp.type) },
+		{ "_ownerID", comp.ownerID },
+		//Component specific data
+	};
+
+	j.push_back({ "points",{} });
+	auto& itr = j.find("points");
+	for (int i = 0; i < comp.points.size(); ++i)
+	{
+		(*itr).push_back(comp.points.at(i).x);
+		(*itr).push_back(comp.points.at(i).y);
+		(*itr).push_back(comp.points.at(i).z);
+	}
+}
+
+void inline from_json(const nlohmann::json& j, se::CShape& comp)
+{
+	//Common component data
+	comp.type = static_cast<COMPONENT_TYPE>(j.at("_type").get<SEint>());
+	comp.ownerID = j.at("_ownerID").get<SEint>();
+
+	//Common spesific data
+
+	comp.points.clear();
+	std::vector<SEfloat> temp = j["points"];
+	for (int i = 0; i < temp.size(); i += 3)
+	{
+		comp.points.emplace_back(Vec3f(temp.at(i), temp.at(i + 1), temp.at(i + 2)));
+	}
+}
 
 } // !namespace se
 

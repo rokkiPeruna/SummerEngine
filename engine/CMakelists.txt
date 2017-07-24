@@ -18,6 +18,7 @@ set(COMPONENTS_FILES
 	include/components/Component.h
 	include/components/CDynamic.h
 	include/components/CCollidable.h
+    include/components/CShape.h
     include/components/CTransformable.h
 	include/components/CTexture.h
     )
