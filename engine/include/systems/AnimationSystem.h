@@ -60,6 +60,9 @@ private:
 	std::vector<CTexture> m_cTextures;
 	std::queue<SEint> m_free_cTexture_indices;
 
+	///Const string naming the default texture
+	const std::string m_def_tex_name;
+
 	///Container holding all texture resources' names for use in gui.
 	std::vector<std::string> m_tex_res_names;
 
@@ -78,7 +81,7 @@ private:
 	void _assignTexture(const std::string& texture_name, CTexture& tex_comp);
 
 	///Create texture from pixel data.
-	///1.param: Name of the texture with correct suffix (e.g. player.png)
+	///1.param: Name of the texture with correct suffix (e.g. player.png).
 	///--
 	///Returns pair(SEuint, SEbool) containing handle (SEint) to that texture to be used by OpenGL and shaders and boolean defining if texture has alpha channel. 
 	std::pair<SEuint, SEbool> _createTexture(const std::string& texture_name);

@@ -1,10 +1,110 @@
 {
-"scene_info":{
-	"name":"level1",
-	"type":2,
-	"width":62,
-	"heigth":62
-},
-"entities":{
-  }
+    "entities": {
+        "bugikoviela": {
+            "collidable": {
+                "_ownerID": 2,
+                "_type": 2,
+                "col_pol": [
+                    -0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464,
+                    0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464
+                ],
+                "max": 0.5,
+                "min": -0.5
+            },
+            "dynamic": {
+                "_ownerID": 2,
+                "_type": 1,
+                "acc_x": 0.0,
+                "acc_y": 0.0,
+                "acc_z": 0.0,
+                "velo_x": 0.0,
+                "velo_y": 0.0,
+                "velo_z": 0.0
+            },
+            "id": 2,
+            "shape": {
+                "_ownerID": 2,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 2,
+                "_type": 3,
+                "tex_name": "testTexture.jpg"
+            },
+            "transformable": {
+                "_ownerID": 2,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "fixed": {
+            "id": 3,
+            "shape": {
+                "_ownerID": 3,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 3,
+                "_type": 3,
+                "tex_name": "default_texture.png"
+            },
+            "transformable": {
+                "_ownerID": 3,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        }
+    },
+    "scene_info": {
+        "heigth": 62,
+        "name": "level1",
+        "type": 2,
+        "width": 62
+    }
 }

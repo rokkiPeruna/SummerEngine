@@ -99,7 +99,9 @@ SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::COLLIDABLE)
 	{
-		return _createComponent_helper(entity, component_type, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		SEint testi = _createComponent_helper(entity, component_type, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		auto bugi = m_cCollidables.at(testi).ownerID;
+		return testi;
 	}
 	else
 	{

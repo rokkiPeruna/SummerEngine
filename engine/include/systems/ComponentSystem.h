@@ -67,9 +67,9 @@ public:
 
 protected:
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
-	//Returns pointer to newly created component if more measures need to be done in system's OnEntityAdded
+	//Returns index off the newly created component if more measures need to be done in system's OnEntityAdded
 	template<typename T>
-	inline T* _onEntityAdded_helper(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
+	inline SEint _onEntityAdded_helper(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
 	{
 		T component = entity_obj.value().at(CompTypeAsString.at(component_type));
 		//If there is available free indice
@@ -80,7 +80,7 @@ protected:
 			container.at(free_index) = component;
 			e.components.at(component_type) = free_index;
 			_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(free_index)));
-			return &container.at(free_index);
+			return free_index;
 		}
 		//If not, emplace back
 		else
@@ -89,7 +89,7 @@ protected:
 			SEint index = container.size() - 1;
 			e.components.at(component_type) = index;
 			_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(index)));
-			return &container.back();
+			return index;
 		}
 	}
 
@@ -103,17 +103,15 @@ protected:
 			index = free_indices.front();
 			free_indices.pop();
 			container.at(index) = T();
-			e.components.emplace(type, index);
-			entity_obj.value().push_back({ CompTypeAsString.at(type), container.at(index) });
 		}
 		else
 		{
 			container.emplace_back(T());
-			index = container.size() - 1; 
-			e.components.emplace(type, index);
-			entity_obj.value().push_back({ CompTypeAsString.at(type), container.back() });
+			index = container.size() - 1;
 		}
+		e.components.emplace(type, index);
 		_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(index)));
+		entity_obj.value().push_back({ CompTypeAsString.at(type), container.at(index) });
 		return index;
 	}
 

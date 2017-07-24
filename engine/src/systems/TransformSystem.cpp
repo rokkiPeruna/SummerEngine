@@ -63,8 +63,8 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 	}
 	if (e.components.count(COMPONENT_TYPE::SHAPE))
 	{
-		CShape* tmp = _onEntityAdded_helper(e, COMPONENT_TYPE::SHAPE, entity_obj, m_cShapes, m_free_cShape_indices);
-		tmp->my_Transform = e.id;
+		SEint index = _onEntityAdded_helper(e, COMPONENT_TYPE::SHAPE, entity_obj, m_cShapes, m_free_cShape_indices);
+		m_cShapes.at(index).my_Transform = e.id;
 	}
 }
 
@@ -166,33 +166,39 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 
 	if (type == COMPONENT_TYPE::SHAPE)
 	{
-		//Store the id of the transform this shape had so we can later assing it back to a newly formed shape
+		//Store the id of the transform this shape had so we can later assing it back to a newly formed shape.
+		//Also store owner id
 		SEint id = m_cShapes.at(index_in_container).my_Transform;
-		
+		SEint owner_id = m_cShapes.at(index_in_container).ownerID;
 		if (ImGui::Button("Triangle")) 
 		{
 			m_cShapes.at(index_in_container) = CShape();
 			m_cShapes.at(index_in_container).my_Transform = id;
+			m_cShapes.at(index_in_container).ownerID = owner_id;
 		}
 		if (ImGui::Button("Rectangle"))
 		{
 			m_cShapes.at(index_in_container) = CShape(4);
 			m_cShapes.at(index_in_container).my_Transform = id;
+			m_cShapes.at(index_in_container).ownerID = owner_id;
 		}
 		if (ImGui::Button("Circle"))
 		{
 			m_cShapes.at(index_in_container) = CShape(30);
 			m_cShapes.at(index_in_container).my_Transform = id;
+			m_cShapes.at(index_in_container).ownerID = owner_id;
 		}
 		if (ImGui::Button("Add indie"))
 		{
 			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() + 1);
 			m_cShapes.at(index_in_container).my_Transform = id;
+			m_cShapes.at(index_in_container).ownerID = owner_id;
 		}
 		if (ImGui::Button("Remove indice") && m_cShapes.at(index_in_container).points.size() > 3)
 		{
 			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() - 1);
 			m_cShapes.at(index_in_container).my_Transform = id;
+			m_cShapes.at(index_in_container).ownerID = owner_id;
 		}
 
 	}

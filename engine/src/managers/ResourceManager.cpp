@@ -35,7 +35,7 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 	//Get all loadable textures' file names
 	std::string path_to_textures = m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name;
 
-	//This uses std::experimental::filesystem.
+	//This uses std::experimental::filesystem. //SE_TODO: Get solution that doesn't need C++17 features :D
 	std::vector<std::string> tex_names{};
 	for (auto& f : std::experimental::filesystem::directory_iterator(path_to_textures))
 	{

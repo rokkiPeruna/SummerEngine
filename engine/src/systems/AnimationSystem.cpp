@@ -14,6 +14,7 @@ namespace priv
 AnimationSystem::AnimationSystem()
 	: m_cTextures{}
 	, m_free_cTexture_indices{}
+	, m_def_tex_name("default_texture.png")
 	, m_tex_res_names{}
 	, m_res_mgr(nullptr)
 	, m_texture_map{}
@@ -34,6 +35,9 @@ AnimationSystem::~AnimationSystem()
 void AnimationSystem::Initialize()
 {
 	m_res_mgr = Engine::Instance().GetResourceManager();
+
+	//Load default texture to be used as default when new CTexture components are added
+	m_texture_map.emplace(m_def_tex_name, _createTexture(m_def_tex_name));
 }
 
 void AnimationSystem::Uninitialize()
@@ -56,8 +60,9 @@ void AnimationSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 {
 	if (e.components.count(COMPONENT_TYPE::TEXTURE))
 	{
-		CTexture* tmp = _onEntityAdded_helper(e, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
-		_assignTexture(tmp->name, *tmp);
+		SEint index = _onEntityAdded_helper(e, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
+		CTexture& comp = m_cTextures.at(index);
+		_assignTexture(comp.name, comp);
 	}
 }
 
@@ -74,7 +79,10 @@ SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
-		return _createComponent_helper<CTexture>(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
+		SEint index = _createComponent_helper<CTexture>(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
+		_assignTexture(m_def_tex_name, m_cTextures.at(index));
+		entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TEXTURE)).at("tex_name") = m_def_tex_name;
+		return index;
 	}
 	else
 	{
@@ -111,11 +119,12 @@ void AnimationSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 			}
 
 			//Get available textures
-			for (auto t : m_tex_res_names)
+			for (auto t_n : m_tex_res_names)
 			{
-				if (ImGui::Button(t.c_str()))
+				if (ImGui::Button(t_n.c_str()))
 				{
-					_assignTexture(t, m_cTextures.at(index_in_container));
+					_assignTexture(t_n, m_cTextures.at(index_in_container));
+					component_obj.value().at("tex_name") = t_n;
 				}
 			}
 		}
