@@ -112,6 +112,7 @@ bool Engine::_initJConfigObject()
 		std::cout << "There is problem with json file containing engine configurations.\nCheck file for syntax errors!" << std::endl;
 		return false;
 	}
+	return true;
 }
 
 void Engine::_findPathToUserFiles()
@@ -355,6 +356,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 			}
 		}
 	}
+	return true;
 }
 
 SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)

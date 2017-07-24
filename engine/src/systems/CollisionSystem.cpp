@@ -95,7 +95,7 @@ void CollisionSystem::OnEntityRemoved(Entity& e)
 
 /*-----------------EDITOR METHODS--------------------*/
 
-SEuint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::COLLIDABLE)
 	{
