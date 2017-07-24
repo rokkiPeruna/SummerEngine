@@ -20,7 +20,8 @@ enum class COMPONENT_TYPE : SEint
 	TRANSFORMABLE = 0,
 	DYNAMIC,
 	COLLIDABLE,
-	TEXTURE
+	TEXTURE,
+	SHAPE
 };
 
 namespace priv
@@ -32,7 +33,8 @@ static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 	{ COMPONENT_TYPE::TRANSFORMABLE, "transformable" },
 	{ COMPONENT_TYPE::DYNAMIC, "dynamic" },
 	{ COMPONENT_TYPE::COLLIDABLE, "collidable" },
-	{ COMPONENT_TYPE::TEXTURE, "texture" }
+	{ COMPONENT_TYPE::TEXTURE, "texture" },
+	{ COMPONENT_TYPE::SHAPE, "shape" }
 };
 }//namespace priv
 }//namespace se
