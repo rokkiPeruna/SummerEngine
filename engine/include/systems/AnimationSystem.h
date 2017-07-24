@@ -63,6 +63,7 @@ private:
 	///Assing texture
 
 	///OLET TÄSSÄ
+	SEint remove;
 
 };
 
