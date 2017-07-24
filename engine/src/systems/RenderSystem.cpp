@@ -1,6 +1,6 @@
 #include <systems/RenderSystem.h>
 #include <core/Engine.h>
-
+#include <systems/AnimationSystem.h>
 
 namespace se
 {
@@ -34,13 +34,21 @@ void RenderSystem::Uninitialize()
 void RenderSystem::Update(SEfloat deltaTime)
 {
 	//Get entities container
-	
+
 
 	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 
 		if (entity.second.components.count(COMPONENT_TYPE::SHAPE))
 		{
+			float texCoords[] =
+			{
+				1.0f, 1.0f,
+				0.0f, 1.0f,
+				0.0f, 0.0f,
+				0.0f, 1.0f
+			};
+
 			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
 
 
@@ -63,15 +71,33 @@ void RenderSystem::Update(SEfloat deltaTime)
 
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0)), (void*)0);
 			glEnableVertexAttribArray(0);
+
+			if (entity.second.components.count(COMPONENT_TYPE::TEXTURE))
+			{
+				auto i = GetTextureComponent(entity.second.components.at(COMPONENT_TYPE::TEXTURE))->handle;
+				if (i != -1)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, GetTextureComponent(entity.second.components.at(COMPONENT_TYPE::TEXTURE))->handle);
+
+					SEuint textureLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "fragment_texture");
+					glUniform1i(textureLocation, 0);
+
+					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, (void*)0);
+					glEnableVertexAttribArray(2);
+				}
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
 
 			glUseProgram(CurrentShader->GetShaderID());
 
-			unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
-			Mat4f haxor = glm::lookAt(Vec3f(0,0,-3),Vec3f(0), Vec3f(0,1,0)) * m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix;
+			SEuint transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
+			Mat4f haxor = glm::lookAt(Vec3f(0, 0, -3), Vec3f(0), Vec3f(0, 1, 0)) * m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix;
 			Mat4f haxor2 = glm::perspective(45.f, 1200.f / 800.f, 0.1f, 100.f) * haxor;
 			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &haxor2[0][0]);
-			
+
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, shape_comp.indices.size(), GL_UNSIGNED_SHORT, 0);
 			glBindVertexArray(0);

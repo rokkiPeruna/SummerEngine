@@ -20,7 +20,8 @@
 			"attributes" :
 			{
 				"0" : "vertexPosition",
-				"1" : "vertexColor"
+				"1" : "vertexColor",
+                "2" : "vertexTexture"
 			}
 			
 
