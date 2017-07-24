@@ -56,7 +56,7 @@ void DummySystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEuint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == component type)
 	{

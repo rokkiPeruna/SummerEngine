@@ -55,7 +55,7 @@ public:
 	/*-----------------EDITOR METHODS--------------------*/
 
 	///Creates component to entity and add it to container and jsonobject
-	SEuint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
+	SEint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
 	
 	///Removes component from entity and container and json object
 	void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;

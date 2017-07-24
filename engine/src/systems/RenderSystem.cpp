@@ -105,7 +105,7 @@ void RenderSystem::OnEntityRemoved(Entity& entity)
 	
 }
 
-SEuint RenderSystem::CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&)
+SEint RenderSystem::CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&)
 {
 	return 0;
 }
