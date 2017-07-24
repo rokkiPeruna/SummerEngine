@@ -75,6 +75,7 @@ private:
 
 	///OLET TÄSSÄ
 	SEint remove;
+	SEint tama_on_vittu_change;
 
 };
 
