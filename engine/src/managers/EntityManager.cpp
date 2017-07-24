@@ -25,8 +25,6 @@ EntityManager::EntityManager()
 	, m_free_entity_ids{}
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
-	//Allocate space for m_entities_map so that we possibly avoid rehashing of keys //SE_TODO: This value should be calculated somehow from the amount of possible textures!
-	m_entities_map.reserve(100);
 }
 
 EntityManager::~EntityManager()

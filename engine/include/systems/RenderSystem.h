@@ -57,7 +57,7 @@ public:
 
 	void OnEntityRemoved(Entity& entity) override final;
 
-	SEint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
+	SEuint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
 
 	void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
 

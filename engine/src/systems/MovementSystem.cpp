@@ -70,7 +70,7 @@ void MovementSystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEuint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::DYNAMIC)
 	{

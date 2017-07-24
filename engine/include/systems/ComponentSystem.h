@@ -54,7 +54,7 @@ public:
 	///CreateComponent adds default constructed component of given type to container and adds component's index in that container
 	///to Entity's components map. Also writes component to current scene file format's iterator.
 	///Returns component's index in container. See MovementSystem's implementation for details.
-	virtual SEint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
+	virtual SEuint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
 
 	///RemoveComponent "removes" component from entity and system(marks component as free to be replaced)
 	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;

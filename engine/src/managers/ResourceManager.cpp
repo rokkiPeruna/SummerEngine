@@ -53,7 +53,7 @@ ShaderResource* ResourceManager::GetShaderProgram(std::string name)
 	}
 }
 
-TextResource* ResourceManager::LoadTextResource(const std::string& filepath, const std::string& name)
+TextResource* ResourceManager::LoadTextResource(std::string filepath, std::string name)
 {
 	std::ifstream file(filepath);
 	if (file.is_open())
@@ -79,7 +79,7 @@ TextResource* ResourceManager::LoadTextResource(const std::string& filepath, con
 	
 }
 
-ImageResource* ResourceManager::LoadImageResource(const std::string& name, SEbool flip_vertically)
+ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_vertically)
 {
 	if (imageResources.count(name))
 		return imageResources.at(name);

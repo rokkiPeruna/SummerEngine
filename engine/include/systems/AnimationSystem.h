@@ -1,9 +1,6 @@
 #ifndef SE_ANIMATION_SYSTEM_H
 #define SE_ANIMATION_SYSTEM_H
 
-//STL includes:
-#include <unordered_map>
-
 //SE includes:
 #include <systems/ComponentSystem.h>
 #include <components/CTexture.h>
@@ -46,7 +43,7 @@ public:
 
 	/*-----------------EDITOR METHODS--------------------*/
 
-	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
+	SEuint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
@@ -61,16 +58,8 @@ private:
 	///Resource manager ptr for image loading
 	ResourceManager* m_res_mgr;
 
-	///Unordered map holding texture ids. Key is std::string as name of the texture with suffix (e.g. tiles.png),
-	///value is texture id.
-	std::unordered_map<std::string, SEuint> m_texture_map;
+	///Create texture
 
-	///Create texture.
-	///1.param: Name of the texture with correct suffix (e.g. player.png)
-	///--
-	///Returns handle (SEint) to that texture to be used by OpenGL and shaders. 
-	SEuint _createTexture(const std::string& texture_name, CTexture& tex_component);
-	
 	///Assing texture
 
 	///OLET TÄSSÄ

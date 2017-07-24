@@ -50,10 +50,10 @@ public:
 	void ShowAndUpdateGUI() override final {};
 
 	///Load text resource. Returns const pointer to TextResource object.
-	TextResource* LoadTextResource(const std::string& filepath, const std::string& name);
+	TextResource* LoadTextResource(std::string filepath, std::string name);
 	
-	///Load image resource. Returns pointer to ImageResource object
-	ImageResource* LoadImageResource(const std::string& name, SEbool flip_vertically = false);
+	///Load image resource. Returns const pointer to ImageResource object
+	ImageResource* LoadImageResource(std::string name, SEbool flip_vertically = false);
 
 	///Map holding pointers to text resources. Resource name as key.
 	std::map<std::string, TextResource*> textResources;
