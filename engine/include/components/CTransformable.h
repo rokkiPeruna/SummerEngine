@@ -41,7 +41,6 @@ public:
 			
 	};
 
-	
 	Vec3f position;
 	SEfloat rotation;
 	Vec3f scale;

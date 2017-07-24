@@ -13,6 +13,8 @@ namespace priv
 std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
 TransformSystem::TransformSystem() 
+	: m_cShapes{}
+	, m_free_cShape_indices{}
 {
 	//THIS IS VERY IMPORTANT:
 	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
@@ -61,7 +63,8 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 	}
 	if (e.components.count(COMPONENT_TYPE::SHAPE))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::SHAPE, entity_obj, m_cShapes, m_free_cShape_indices);
+		CShape* tmp = _onEntityAdded_helper(e, COMPONENT_TYPE::SHAPE, entity_obj, m_cShapes, m_free_cShape_indices);
+		tmp->my_Transform = e.id;
 	}
 }
 
@@ -96,7 +99,8 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 
 	if (component_type == COMPONENT_TYPE::SHAPE)
 	{
-		return _createComponent_helper(e, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
+		SEint tmp = _createComponent_helper(e, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
+		m_cShapes.at(tmp).my_Transform = e.id;
 	}
 
 	else
@@ -137,7 +141,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("orig_x", &comp.origin.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_y", &comp.origin.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("orig_z", &comp.origin.z, 0.0f, 200.0f);
-		ImGui::SliderFloat("rot", &comp.rotation, 0.0f, 360.0f);
+		ImGui::SliderFloat("rot", &comp.rotation, -360.0f, 360.0f);
 		ImGui::SliderFloat("scal_x", &comp.scale.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
@@ -162,25 +166,33 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 
 	if (type == COMPONENT_TYPE::SHAPE)
 	{
+		//Store the id of the transform this shape had so we can later assing it back to a newly formed shape
+		SEint id = m_cShapes.at(index_in_container).my_Transform;
+		
 		if (ImGui::Button("Triangle")) 
 		{
 			m_cShapes.at(index_in_container) = CShape();
+			m_cShapes.at(index_in_container).my_Transform = id;
 		}
 		if (ImGui::Button("Rectangle"))
 		{
 			m_cShapes.at(index_in_container) = CShape(4);
+			m_cShapes.at(index_in_container).my_Transform = id;
 		}
 		if (ImGui::Button("Circle"))
 		{
 			m_cShapes.at(index_in_container) = CShape(30);
+			m_cShapes.at(index_in_container).my_Transform = id;
 		}
 		if (ImGui::Button("Add indie"))
 		{
 			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() + 1);
+			m_cShapes.at(index_in_container).my_Transform = id;
 		}
 		if (ImGui::Button("Remove indice") && m_cShapes.at(index_in_container).points.size() > 3)
 		{
 			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() - 1);
+			m_cShapes.at(index_in_container).my_Transform = id;
 		}
 
 	}

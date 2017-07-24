@@ -70,9 +70,10 @@ public:
 	
 private:
 
+	///Every shape in program is stored in this container
 	std::vector<CShape> m_cShapes;
-	std::queue<SEint> m_free_cShape_indices;
 
+	std::queue<SEint> m_free_cShape_indices;
 };
 
 
