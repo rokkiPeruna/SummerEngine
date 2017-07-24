@@ -18,11 +18,8 @@ class CShape : public Component
 
 public:
 
-	CShape(SEuint _num_points = 3)
+	CShape(SEushort num_points = 3)
 		: Component(COMPONENT_TYPE::SHAPE)
-		, num_points(_num_points)
-		, modelMatrix(1.0)
-
 	{
 
 		SEfloat theta = 2 * 3.1415926 / SEfloat(num_points);
@@ -38,7 +35,7 @@ public:
 			y = 0.5;
 		}
 
-		for (SEuint i = 0; i < num_points; ++i)
+		for (SEushort i = 0; i < num_points; ++i)
 		{
 			points.emplace_back(x, y, 0.0);
 
@@ -52,7 +49,7 @@ public:
 			y *= radial_factor;
 		}
 
-		for (SEuint i = 0; i < num_points - 2; ++i)
+		for (SEushort i = 0; i < num_points - 2; ++i)
 		{
 			indices.emplace_back(0);
 			indices.emplace_back(i + 1);
@@ -60,11 +57,10 @@ public:
 		}
 	};
 
-	SEuint num_points;
-	std::vector<Vec3f> points;
-	std::vector<SEuint> indices;
+	SEuint my_Transform;
 
-	Mat4f modelMatrix;
+	std::vector<Vec3f> points;
+	std::vector<SEushort> indices;
 
 private:
 };
@@ -78,7 +74,6 @@ void inline to_json(nlohmann::json& j, const se::CShape& comp)
 		{ "_type", static_cast<SEint>(comp.type) },
 		{ "_ownerID", comp.ownerID },
 		//Component specific data
-		{ "num_points", comp.num_points }
 	};
 
 	j.push_back({ "points",{} });
@@ -98,7 +93,6 @@ void inline from_json(const nlohmann::json& j, se::CShape& comp)
 	comp.ownerID = j.at("_ownerID").get<SEint>();
 
 	//Common spesific data
-	comp.num_points = j.at("num_points").get<SEshort>();
 
 	comp.points.clear();
 	std::vector<SEfloat> temp = j["points"];

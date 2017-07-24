@@ -33,18 +33,9 @@ void RenderSystem::Uninitialize()
 
 void RenderSystem::Update(SEfloat deltaTime)
 {
-	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
-	};
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,  // first Triangle
-		1, 2, 3   // second Triangle
-	};
-
 	//Get entities container
+	
+
 	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 
@@ -64,22 +55,22 @@ void RenderSystem::Update(SEfloat deltaTime)
 
 
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(shape_comp.points.at(0)) * shape_comp.points.size(), shape_comp.points.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(shape_comp.points.at(0)) * shape_comp.points.size(), shape_comp.points.data(), GL_DYNAMIC_DRAW);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(shape_comp.indices.at(0)) * shape_comp.indices.size(), shape_comp.indices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(shape_comp.indices.at(0)) * shape_comp.indices.size(), shape_comp.indices.data(), GL_DYNAMIC_DRAW);
 
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0)), (void*)0);
 			glEnableVertexAttribArray(0);
 			glBindVertexArray(0);
 
 			glUseProgram(CurrentShader->GetShaderID());
 
-			unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
-			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &shape_comp.modelMatrix[0][0]);
-
+	//		unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
+	//		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &shape_comp.modelMatrix[0][0]);
+		
 			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, shape_comp.indices.size(), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, shape_comp.indices.size(), GL_UNSIGNED_SHORT, 0);
 			glBindVertexArray(0);
 
 		}

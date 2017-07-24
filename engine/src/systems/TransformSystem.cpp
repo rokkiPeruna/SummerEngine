@@ -59,6 +59,10 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 		//Build run-time component on the index that matches owning entity's id
 		TransformableComponents.emplace(TransformableComponents.begin() + component.ownerID, component);
 	}
+	if (e.components.count(COMPONENT_TYPE::SHAPE))
+	{
+		_onEntityAdded_helper(e, COMPONENT_TYPE::SHAPE, entity_obj, m_cShapes, m_free_cShape_indices);
+	}
 }
 
 void TransformSystem::OnEntityRemoved(Entity& e)
@@ -137,16 +141,8 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("scal_x", &comp.scale.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
-
-		for (auto shapeComponent : m_cShapes)
-		{
-			if (shapeComponent.ownerID == comp.ownerID)
-			{
-				
-			}
-		}
 		
-//		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
+		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
 
 		if (ImGui::Button("Apply changes"))
 		{
@@ -180,11 +176,11 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		}
 		if (ImGui::Button("Add indie"))
 		{
-			m_cShapes.at(index_in_container) = CShape(++m_cShapes.at(index_in_container).num_points);
+			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() + 1);
 		}
-		if (ImGui::Button("Remove indice") && m_cShapes.at(index_in_container).num_points > 3)
+		if (ImGui::Button("Remove indice") && m_cShapes.at(index_in_container).points.size() > 3)
 		{
-			m_cShapes.at(index_in_container) = CShape(--m_cShapes.at(index_in_container).num_points);
+			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() - 1);
 		}
 
 	}

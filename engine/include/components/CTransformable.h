@@ -74,15 +74,6 @@ void inline to_json(nlohmann::json& j, const se::CTransformable& comp)
 		{ "scal_z",comp.scale.z }
 	};
 
-	j.push_back({ "points", {} });
-	auto& itr = j.find("points");
-
-	for (int i = 0; i < comp.points.size(); ++i)
-	{
-		(*itr).push_back(comp.points.at(i).x);
-		(*itr).push_back(comp.points.at(i).y);
-		(*itr).push_back(comp.points.at(i).z);
-	}
 }
 
 void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
@@ -104,12 +95,6 @@ void inline from_json(const nlohmann::json& j, se::CTransformable& comp)
 
 	comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
 	
-	comp.points.clear();
-	std::vector<SEfloat> temp = j["points"];
-	for (int i = 0; i < temp.size(); i += 3)
-	{
-		comp.points.emplace_back(Vec3f(temp.at(i), temp.at(i + 1), temp.at(i + 2)));
-	}
 }
 }// !namespace se
 
