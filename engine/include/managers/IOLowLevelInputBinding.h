@@ -104,10 +104,13 @@ enum Keyboard
 	//SE_TODO: Add rest of the keys
 
 };
+SDL_GetKE
 
 enum Mouse
 {
-
+	Left_Button = SDL_BUTTON_LEFT,
+	Middle_Button = SDL_BUTTON_MIDDLE,
+	Rigth_Button = SDL_BUTTON_RIGHT
 };
 
 }//namespace se
