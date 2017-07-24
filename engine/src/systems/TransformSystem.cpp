@@ -166,6 +166,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 
 	if (type == COMPONENT_TYPE::SHAPE)
 	{
+		//Store the id of the transform this shape had so we can later assing it back to a newly formed shape
 		SEint id = m_cShapes.at(index_in_container).my_Transform;
 		
 		if (ImGui::Button("Triangle")) 

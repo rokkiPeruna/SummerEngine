@@ -68,7 +68,9 @@ void RenderSystem::Update(SEfloat deltaTime)
 			glUseProgram(CurrentShader->GetShaderID());
 
 			unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
-			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix[0][0]);
+			Mat4f haxor = glm::lookAt(Vec3f(0,0,-3),Vec3f(0), Vec3f(0,1,0)) * m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix;
+			Mat4f haxor2 = glm::perspective(45.f, 1200.f / 800.f, 0.1f, 100.f) * haxor;
+			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &haxor2[0][0]);
 			
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, shape_comp.indices.size(), GL_UNSIGNED_SHORT, 0);

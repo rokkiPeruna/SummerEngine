@@ -13,6 +13,9 @@ namespace se
 {
 
 
+///Brief : CShape is basically always a circle but number of points determines how many points it has.
+///with small amount of points we can have all basic shapes.
+
 class CShape : public Component
 {
 
@@ -58,14 +61,16 @@ public:
 		}
 	};
 
+	///Track in which transform this shape belongs to
 	SEint my_Transform;
 
+	///Actual points in 3d coordinates
 	std::vector<Vec3f> points;
+	
+	///Indices determine which points form which triangle
 	std::vector<SEushort> indices;
 
-private:
 };
-
 
 void inline to_json(nlohmann::json& j, const se::CShape& comp)
 {
