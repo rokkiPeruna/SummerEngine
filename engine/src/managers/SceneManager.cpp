@@ -194,8 +194,13 @@ void SceneManager::LoadScene(std::string scenename)
 	}
 	m_sceneJsonObject.clear();
 
-	if (!util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id))
+	try { util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id); }
+	catch (const se_exception& exc)
+	{
+		MessageError(SceneMgr_id) << "Failed to parse [" + scenename + "] json object or failed to open\nfile " + m_rel_path_to_json_scenes + scenename + m_scene_file_suffix 
+			+ ",\nexception message: " + exc.msg;
 		return;
+	}
 
 	//Read scene's info to json object and create new current scene
 	auto& info_obj = m_sceneJsonObject.find(m_scene_struct_info_obj_name);

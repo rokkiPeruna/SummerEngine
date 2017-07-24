@@ -36,7 +36,7 @@ inline bool ReadFileToJson(nlohmann::json& j, std::string& filepath, SEuint64 se
 	{
 		data.close();
 		
-		throw(priv::se_exc_json_parse_failed("Failed to parse " + filepath + " to json object [" + j.type_name() + "],\nexception message: " + exc.what()));
+		throw(priv::se_exc_json_parse_failed("Failed to parse " + filepath + " to json object [" + j.type_name() + "],\nnlohmann exception message: " + exc.what()));
 	}
 	data.close();
 	return true;

@@ -43,6 +43,8 @@ public:
 
 	void OnEntityRemoved(Entity& e) override final;
 
+	void SetTextureResourceNames(const std::vector<std::string>& tex_names) { m_tex_res_names = { tex_names }; }
+
 
 	/*-----------------EDITOR METHODS--------------------*/
 
@@ -58,24 +60,29 @@ private:
 	std::vector<CTexture> m_cTextures;
 	std::queue<SEint> m_free_cTexture_indices;
 
+	///Container holding all texture resources' names for use in gui.
+	std::vector<std::string> m_tex_res_names;
+
 	///Resource manager ptr for image loading
 	ResourceManager* m_res_mgr;
 
 	///Unordered map holding texture ids. Key is std::string as name of the texture with suffix (e.g. tiles.png),
-	///value is texture id.
-	std::unordered_map<std::string, SEuint> m_texture_map;
+	///value is pair(SEuint, SEbool) containing handle to texture and boolean telling if texture has alpha channel.
+	std::unordered_map<std::string, std::pair<SEuint, SEbool>> m_texture_map;
 
-	///Create texture.
+	///Returns SEuint for texture handle to be assigned to component.
+	///If texture is already loaded to GPU memory, returns that handle,
+	///if not, calls _createTexture() and returns handle to newly created texture
+	///1.param: name of the texture with correct suffix (e.g. player.png)
+	///2.param: CTexture component to which the texture is binded
+	void _assignTexture(const std::string& texture_name, CTexture& tex_comp);
+
+	///Create texture from pixel data.
 	///1.param: Name of the texture with correct suffix (e.g. player.png)
 	///--
-	///Returns handle (SEint) to that texture to be used by OpenGL and shaders. 
-	SEuint _createTexture(const std::string& texture_name, CTexture& tex_component);
+	///Returns pair(SEuint, SEbool) containing handle (SEint) to that texture to be used by OpenGL and shaders and boolean defining if texture has alpha channel. 
+	std::pair<SEuint, SEbool> _createTexture(const std::string& texture_name);
 	
-	///Assing texture
-
-	///OLET TÄSSÄ
-	SEint remove;
-	SEint tama_on_vittu_change;
 
 };
 

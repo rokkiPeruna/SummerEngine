@@ -38,7 +38,9 @@ public:
 	ResourceManager(const ResourceManager&) = delete;
 	void operator=(const ResourceManager&) = delete;
 
-	///Initialize resource manager with starting scene's loadable resources
+	///Initialize resource manager with paths to resources. Also fetches all resource file names for gui to use.
+	///1.param: path to shader files
+	///2.param: relative path to project's user files 
 	void Initialize(const std::string& shaderpath, const std::string& rel_path_to_user_files);
 
 	///Delete all resources, uninitialize dependencies
@@ -73,7 +75,8 @@ private:
 	std::vector<TextResource> m_textResourcesContainer;
 
 	std::vector<ImageResource> m_imageResContainer;
-	
+	const std::string m_image_fold_name;
+
 	///Stores shader ID's as 'shader name' & 'shader resource' pair
 	std::map<std::string, ShaderResource> m_shaderProgramContainer;
 

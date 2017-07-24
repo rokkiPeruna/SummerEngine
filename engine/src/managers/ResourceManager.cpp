@@ -2,6 +2,9 @@
 #include <core/Engine.h>
 #include <stb_image.h>
 
+//C++17 feature used to get all filenames in resources folder
+#include <experimental/filesystem>
+
 namespace se
 {
 namespace priv
@@ -9,9 +12,10 @@ namespace priv
 
 ResourceManager::ResourceManager()
 	: m_rel_path_to_user_files("")
-	, m_res_fold_name("resources")
+	, m_res_fold_name("resources/")
 	, m_textResourcesContainer{}
 	, m_imageResContainer{}
+	, m_image_fold_name("textures/")
 	, m_shaderProgramContainer{}
 {
 
@@ -27,6 +31,18 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 {
 	_initializeShaders(sourcePath);
 	m_rel_path_to_user_files = rel_path_to_user_files;
+
+	//Get all loadable textures' file names
+	std::string path_to_textures = m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name;
+
+	//This uses std::experimental::filesystem.
+	std::vector<std::string> tex_names{};
+	for (auto& f : std::experimental::filesystem::directory_iterator(path_to_textures))
+	{
+		tex_names.emplace_back(f.path().filename().generic_string());
+	}
+	
+	Engine::Instance().GetAnimationSystem()->SetTextureResourceNames(tex_names);
 
 }
 
@@ -85,7 +101,7 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 		return imageResources.at(name);
 
 	SEint w, h, bpp = 0;
-	std::string filepath(m_rel_path_to_user_files + m_res_fold_name);
+	std::string filepath(m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name + name);
 
 	stbi_set_flip_vertically_on_load(flip_vertically);
 

@@ -1,5 +1,6 @@
 #include <systems/AnimationSystem.h>
 #include <core/Engine.h>
+#include <imgui/imgui.h>
 
 namespace se
 {
@@ -13,6 +14,7 @@ namespace priv
 AnimationSystem::AnimationSystem()
 	: m_cTextures{}
 	, m_free_cTexture_indices{}
+	, m_tex_res_names{}
 	, m_res_mgr(nullptr)
 	, m_texture_map{}
 {
@@ -36,7 +38,7 @@ void AnimationSystem::Initialize()
 
 void AnimationSystem::Uninitialize()
 {
-
+	m_texture_map.clear();
 }
 
 void AnimationSystem::Update(SEfloat deltaTime)
@@ -54,7 +56,8 @@ void AnimationSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 {
 	if (e.components.count(COMPONENT_TYPE::TEXTURE))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
+		CTexture* tmp = _onEntityAdded_helper(e, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
+		_assignTexture(tmp->name, *tmp);
 	}
 }
 
@@ -63,6 +66,7 @@ void AnimationSystem::OnEntityRemoved(Entity& e)
 	if (e.components.count(COMPONENT_TYPE::TEXTURE))
 	{
 		m_free_cTexture_indices.push(e.components.at(COMPONENT_TYPE::TEXTURE));
+		m_cTextures.at(e.components.at(COMPONENT_TYPE::TEXTURE)).ownerID = -1;
 	}
 }
 
@@ -84,6 +88,7 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
 		m_free_cTexture_indices.push(_removeComponent_helper(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures));
+		m_cTextures.at(entity.components.at(COMPONENT_TYPE::TEXTURE)).ownerID = -1;
 	}
 	else
 	{
@@ -94,7 +99,27 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 
 void AnimationSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
 {
+	if (type == COMPONENT_TYPE::TEXTURE)
+	{
+		if (ImGui::CollapsingHeader("Add texture"))
+		{
 
+			if (m_tex_res_names.empty())
+			{
+				MessageInfo(AnimationSys_id) << "No available texture resources in ModifyComponent!";
+				return;
+			}
+
+			//Get available textures
+			for (auto t : m_tex_res_names)
+			{
+				if (ImGui::Button(t.c_str()))
+				{
+					_assignTexture(t, m_cTextures.at(index_in_container));
+				}
+			}
+		}
+	}
 }
 
 Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
@@ -107,7 +132,24 @@ Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 		return nullptr;
 }
 
-SEuint AnimationSystem::_createTexture(const std::string& texture_name, CTexture& tex_component)
+void AnimationSystem::_assignTexture(const std::string& texture_name, CTexture& tex_comp)
+{
+	//Check if we have texture loaded already
+	if (m_texture_map.count(texture_name))
+	{
+		tex_comp.handle = m_texture_map.at(texture_name).first;
+		tex_comp.has_alpha = m_texture_map.at(texture_name).second;
+	}
+	//If not, create texture
+	else
+	{
+		auto data = _createTexture(texture_name);
+		tex_comp.handle = data.first;
+		tex_comp.has_alpha = data.second;
+	}
+}
+
+std::pair<SEuint, SEbool> AnimationSystem::_createTexture(const std::string& texture_name)
 {
 	//Create pixeldata
 	auto image = m_res_mgr->LoadImageResource(texture_name);
@@ -117,8 +159,10 @@ SEuint AnimationSystem::_createTexture(const std::string& texture_name, CTexture
 	SEint h{ image->GetData().heigth };
 	assert(w > 0 && h > 0);
 
-	glGenTextures(1, &tex_component.handle);
-	glBindTexture(GL_TEXTURE_2D, tex_component.handle);
+	std::pair<SEuint, SEbool> ret{ -1, false };
+
+	glGenTextures(1, &ret.first);
+	glBindTexture(GL_TEXTURE_2D, ret.first);
 
 	//Check for bytes per pixel
 	assert(image->GetData().bpp == 3 || image->GetData().bpp == 4);
@@ -147,10 +191,10 @@ SEuint AnimationSystem::_createTexture(const std::string& texture_name, CTexture
 		image->GetData().pixelData.data()
 	);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	tex_component.has_alpha = alpha;
+	ret.second = alpha;
 
-	m_texture_map.emplace(texture_name, tex_component.handle);
-	return tex_component.handle;
+	m_texture_map.emplace(texture_name, std::make_pair(ret.first, ret.second));
+	return ret;
 }
 
 }//namespace priv

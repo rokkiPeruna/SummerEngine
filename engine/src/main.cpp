@@ -15,6 +15,5 @@ int main(int argc, char *argv[])
 	SE_Engine.EngineUpdate();
 	SE_Engine.Uninitialize();
 	return 0;
-
-
+	
 }
