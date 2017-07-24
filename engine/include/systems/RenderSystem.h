@@ -67,7 +67,7 @@ public:
 
 private:
 
-	TransformSystem* m_fransform_system;
+	TransformSystem* m_transform_system;
 
 	//testing
 	ShaderResource* CurrentShader;
