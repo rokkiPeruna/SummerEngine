@@ -163,7 +163,6 @@ private:
 	EntityManager m_entityMgr;
 	SceneManager m_sceneMgr;
 	ResourceManager m_resourceMgr;
-	RenderManager m_renderMgr;
 	ComponentManager m_compMgr;
 
 	///Messenger

@@ -38,7 +38,6 @@ Engine::Engine()
 	, m_entityMgr()
 	, m_sceneMgr()
 	, m_resourceMgr()
-	, m_renderMgr()
 	, m_compMgr()
 
 {
