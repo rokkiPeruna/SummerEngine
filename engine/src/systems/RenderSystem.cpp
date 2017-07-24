@@ -43,6 +43,7 @@ void RenderSystem::Update(SEfloat deltaTime)
 		{
 			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
 
+
 			SEuint VAO;
 			SEuint VBO;
 			SEuint EBO;
@@ -66,9 +67,9 @@ void RenderSystem::Update(SEfloat deltaTime)
 
 			glUseProgram(CurrentShader->GetShaderID());
 
-	//		unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
-	//		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &shape_comp.modelMatrix[0][0]);
-		
+			unsigned int transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
+			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix[0][0]);
+			
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, shape_comp.indices.size(), GL_UNSIGNED_SHORT, 0);
 			glBindVertexArray(0);

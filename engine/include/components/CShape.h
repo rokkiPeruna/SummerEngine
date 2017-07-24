@@ -20,6 +20,7 @@ public:
 
 	CShape(SEushort num_points = 3)
 		: Component(COMPONENT_TYPE::SHAPE)
+		, my_Transform(-1)
 	{
 
 		SEfloat theta = 2 * 3.1415926 / SEfloat(num_points);
@@ -57,7 +58,7 @@ public:
 		}
 	};
 
-	SEuint my_Transform;
+	SEint my_Transform;
 
 	std::vector<Vec3f> points;
 	std::vector<SEushort> indices;

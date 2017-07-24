@@ -72,7 +72,6 @@ private:
 
 	std::vector<CShape> m_cShapes;
 	std::queue<SEint> m_free_cShape_indices;
-
 };
 
 

@@ -29,7 +29,7 @@ struct RenderableMovable
 };
 
 namespace priv
-{
+{ 
 
 class RenderSystem : public ComponentSystem
 {
