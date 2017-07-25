@@ -28,6 +28,8 @@ typedef unsigned short			SEushort;
 typedef long int				SElint;
 typedef unsigned long int		SEulint;
 typedef unsigned int			SEuint;
+typedef uint8_t					SEuint8;
+typedef uint16_t				SEuint16;
 typedef int32_t					SEint32;
 typedef int64_t					SEint64;
 typedef unsigned long long		SEuint64;

@@ -61,6 +61,10 @@ set(MANAGERS_FILES
 	include/managers/IOManager.h
 	src/managers/IOManager.cpp
 	include/managers/IOLowLevelInputBinding.h
+	include/managers/Keyboard.h
+	src/managers/Keyboard.cpp
+	include/managers/Mouse.h
+	src/managers/Mouse.cpp
 	include/managers/Batch.h
 	src/managers/Batch.cpp
 	)
@@ -96,11 +100,14 @@ source_group("ids" FILES ${IDS_FILES})
 #Utility
 set(UTILITY_FILES
 	include/utility/Typedefs.h
+	include/utility/Math.h
 	include/utility/Time.h
 	src/utility/Time.cpp
 	include/utility/Clock.h
 	src/utility/Clock.cpp
 	include/utility/JsonUtilFunctions.h
+	include/utility/EditorFunctions.h
+	src/utility/EditorFunctions.cpp
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------

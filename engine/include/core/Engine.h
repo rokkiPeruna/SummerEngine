@@ -72,7 +72,6 @@ public:
 	// Engine update 
 	void EngineUpdate();
 
-	
 	///System getters
 	//
 	///Returns ptr to Engine's TransformSystem

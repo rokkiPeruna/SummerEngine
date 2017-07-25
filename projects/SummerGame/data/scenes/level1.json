@@ -99,6 +99,43 @@
                 "scal_y": 1.0,
                 "scal_z": 1.0
             }
+        },
+        "teemu": {
+            "id": 4,
+            "shape": {
+                "_ownerID": 4,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 4,
+                "_type": 3,
+                "tex_name": "testTexture.jpg"
+            },
+            "transformable": {
+                "_ownerID": 4,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
         }
     },
     "scene_info": {

@@ -10,6 +10,9 @@
 #include <imgui/imgui.h>
 #include <core/imgui_impl_sdl_gl3.h>
 
+#include <managers/Keyboard.h>
+#include <managers/Mouse.h>
+
 
 namespace se
 {
@@ -160,8 +163,8 @@ void Engine::_initAndApplyEngineSettings()
 			windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
 
 		//Set window size to global values for GUI
-		_gui_width = windata.width;
-		_gui_heigth = windata.heigth;
+		//_gui_width = windata.width;
+		//_gui_heigth = windata.heigth;
 	}
 
 	//Initialize imgui IO. This file will hold users preference window positions and sizes. SE_TODO: Create switch for editor mode and deploy mode builds
@@ -287,6 +290,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 	m_frame_time = m_engine_clock.restart();
 	SEfloat deltaTime = m_frame_time.asSeconds();
 
+	Keyboard keyboard;
+	Mouse mouse;
 	bool editorloop = true;
 	try
 	{
@@ -339,13 +344,13 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 		{
 			switch (event.key.keysym.sym)
 			{
-			case Key_Escape:
+			case KeyboardEvent::Escape:
 				editorloop = false; return true;
 				break;
-			case Key_F11:
+			case KeyboardEvent::F11:
 				editorloop = false; m_inEditorLoop = false;
 				break;
-			case Key_F12:
+			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
 				_gui_show_main_window = (_gui_show_main_window) ? false : true;
 				break;
@@ -370,12 +375,12 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 		{
 			switch (event.key.keysym.sym)
 			{
-			case Key_Escape:
+			case KeyboardEvent::Escape:
 				gameloop = false;
 				break;
-			case Key_F11:
+			case KeyboardEvent::F11:
 				m_inEditorLoop = true;
-			case Key_F12:
+			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
 				_gui_show_main_window = (_gui_show_main_window) ? false : true;
 				break;

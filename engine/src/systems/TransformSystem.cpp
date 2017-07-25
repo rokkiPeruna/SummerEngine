@@ -5,6 +5,9 @@
 
 #include <core/Engine.h>
 
+#include <managers/Keyboard.h>
+#include <managers/Mouse.h>
+#include <utility/EditorFunctions.h>
 
 namespace se
 {
@@ -12,7 +15,7 @@ namespace priv
 {
 std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
-TransformSystem::TransformSystem() 
+TransformSystem::TransformSystem()
 	: m_cShapes{}
 	, m_free_cShape_indices{}
 {
@@ -83,8 +86,8 @@ void TransformSystem::OnEntityRemoved(Entity& e)
 SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
-	{	
-		
+	{
+
 		//Build run-time component on the index that matches owning entity's id
 		TransformableComponents.emplace(TransformableComponents.begin() + e.id, CTransformable());
 		//Add owner's id to component
@@ -132,8 +135,26 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 {
 	if (type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
+
 		//SE_TODO: Check somehow that index is valid component!
 		auto& comp = TransformableComponents.at(index_in_container);
+
+		Keyboard keyboard;
+		Mouse mouse;
+
+		SEint mouse_pos_X = 0;
+		SEint mouse_pos_Y = 0;
+
+		if (keyboard.GetState(KeyboardState::W) && mouse.GetState(MouseState::Left_Button, &mouse_pos_X, &mouse_pos_Y))
+		{
+			Vec2f norm_mouse_pos = util::ScreenCoordsToNormOpenGLCoords(mouse_pos_X, mouse_pos_Y, Vec2f(_gui_width, _gui_heigth), Vec3f(0.0f, 0.0f, 10.0f));
+			comp.position.x = norm_mouse_pos.x;
+			comp.position.y = norm_mouse_pos.y;
+		}
+		if (keyboard.GetState(KeyboardState::R))
+		{
+			comp.rotation += 10.f;
+		}
 
 		ImGui::SliderFloat("pos_x", &comp.position.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("pos_y", &comp.position.y, 0.0f, 200.0f);
@@ -145,7 +166,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		ImGui::SliderFloat("scal_x", &comp.scale.x, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
-		
+
 		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
 
 		if (ImGui::Button("Apply changes"))
@@ -170,7 +191,7 @@ void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contai
 		//Also store owner id
 		SEint id = m_cShapes.at(index_in_container).my_Transform;
 		SEint owner_id = m_cShapes.at(index_in_container).ownerID;
-		if (ImGui::Button("Triangle")) 
+		if (ImGui::Button("Triangle"))
 		{
 			m_cShapes.at(index_in_container) = CShape();
 			m_cShapes.at(index_in_container).my_Transform = id;

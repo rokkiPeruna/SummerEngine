@@ -13,8 +13,8 @@ namespace se
 namespace priv
 {
 ///Window size for GUI windows
-static SEint _gui_width;
-static SEint _gui_heigth;
+const SEint _gui_width = 1200;
+const SEint _gui_heigth = 800;
 
 ///Main window
 static SEbool _gui_show_main_window = true;

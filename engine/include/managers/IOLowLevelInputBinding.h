@@ -8,110 +8,228 @@
 
 namespace se
 {
-///Brief: Create enum that matches with current low-level input provider (SDL2).
-///This "renaming" is just for convenience
-enum Keyboard
+///Brief: Namespace holding renamed keyboard events in anonymous enum.
+///This renaming is just for convenience.
+///NOTE: Event happens just once when key is pressed or released. If you want key's state (pressed/not pressed),
+///use KeyboardState - namespace
+namespace KeyboardEvent
+{
+enum
 {
 	//Letters
-	Key_A = SDLK_a,
-	Key_B = SDLK_b,
-	Key_C = SDLK_c,
-	Key_D = SDLK_d,
-	Key_E = SDLK_e,
-	Key_F = SDLK_f,
-	Key_G = SDLK_g,
-	Key_H = SDLK_h,
-	Key_I = SDLK_i,
-	Key_J = SDLK_j,
-	Key_K = SDLK_k,
-	Key_L = SDLK_l,
-	Key_M = SDLK_m,
-	Key_N = SDLK_n,
-	Key_O = SDLK_o,
-	Key_P = SDLK_p,
-	Key_Q = SDLK_q,
-	Key_R = SDLK_r,
-	Key_S = SDLK_s,
-	Key_T = SDLK_t,
-	Key_U = SDLK_u,
-	Key_V = SDLK_v,
-	Key_W = SDLK_w,
-	Key_X = SDLK_x,
-	Key_Y = SDLK_y,
-	Key_Z = SDLK_z,
+	A = SDLK_a,
+	B = SDLK_b,
+	C = SDLK_c,
+	D = SDLK_d,
+	E = SDLK_e,
+	F = SDLK_f,
+	G = SDLK_g,
+	H = SDLK_h,
+	I = SDLK_i,
+	J = SDLK_j,
+	K = SDLK_k,
+	L = SDLK_l,
+	M = SDLK_m,
+	N = SDLK_n,
+	O = SDLK_o,
+	P = SDLK_p,
+	Q = SDLK_q,
+	R = SDLK_r,
+	S = SDLK_s,
+	T = SDLK_t,
+	U = SDLK_u,
+	V = SDLK_v,
+	W = SDLK_w,
+	X = SDLK_x,
+	Y = SDLK_y,
+	Z = SDLK_z,
 
 	//Number keys
-	Key_0 = SDLK_0,
-	Key_1 = SDLK_1,
-	Key_2 = SDLK_2,
-	Key_3 = SDLK_3,
-	Key_4 = SDLK_4,
-	Key_5 = SDLK_5,
-	Key_6 = SDLK_6,
-	Key_7 = SDLK_7,
-	Key_8 = SDLK_8,
-	Key_9 = SDLK_9,
+	Num0 = SDLK_0,
+	Num1 = SDLK_1,
+	Num2 = SDLK_2,
+	Num3 = SDLK_3,
+	Num4 = SDLK_4,
+	Num5 = SDLK_5,
+	Num6 = SDLK_6,
+	Num7 = SDLK_7,
+	Num8 = SDLK_8,
+	Num9 = SDLK_9,
 
 	//Numpad keys
-	Key_NumLockClear = SDLK_NUMLOCKCLEAR,
-	Key_Numpad_Divide = SDLK_KP_DIVIDE,
-	Key_Numpad_Multiply = SDLK_KP_MULTIPLY,
-	Key_Numpad_Minus = SDLK_KP_MINUS,
-	Key_Numpad_Plus = SDLK_KP_PLUS,
-	Key_Numpad_Enter = SDLK_KP_ENTER,
-	Key_Numpad_1 = SDLK_KP_1,
-	Key_Numpad_2 = SDLK_KP_2,
-	Key_Numpad_3 = SDLK_KP_3,
-	Key_Numpad_4 = SDLK_KP_4,
-	Key_Numpad_5 = SDLK_KP_5,
-	Key_Numpad_6 = SDLK_KP_6,
-	Key_Numpad_7 = SDLK_KP_7,
-	Key_Numpad_8 = SDLK_KP_8,
-	Key_Numpad_9 = SDLK_KP_9,
-	Key_Numpad_0 = SDLK_KP_0,
-	Key_Numpad_Period = SDLK_KP_PERIOD,
+	NumLockClear = SDLK_NUMLOCKCLEAR,
+	Numpad_Divide = SDLK_KP_DIVIDE,
+	Numpad_Multiply = SDLK_KP_MULTIPLY,
+	Numpad_Minus = SDLK_KP_MINUS,
+	Numpad_Plus = SDLK_KP_PLUS,
+	Numpad_Enter = SDLK_KP_ENTER,
+	Numpad_1 = SDLK_KP_1,
+	Numpad_2 = SDLK_KP_2,
+	Numpad_3 = SDLK_KP_3,
+	Numpad_4 = SDLK_KP_4,
+	Numpad_5 = SDLK_KP_5,
+	Numpad_6 = SDLK_KP_6,
+	Numpad_7 = SDLK_KP_7,
+	Numpad_8 = SDLK_KP_8,
+	Numpad_9 = SDLK_KP_9,
+	Numpad_0 = SDLK_KP_0,
+	Numpad_Period = SDLK_KP_PERIOD,
 
 	//Function keys
-	Key_Escape = SDLK_ESCAPE,
-	Key_F1 = SDLK_F1,
-	Key_F2 = SDLK_F2,
-	Key_F3 = SDLK_F3,
-	Key_F4 = SDLK_F4,
-	Key_F5 = SDLK_F5,
-	Key_F6 = SDLK_F6,
-	Key_F7 = SDLK_F7,
-	Key_F8 = SDLK_F8,
-	Key_F9 = SDLK_F9,
-	Key_F10 = SDLK_F10,
-	Key_F11 = SDLK_F11,
-	Key_F12 = SDLK_F12,
+	Escape = SDLK_ESCAPE,
+	F1 = SDLK_F1,
+	F2 = SDLK_F2,
+	F3 = SDLK_F3,
+	F4 = SDLK_F4,
+	F5 = SDLK_F5,
+	F6 = SDLK_F6,
+	F7 = SDLK_F7,
+	F8 = SDLK_F8,
+	F9 = SDLK_F9,
+	F10 = SDLK_F10,
+	F11 = SDLK_F11,
+	F12 = SDLK_F12,
 
 	//Arrows and utility
-	Key_PrintScreen = SDLK_PRINTSCREEN,
-	Key_ScrollLock = SDLK_SCROLLLOCK,
-	Key_Pause = SDLK_PAUSE,
-	Key_Insert = SDLK_INSERT,
-	Key_Home = SDLK_HOME,
-	Key_PageUp = SDLK_PAGEUP,
-	Key_Delete = SDLK_DELETE,
-	Key_End = SDLK_END,
-	Key_PageDown = SDLK_PAGEDOWN,
-	Key_Rigth = SDLK_RIGHT,
-	Key_Left = SDLK_LEFT,
-	Key_Down = SDLK_DOWN,
-	Key_Up = SDLK_UP
+	PrintScreen = SDLK_PRINTSCREEN,
+	ScrollLock = SDLK_SCROLLLOCK,
+	Pause = SDLK_PAUSE,
+	Insert = SDLK_INSERT,
+	Home = SDLK_HOME,
+	PageUp = SDLK_PAGEUP,
+	Delete = SDLK_DELETE,
+	End = SDLK_END,
+	PageDown = SDLK_PAGEDOWN,
+	Rigth = SDLK_RIGHT,
+	Left = SDLK_LEFT,
+	Down = SDLK_DOWN,
+	Up = SDLK_UP
 
 	//SE_TODO: Add rest of the keys
-
 };
-SDL_GetKE
+};//namespace KeyboardEvent
 
-enum Mouse
+namespace MouseEvent
+{
+enum
 {
 	Left_Button = SDL_BUTTON_LEFT,
 	Middle_Button = SDL_BUTTON_MIDDLE,
 	Rigth_Button = SDL_BUTTON_RIGHT
+
+	//SE_TODO: Add more keys
 };
+};//namespace MouseEvent
+
+
+namespace KeyboardState
+{
+enum
+{
+	//Letters
+	A = SDL_SCANCODE_A,
+	B = SDL_SCANCODE_B,
+	C = SDL_SCANCODE_C,
+	D = SDL_SCANCODE_D,
+	E = SDL_SCANCODE_E,
+	F = SDL_SCANCODE_F,
+	G = SDL_SCANCODE_G,
+	H = SDL_SCANCODE_H,
+	I = SDL_SCANCODE_I,
+	J = SDL_SCANCODE_J,
+	K = SDL_SCANCODE_K,
+	L = SDL_SCANCODE_L,
+	M = SDL_SCANCODE_M,
+	N = SDL_SCANCODE_N,
+	O = SDL_SCANCODE_O,
+	P = SDL_SCANCODE_P,
+	Q = SDL_SCANCODE_Q,
+	R = SDL_SCANCODE_R,
+	S = SDL_SCANCODE_S,
+	T = SDL_SCANCODE_T,
+	U = SDL_SCANCODE_U,
+	V = SDL_SCANCODE_V,
+	W = SDL_SCANCODE_W,
+	X = SDL_SCANCODE_X,
+	Y = SDL_SCANCODE_Y,
+	Z = SDL_SCANCODE_Z,
+
+	//Number keys
+	Num0 = SDL_SCANCODE_0,
+	Num1 = SDL_SCANCODE_1,
+	Num2 = SDL_SCANCODE_2,
+	Num3 = SDL_SCANCODE_3,
+	Num4 = SDL_SCANCODE_4,
+	Num5 = SDL_SCANCODE_5,
+	Num6 = SDL_SCANCODE_6,
+	Num7 = SDL_SCANCODE_7,
+	Num8 = SDL_SCANCODE_8,
+	Num9 = SDL_SCANCODE_9,
+
+	//Numpad keys
+	NumLockClear = SDLK_NUMLOCKCLEAR,
+	Numpad_Divide = SDLK_KP_DIVIDE,
+	Numpad_Multiply = SDLK_KP_MULTIPLY,
+	Numpad_Minus = SDLK_KP_MINUS,
+	Numpad_Plus = SDLK_KP_PLUS,
+	Numpad_Enter = SDLK_KP_ENTER,
+	Numpad_1 = SDLK_KP_1,
+	Numpad_2 = SDLK_KP_2,
+	Numpad_3 = SDLK_KP_3,
+	Numpad_4 = SDLK_KP_4,
+	Numpad_5 = SDLK_KP_5,
+	Numpad_6 = SDLK_KP_6,
+	Numpad_7 = SDLK_KP_7,
+	Numpad_8 = SDLK_KP_8,
+	Numpad_9 = SDLK_KP_9,
+	Numpad_0 = SDLK_KP_0,
+	Numpad_Period = SDLK_KP_PERIOD,
+
+	//Function keys
+	Escape = SDL_SCANCODE_ESCAPE,
+	F1 = SDL_SCANCODE_F1,
+	F2 = SDL_SCANCODE_F2,
+	F3 = SDL_SCANCODE_F3,
+	F4 = SDL_SCANCODE_F4,
+	F5 = SDL_SCANCODE_F5,
+	F6 = SDL_SCANCODE_F6,
+	F7 = SDL_SCANCODE_F7,
+	F8 = SDL_SCANCODE_F8,
+	F9 = SDL_SCANCODE_F9,
+	F10 = SDL_SCANCODE_F10,
+	F11 = SDL_SCANCODE_F11,
+	F12 = SDL_SCANCODE_F12,
+
+	//Arrows and utility
+	PrintScreen =	SDL_SCANCODE_PRINTSCREEN,
+	ScrollLock =	SDL_SCANCODE_SCROLLLOCK,
+	Pause =			SDL_SCANCODE_PAUSE,
+	Insert =		SDL_SCANCODE_INSERT,
+	Home =			SDL_SCANCODE_HOME,
+	PageUp =		SDL_SCANCODE_PAGEUP,
+	Delete =		SDL_SCANCODE_DELETE,
+	End =			SDL_SCANCODE_END,
+	PageDown =		SDL_SCANCODE_PAGEDOWN,
+	Rigth =			SDL_SCANCODE_RIGHT,
+	Left =			SDL_SCANCODE_LEFT,
+	Down =			SDL_SCANCODE_DOWN,
+	Up =			SDL_SCANCODE_UP
+
+	//SE_TODO: Add rest of the keys
+};
+};//namespace KeyboardEvent
+
+namespace MouseState
+{
+enum
+{
+	Left_Button = SDL_BUTTON_LEFT,
+	Middle_Button = SDL_BUTTON_MIDDLE,
+	Rigth_Button = SDL_BUTTON_RIGHT
+
+	//SE_TODO: Add more keys
+};
+};//namespace MouseEvent
 
 }//namespace se
 #endif
