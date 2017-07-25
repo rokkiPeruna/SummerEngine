@@ -111,6 +111,17 @@ set(UTILITY_FILES
 	)
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
+#Engine Gui
+set(ENGINE_GUI_FILES
+	include/gui/EngineGui.h
+	src/gui/EngineGui.cpp
+	include/gui/ManagerGui.h
+	src/gui/ManagerGui.cpp
+	include/gui/SystemGui.h
+	src/gui/SystemGui.cpp
+	)
+source_group("engine_gui" FILES ${ENGINE_GUI_FILES})
+#-----------------------------------------------------------------
 #Imgui
 set(IMGUI_FILES
 	${PROJECT_SOURCE_DIR}/external/imgui/imconfig.h
@@ -134,34 +145,6 @@ set(MAIN_CPP
 	)
 source_group("" FILES ${MAIN_CPP})
 #-----------------------------------------------------------------
-
-#JSON files
-#set(JSON_COMPONENT_TEMPLATES
-#	json_files/component_templates.json)
-#
-#set(JSON_COMPONENTS
-#	json_files/components.json)
-#	
-#set(JSON_ENTITY_TEMPLATES
-#	json_files/entity_templates.json)
-#
-#set(JSON_ENTITIES
-#	json_files/entities.json)
-#
-#set(JSON_SCENES
-#	json_files/scenes.json)
-#
-#set(JSON_ENGINE_CONFIG
-#	json_files/engine_config.json
-#	)
-#	
-#set(JSON_FILES
-#	${JSON_ENGINE_CONFIG}
-#	)
-	
-#source_group("json" FILES
-#	${JSON_FILES})
-#-----------------------------------------------------------------
 #Project name
 add_executable(engine
 	src/main.cpp
@@ -171,10 +154,10 @@ add_executable(engine
 	${CORE_FILES}
 	${IDS_FILES}
 	${UTILITY_FILES}
+	${ENGINE_GUI_FILES}
 	${IMGUI_FILES}
 	${STB_FILES}
 	${MAIN_CPP}
-	#${JSON_FILES}
 	)
 
 

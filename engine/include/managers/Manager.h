@@ -32,8 +32,6 @@ public:
 	virtual void Update() = 0;
 
 	virtual void ShowAndUpdateGUI() = 0;
-
-
 };
 
 }//namespace priv
