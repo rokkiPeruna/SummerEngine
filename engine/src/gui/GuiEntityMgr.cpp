@@ -34,8 +34,11 @@ void GuiEntityMgr::Update()
 	if (!m_entity_mgr->GetCurrentScene())
 	{
 		ImGui::End();
+		m_gui_scene_name = "NO ACTIVE SCENE";
 		return;
 	}
+	else
+		m_gui_scene_name = m_entity_mgr->GetCurrentScene()->GetName();
 
 	if (ImGui::CollapsingHeader("Create entity"))
 	{

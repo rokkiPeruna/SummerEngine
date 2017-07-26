@@ -42,7 +42,7 @@
 //Gui
 #include <gui/EngineGui.h>
 #include <gui/ManagerGui.h>
-#include <gui/SystemGui.h>
+#include <gui/CompEditorGui.h>
 
 namespace se
 {
@@ -91,8 +91,12 @@ public:
 	ComponentManager* GetCompMgr() { return &m_compMgr; }
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 
-	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
+	///Static map for binding component type to correct system.
+	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
+
+	///Static map for binding component type to correct gui editor
+	static std::map<COMPONENT_TYPE, gui::CompEditorGui*> ComponentTypeToGuiEditor;
 
 	///Add EngineGui object
 	void AddEngineGuiToCont(gui::EngineGui* gui_to_add) { m_engine_gui_container.emplace_back(gui_to_add); }

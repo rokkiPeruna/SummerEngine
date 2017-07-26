@@ -78,9 +78,9 @@ void GuiCompMgr::Update()
 				break;
 			}
 		}
-		if (curr_e)
+		if (curr_e && m_comp_mgr->GetCurrentComponent())
 		{
-			//m_comp_mgr->ModifyComponentFromEntity();
+			m_comp_mgr->ModifyComponentFromEntity();
 		}
 	}
 

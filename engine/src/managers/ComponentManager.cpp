@@ -249,8 +249,7 @@ void ComponentManager::ModifyComponentFromEntity()
 		MessageWarning(ComponentMgr_id) << "Failed to find " + CompTypeAsString.at(m_curr_component->type) + " json object in SetCurrentComponent()";
 		return;
 	}
-
-	Engine::ComponentTypeToSystemPtr.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, component_obj);
+	Engine::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, component_obj);
 }
 
 void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container)

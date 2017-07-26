@@ -112,13 +112,11 @@ set(UTILITY_FILES
 source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
 #Engine Gui
-set(ENGINE_GUI_FILES
+set(ENGINE_GUI_MANAGER_FILES
 	include/gui/EngineGui.h
 	src/gui/EngineGui.cpp
 	include/gui/ManagerGui.h
 	src/gui/ManagerGui.cpp
-	include/gui/SystemGui.h
-	src/gui/SystemGui.cpp
 	include/gui/GuiSceneMgr.h
 	src/gui/GuiSceneMgr.cpp
 	include/gui/GuiEntityMgr.h
@@ -126,7 +124,26 @@ set(ENGINE_GUI_FILES
 	include/gui/GuiCompMgr.h
 	src/gui/GuiCompMgr.cpp
 	)
-source_group("engine_gui" FILES ${ENGINE_GUI_FILES})
+set(ENGINE_GUI_COMPONENT_MODIFIERS
+	include/gui/CompEditorGui.h
+	src/gui/CompEditorGui.cpp	
+	include/gui/CCollidableEditor.h
+	src/gui/CCollidableEditor.cpp	
+	include/gui/CDynamicEditor.h
+	src/gui/CDynamicEditor.cpp	
+	include/gui/CShapeEditor.h
+	src/gui/CShapeEditor.cpp	
+	include/gui/CTransformableEditor.h
+	src/gui/CTransformableEditor.cpp	
+	include/gui/CTextureEditor.h
+	src/gui/CTextureEditor.cpp	
+	)
+set(ENGINE_GUI_FILES
+	${ENGINE_GUI_MANAGER_FILES}
+	${ENGINE_GUI_COMPONENT_MODIFIERS}
+	)
+source_group("engine_gui" FILES ${ENGINE_GUI_MANAGER_FILES})
+source_group("engine_gui/component_modifiers" FILES ${ENGINE_GUI_COMPONENT_MODIFIERS})
 #-----------------------------------------------------------------
 #Imgui
 set(IMGUI_FILES

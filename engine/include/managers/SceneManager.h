@@ -63,8 +63,8 @@ public:
 	const std::vector<std::string>& GetSceneNames();
 
 private:
-	///Pointer to EntityComponentManager
-	EntityManager* m_ecm_ptr;
+	///Pointer to EntityManager
+	EntityManager* m_entity_mgr;
 
 	///Json object for holding current scene. This gets send to EntityManager and ComponentManager inside current scene
 	nlohmann::json m_sceneJsonObject;

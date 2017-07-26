@@ -16,12 +16,19 @@
 #include <gui/GuiSceneMgr.h>
 #include <gui/GuiEntityMgr.h>
 #include <gui/GuiCompMgr.h>
+#include <gui/CCollidableEditor.h>
+#include <gui/CDynamicEditor.h>
+#include <gui/CShapeEditor.h>
+#include <gui/CTextureEditor.h>
+#include <gui/CTransformableEditor.h>
 
 namespace se
 {
 namespace priv
 {
 std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {};
+
+std::map<COMPONENT_TYPE, gui::CompEditorGui*> Engine::ComponentTypeToGuiEditor = {};
 
 Engine::Engine()
 	: m_eng_conf_file_name("engine_config.json")
@@ -224,9 +231,17 @@ void Engine::_initGui()
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
 	
 	//SE_TODO: Let macro decide if these get build
+	//Emplace manager classes' guis
 	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr());
 	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());
 	m_engine_gui_container.emplace_back(new gui::GuiCompMgr());
+
+	//Emplace component editors
+	m_engine_gui_container.emplace_back(new gui::CCollidableEditor());
+	m_engine_gui_container.emplace_back(new gui::CDynamicEditor());
+	m_engine_gui_container.emplace_back(new gui::CShapeEditor());
+	m_engine_gui_container.emplace_back(new gui::CTextureEditor());
+	m_engine_gui_container.emplace_back(new gui::CTransformableEditor());
 }
 
 void Engine::_updateMgrs()

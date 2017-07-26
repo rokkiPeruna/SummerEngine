@@ -9,7 +9,7 @@ namespace se
 namespace priv
 {
 SceneManager::SceneManager()
-	: m_ecm_ptr(nullptr)
+	: m_entity_mgr(nullptr)
 	, m_sceneJsonObject()
 	, m_sceneNamesJsonObject()
 	, m_rel_path_to_json_scenes("")
@@ -27,16 +27,16 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-	m_ecm_ptr = nullptr;
+	m_entity_mgr = nullptr;
 }
 
-void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* ecm_ptr)
+void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr)
 {
 	///Relative path to scenes.json file
 	m_rel_path_to_json_scenes = filepathToUserFiles + m_scenes_subfolder_name;
 
 	///EntityComponentManager pointer
-	m_ecm_ptr = ecm_ptr;
+	m_entity_mgr = entityMgr_ptr;
 
 	///Load scene names
 	_loadSceneNames();
@@ -226,7 +226,7 @@ SEbool SceneManager::LoadScene(std::string scenename)
 		s->ClearComponentContainers();
 	}
 
-	m_ecm_ptr->InitWithNewScene(&m_currentScene);
+	m_entity_mgr->InitWithNewScene(&m_currentScene);
 	return true;
 }
 
