@@ -39,7 +39,7 @@ public:
 
 	void ClearComponentContainers() override final;
 
-	void OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj) override final;
+	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
 
 	void OnEntityRemoved(Entity& e) override final;
 
@@ -55,9 +55,9 @@ public:
 	void AssignTexture(const std::string& texture_name, CTexture& tex_comp);
 
 
-	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
+	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
 
-	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
+	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 

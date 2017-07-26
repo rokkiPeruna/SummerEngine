@@ -14,7 +14,7 @@ CShapeEditor::CShapeEditor()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::SHAPE, this);
 }
 
-void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
+void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)
 {
 	if (type == COMPONENT_TYPE::SHAPE)
 	{

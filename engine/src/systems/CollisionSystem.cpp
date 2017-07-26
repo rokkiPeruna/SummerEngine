@@ -77,7 +77,7 @@ void CollisionSystem::ClearComponentContainers()
 	m_free_cCollidables_indices = {};
 }
 
-void CollisionSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+void CollisionSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 {
 	if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
 	{
@@ -95,7 +95,7 @@ void CollisionSystem::OnEntityRemoved(Entity& e)
 
 /*-----------------EDITOR METHODS--------------------*/
 
-SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::COLLIDABLE)
 	{
@@ -110,7 +110,7 @@ SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 	}
 }
 
-void CollisionSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+void CollisionSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::COLLIDABLE)
 	{

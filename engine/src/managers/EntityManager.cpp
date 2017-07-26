@@ -101,7 +101,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 
 	entities_obj.value().erase(entity_name);
 
-	for (auto& s : Engine::Instance().GetSystemsContainer())
+	for (auto s : Engine::Instance().GetSystemsContainer())
 	{
 		s->OnEntityRemoved(m_entities_map.at(entity_name));
 	}
@@ -198,7 +198,7 @@ SEint EntityManager::_findFreeEntityID()
 	{
 		//Push indices larger than current largest index with proper marginal
 		SEint curr_larg_id = tmp.back();
-		for (SEint i = 10; i > 0; --i)
+		for (SEint i = 100; i > 0; --i)
 		{
 			m_free_entity_ids.push(curr_larg_id + i);
 		}
@@ -216,7 +216,7 @@ SEint EntityManager::_findFreeEntityID()
 	//If scene is really empty of entities, push proper amount of values to free ids and return first id
 	else
 	{
-		for (SEint i = 10; i > 0; --i)
+		for (SEint i = 100; i > 0; --i)
 		{
 			m_free_entity_ids.push(i);
 		}

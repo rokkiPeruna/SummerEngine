@@ -15,7 +15,7 @@ CDynamicEditor::CDynamicEditor()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::DYNAMIC, this);
 }
 
-void CDynamicEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
+void CDynamicEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)
 {
 	if (type == COMPONENT_TYPE::DYNAMIC)
 	{

@@ -15,7 +15,7 @@ CTransformableEditor::CTransformableEditor()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::TRANSFORMABLE, this);
 }
 
-void CTransformableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
+void CTransformableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)
 {
 	if (type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
