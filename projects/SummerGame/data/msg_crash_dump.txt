@@ -1,3 +1,7 @@
+MESSAGE TYPE: ERROR
+EditorLoop failed from std::exception,
+exception message: invalid map<K, T> key
+---
 MESSAGE TYPE: INFO
 Compiling test.frag
 ---

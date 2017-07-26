@@ -63,10 +63,12 @@ public:
 	///Delete entity from scene
 	void DeleteEntityOnEditor(std::string entity_name);
 
-	const std::unordered_map<std::string, Entity>& GetEntities()
-	{
-		return m_entities_map;
-	}
+	std::unordered_map<std::string, Entity>& GetEntities();
+
+	Scene* GetCurrentScene();
+
+	Entity* GetCurrentEntity();
+	void SetCurrentEntity(Entity* e);
 
 private:
 	///Pointer to ComponentManager
@@ -110,9 +112,6 @@ private:
 	SEint m_curr_free_entity_id;
 	SEbool m_posb_gap_in_free_entity_ids;
 	std::stack<SEint> m_free_entity_ids;
-
-	///GUI
-	std::string m_gui_scene_name;
 
 };
 }//namespace priv

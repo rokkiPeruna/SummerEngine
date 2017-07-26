@@ -88,6 +88,7 @@ public:
 	///Manager getters
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 	EntityManager* GetEntityMgr() { return &m_entityMgr; }
+	ComponentManager* GetCompMgr() { return &m_compMgr; }
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 
 	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.

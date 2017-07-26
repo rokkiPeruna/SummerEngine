@@ -23,7 +23,6 @@ EntityManager::EntityManager()
 	, m_posb_gap_in_free_entity_ids(true)
 	, m_curr_free_entity_id(-1)
 	, m_free_entity_ids{}
-	, m_gui_scene_name("NO ACTIVE SCENE")
 {
 }
 
@@ -123,8 +122,6 @@ void EntityManager::InitWithNewScene(Scene* scene)
 		m_free_entity_ids.pop();
 	m_curr_free_entity_id = _findFreeEntityID();
 
-	m_gui_scene_name = scene->GetName();
-
 	//Inform ComponentManager of scene change
 	m_compMgr->InitWithNewScene(m_entities_map, scene);
 }
@@ -174,6 +171,26 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	}
 
 	m_entities_map.erase(entity_name);
+}
+
+std::unordered_map<std::string, Entity>& EntityManager::GetEntities()
+{
+	return m_entities_map;
+}
+
+Scene* EntityManager::GetCurrentScene()
+{
+	return m_currentScene;
+}
+
+Entity* EntityManager::GetCurrentEntity()
+{
+	return m_currentEntity;
+}
+
+void EntityManager::SetCurrentEntity(Entity* e)
+{
+	m_currentEntity = e;
 }
 
 SEint EntityManager::_loadSceneEntities()

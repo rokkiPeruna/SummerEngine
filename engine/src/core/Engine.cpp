@@ -222,12 +222,11 @@ void Engine::_initGui()
 {
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
-	auto ctx = ImGui::GetCurrentContext();
 	
 	//SE_TODO: Let macro decide if these get build
 	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr());
-	//m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());
-	//m_engine_gui_container.emplace_back(new gui::GuiCompMgr());
+	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());
+	m_engine_gui_container.emplace_back(new gui::GuiCompMgr());
 }
 
 void Engine::_updateMgrs()
@@ -258,11 +257,11 @@ void Engine::_updateGUI()
 	}
 
 	//SE_TODO: Create better gui structure
-	//for (auto gui : m_engine_gui_container)
-	//{
-	//	gui->Update();
-	//}
-	m_engine_gui_container.at(0)->Update();
+	for (auto gui : m_engine_gui_container)
+	{
+		gui->Update();
+	}
+	//m_engine_gui_container.at(0)->Update();
 	//m_entityMgr.ShowAndUpdateGUI();
 	//m_sceneMgr.ShowAndUpdateGUI();
 	//m_compMgr.ShowAndUpdateGUI();
@@ -339,9 +338,21 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}
 	}
-	catch (...)
+	catch (const se_exception& exc)
 	{
-		std::cout << "Failure in Editor!" << std::endl;
+		MessageError(Engine_id) << "EditorLoop failed from se_exception,\nexception message: " + exc.msg;
+		std::cout << "Failure in EditorLoop, check crash dump for messages!!" << std::endl;
+		std::string crash_dump_file_n = "msg_crash_dump";
+		std::string suffix = ".txt";
+		m_messenger.CrashDumbToFile(m_path_to_user_files, crash_dump_file_n, suffix);
+		exitProgram = true;
+		return;
+	}
+	catch (const std::exception& exc)
+	{
+		std::string msg(exc.what());
+		MessageError(Engine_id) << "EditorLoop failed from std::exception,\nexception message: " + msg;
+		std::cout << "Failure in EditorLoop, check crash dump for messages!!" << std::endl;
 		std::string crash_dump_file_n = "msg_crash_dump";
 		std::string suffix = ".txt";
 		m_messenger.CrashDumbToFile(m_path_to_user_files, crash_dump_file_n, suffix);

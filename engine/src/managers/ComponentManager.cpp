@@ -266,6 +266,10 @@ void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_c
 		m_curr_comp_index = -1;
 	}
 }
+Component* ComponentManager::GetCurrentComponent()
+{
+	return m_curr_component;
+}
 
 void ComponentManager::SetCurrentEntity(Entity* e)
 {

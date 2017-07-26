@@ -56,8 +56,9 @@ public:
 	void ModifyComponentFromEntity();
 
 	void SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container);
+	Component* GetCurrentComponent();
 
-	///Set pointer to current entity. Mostly called by EntityManager.
+	///Set pointer to current entity. Mostly called by EntityManager and gui.
 	void SetCurrentEntity(Entity* e);
 
 private:
@@ -85,7 +86,7 @@ private:
 	///Pointer to current scene
 	Scene* m_curr_scene;
 
-	///For gui
+	///Pointer to current entity
 	Entity* m_curr_entity;
 
 	///Pointer to current component for editor
