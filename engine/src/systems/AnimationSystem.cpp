@@ -96,7 +96,6 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
 		m_free_cTexture_indices.push(_removeComponent_helper(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures));
-		m_cTextures.at(entity.components.at(COMPONENT_TYPE::TEXTURE)).ownerID = -1;
 	}
 	else
 	{
