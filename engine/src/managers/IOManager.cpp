@@ -31,11 +31,6 @@ void IOManager::Update()
 
 }
 
-void IOManager::ShowAndUpdateGUI()
-{
-
-}
-
 void IOManager::_handleEvents()
 {
 	SDL_Event event;

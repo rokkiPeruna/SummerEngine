@@ -45,14 +45,19 @@ public:
 
 	void SetTextureResourceNames(const std::vector<std::string>& tex_names) { m_tex_res_names = { tex_names }; }
 
+	const std::vector<std::string>& GetTextureResourceNames() { return m_tex_res_names; }
 
-	/*-----------------EDITOR METHODS--------------------*/
+	///Returns SEuint for texture handle to be assigned to component.
+	///If texture is already loaded to GPU memory, returns that handle,
+	///if not, calls _createTexture() and returns handle to newly created texture
+	///1.param: name of the texture with correct suffix (e.g. player.png)
+	///2.param: CTexture component to which the texture is binded
+	void AssignTexture(const std::string& texture_name, CTexture& tex_comp);
+
 
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
-
-	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
@@ -72,13 +77,6 @@ private:
 	///Unordered map holding texture ids. Key is std::string as name of the texture with suffix (e.g. tiles.png),
 	///value is pair(SEuint, SEbool) containing handle to texture and boolean telling if texture has alpha channel.
 	std::unordered_map<std::string, std::pair<SEuint, SEbool>> m_texture_map;
-
-	///Returns SEuint for texture handle to be assigned to component.
-	///If texture is already loaded to GPU memory, returns that handle,
-	///if not, calls _createTexture() and returns handle to newly created texture
-	///1.param: name of the texture with correct suffix (e.g. player.png)
-	///2.param: CTexture component to which the texture is binded
-	void _assignTexture(const std::string& texture_name, CTexture& tex_comp);
 
 	///Create texture from pixel data.
 	///1.param: Name of the texture with correct suffix (e.g. player.png).

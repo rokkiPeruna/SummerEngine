@@ -42,8 +42,6 @@ public:
 	///Update method
 	void Update() override final;
 
-	void ShowAndUpdateGUI() override final;
-
 	///Initialize with new scene. Takes in const ref of std::vector containing scene's entities and current scene ptr
 	void InitWithNewScene(std::unordered_map<std::string, Entity>& entities, Scene* scene);
 
@@ -55,8 +53,10 @@ public:
 
 	void ModifyComponentFromEntity();
 
+	///Set current component by finding it with type and index. Sets also m_curr_comp_index
 	void SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_container);
 	Component* GetCurrentComponent();
+	SEint GetCurrentComponentIndex();
 
 	///Set pointer to current entity. Mostly called by EntityManager and gui.
 	void SetCurrentEntity(Entity* e);

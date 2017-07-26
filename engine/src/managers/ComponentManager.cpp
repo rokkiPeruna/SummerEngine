@@ -49,70 +49,6 @@ void ComponentManager::Update()
 
 }
 
-void ComponentManager::ShowAndUpdateGUI()
-{
-	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
-	//ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	//ImGui::SetNextWindowPos(ImVec2(gui::_gui_width / 2, gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	//ImGui::Begin("Component Editor", &gui::_gui_show_component_mgr_window);
-	//if (m_curr_entity)
-	//	ImGui::Text(m_curr_entity->name.c_str());
-	//else
-	//{
-	//	//If no active entity, skip rest
-	//	ImGui::Text("NO ACTIVE ENTITY");
-	//	ImGui::End();
-	//	return;
-	//}
-
-	//ImGui::Separator();
-
-	//if (ImGui::CollapsingHeader("Add component"))
-	//{
-	//	for (auto& component : CompTypeAsString)
-	//	{
-	//		if (m_curr_entity->components.count(component.first))
-	//			continue;
-
-	//		if (ImGui::Button(component.second.c_str()))
-	//		{
-	//			AddNewComponentToEntity(*m_curr_entity, component.first);
-	//		}
-	//	}
-	//}
-	//if (ImGui::CollapsingHeader("Remove component"))
-	//{
-	//	for (auto& component : m_curr_entity->components)
-	//	{
-	//		//Can't delete position component
-	//		if (component.first == COMPONENT_TYPE::TRANSFORMABLE)
-	//			continue;
-	//		if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
-	//		{
-	//			RemoveComponentFromEntity(*m_curr_entity, component.first);
-	//			break;
-	//		}
-	//	}
-	//}
-	//if (ImGui::CollapsingHeader("Modify component"))
-	//{
-	//	for (auto& component : m_curr_entity->components)
-	//	{
-	//		if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
-	//		{
-	//			SetCurrentComponent(component.first, component.second);
-	//			break;
-	//		}
-	//	}
-	//	if (m_curr_component)
-	//	{
-	//		ModifyComponentFromEntity();
-	//	}
-	//}
-
-	//ImGui::End();
-}
-
 void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>& entities, Scene* scene)
 {
 	//SE_TODO: Move to logic separate functions
@@ -222,6 +158,10 @@ void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE 
 		MessageError(ComponentMgr_id) << "Could not open json object [" + entity.name + "] in RemoveComponentFromEntity(),\ncomponent not removed from " + entity.name + "!";
 		return;
 	}
+	//Check that if removed component is same m_curr_component, make m_curr_component nullptr
+	if (Engine::ComponentTypeToSystemPtr.at(component_type)->GetPlainComponentPtr(component_type, entity.components.at(component_type)) == m_curr_component)
+		//SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
+
 	//Remove from run-time system and entity. Note that system responsible for handling the component to be added, is also
 	//responsible for writing changes to json object. This way we avoid pointer casting.
 	Engine::ComponentTypeToSystemPtr.at(component_type)->RemoveComponent(entity, component_type, entity_obj);
@@ -234,19 +174,19 @@ void ComponentManager::ModifyComponentFromEntity()
 	auto& entities_obj = json->find("entities"); //SE_TODO: Change to some constant
 	if (entities_obj == json->end())
 	{
-		MessageWarning(ComponentMgr_id) << "Failed to find [entities] json object in SetCurrentComponent()";
+		MessageWarning(ComponentMgr_id) << "Failed to find [entities] json object in ModifyComponentFromEntity()";
 		return;
 	}
 	auto& entity_obj = entities_obj.value().find(m_curr_entity->name);
 	if (entity_obj == entities_obj.value().end())
 	{
-		MessageWarning(ComponentMgr_id) << "Failed to find " + m_curr_entity->name + " json object in SetCurrentComponent()";
+		MessageWarning(ComponentMgr_id) << "Failed to find " + m_curr_entity->name + " json object in ModifyComponentFromEntity()";
 		return;
 	}
 	auto& component_obj = entity_obj.value().find(CompTypeAsString.at(m_curr_component->type));
 	if (component_obj == entity_obj.value().end())
 	{
-		MessageWarning(ComponentMgr_id) << "Failed to find " + CompTypeAsString.at(m_curr_component->type) + " json object in SetCurrentComponent()";
+		MessageWarning(ComponentMgr_id) << "Failed to find " + CompTypeAsString.at(m_curr_component->type) + " json object in ModifyComponentFromEntity()";
 		return;
 	}
 	Engine::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, component_obj);
@@ -268,6 +208,11 @@ void ComponentManager::SetCurrentComponent(COMPONENT_TYPE type, SEint index_in_c
 Component* ComponentManager::GetCurrentComponent()
 {
 	return m_curr_component;
+}
+
+SEint ComponentManager::GetCurrentComponentIndex()
+{
+	return m_curr_comp_index;
 }
 
 void ComponentManager::SetCurrentEntity(Entity* e)

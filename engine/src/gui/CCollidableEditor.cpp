@@ -14,9 +14,21 @@ CCollidableEditor::CCollidableEditor()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::COLLIDABLE, this);
 }
 
-void CCollidableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
+void CCollidableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
 {
-	Message(_nullSysMgr_id) << "CCollidableEditor";
+	if (type == COMPONENT_TYPE::COLLIDABLE)
+	{
+		auto comp = GetCollidableComponent(index_in_container);
+
+		ImGui::SliderFloat("aabb_min", &comp->aabb.x, -10.0f, 10.0f);
+		ImGui::SliderFloat("aabb_max", &comp->aabb.y, -10.0f, 10.0f);
+
+		if (ImGui::Button("Apply changes"))
+		{
+			component_obj.value().at("min") = comp->aabb.x;
+			component_obj.value().at("max") = comp->aabb.y;
+		}
+	}
 }
 
 }//namespace gui

@@ -47,8 +47,6 @@ public:
 	///Update method
 	void Update() override final;
 
-	void ShowAndUpdateGUI() override final;
-
 	///Initialize with EntityManager with new current scene and it's entities. This is called by SceneManager.
 	void InitWithNewScene(Scene* scene);
 

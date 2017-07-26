@@ -3,6 +3,7 @@
 
 //SE includes:
 #include <gui/CompEditorGui.h>
+#include <systems/MovementSystem.h>
 
 namespace se
 {
@@ -15,7 +16,7 @@ public:
 	///Default constructor
 	CDynamicEditor();
 
-	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
+	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj) override final;
 };
 
 }//namespace gui

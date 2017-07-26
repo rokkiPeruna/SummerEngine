@@ -48,9 +48,6 @@ public:
 	///Check if removed entity has components that are in system's container. If it has, marks those components as free to replace (pushes them to free_indices container) and doesn't update them.
 	virtual void OnEntityRemoved(Entity& e) = 0;
 
-
-	//EDITOR METHODS
-
 	///CreateComponent adds default constructed component of given type to container and adds component's index in that container
 	///to Entity's components map. Also writes component to current scene file format's iterator.
 	///Returns component's index in container. See MovementSystem's implementation for details.
@@ -58,9 +55,6 @@ public:
 
 	///RemoveComponent "removes" component from entity and system(marks component as free to be replaced)
 	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
-
-	///ModifyComponent provides gui interface for user to to apply changes to given entity's component's values
-	virtual void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator&) = 0;
 
 	///GetPlainComponentPtr returns plain Component* to be used in editor function. Can't be used for alternating data in game logic
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;

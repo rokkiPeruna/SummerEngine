@@ -29,8 +29,6 @@ public:
 
 	void Update() override final;
 
-	void ShowAndUpdateGUI() override final;
-
 private:
 
 

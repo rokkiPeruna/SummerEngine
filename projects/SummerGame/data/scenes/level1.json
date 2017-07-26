@@ -20,12 +20,12 @@
             "dynamic": {
                 "_ownerID": 2,
                 "_type": 1,
-                "acc_x": 0.0,
+                "acc_x": 39.4160003662109,
                 "acc_y": 0.0,
-                "acc_z": 0.0,
+                "acc_z": 1.46000003814697,
                 "velo_x": 0.0,
                 "velo_y": 0.0,
-                "velo_z": 0.0
+                "velo_z": 86.1310043334961
             },
             "id": 2,
             "shape": {
@@ -46,7 +46,7 @@
             "texture": {
                 "_ownerID": 2,
                 "_type": 3,
-                "tex_name": "testTexture.jpg"
+                "tex_name": "test_texture.png"
             },
             "transformable": {
                 "_ownerID": 2,
@@ -54,7 +54,7 @@
                 "orig_x": 0.0,
                 "orig_y": 0.0,
                 "orig_z": 0.0,
-                "pos_x": 0.0,
+                "pos_x": 4.38000011444092,
                 "pos_y": 0.0,
                 "pos_z": 0.0,
                 "rot": 0.0,

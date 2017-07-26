@@ -62,7 +62,7 @@ void AnimationSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 	{
 		SEint index = _onEntityAdded_helper(e, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
 		CTexture& comp = m_cTextures.at(index);
-		_assignTexture(comp.name, comp);
+		AssignTexture(comp.name, comp);
 	}
 }
 
@@ -80,7 +80,7 @@ SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
 		SEint index = _createComponent_helper<CTexture>(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
-		_assignTexture(m_def_tex_name, m_cTextures.at(index));
+		AssignTexture(m_def_tex_name, m_cTextures.at(index));
 		entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TEXTURE)).at("tex_name") = m_def_tex_name;
 		return index;
 	}
@@ -104,43 +104,7 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 	}
 }
 
-void AnimationSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
-{
-	if (type == COMPONENT_TYPE::TEXTURE)
-	{
-		if (ImGui::CollapsingHeader("Add texture"))
-		{
-
-			if (m_tex_res_names.empty())
-			{
-				MessageInfo(AnimationSys_id) << "No available texture resources in ModifyComponent!";
-				return;
-			}
-
-			//Get available textures
-			for (auto t_n : m_tex_res_names)
-			{
-				if (ImGui::Button(t_n.c_str()))
-				{
-					_assignTexture(t_n, m_cTextures.at(index_in_container));
-					component_obj.value().at("tex_name") = t_n;
-				}
-			}
-		}
-	}
-}
-
-Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
-{
-	if (type == COMPONENT_TYPE::TEXTURE)
-	{
-		return &m_cTextures.at(index_in_container);
-	}
-	else
-		return nullptr;
-}
-
-void AnimationSystem::_assignTexture(const std::string& texture_name, CTexture& tex_comp)
+void AnimationSystem::AssignTexture(const std::string& texture_name, CTexture& tex_comp)
 {
 	//Check if we have texture loaded already
 	if (m_texture_map.count(texture_name))
@@ -156,6 +120,17 @@ void AnimationSystem::_assignTexture(const std::string& texture_name, CTexture& 
 		tex_comp.has_alpha = data.second;
 	}
 }
+
+Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
+{
+	if (type == COMPONENT_TYPE::TEXTURE)
+	{
+		return &m_cTextures.at(index_in_container);
+	}
+	else
+		return nullptr;
+}
+
 
 std::pair<SEuint, SEbool> AnimationSystem::_createTexture(const std::string& texture_name)
 {

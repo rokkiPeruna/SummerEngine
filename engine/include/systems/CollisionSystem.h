@@ -39,14 +39,9 @@ public:
 
 	void OnEntityRemoved(Entity& e) override final;
 
-
-	/*-----------------EDITOR METHODS--------------------*/
-
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
-
-	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 

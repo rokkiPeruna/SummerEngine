@@ -82,11 +82,6 @@ void DummySystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type,
 	}
 }
 
-void DummySystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
-{
-
-}
-
 Component* DummySystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
 {
 	if (type == component type)

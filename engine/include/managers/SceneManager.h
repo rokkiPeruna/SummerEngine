@@ -41,9 +41,6 @@ public:
 	///Update manager and gui
 	void Update() override final;
 
-	///
-	void ShowAndUpdateGUI() override final;
-
 	///Add new scene. To move to newly created scene, you must also load it with LoadScene()
 	SEbool AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
 
@@ -58,6 +55,9 @@ public:
 
 	///Save progress. Calls EntityManager's SaveProgress
 	void SaveProgress();
+
+	///Returns pointer to current scene
+	Scene* GetCurrentScene();
 
 	///Returns scene names
 	const std::vector<std::string>& GetSceneNames();

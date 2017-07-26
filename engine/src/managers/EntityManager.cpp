@@ -52,62 +52,6 @@ void EntityManager::Update()
 
 }
 
-void EntityManager::ShowAndUpdateGUI()
-{
-	/*ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Entity editor", &_gui_show_entity_comp_mgr_window); ImGui::SameLine();
-	ImGui::Text(m_gui_scene_name.c_str());
-	ImGui::Separator();
-
-	if (!m_currentScene)
-	{
-		ImGui::End();
-		return;
-	}
-
-	if (ImGui::CollapsingHeader("Create entity"))
-	{
-		static SEchar entityname[64];
-		ImGui::InputText("Name", entityname, 64, ImGuiInputTextFlags_CharsNoBlank);
-		if (std::strlen(entityname) != 0)
-		{
-			if (ImGui::Button("Create!"))
-			{
-				CreateEntityOnEditor(entityname);
-				memset(&entityname[0], 0, sizeof(entityname));
-			}
-		}
-
-	}
-	if (ImGui::CollapsingHeader("Delete entity"))
-	{
-		for (auto& e : m_entities_map)
-		{
-			if (ImGui::Button(e.first.c_str()))
-			{
-				DeleteEntityOnEditor(e.first);
-				break;
-			}
-		}
-	}
-	ImGui::Separator();
-	if (ImGui::CollapsingHeader("Entities"))
-	{
-		for (auto& e : m_entities_map)
-		{
-			ImGui::Bullet();
-			if (ImGui::SmallButton(e.second.name.c_str()))
-			{
-				m_currentEntity = &e.second;
-				m_compMgr->SetCurrentEntity(m_currentEntity);
-				_gui_show_component_mgr_window = true;
-			}
-		}
-	}
-	ImGui::End();*/
-}
-
 void EntityManager::InitWithNewScene(Scene* scene)
 {
 	m_entities_map.clear();

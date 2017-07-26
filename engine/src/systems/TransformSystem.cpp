@@ -9,8 +9,16 @@
 #include <managers/Mouse.h>
 #include <utility/EditorFunctions.h>
 
+#include <utility/Math.h>
+#include <glm/glm.hpp>
+
 namespace se
 {
+CShape* GetShapeComponent(SEint index)
+{
+	return &priv::Engine::Instance().GetTransformSystem()->m_cShapes.at(index);
+}
+
 namespace priv
 {
 std::vector<CTransformable> TransformSystem::TransformableComponents = {};
@@ -57,12 +65,16 @@ void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_o
 	if (e.components.count(COMPONENT_TYPE::TRANSFORMABLE))
 	{
 		//Build component from json object and mark it's owner
-		CTransformable component = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TRANSFORMABLE));
-		component.ownerID = e.id;
+		CTransformable c = entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TRANSFORMABLE));
+		c.ownerID = e.id;
 		//Give entity a component's index which in this particular case is the same as entity's own id
-		e.components.at(COMPONENT_TYPE::TRANSFORMABLE) = component.ownerID;
+		e.components.at(COMPONENT_TYPE::TRANSFORMABLE) = c.ownerID;
+
+		//Calc model matrix SE_TODO: Create function to system to calculate this!!!
+		c.modelMatrix = glm::translate(Mat4f(1.0f), c.position) * glm::rotate(Mat4f(1.0f), glm::radians(c.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), c.scale);
+
 		//Build run-time component on the index that matches owning entity's id
-		TransformableComponents.emplace(TransformableComponents.begin() + component.ownerID, component);
+		TransformableComponents.emplace(TransformableComponents.begin() + c.ownerID, c);
 	}
 	if (e.components.count(COMPONENT_TYPE::SHAPE))
 	{
@@ -104,6 +116,7 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 	{
 		SEint tmp = _createComponent_helper(e, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
 		m_cShapes.at(tmp).my_Transform = e.id;
+		return e.id;
 	}
 
 	else
@@ -130,101 +143,6 @@ void TransformSystem::RemoveComponent(Entity& e, COMPONENT_TYPE component_type, 
 		return;
 	}
 }
-
-void TransformSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
-{
-	if (type == COMPONENT_TYPE::TRANSFORMABLE)
-	{
-
-		//SE_TODO: Check somehow that index is valid component!
-		auto& comp = TransformableComponents.at(index_in_container);
-
-		Keyboard keyboard;
-		Mouse mouse;
-
-		SEint mouse_pos_X = 0;
-		SEint mouse_pos_Y = 0;
-
-		if (keyboard.GetState(KeyboardState::W) && mouse.GetState(MouseState::Left_Button, &mouse_pos_X, &mouse_pos_Y))
-		{
-			Vec2f norm_mouse_pos = util::ScreenCoordsToNormOpenGLCoords(mouse_pos_X, mouse_pos_Y, Vec2f(gui::_gui_width, gui::_gui_heigth), Vec3f(0.0f, 0.0f, 10.0f));
-			comp.position.x = norm_mouse_pos.x;
-			comp.position.y = norm_mouse_pos.y;
-		}
-		if (keyboard.GetState(KeyboardState::R))
-		{
-			comp.rotation += 10.f;
-		}
-
-		ImGui::SliderFloat("pos_x", &comp.position.x, 0.0f, 200.0f);
-		ImGui::SliderFloat("pos_y", &comp.position.y, 0.0f, 200.0f);
-		ImGui::SliderFloat("pos_z", &comp.position.z, 0.0f, 200.0f);
-		ImGui::SliderFloat("orig_x", &comp.origin.x, 0.0f, 200.0f);
-		ImGui::SliderFloat("orig_y", &comp.origin.y, 0.0f, 200.0f);
-		ImGui::SliderFloat("orig_z", &comp.origin.z, 0.0f, 200.0f);
-		ImGui::SliderFloat("rot", &comp.rotation, -360.0f, 360.0f);
-		ImGui::SliderFloat("scal_x", &comp.scale.x, 0.0f, 200.0f);
-		ImGui::SliderFloat("scal_y", &comp.scale.y, 0.0f, 200.0f);
-		ImGui::SliderFloat("scal_z", &comp.scale.z, 0.0f, 200.0f);
-
-		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
-
-		if (ImGui::Button("Apply changes"))
-		{
-			component_obj.value().at("pos_x") = comp.position.x;
-			component_obj.value().at("pos_y") = comp.position.y;
-			component_obj.value().at("pos_z") = comp.position.z;
-			component_obj.value().at("orig_x") = comp.origin.x;
-			component_obj.value().at("orig_y") = comp.origin.y;
-			component_obj.value().at("orig_z") = comp.origin.z;
-			component_obj.value().at("rot") = comp.rotation;
-			component_obj.value().at("scal_x") = comp.scale.x;
-			component_obj.value().at("scal_y") = comp.scale.y;
-			component_obj.value().at("scal_z") = comp.scale.z;
-		}
-
-	}
-
-	if (type == COMPONENT_TYPE::SHAPE)
-	{
-		//Store the id of the transform this shape had so we can later assing it back to a newly formed shape.
-		//Also store owner id
-		SEint id = m_cShapes.at(index_in_container).my_Transform;
-		SEint owner_id = m_cShapes.at(index_in_container).ownerID;
-		if (ImGui::Button("Triangle"))
-		{
-			m_cShapes.at(index_in_container) = CShape();
-			m_cShapes.at(index_in_container).my_Transform = id;
-			m_cShapes.at(index_in_container).ownerID = owner_id;
-		}
-		if (ImGui::Button("Rectangle"))
-		{
-			m_cShapes.at(index_in_container) = CShape(4);
-			m_cShapes.at(index_in_container).my_Transform = id;
-			m_cShapes.at(index_in_container).ownerID = owner_id;
-		}
-		if (ImGui::Button("Circle"))
-		{
-			m_cShapes.at(index_in_container) = CShape(30);
-			m_cShapes.at(index_in_container).my_Transform = id;
-			m_cShapes.at(index_in_container).ownerID = owner_id;
-		}
-		if (ImGui::Button("Add indie"))
-		{
-			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() + 1);
-			m_cShapes.at(index_in_container).my_Transform = id;
-			m_cShapes.at(index_in_container).ownerID = owner_id;
-		}
-		if (ImGui::Button("Remove indice") && m_cShapes.at(index_in_container).points.size() > 3)
-		{
-			m_cShapes.at(index_in_container) = CShape(m_cShapes.at(index_in_container).points.size() - 1);
-			m_cShapes.at(index_in_container).my_Transform = id;
-			m_cShapes.at(index_in_container).ownerID = owner_id;
-		}
-
-	}
-}
-
 
 Component* TransformSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
 {

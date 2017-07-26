@@ -27,8 +27,8 @@ const SEuint64 CollisionSys_id =				oOo << 8;
 const SEuint64 TransformSys_id =				oOo << 9;  
 const SEuint64 AnimationSys_id =				oOo << 10; 
 const SEuint64 IOMgr_id			=				oOo << 11; 
-const SEuint64 dummy_id_mgrsys_12 =				oOo << 12; //Remember to add id to map below!!!
-const SEuint64 dummy_id_mgrsys_13 =				oOo << 13; //Remember to add id to map below!!!
+const SEuint64 gui_ComponentEditor =			oOo << 12; 
+const SEuint64 gui_Manager =					oOo << 13; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_14 =				oOo << 14; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_15 =				oOo << 15; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_16 =				oOo << 16; //Remember to add id to map below!!!
@@ -99,7 +99,9 @@ static const std::map<SEuint64, std::string> sys_mgr_id_to_name
 	{ CollisionSys_id, "collision_sys"},
 	{ TransformSys_id, "transform_sys" },
 	{ AnimationSys_id, "animation_sys" },
-	{ IOMgr_id, "IOmgr_sys" }
+	{ IOMgr_id, "IOmgr_sys" },
+	{ gui_ComponentEditor, "gui_ComponentEditor_subclass" },
+	{ gui_Manager, "gui_Manager" }
 };
 
 }//namespace priv

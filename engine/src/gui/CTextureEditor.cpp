@@ -7,16 +7,41 @@ namespace se
 namespace gui
 {
 CTextureEditor::CTextureEditor()
+	: m_animation_sys(nullptr)
 {
 	//This is IMPORTANT. It binds component to correct editor.
 	//MUST be done in every new component editor's constructor
 	//ALSO remember to add editor to Engine::m_engine_gui_container in Engine::_initGui()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::TEXTURE, this);
+
+	m_animation_sys = priv::Engine::Instance().GetAnimationSystem();
+	assert(m_animation_sys);
 }
 
-void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
+void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
 {
-	Message(_nullSysMgr_id) << "CTextureEditor";
+	if (type == COMPONENT_TYPE::TEXTURE)
+	{
+		if (ImGui::CollapsingHeader("Add texture"))
+		{
+
+			if (m_animation_sys->GetTextureResourceNames().empty())
+			{
+				MessageInfo(AnimationSys_id) << "No available texture resources in ModifyComponent!";
+				return;
+			}
+
+			//Get available textures
+			for (auto t_n : m_animation_sys->GetTextureResourceNames())
+			{
+				if (ImGui::Button(t_n.c_str()))
+				{
+					m_animation_sys->AssignTexture(t_n, *GetTextureComponent(index_in_container));
+					component_obj.value().at("tex_name") = t_n;
+				}
+			}
+		}
+	}
 }
 
 }//namespace gui

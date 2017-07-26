@@ -4,6 +4,7 @@
 
 //SE includes:
 #include <gui/ManagerGui.h>
+#include <managers/SceneManager.h>
 #include <managers/EntityManager.h>
 #include <managers/ComponentManager.h>
 
@@ -26,11 +27,27 @@ public:
 	void Update() override final;
 
 private:
+	///SceneManager pointer
+	priv::SceneManager* m_scene_mgr;
+
 	///EntityManager pointer
 	priv::EntityManager* m_entity_mgr;
 
 	///ComponentManager pointer
 	priv::ComponentManager* m_comp_mgr;
+
+	///Need reinit?
+	SEbool m_reInitWithNewComp;
+
+	///Initialize with new component
+	void _initWithNewComp();
+
+	///
+	nlohmann::json::iterator m_component_obj;
+
+	///
+	Component* m_curr_component;
+	SEint m_curr_comp_index;
 };
 
 }//namespace gui

@@ -1,6 +1,9 @@
 #ifndef SE_ENGINEGUI_H
 #define SE_ENGINEGUI_H
 
+//STL includes:
+#include <cassert>
+
 //External includes:
 #include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
@@ -13,6 +16,8 @@
 #include <core/gui_values.h>
 #include <core/SE_exceptions.h>
 #include <managers/Entity.h>
+#include <managers/Keyboard.h>
+#include <managers/Mouse.h>
 
 namespace se
 {

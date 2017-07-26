@@ -14,9 +14,47 @@ CShapeEditor::CShapeEditor()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::SHAPE, this);
 }
 
-void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
+void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
 {
-	Message(_nullSysMgr_id) << "CShapeEditor";
+	if (type == COMPONENT_TYPE::SHAPE)
+	{
+		//Store the id of the transform this shape had so we can later assing it back to a newly formed shape.
+		//Also store owner id
+		SEint id = GetShapeComponent(index_in_container)->my_Transform;
+		SEint owner_id = GetShapeComponent(index_in_container)->ownerID;
+		CShape& comp = *GetShapeComponent(index_in_container);
+		if (ImGui::Button("Triangle"))
+		{
+			comp = CShape();
+			comp.my_Transform = id;
+			comp.ownerID = owner_id;
+		}
+		if (ImGui::Button("Rectangle"))
+		{
+			comp = CShape(4);
+			comp.my_Transform = id;
+			comp.ownerID = owner_id;
+		}
+		if (ImGui::Button("Circle"))
+		{
+			comp = CShape(30);
+			comp.my_Transform = id;
+			comp.ownerID = owner_id;
+		}
+		if (ImGui::Button("Add indie"))
+		{
+			comp = CShape(comp.points.size() + 1);
+			comp.my_Transform = id;
+			comp.ownerID = owner_id;
+		}
+		if (ImGui::Button("Remove indice") && comp.points.size() > 3)
+		{
+			comp = CShape(comp.points.size() - 1);
+			comp.my_Transform = id;
+			comp.ownerID = owner_id;
+		}
+
+	}
 }
 
 }//namespace gui

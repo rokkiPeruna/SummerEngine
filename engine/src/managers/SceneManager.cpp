@@ -52,70 +52,6 @@ void SceneManager::Update()
 
 }
 
-void SceneManager::ShowAndUpdateGUI()
-{
-	/*ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
-
-	if (ImGui::CollapsingHeader("Create scene"))
-	{
-		ImGui::Text("Scene name:");
-		static SEchar scenename[64];
-		ImGui::InputText("", scenename, 64, ImGuiInputTextFlags_CharsNoBlank);
-		if (std::strlen(scenename) != 0)
-		{
-			ImGui::Text("Scene type");
-			static SEint scenetype_picker = 0;
-			ImGui::RadioButton("Menu", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::MENU)); ImGui::SameLine();
-			ImGui::RadioButton("Level", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::LEVEL)); ImGui::SameLine();
-			ImGui::RadioButton("Credits", &scenetype_picker, static_cast<SEint>(SCENE_TYPE::CREDITS));
-
-			static SEint width = 0;
-			static SEint heigth = 0;
-			if (scenetype_picker == static_cast<SEint>(SCENE_TYPE::LEVEL))
-			{
-				ImGui::Separator();
-				ImGui::SliderInt("Level width", &width, 2, 128);
-				ImGui::SliderInt("Level heigth", &heigth, 2, 128);
-			}
-
-			if (scenetype_picker != 0 && std::strlen(scenename) != 0)
-			{
-				ImGui::Separator();
-				if (ImGui::Button("Add scene"))
-				{
-					m_gui_sceneAdded = AddScene(scenename, static_cast<SCENE_TYPE>(scenetype_picker), width, heigth);
-				}
-			}
-		}
-	}
-	if (ImGui::CollapsingHeader("Load scene"))
-	{
-		ImGui::Separator();
-		if (ImGui::TreeNode("Scene list"))
-		{
-			ImGui::Separator();
-			for (auto sn : m_sceneNames)
-			{
-				ImGui::Bullet();
-				if (ImGui::SmallButton(sn.c_str()))
-				{
-					LoadScene(sn);
-				}
-			}
-			ImGui::TreePop();
-		}
-	}
-	if (ImGui::Button("SAVE CURRENT PROGRESS"))
-	{
-		SaveProgress();
-	}
-
-	_handlePopups();
-	ImGui::End();*/
-}
-
 SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
 	//Check for name conflicts
@@ -190,7 +126,7 @@ SEbool SceneManager::LoadScene(std::string scenename)
 	try { util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id); }
 	catch (const se_exception& exc)
 	{
-		MessageError(SceneMgr_id) << "Failed to parse [" + scenename + "] json object or failed to open\nfile " + m_rel_path_to_json_scenes + scenename + m_scene_file_suffix 
+		MessageError(SceneMgr_id) << "Failed to parse [" + scenename + "] json object or failed to open\nfile " + m_rel_path_to_json_scenes + scenename + m_scene_file_suffix
 			+ ",\nexception message: " + exc.msg;
 		return false;
 	}
@@ -249,6 +185,17 @@ void SceneManager::SaveProgress()
 	file << std::setw(4) << *m_currentScene.GetData() << std::endl;
 }
 
+Scene* SceneManager::GetCurrentScene()
+{
+	if (m_currentScene.GetType() != SCENE_TYPE::FAULTY)
+		return &m_currentScene;
+	else
+	{
+		MessageWarning(SceneMgr_id) << "GetCurrentScene() returns nullptr!";
+		return nullptr;
+	}
+}
+
 const std::vector<std::string>& SceneManager::GetSceneNames()
 {
 	return m_sceneNames;
@@ -271,7 +218,7 @@ void SceneManager::_loadSceneNames()
 	}
 	nlohmann::json j;
 	try { j = nlohmann::json::parse(data); }
-	catch (const std::exception& exc) 
+	catch (const std::exception& exc)
 	{
 		std::string what(exc.what());
 		MessageError(SceneMgr_id) << "Failed to parse scene names file to json object in _loadSceneNames(),\nexception message: " + what;

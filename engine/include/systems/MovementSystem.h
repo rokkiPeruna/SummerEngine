@@ -10,7 +10,7 @@
 namespace se
 {
 ///Getter method for CMovable components
-CDynamic* GetDynamicComponent(SEint index);
+extern inline CDynamic* GetDynamicComponent(SEint index);
 
 namespace priv
 {
@@ -47,17 +47,11 @@ public:
 
 	void OnEntityRemoved(Entity& e) override final;
 
-
-	/*-----------------EDITOR METHODS--------------------*/
-
 	///Creates component to entity and add it to container and json object
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
 
 	///Removes component from entity and container and json object
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj) override final;
-
-	///Modifies component from entity
-	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) override final;
 
 	///Returns plain Component* used in editor function.
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container);

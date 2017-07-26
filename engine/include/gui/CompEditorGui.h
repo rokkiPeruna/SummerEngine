@@ -27,7 +27,7 @@ public:
 
 	virtual void Update() {};
 
-	virtual void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) = 0;
+	virtual void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj) = 0;
 
 };
 }//namespace gui

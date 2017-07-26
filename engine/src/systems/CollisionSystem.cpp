@@ -123,23 +123,6 @@ void CollisionSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 	}
 }
 
-void CollisionSystem::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj)
-{
-	if (type == COMPONENT_TYPE::COLLIDABLE)
-	{
-		auto& comp = m_cCollidables.at(index_in_container);
-
-		ImGui::SliderFloat("aabb_min", &comp.aabb.x, -10.0f, 10.0f);
-		ImGui::SliderFloat("aabb_max", &comp.aabb.y, -10.0f, 10.0f);
-
-		if (ImGui::Button("Apply changes"))
-		{
-			component_obj.value().at("min") = comp.aabb.x;
-			component_obj.value().at("max") = comp.aabb.y;
-		}
-	}
-}
-
 Component* CollisionSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
 {
 	if (type == COMPONENT_TYPE::COLLIDABLE)
