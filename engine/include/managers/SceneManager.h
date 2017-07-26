@@ -45,13 +45,13 @@ public:
 	void ShowAndUpdateGUI() override final;
 
 	///Add new scene. To move to newly created scene, you must also load it with LoadScene()
-	bool AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
+	SEbool AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth);
 
 	///Save current scene to json
 	void SaveScene(std::string scenename, SCENE_TYPE type, SEint width = 0, SEint heigth = 0);
 
 	///Load scene from json
-	void LoadScene(std::string scenename);
+	SEbool LoadScene(std::string scenename);
 
 	///Delete scene from json file
 	void DeleteScene(std::string scenename);
@@ -59,6 +59,8 @@ public:
 	///Save progress. Calls EntityManager's SaveProgress
 	void SaveProgress();
 
+	///Returns scene names
+	const std::vector<std::string>& GetSceneNames();
 
 private:
 	///Pointer to EntityComponentManager
@@ -106,16 +108,6 @@ private:
 
 	///If m_scene_name_list_file is empty, create basic structure
 	void _createStructToScnNamesJson();
-
-
-	///GUI
-	///Method for updating gui
-	void _handlePopups();
-
-	///GUI variables
-	bool m_gui_sceneAdded;
-	bool m_gui_addSceneNameConflict;
-	bool m_gui_sceneAlreadyLoaded;
 
 };
 }//namespace priv

@@ -52,65 +52,65 @@ void ComponentManager::Update()
 void ComponentManager::ShowAndUpdateGUI()
 {
 	//Component editor //SE_TODO: This should probably be in it's own class, ComponentMgr???
-	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Component Editor", &_gui_show_component_mgr_window);
-	if (m_curr_entity)
-		ImGui::Text(m_curr_entity->name.c_str());
-	else
-	{
-		//If no active entity, skip rest
-		ImGui::Text("NO ACTIVE ENTITY");
-		ImGui::End();
-		return;
-	}
+	//ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	//ImGui::SetNextWindowPos(ImVec2(gui::_gui_width / 2, gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+	//ImGui::Begin("Component Editor", &gui::_gui_show_component_mgr_window);
+	//if (m_curr_entity)
+	//	ImGui::Text(m_curr_entity->name.c_str());
+	//else
+	//{
+	//	//If no active entity, skip rest
+	//	ImGui::Text("NO ACTIVE ENTITY");
+	//	ImGui::End();
+	//	return;
+	//}
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
-	if (ImGui::CollapsingHeader("Add component"))
-	{
-		for (auto& component : CompTypeAsString)
-		{
-			if (m_curr_entity->components.count(component.first))
-				continue;
+	//if (ImGui::CollapsingHeader("Add component"))
+	//{
+	//	for (auto& component : CompTypeAsString)
+	//	{
+	//		if (m_curr_entity->components.count(component.first))
+	//			continue;
 
-			if (ImGui::Button(component.second.c_str()))
-			{
-				AddNewComponentToEntity(*m_curr_entity, component.first);
-			}
-		}
-	}
-	if (ImGui::CollapsingHeader("Remove component"))
-	{
-		for (auto& component : m_curr_entity->components)
-		{
-			//Can't delete position component
-			if (component.first == COMPONENT_TYPE::TRANSFORMABLE)
-				continue;
-			if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
-			{
-				RemoveComponentFromEntity(*m_curr_entity, component.first);
-				break;
-			}
-		}
-	}
-	if (ImGui::CollapsingHeader("Modify component"))
-	{
-		for (auto& component : m_curr_entity->components)
-		{
-			if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
-			{
-				SetCurrentComponent(component.first, component.second);
-				break;
-			}
-		}
-		if (m_curr_component)
-		{
-			ModifyComponentFromEntity();
-		}
-	}
+	//		if (ImGui::Button(component.second.c_str()))
+	//		{
+	//			AddNewComponentToEntity(*m_curr_entity, component.first);
+	//		}
+	//	}
+	//}
+	//if (ImGui::CollapsingHeader("Remove component"))
+	//{
+	//	for (auto& component : m_curr_entity->components)
+	//	{
+	//		//Can't delete position component
+	//		if (component.first == COMPONENT_TYPE::TRANSFORMABLE)
+	//			continue;
+	//		if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
+	//		{
+	//			RemoveComponentFromEntity(*m_curr_entity, component.first);
+	//			break;
+	//		}
+	//	}
+	//}
+	//if (ImGui::CollapsingHeader("Modify component"))
+	//{
+	//	for (auto& component : m_curr_entity->components)
+	//	{
+	//		if (ImGui::Button(CompTypeAsString.at(component.first).c_str()))
+	//		{
+	//			SetCurrentComponent(component.first, component.second);
+	//			break;
+	//		}
+	//	}
+	//	if (m_curr_component)
+	//	{
+	//		ModifyComponentFromEntity();
+	//	}
+	//}
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>& entities, Scene* scene)

@@ -23,7 +23,9 @@ public:
 	SystemGui(const SystemGui&) = delete;
 	void operator=(const SystemGui&) = delete;
 
+	virtual void Update() = 0;
 
+	virtual void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, SceneFileFormatIterator& component_obj) = 0;
 
 };
 }//namespace gui

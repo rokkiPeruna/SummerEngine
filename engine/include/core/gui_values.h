@@ -10,7 +10,7 @@
 
 namespace se
 {
-namespace priv
+namespace gui
 {
 ///Window size for GUI windows
 const SEint _gui_width = 1200;

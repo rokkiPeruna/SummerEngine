@@ -119,6 +119,12 @@ set(ENGINE_GUI_FILES
 	src/gui/ManagerGui.cpp
 	include/gui/SystemGui.h
 	src/gui/SystemGui.cpp
+	include/gui/GuiSceneMgr.h
+	src/gui/GuiSceneMgr.cpp
+	include/gui/GuiEntityMgr.h
+	src/gui/GuiEntityMgr.cpp
+	include/gui/GuiCompMgr.h
+	src/gui/GuiCompMgr.cpp
 	)
 source_group("engine_gui" FILES ${ENGINE_GUI_FILES})
 #-----------------------------------------------------------------

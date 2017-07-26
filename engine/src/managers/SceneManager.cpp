@@ -1,5 +1,5 @@
 #include <managers/SceneManager.h>
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 #include <core/Engine.h>
 #include <core/Messages.h>
 #include <utility/JsonUtilFunctions.h>
@@ -21,9 +21,6 @@ SceneManager::SceneManager()
 	, m_scene_struct_main_obj_name("entities")
 	, m_currentScene("", SCENE_TYPE::FAULTY, 0, 0)
 	, m_sceneNames{}
-	, m_gui_sceneAdded(false)
-	, m_gui_addSceneNameConflict(false)
-	, m_gui_sceneAlreadyLoaded(false)
 {
 
 }
@@ -57,7 +54,7 @@ void SceneManager::Update()
 
 void SceneManager::ShowAndUpdateGUI()
 {
-	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	/*ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
 
@@ -116,10 +113,10 @@ void SceneManager::ShowAndUpdateGUI()
 	}
 
 	_handlePopups();
-	ImGui::End();
+	ImGui::End();*/
 }
 
-bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
+SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
 {
 	//Check for name conflicts
 	for (auto& n : m_sceneNames)
@@ -127,7 +124,6 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 		if (n == scenename)
 		{
 			MessageWarning(SceneMgr_id) << "Scene with name " + scenename + " already exists, scene not added";
-			m_gui_addSceneNameConflict = true;
 			return false;
 		}
 	}
@@ -173,8 +169,6 @@ bool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint width,
 	//Add name to runtime container
 	m_sceneNames.emplace_back(scenename);
 
-	m_gui_sceneAdded = true;
-
 	return true;
 }
 
@@ -184,13 +178,12 @@ void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width
 
 }
 
-void SceneManager::LoadScene(std::string scenename)
+SEbool SceneManager::LoadScene(std::string scenename)
 {
 	if (scenename == m_currentScene.GetName())
 	{
 		MessageInfo(SceneMgr_id) << "Scene already loaded to memory!";
-		m_gui_sceneAlreadyLoaded = true;
-		return;
+		return false;
 	}
 	m_sceneJsonObject.clear();
 
@@ -199,7 +192,7 @@ void SceneManager::LoadScene(std::string scenename)
 	{
 		MessageError(SceneMgr_id) << "Failed to parse [" + scenename + "] json object or failed to open\nfile " + m_rel_path_to_json_scenes + scenename + m_scene_file_suffix 
 			+ ",\nexception message: " + exc.msg;
-		return;
+		return false;
 	}
 
 	//Read scene's info to json object and create new current scene
@@ -207,7 +200,7 @@ void SceneManager::LoadScene(std::string scenename)
 	if (info_obj == m_sceneJsonObject.end())
 	{
 		MessageError(SceneMgr_id) << "Failed to open json object " + m_scene_struct_info_obj_name + "\nin LoadScene, scene not loaded!";
-		return;
+		return false;
 	}
 	auto& name = info_obj.value().at("name");
 	SEint type_as_int = info_obj.value().at("type");
@@ -223,7 +216,7 @@ void SceneManager::LoadScene(std::string scenename)
 	if (main_obj == m_sceneJsonObject.end())
 	{
 		MessageError(SceneMgr_id) << "Could not find " + m_scene_struct_main_obj_name + " in " + scenename + m_scene_file_suffix + "\n, scene not loaded!";
-		return;
+		return false;
 	}
 	//And if it is, give it to m_currentScene, empty systems component containers and init new scene
 	m_currentScene.SetData(&m_sceneJsonObject);
@@ -234,6 +227,7 @@ void SceneManager::LoadScene(std::string scenename)
 	}
 
 	m_ecm_ptr->InitWithNewScene(&m_currentScene);
+	return true;
 }
 
 void SceneManager::DeleteScene(std::string scenename)
@@ -253,6 +247,11 @@ void SceneManager::SaveProgress()
 		return;
 	}
 	file << std::setw(4) << *m_currentScene.GetData() << std::endl;
+}
+
+const std::vector<std::string>& SceneManager::GetSceneNames()
+{
+	return m_sceneNames;
 }
 
 void SceneManager::_loadSceneNames()
@@ -323,55 +322,6 @@ void SceneManager::_createStructToScnNamesJson()
 		"  ]\n" <<
 		"}" << std::endl;
 	data.close();
-}
-
-void SceneManager::_handlePopups()
-{
-	if (m_gui_addSceneNameConflict)
-	{
-		ImGui::OpenPopup("Name conflict!");
-		if (ImGui::BeginPopupModal("Name conflict!", &m_gui_addSceneNameConflict, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
-		{
-			ImGui::Separator();
-			ImGui::Text("Scene with given name already exists!\nChange the name.");
-			if (ImGui::Button("OK"))
-			{
-				m_gui_addSceneNameConflict = false;
-				ImGui::CloseCurrentPopup();
-			}
-		}
-		ImGui::EndPopup();
-	}
-	if (m_gui_sceneAdded)
-	{
-		ImGui::OpenPopup("");
-		if (ImGui::BeginPopupModal("", &m_gui_sceneAdded, ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
-		{
-			ImGui::Separator();
-			ImGui::Text("Scene added successfully!");
-			if (ImGui::Button("OK"))
-			{
-				m_gui_sceneAdded = false;
-				ImGui::CloseCurrentPopup();
-			}
-		}
-		ImGui::EndPopup();
-	}
-	if (m_gui_sceneAlreadyLoaded)
-	{
-		ImGui::OpenPopup("");
-		if (ImGui::BeginPopupModal("", &m_gui_sceneAlreadyLoaded, ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
-		{
-			ImGui::Separator();
-			ImGui::Text("Scene already loaded to memory!");
-			if (ImGui::Button("OK"))
-			{
-				m_gui_sceneAlreadyLoaded = false;
-				ImGui::CloseCurrentPopup();
-			}
-		}
-		ImGui::EndPopup();
-	}
 }
 
 }//namespace priv

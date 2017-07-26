@@ -39,6 +39,10 @@
 #include <managers/ResourceManager.h>
 #include <managers/ComponentManager.h>
 
+//Gui
+#include <gui/EngineGui.h>
+#include <gui/ManagerGui.h>
+#include <gui/SystemGui.h>
 
 namespace se
 {
@@ -73,25 +77,24 @@ public:
 	void EngineUpdate();
 
 	///System getters
-	//
-	///Returns ptr to Engine's TransformSystem
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
 	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
 	TransformSystem* GetTransformSystem() { return &m_transformSystem; }
 	RenderSystem* GetRenderSystem() { return &m_renderSystem; }
 	AnimationSystem* GetAnimationSystem() { return &m_animationSystem; }
-
+	//
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
 	///Manager getters
 	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
 	EntityManager* GetEntityMgr() { return &m_entityMgr; }
-
-	//Test delete afterwards
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 
 	///Static map. Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
+
+	///Add EngineGui object
+	void AddEngineGuiToCont(gui::EngineGui* gui_to_add) { m_engine_gui_container.emplace_back(gui_to_add); }
 
 private:
 	///Const string naming the json file containing Engine configurations 
@@ -165,6 +168,11 @@ private:
 
 	///Messenger
 	Messenger m_messenger;
+
+	///GUI //SE_TODO: Let macro define is gui is active
+	std::vector<gui::EngineGui*> m_engine_gui_container;
+	void _initGui();
+
 
 };
 }//namespace priv

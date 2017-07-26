@@ -46,7 +46,7 @@ void Messenger::Initialize()
 
 void Messenger::PrintMessages(SEint flags)
 {
-	ImGui::Begin("Console", &_gui_show_console_window);
+	ImGui::Begin("Console", &gui::_gui_show_console_window);
 	ImGui::SetWindowPos("Console", ImVec2(0.0f, 0.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::SetWindowSize(ImVec2(400, 500), ImGuiSetCond_FirstUseEver);
 

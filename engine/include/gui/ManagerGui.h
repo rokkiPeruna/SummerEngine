@@ -23,6 +23,7 @@ public:
 	ManagerGui(const ManagerGui&) = delete;
 	void operator=(const ManagerGui&) = delete;
 
+	virtual void Update() = 0;
 
 };
 }//namespace gui

@@ -2,10 +2,17 @@
 #define SE_ENGINEGUI_H
 
 //External includes:
+#include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
 
 //SE includes:
-
+#include <utility/Typedefs.h>
+#include <utility/Math.h>
+#include <ids/ComponentTypeList.h>
+#include <ids/SystemAndManagerIDList.h>
+#include <core/gui_values.h>
+#include <core/SE_exceptions.h>
+#include <managers/Entity.h>
 
 namespace se
 {
@@ -24,7 +31,7 @@ public:
 	EngineGui(const EngineGui&) = delete;
 	void operator=(const EngineGui&) = delete;
 
-
+	virtual void Update() = 0;
 
 protected:
 

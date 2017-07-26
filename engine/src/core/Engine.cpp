@@ -6,13 +6,16 @@
 #include <iomanip>
 #include <exception>
 #include <utility/JsonUtilFunctions.h>
-//#include <nlohmann_json/json.hpp>
 #include <imgui/imgui.h>
 #include <core/imgui_impl_sdl_gl3.h>
 
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 
+//SE_TODO: //SE_TODO: Let macro decide if these get included
+#include <gui/GuiSceneMgr.h>
+#include <gui/GuiEntityMgr.h>
+#include <gui/GuiCompMgr.h>
 
 namespace se
 {
@@ -42,13 +45,20 @@ Engine::Engine()
 	, m_sceneMgr()
 	, m_resourceMgr()
 	, m_compMgr()
+	/*GUI ELEMENTS*/
+	, m_engine_gui_container{} //Elements here are allocated from heap so they MUST be released in destructor
 {
 
 }
 
 Engine::~Engine()
 {
-
+	for (auto g : m_engine_gui_container)
+	{
+		auto tmp = g;
+		g = nullptr;
+		delete tmp;
+	}
 }
 
 
@@ -79,8 +89,8 @@ void Engine::Initialize(const std::string& projectName)
 	_initManagers();
 	_initSystems();
 
-	//Init imgui using implementation provided in examples
-	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
+	_initGui(); //Must be after manager and system init
+
 }
 
 void Engine::Uninitialize()
@@ -208,6 +218,18 @@ void Engine::_initSystems()
 	m_systemContainer.emplace_back(&m_animationSystem);
 }
 
+void Engine::_initGui()
+{
+	//Init imgui using implementation provided in examples
+	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
+	auto ctx = ImGui::GetCurrentContext();
+	
+	//SE_TODO: Let macro decide if these get build
+	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr());
+	//m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());
+	//m_engine_gui_container.emplace_back(new gui::GuiCompMgr());
+}
+
 void Engine::_updateMgrs()
 {
 	m_sceneMgr.Update();
@@ -224,28 +246,27 @@ void Engine::_updateSystems(SEfloat deltaTime)
 void Engine::_updateGUI()
 {
 	//Engine window in editor
-	if (_gui_show_main_window)
+	if (gui::_gui_show_main_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(gui::_gui_width / 2, gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");
 		ImGui::Separator();
-		if (ImGui::Button("Scenes"))
-			_gui_show_scene_mgr_window = (_gui_show_scene_mgr_window) ? false : true;
-
-		if (ImGui::Button("EntCompMgr"))
-			_gui_show_entity_comp_mgr_window = (_gui_show_entity_comp_mgr_window) ? false : true;
-
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
 
 	//SE_TODO: Create better gui structure
-	m_entityMgr.ShowAndUpdateGUI();
-	m_sceneMgr.ShowAndUpdateGUI();
-	m_compMgr.ShowAndUpdateGUI();
-
+	//for (auto gui : m_engine_gui_container)
+	//{
+	//	gui->Update();
+	//}
+	m_engine_gui_container.at(0)->Update();
+	//m_entityMgr.ShowAndUpdateGUI();
+	//m_sceneMgr.ShowAndUpdateGUI();
+	//m_compMgr.ShowAndUpdateGUI();
+	
 }
 
 bool Engine::_gameLoop()
@@ -272,7 +293,7 @@ bool Engine::_gameLoop()
 		// Rendering
 
 
-		glViewport(0, 0, _gui_width, _gui_heigth);
+		glViewport(0, 0, gui::_gui_width, gui::_gui_heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -299,21 +320,21 @@ void Engine::_editorLoop(SEbool& exitProgram)
 		{
 			exitProgram = _handleEditorEvents(editorloop);
 			//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
+
 			ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
-			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
 			_updateMgrs();
+
 
 			//Messenger should be last to update before render
 			m_messenger.PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, _gui_width, _gui_heigth);
+			glViewport(0, 0, gui::_gui_width,gui:: _gui_heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			//	m_renderMgr.UpdateRenderManager(m_window->GetWindowHandle(), m_resourceMgr.GetShaderProgram("testShader"));
+			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
 			m_renderSystem.Update(deltaTime);
-
 			ImGui::Render();
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}
@@ -352,7 +373,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 				break;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				_gui_show_main_window = (_gui_show_main_window) ? false : true;
+				gui::_gui_show_main_window = (gui::_gui_show_main_window) ? false : true;
 				break;
 
 			default:
@@ -382,7 +403,7 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				m_inEditorLoop = true;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				_gui_show_main_window = (_gui_show_main_window) ? false : true;
+				gui::_gui_show_main_window = (gui::_gui_show_main_window) ? false : true;
 				break;
 			default:
 				break;
