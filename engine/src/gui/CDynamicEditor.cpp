@@ -19,7 +19,7 @@ void CDynamicEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 {
 	if (type == COMPONENT_TYPE::DYNAMIC)
 	{
-		
+
 		//SE_TODO: Check somehow that index is valid component!
 		CDynamic* comp = GetDynamicComponent(index_in_container);
 		ImGui::SliderFloat("velocity_x", &comp->velocity.x, 0.0f, 200.0f);
@@ -29,15 +29,12 @@ void CDynamicEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 		ImGui::SliderFloat("acceleration_y", &comp->acceleration.y, 0.0f, 200.0f);
 		ImGui::SliderFloat("acceleration_z", &comp->acceleration.z, 0.0f, 200.0f);
 
-		if (ImGui::Button("Apply changes"))
-		{
-			component_obj.value().at("velo_x") = comp->velocity.x;
-			component_obj.value().at("velo_y") = comp->velocity.y;
-			component_obj.value().at("velo_z") = comp->velocity.z;
-			component_obj.value().at("acc_x") = comp->acceleration.x;
-			component_obj.value().at("acc_y") = comp->acceleration.y;
-			component_obj.value().at("acc_z") = comp->acceleration.z;
-		}
+		component_obj.value().at("velo_x") = comp->velocity.x;
+		component_obj.value().at("velo_y") = comp->velocity.y;
+		component_obj.value().at("velo_z") = comp->velocity.z;
+		component_obj.value().at("acc_x") = comp->acceleration.x;
+		component_obj.value().at("acc_y") = comp->acceleration.y;
+		component_obj.value().at("acc_z") = comp->acceleration.z;
 	}
 
 }

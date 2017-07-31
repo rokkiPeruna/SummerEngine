@@ -1,6 +1,6 @@
 MESSAGE TYPE: ERROR
 EditorLoop failed from std::exception,
-exception message: invalid map<K, T> key
+exception message: invalid unordered_map<K, T> key
 ---
 MESSAGE TYPE: INFO
 Compiling test.frag
@@ -22,3 +22,34 @@ Applying window settings..
 
 /*------DEBUG STARTS------*/
 
+[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
+---[DEBUG]MESSAGE TYPE: INFO
+Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
+---

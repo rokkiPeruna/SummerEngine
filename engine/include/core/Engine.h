@@ -101,6 +101,9 @@ public:
 	///Add EngineGui object
 	void AddEngineGuiToCont(gui::EngineGui* gui_to_add) { m_engine_gui_container.emplace_back(gui_to_add); }
 
+	///Get EngineGui objects
+	const std::vector<gui::EngineGui*>& GetEngineGuiObjects() { return m_engine_gui_container; }
+
 private:
 	///Const string naming the json file containing Engine configurations 
 	const std::string m_eng_conf_file_name;

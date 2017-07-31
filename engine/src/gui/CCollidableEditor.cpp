@@ -23,11 +23,8 @@ void CCollidableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_cont
 		ImGui::SliderFloat("aabb_min", &comp->aabb.x, -10.0f, 10.0f);
 		ImGui::SliderFloat("aabb_max", &comp->aabb.y, -10.0f, 10.0f);
 
-		if (ImGui::Button("Apply changes"))
-		{
-			component_obj.value().at("min") = comp->aabb.x;
-			component_obj.value().at("max") = comp->aabb.y;
-		}
+		component_obj.value().at("min") = comp->aabb.x;
+		component_obj.value().at("max") = comp->aabb.y;
 	}
 }
 

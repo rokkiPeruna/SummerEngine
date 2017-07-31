@@ -58,6 +58,12 @@ public:
 	///from other appended with child count index, e.g "flying_enemy_1"
 	void CreateEntityOnEditor(Entity& other, std::string name = "");
 
+	///
+	Entity* CreateEntityFromTemplate(std::string templateName);
+
+	///
+	void SaveEntityAsTemplate(Entity* entity);
+
 	///Delete entity from scene
 	void DeleteEntityOnEditor(std::string entity_name);
 
@@ -86,8 +92,14 @@ private:
 	///Relative path to scenes.json
 	std::string m_rel_path_to_json_scenes;
 
+	///Relative path to user files
+	std::string m_rel_path_to_user_files;
+
 	///Name of the subfolder where scenes exist
 	const std::string m_scenes_subfolder_name;
+
+	///Name of the folder containing entity templates
+	const std::string m_ent_templ_fold_name;
 
 	///Const string naming the suffix for scene files
 	const std::string m_scene_file_suffix;
@@ -97,6 +109,12 @@ private:
 
 	///Container holding entities and their access keys (names)
 	std::unordered_map<std::string, Entity> m_entities_map;
+
+	///Container holding entity templates as json objects
+	std::unordered_map<std::string, Dataformat_itr> m_entity_templs_map;
+
+	///Running number that differentiates entities created from templates
+	SEint m_templ_number;
 
 	///Loads current scene's entities. Returns largest id found.
 	SEint _loadSceneEntities();

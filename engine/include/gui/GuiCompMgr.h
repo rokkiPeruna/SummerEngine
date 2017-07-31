@@ -26,6 +26,8 @@ public:
 
 	void Update() override final;
 
+	void InvalidateComponentObj();
+
 private:
 	///SceneManager pointer
 	priv::SceneManager* m_scene_mgr;

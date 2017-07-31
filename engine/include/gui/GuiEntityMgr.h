@@ -11,6 +11,8 @@ namespace se
 {
 namespace gui
 {
+class GuiCompMgr;
+
 ///Brief:	...
 class GuiEntityMgr : public ManagerGui
 {
@@ -31,6 +33,9 @@ private:
 	
 	///ComponentManager pointer
 	priv::ComponentManager* m_comp_mgr;
+
+	///GuiCompMgr pointer
+	GuiCompMgr* m_gui_comp_mgr;
 
 	std::string m_gui_scene_name;
 

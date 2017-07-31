@@ -53,23 +53,19 @@ void CTransformableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_c
 
 		comp.modelMatrix = glm::translate(Mat4f(1.0f), comp.position) * glm::rotate(Mat4f(1.0f), glm::radians(comp.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), comp.scale);
 
-		if (ImGui::Button("Apply changes"))
-		{
-			component_obj.value().at("pos_x") = comp.position.x;
-			component_obj.value().at("pos_y") = comp.position.y;
-			component_obj.value().at("pos_z") = comp.position.z;
-			component_obj.value().at("orig_x") = comp.origin.x;
-			component_obj.value().at("orig_y") = comp.origin.y;
-			component_obj.value().at("orig_z") = comp.origin.z;
-			component_obj.value().at("rot") = comp.rotation;
-			component_obj.value().at("scal_x") = comp.scale.x;
-			component_obj.value().at("scal_y") = comp.scale.y;
-			component_obj.value().at("scal_z") = comp.scale.z;
-		}
-
+		component_obj.value().at("pos_x") = comp.position.x;
+		component_obj.value().at("pos_y") = comp.position.y;
+		component_obj.value().at("pos_z") = comp.position.z;
+		component_obj.value().at("orig_x") = comp.origin.x;
+		component_obj.value().at("orig_y") = comp.origin.y;
+		component_obj.value().at("orig_z") = comp.origin.z;
+		component_obj.value().at("rot") = comp.rotation;
+		component_obj.value().at("scal_x") = comp.scale.x;
+		component_obj.value().at("scal_y") = comp.scale.y;
+		component_obj.value().at("scal_z") = comp.scale.z;
 	}
 
-	
+
 }
 
 }//namespace gui

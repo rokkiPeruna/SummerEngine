@@ -54,8 +54,8 @@
                 "orig_x": 0.0,
                 "orig_y": 0.0,
                 "orig_z": 0.0,
-                "pos_x": 4.38000011444092,
-                "pos_y": 0.0,
+                "pos_x": -0.0833333358168602,
+                "pos_y": -3.25,
                 "pos_z": 0.0,
                 "rot": 0.0,
                 "scal_x": 1.0,
@@ -64,6 +64,16 @@
             }
         },
         "fixed": {
+            "dynamic": {
+                "_ownerID": 3,
+                "_type": 1,
+                "acc_x": 0.0,
+                "acc_y": 0.0,
+                "acc_z": 0.0,
+                "velo_x": 0.0,
+                "velo_y": 0.25,
+                "velo_z": 0.0
+            },
             "id": 3,
             "shape": {
                 "_ownerID": 3,
@@ -91,8 +101,8 @@
                 "orig_x": 0.0,
                 "orig_y": 0.0,
                 "orig_z": 0.0,
-                "pos_x": 0.0,
-                "pos_y": 0.0,
+                "pos_x": 1.76666665077209,
+                "pos_y": 1.875,
                 "pos_z": 0.0,
                 "rot": 0.0,
                 "scal_x": 1.0,
@@ -124,6 +134,191 @@
             },
             "transformable": {
                 "_ownerID": 4,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": -1.63333320617676,
+                "pos_y": -1.39999997615814,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "teemu_copy": {
+            "id": 5,
+            "shape": {
+                "_ownerID": 5,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 5,
+                "_type": 3,
+                "tex_name": "default_texture.png"
+            },
+            "transformable": {
+                "_ownerID": 5,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": -2.56666660308838,
+                "pos_y": 0.324999988079071,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "teemu_copy_copy": {
+            "id": 6,
+            "shape": {
+                "_ownerID": 6,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 6,
+                "_type": 3,
+                "tex_name": "default_texture.png"
+            },
+            "transformable": {
+                "_ownerID": 6,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 3.45000004768372,
+                "pos_y": 1.10000002384186,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "teemu_copy_copy_copy": {
+            "id": 7,
+            "shape": {
+                "_ownerID": 7,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 7,
+                "_type": 3,
+                "tex_name": "default_texture.png"
+            },
+            "transformable": {
+                "_ownerID": 7,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 3.30000019073486,
+                "pos_y": -1.94999992847443,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "teemu_copy_copy_copy_copy": {
+            "id": 8,
+            "shape": {
+                "_ownerID": 8,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 8,
+                "_type": 3,
+                "tex_name": "default_texture.png"
+            },
+            "transformable": {
+                "_ownerID": 8,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 1.03333330154419,
+                "pos_y": 1.44999992847443,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "teemu_copy_copy_copy_copy_copy": {
+            "id": 9,
+            "shape": {
+                "_ownerID": 9,
+                "_type": 4,
+                "points": [
+                    0.0,
+                    0.5,
+                    0.0,
+                    -0.433012694120407,
+                    -0.250000029802322,
+                    0.0,
+                    0.433012753725052,
+                    -0.249999955296516,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 9,
+                "_type": 3,
+                "tex_name": "default_texture.png"
+            },
+            "transformable": {
+                "_ownerID": 9,
                 "_type": 0,
                 "orig_x": 0.0,
                 "orig_y": 0.0,

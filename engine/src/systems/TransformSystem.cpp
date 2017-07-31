@@ -51,12 +51,18 @@ void TransformSystem::Uninitialize()
 
 void TransformSystem::Update(SEfloat deltaTime)
 {
-
+	//This is stupid way to do this, but recalculate all model matrices
+	for (auto& tr : TransformableComponents)
+	{
+		tr.modelMatrix = glm::translate(Mat4f(1.0f), tr.position) * glm::rotate(Mat4f(1.0f), glm::radians(tr.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), tr.scale);
+	}
 }
 
 void TransformSystem::ClearComponentContainers()
 {
 	TransformableComponents.clear();
+	m_free_cShape_indices = {};
+	m_cShapes.clear();
 }
 
 

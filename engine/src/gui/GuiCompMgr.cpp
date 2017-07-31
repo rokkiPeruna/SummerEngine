@@ -94,7 +94,6 @@ void GuiCompMgr::Update()
 			_initWithNewComp();
 			m_reInitWithNewComp = false;
 		}
-
 		if (curr_e && m_curr_component && m_curr_comp_index != -1)
 		{
 			priv::Engine::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_component_obj);
@@ -102,6 +101,12 @@ void GuiCompMgr::Update()
 	}
 
 	ImGui::End();
+}
+
+void GuiCompMgr::InvalidateComponentObj()
+{
+	m_component_obj = {};
+	m_reInitWithNewComp = true;
 }
 
 void GuiCompMgr::_initWithNewComp()

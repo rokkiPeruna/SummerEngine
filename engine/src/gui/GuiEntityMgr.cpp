@@ -1,4 +1,6 @@
 #include <gui/GuiEntityMgr.h>
+#include <gui/GuiCompMgr.h>
+#include <typeindex>
 #include <core/Engine.h>
 
 namespace se
@@ -8,16 +10,26 @@ namespace gui
 GuiEntityMgr::GuiEntityMgr()
 	: m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
+	, m_gui_comp_mgr(nullptr)
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
 	m_entity_mgr = priv::Engine::Instance().GetEntityMgr();
 	m_comp_mgr = priv::Engine::Instance().GetCompMgr();
+
+	for (auto g : priv::Engine::Instance().GetEngineGuiObjects())
+	{
+		if (typeid(*g) == typeid(GuiCompMgr))
+		{
+			m_gui_comp_mgr = dynamic_cast<GuiCompMgr*>(g);
+		}
+	}
 }
 
 GuiEntityMgr::~GuiEntityMgr()
 {
 	m_entity_mgr = nullptr;
 	m_comp_mgr = nullptr;
+	m_gui_comp_mgr = nullptr;
 }
 
 void GuiEntityMgr::Update()
@@ -53,7 +65,18 @@ void GuiEntityMgr::Update()
 				memset(&entityname[0], 0, sizeof(entityname));
 			}
 		}
-
+	}
+	else if (ImGui::CollapsingHeader("Save as entity template"))
+	{
+		ImGui::Separator();
+		for (auto& e : m_entity_mgr->GetEntities())
+		{
+			//ImGui::Bullet();
+			if (ImGui::SmallButton(e.second.name.c_str()))
+			{
+				m_entity_mgr->SaveEntityAsTemplate(&e.second);
+			}
+		}
 	}
 	else if (ImGui::CollapsingHeader("Entities"))
 	{
@@ -66,6 +89,8 @@ void GuiEntityMgr::Update()
 				m_entity_mgr->SetCurrentEntity(&e.second);
 				m_comp_mgr->SetCurrentEntity(&e.second);
 				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e.second.id);
+				//Inform GuiCompMgr that json object pointing to current component has been invalidated
+				m_gui_comp_mgr->InvalidateComponentObj();				
 				_gui_show_component_mgr_window = true;
 			}
 		}

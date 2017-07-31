@@ -114,7 +114,10 @@ void Engine::EngineUpdate()
 		if (!m_inEditorLoop)
 			m_inEditorLoop = _gameLoop();
 		else
+		{
+			m_sceneMgr.ReinitScene();
 			_editorLoop(exitProgram);
+		}
 	}
 
 	//Cleanup imgui
@@ -192,7 +195,7 @@ void Engine::_initAndApplyEngineSettings()
 void Engine::_initManagers()
 {
 	//SceneMgr
-	m_sceneMgr.Initialize(m_path_to_user_files, &m_entityMgr);
+	m_sceneMgr.Initialize(m_path_to_user_files, &m_entityMgr, &m_compMgr);
 
 	//EntityManager
 	m_entityMgr.Initialize(m_path_to_user_files, &m_compMgr);
@@ -233,8 +236,8 @@ void Engine::_initGui()
 	//SE_TODO: Let macro decide if these get build
 	//Emplace manager classes' guis
 	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr());
-	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());
-	m_engine_gui_container.emplace_back(new gui::GuiCompMgr());
+	m_engine_gui_container.emplace_back(new gui::GuiCompMgr());		//Must be before GuiEntityMgr!!
+	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());	//Must be after GuiCompMgr!!
 
 	//Emplace component editors
 	m_engine_gui_container.emplace_back(new gui::CCollidableEditor());
@@ -253,8 +256,12 @@ void Engine::_updateMgrs()
 void Engine::_updateSystems(SEfloat deltaTime)
 {
 	m_movementSystem.Update(deltaTime);
+
 	m_transformSystem.Update(deltaTime);
+
 	m_collisionSystem.Update(deltaTime);
+
+
 }
 
 void Engine::_updateGUI()
@@ -402,7 +409,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 			}
 		}
 	}
-	return true;
+	return false;
 }
 
 SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)

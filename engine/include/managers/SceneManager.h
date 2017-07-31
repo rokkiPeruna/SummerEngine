@@ -14,6 +14,7 @@
 #include <managers/Manager.h>
 #include <managers/Scene.h>
 #include <managers/EntityManager.h>
+#include <managers/ComponentManager.h>
 
 namespace se
 {
@@ -33,7 +34,7 @@ public:
 	void operator=(const SceneManager&) = delete;
 
 	///Init SceneManager
-	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr);
+	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr, ComponentManager* compMgr_ptr);
 
 	///Uninit
 	void Uninitialize() override final;
@@ -47,8 +48,15 @@ public:
 	///Save current scene to json
 	void SaveScene(std::string scenename, SCENE_TYPE type, SEint width = 0, SEint heigth = 0);
 
-	///Load scene from json
-	SEbool LoadScene(std::string scenename);
+	///Load scene from json.
+	///1.param: name of the scene as string.
+	///2.param: DEFAULT boolean defining if scene is reinitialized when returning from game loop to editor loop
+	///--
+	///Returns boolean indicating success for loading scene
+	SEbool LoadScene(std::string scenename, SEbool reinitialization = false);
+
+	///Reinitializes current scene.
+	void ReinitScene();
 
 	///Delete scene from json file
 	void DeleteScene(std::string scenename);
@@ -65,6 +73,9 @@ public:
 private:
 	///Pointer to EntityManager
 	EntityManager* m_entity_mgr;
+
+	///Pointer to ComponentManager
+	ComponentManager* m_comp_mgr;
 
 	///Json object for holding current scene. This gets send to EntityManager and ComponentManager inside current scene
 	nlohmann::json m_sceneJsonObject;

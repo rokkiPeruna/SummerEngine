@@ -10,6 +10,7 @@ namespace priv
 {
 SceneManager::SceneManager()
 	: m_entity_mgr(nullptr)
+	, m_comp_mgr(nullptr)
 	, m_sceneJsonObject()
 	, m_sceneNamesJsonObject()
 	, m_rel_path_to_json_scenes("")
@@ -28,15 +29,21 @@ SceneManager::SceneManager()
 SceneManager::~SceneManager()
 {
 	m_entity_mgr = nullptr;
+	m_comp_mgr = nullptr;
 }
 
-void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr)
+void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr, ComponentManager* compMgr_ptr)
 {
 	///Relative path to scenes.json file
 	m_rel_path_to_json_scenes = filepathToUserFiles + m_scenes_subfolder_name;
 
 	///EntityComponentManager pointer
 	m_entity_mgr = entityMgr_ptr;
+
+	///ComponentManager pointer
+	m_comp_mgr = compMgr_ptr;
+
+	assert(m_entity_mgr && m_comp_mgr);
 
 	///Load scene names
 	_loadSceneNames();
@@ -114,9 +121,9 @@ void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width
 
 }
 
-SEbool SceneManager::LoadScene(std::string scenename)
+SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 {
-	if (scenename == m_currentScene.GetName())
+	if (scenename == m_currentScene.GetName() && !reinitialization)
 	{
 		MessageInfo(SceneMgr_id) << "Scene already loaded to memory!";
 		return false;
@@ -164,6 +171,17 @@ SEbool SceneManager::LoadScene(std::string scenename)
 
 	m_entity_mgr->InitWithNewScene(&m_currentScene);
 	return true;
+}
+
+void SceneManager::ReinitScene()
+{
+	if (m_currentScene.GetType() != SCENE_TYPE::FAULTY)
+	{
+		LoadScene(m_currentScene.GetName(), true);
+		m_entity_mgr->SetCurrentEntity(nullptr);
+		m_comp_mgr->SetCurrentEntity(nullptr);
+		m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
+	}
 }
 
 void SceneManager::DeleteScene(std::string scenename)

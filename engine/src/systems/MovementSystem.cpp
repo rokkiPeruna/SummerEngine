@@ -45,7 +45,6 @@ void MovementSystem::Update(SEfloat deltaTime)
 		c.velocity += c.acceleration * deltaTime;
 		transforms.at(c.ownerID).position += c.velocity * deltaTime;
 	}
-
 }
 
 void MovementSystem::ClearComponentContainers()
