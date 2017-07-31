@@ -1,4 +1,4 @@
-#include <systems/RenderSystem.h>
+#include <core/EditorRender.h>
 #include <core/Engine.h>
 #include <systems/AnimationSystem.h>
 
@@ -7,31 +7,32 @@ namespace se
 namespace priv
 {
 
-RenderSystem::RenderSystem()
+EditorRender::EditorRender()
 	: m_transform_system(nullptr)
 {
 
 }
 
-RenderSystem::~RenderSystem()
+EditorRender::~EditorRender()
 {
 
 }
 
-void RenderSystem::Initialize()
+void EditorRender::Initialize()
 {
 	glFrontFace(GL_CCW);
 	m_transform_system = Engine::Instance().GetTransformSystem();
+	
+	// TODO : This shoud be related to entity
 	CurrentShader = Engine::Instance().GetResourceManager()->GetShaderProgram("testShader");
 }
 
-void RenderSystem::Uninitialize()
+void EditorRender::Uninitialize()
 {
 
 }
 
-
-void RenderSystem::Update(SEfloat deltaTime)
+void EditorRender::Update(SEfloat deltaTime)
 {
 	//Get entities container
 
@@ -40,21 +41,15 @@ void RenderSystem::Update(SEfloat deltaTime)
 	if (true)
 		return;
 	*/
+	// loop through all en-tities
 	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 
 		if (entity.second.components.count(COMPONENT_TYPE::SHAPE))
 		{
-			float texCoords[] =
-			{
-				1.0f, 1.0f,
-				0.0f, 1.0f,
-				0.0f, 0.0f,
-				0.0f, 1.0f
-			};
-
+			
+			// this is how we find THE shape component of THE entity
 			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
-
 
 			SEuint VAO;
 			SEuint VBO;
@@ -87,7 +82,7 @@ void RenderSystem::Update(SEfloat deltaTime)
 					SEuint textureLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "fragment_texture");
 					glUniform1i(textureLocation, 0);
 
-					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, (void*)0);
+					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
 					glEnableVertexAttribArray(2);
 				}
 			}
@@ -120,30 +115,17 @@ void RenderSystem::Update(SEfloat deltaTime)
 
 }
 
-void RenderSystem::ClearComponentContainers()
+void EditorRender::AddRenderable()
 {
 
 }
 
-void RenderSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
+void EditorRender::RemoveRenderable()
 {
 
 }
 
-void RenderSystem::OnEntityRemoved(Entity& entity)
-{
 
-}
-
-SEint RenderSystem::CreateComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&)
-{
-	return 0;
-}
-
-void RenderSystem::RemoveComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&)
-{
-
-}
 
 
 }// !namespace priv

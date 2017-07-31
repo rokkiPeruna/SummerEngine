@@ -21,6 +21,10 @@
 #include <core/gui_values.h>
 
 #include <core/Window.h>
+
+#include <core/EditorRender.h>
+#include <core/GameRender.h>
+
 #include <utility/Typedefs.h>
 
 #include <core/Messenger.h>
@@ -30,7 +34,6 @@
 //Systems
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
-#include <systems/RenderSystem.h>
 #include <systems/TransformSystem.h>
 #include <systems/CollisionSystem.h>
 #include <systems/AnimationSystem.h>
@@ -82,7 +85,6 @@ public:
 	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
 	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
 	TransformSystem* GetTransformSystem() { return &m_transformSystem; }
-	RenderSystem* GetRenderSystem() { return &m_renderSystem; }
 	AnimationSystem* GetAnimationSystem() { return &m_animationSystem; }
 	//
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
@@ -93,6 +95,9 @@ public:
 	ComponentManager* GetCompMgr() { return &m_compMgr; }
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 
+
+	std::shared_ptr<EditorRender> GetEditorRender() { return m_editorRender; }
+	std::shared_ptr<GameRender> GetGameRender() { return m_gameRender;  }
 	Camera* GetCamera() { return m_camera; }
 
 	///Static map for binding component type to correct system.
@@ -158,10 +163,11 @@ private:
 	Time m_input_coolDown;
 
 	std::shared_ptr<Window> m_window;
+	std::shared_ptr<EditorRender> m_editorRender;
+	std::shared_ptr<GameRender> m_gameRender;
 
 	///Systems
 	MovementSystem m_movementSystem;
-	RenderSystem m_renderSystem;
 	TransformSystem m_transformSystem;
 	CollisionSystem m_collisionSystem;
 	AnimationSystem m_animationSystem;
