@@ -25,6 +25,8 @@
 
 #include <core/Messenger.h>
 
+#include <core/Camera.h>
+
 //Systems
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
@@ -90,6 +92,8 @@ public:
 	EntityManager* GetEntityMgr() { return &m_entityMgr; }
 	ComponentManager* GetCompMgr() { return &m_compMgr; }
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
+
+	Camera* GetCamera() { return m_camera; }
 
 	///Static map for binding component type to correct system.
 	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
@@ -173,6 +177,9 @@ private:
 
 	///Messenger
 	Messenger m_messenger;
+
+	//Camera
+	Camera* m_camera;
 
 	///GUI //SE_TODO: Let macro define is gui is active
 	std::vector<gui::EngineGui*> m_engine_gui_container;

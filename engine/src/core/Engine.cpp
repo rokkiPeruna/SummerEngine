@@ -42,6 +42,7 @@ Engine::Engine()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
 	, m_messenger()
+	, m_camera(new Camera)
 	/*SYSTEMS*/
 	, m_movementSystem()
 	, m_animationSystem()
@@ -116,7 +117,7 @@ void Engine::EngineUpdate()
 		else
 			_editorLoop(exitProgram);
 	}
-
+	
 	//Cleanup imgui
 	ImGui_ImplSdlGL3_Shutdown();
 
@@ -343,6 +344,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
+			m_camera->Update(deltaTime);
 			m_renderSystem.Update(deltaTime);
 			ImGui::Render();
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
