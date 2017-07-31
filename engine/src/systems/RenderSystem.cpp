@@ -36,9 +36,10 @@ void RenderSystem::Update(SEfloat deltaTime)
 	//Get entities container
 
 	//RESOURCE LEAK HERE SOMEWHERE
+	/*
 	if (true)
 		return;
-
+	*/
 	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 

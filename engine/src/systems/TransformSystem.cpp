@@ -159,7 +159,5 @@ Component* TransformSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 			return nullptr;
 	}
 }
-
-
 }
 }

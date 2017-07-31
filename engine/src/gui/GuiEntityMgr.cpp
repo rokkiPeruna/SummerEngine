@@ -65,6 +65,7 @@ void GuiEntityMgr::Update()
 			{
 				m_entity_mgr->SetCurrentEntity(&e.second);
 				m_comp_mgr->SetCurrentEntity(&e.second);
+				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e.second.id);
 				_gui_show_component_mgr_window = true;
 			}
 		}

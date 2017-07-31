@@ -85,6 +85,7 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	m_currentEntity = &m_entities_map.at(name);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::TRANSFORMABLE);
+	m_compMgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_currentEntity->id);
 
 	m_curr_free_entity_id = _findFreeEntityID();
 }
