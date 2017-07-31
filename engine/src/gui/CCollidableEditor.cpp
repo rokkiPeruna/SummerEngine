@@ -14,7 +14,7 @@ CCollidableEditor::CCollidableEditor()
 	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::COLLIDABLE, this);
 }
 
-void CCollidableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
+void CCollidableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)
 {
 	if (type == COMPONENT_TYPE::COLLIDABLE)
 	{

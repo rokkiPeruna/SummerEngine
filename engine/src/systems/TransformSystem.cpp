@@ -60,7 +60,7 @@ void TransformSystem::ClearComponentContainers()
 }
 
 
-void TransformSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+void TransformSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 {
 	if (e.components.count(COMPONENT_TYPE::TRANSFORMABLE))
 	{
@@ -95,7 +95,7 @@ void TransformSystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
@@ -126,7 +126,7 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 	}
 }
 
-void TransformSystem::RemoveComponent(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+void TransformSystem::RemoveComponent(Entity& e, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TRANSFORMABLE)
 	{
@@ -159,7 +159,5 @@ Component* TransformSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 			return nullptr;
 	}
 }
-
-
 }
 }

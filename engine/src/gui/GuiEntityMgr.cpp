@@ -42,6 +42,7 @@ void GuiEntityMgr::Update()
 
 	if (ImGui::CollapsingHeader("Create entity"))
 	{
+		ImGui::Separator();
 		static SEchar entityname[64];
 		ImGui::InputText("Name", entityname, 64, ImGuiInputTextFlags_CharsNoBlank);
 		if (std::strlen(entityname) != 0)
@@ -54,8 +55,24 @@ void GuiEntityMgr::Update()
 		}
 
 	}
-	if (ImGui::CollapsingHeader("Delete entity"))
+	else if (ImGui::CollapsingHeader("Entities"))
 	{
+		ImGui::Separator();
+		for (auto& e : m_entity_mgr->GetEntities())
+		{
+			//ImGui::Bullet();
+			if (ImGui::SmallButton(e.second.name.c_str()))
+			{
+				m_entity_mgr->SetCurrentEntity(&e.second);
+				m_comp_mgr->SetCurrentEntity(&e.second);
+				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e.second.id);
+				_gui_show_component_mgr_window = true;
+			}
+		}
+	}
+	else if (ImGui::CollapsingHeader("Delete entity"))
+	{
+		ImGui::Separator();
 		for (auto& e : m_entity_mgr->GetEntities())
 		{
 			if (ImGui::Button(e.first.c_str()))
@@ -65,20 +82,7 @@ void GuiEntityMgr::Update()
 			}
 		}
 	}
-	ImGui::Separator();
-	if (ImGui::CollapsingHeader("Entities"))
-	{
-		for (auto& e : m_entity_mgr->GetEntities())
-		{
-			ImGui::Bullet();
-			if (ImGui::SmallButton(e.second.name.c_str()))
-			{
-				m_entity_mgr->SetCurrentEntity(&e.second);
-				m_comp_mgr->SetCurrentEntity(&e.second);
-				_gui_show_component_mgr_window = true;
-			}
-		}
-	}
+	
 	ImGui::End();
 }
 

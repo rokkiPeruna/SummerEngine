@@ -275,12 +275,7 @@ void Engine::_updateGUI()
 	for (auto gui : m_engine_gui_container)
 	{
 		gui->Update();
-	}
-	//m_engine_gui_container.at(0)->Update();
-	//m_entityMgr.ShowAndUpdateGUI();
-	//m_sceneMgr.ShowAndUpdateGUI();
-	//m_compMgr.ShowAndUpdateGUI();
-	
+	}	
 }
 
 bool Engine::_gameLoop()

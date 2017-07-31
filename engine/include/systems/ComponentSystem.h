@@ -43,7 +43,7 @@ public:
 
 	///Checks if added entity has components that belong to system. If it has, creates components from file data and adds
 	///them to run-time containers and bind to entity
-	virtual void OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj) = 0;
+	virtual void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) = 0;
 
 	///Check if removed entity has components that are in system's container. If it has, marks those components as free to replace (pushes them to free_indices container) and doesn't update them.
 	virtual void OnEntityRemoved(Entity& e) = 0;
@@ -51,10 +51,10 @@ public:
 	///CreateComponent adds default constructed component of given type to container and adds component's index in that container
 	///to Entity's components map. Also writes component to current scene file format's iterator.
 	///Returns component's index in container. See MovementSystem's implementation for details.
-	virtual SEint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
+	virtual SEint CreateComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) = 0;
 
 	///RemoveComponent "removes" component from entity and system(marks component as free to be replaced)
-	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) = 0;
+	virtual void RemoveComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) = 0;
 
 	///GetPlainComponentPtr returns plain Component* to be used in editor function. Can't be used for alternating data in game logic
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
@@ -63,7 +63,7 @@ protected:
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
 	//Returns index off the newly created component if more measures need to be done in system's OnEntityAdded
 	template<typename T>
-	inline SEint _onEntityAdded_helper(Entity& e, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
+	inline SEint _onEntityAdded_helper(Entity& e, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
 	{
 		T component = entity_obj.value().at(CompTypeAsString.at(component_type));
 		//If there is available free indice
@@ -87,9 +87,9 @@ protected:
 		}
 	}
 
-	///Template helper method that creates component to given container, binds it to given entity and writes it to given SceneFileFormatIterator
+	///Template helper method that creates component to given container, binds it to given entity and writes it to given Dataformat_itr
 	template<typename T>
-	inline SEint _createComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
+	inline SEint _createComponent_helper(Entity& e, COMPONENT_TYPE type, Dataformat_itr& entity_obj, std::vector<T>& container, std::queue<SEint>& free_indices)
 	{
 		SEint index = -1;
 		if (!free_indices.empty())
@@ -109,10 +109,10 @@ protected:
 		return index;
 	}
 
-	///Template helper method that removes component from given container, unbinds from given entity and writes changes to given SceneFileFormatIterator.
+	///Template helper method that removes component from given container, unbinds from given entity and writes changes to given Dataformat_itr.
 	///Returns index of the freed component to be stored in container holding free indices
 	template<typename T>
-	inline SEint _removeComponent_helper(Entity& e, COMPONENT_TYPE type, SceneFileFormatIterator& entity_obj, std::vector<T>& container)
+	inline SEint _removeComponent_helper(Entity& e, COMPONENT_TYPE type, Dataformat_itr& entity_obj, std::vector<T>& container)
 	{
 		//Get component's index
 		SEint free_index = e.components.at(type);

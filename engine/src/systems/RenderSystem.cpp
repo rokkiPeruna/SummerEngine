@@ -35,7 +35,11 @@ void RenderSystem::Update(SEfloat deltaTime)
 {
 	//Get entities container
 
-
+	//RESOURCE LEAK HERE SOMEWHERE
+	/*
+	if (true)
+		return;
+	*/
 	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 
@@ -122,7 +126,7 @@ void RenderSystem::ClearComponentContainers()
 
 }
 
-void RenderSystem::OnEntityAdded(Entity& entity, SceneFileFormatIterator& entity_obj)
+void RenderSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 {
 
 }
@@ -132,12 +136,12 @@ void RenderSystem::OnEntityRemoved(Entity& entity)
 
 }
 
-SEint RenderSystem::CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&)
+SEint RenderSystem::CreateComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&)
 {
 	return 0;
 }
 
-void RenderSystem::RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&)
+void RenderSystem::RemoveComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&)
 {
 
 }

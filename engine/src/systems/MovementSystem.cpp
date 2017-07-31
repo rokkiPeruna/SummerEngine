@@ -54,7 +54,7 @@ void MovementSystem::ClearComponentContainers()
 	m_free_cDynamics_indices = {};
 }
 
-void MovementSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+void MovementSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 {
 	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
@@ -70,7 +70,7 @@ void MovementSystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::DYNAMIC)
 	{
@@ -83,7 +83,7 @@ SEint MovementSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_t
 	}
 }
 
-void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+void MovementSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::DYNAMIC)
 	{

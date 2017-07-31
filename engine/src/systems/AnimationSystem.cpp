@@ -56,7 +56,7 @@ void AnimationSystem::ClearComponentContainers()
 	m_free_cTexture_indices = {};
 }
 
-void AnimationSystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+void AnimationSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 {
 	if (e.components.count(COMPONENT_TYPE::TEXTURE))
 	{
@@ -75,7 +75,7 @@ void AnimationSystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
@@ -91,7 +91,7 @@ SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 	}
 }
 
-void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{

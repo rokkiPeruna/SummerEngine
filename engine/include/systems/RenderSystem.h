@@ -53,13 +53,13 @@ public:
 
 	void ClearComponentContainers() override final;
 
-	void OnEntityAdded(Entity& entity, SceneFileFormatIterator& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
 	void OnEntityRemoved(Entity& entity) override final;
 
-	SEint CreateComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
+	SEint CreateComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) override final;
 
-	void RemoveComponent(Entity&, COMPONENT_TYPE, SceneFileFormatIterator&) override final;
+	void RemoveComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) { return nullptr; }
 

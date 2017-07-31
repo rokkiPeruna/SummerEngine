@@ -18,7 +18,7 @@ CTextureEditor::CTextureEditor()
 	assert(m_animation_sys);
 }
 
-void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj)
+void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)
 {
 	if (type == COMPONENT_TYPE::TEXTURE)
 	{

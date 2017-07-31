@@ -15,7 +15,7 @@ public:
 	///Default constructor
 	CCollidableEditor();
 
-	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, nlohmann::json::iterator component_obj) override final;
+	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj) override final;
 };
 
 }//namespace gui

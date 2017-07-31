@@ -40,7 +40,7 @@ void DummySystem::ClearComponentContainers()
 	clear containers
 }
 
-void DummySystem::OnEntityAdded(Entity& e, SceneFileFormatIterator& entity_obj)
+void DummySystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 {
 	if (e.components.count(component type)
 	{
@@ -56,7 +56,7 @@ void DummySystem::OnEntityRemoved(Entity& e)
 	}
 }
 
-SEint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+SEint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == component type)
 	{
@@ -69,7 +69,7 @@ SEint DummySystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_type
 	}
 }
 
-void DummySystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, SceneFileFormatIterator& entity_obj)
+void DummySystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj)
 {
 	if (component_type == component type)
 	{
