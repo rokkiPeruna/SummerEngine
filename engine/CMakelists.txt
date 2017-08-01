@@ -31,8 +31,6 @@ set(SYSTEMS_FILES
 	include/systems/DummySystemCPP.txt
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
-    include/systems/RenderSystem.h
-    src/systems/RenderSystem.cpp
 	include/systems/TransformSystem.h
     src/systems/TransformSystem.cpp
 	include/systems/CollisionSystem.h
@@ -85,7 +83,11 @@ set(CORE_FILES
 	include/core/SE_exceptions.h
     include/core/Camera.h
     src/core/Camera.cpp
-	)
+    include/core/EditorRender.h
+    src/core/EditorRender.cpp
+    include/core/GameRender.h
+    src/core/GameRender.cpp
+    )
 source_group("core" FILES ${CORE_FILES})
 
 #-----------------------------------------------------------------

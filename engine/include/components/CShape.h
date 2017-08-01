@@ -30,14 +30,14 @@ public:
 		SEfloat tangential_factor = tanf(theta);
 		SEfloat radial_factor = cosf(theta);
 
-		SEfloat x = 0.25;
-		SEfloat y = 0.25;
+		SEfloat x = -0.25;
+		SEfloat y = -0.25;
 
-		if (num_points < 4)
-		{
-			x = 0;
-			y = 0.5;
-		}
+//		if (num_points < 4)
+//		{
+//			x = 0;
+//			y = 0.5;
+//		}
 
 		for (SEushort i = 0; i < num_points; ++i)
 		{

@@ -67,11 +67,11 @@ public:
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
 
+	std::vector<CShape> m_cShapes;
 	
 private:
 
 	///Every shape in program is stored in this container
-	std::vector<CShape> m_cShapes;
 
 	std::queue<SEint> m_free_cShape_indices;
 };

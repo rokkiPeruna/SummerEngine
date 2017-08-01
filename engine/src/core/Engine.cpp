@@ -42,10 +42,12 @@ Engine::Engine()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
 	, m_messenger()
+	, m_camera(new Camera)
 	/*SYSTEMS*/
 	, m_movementSystem()
 	, m_animationSystem()
-	, m_renderSystem()
+	, m_editorRender(new EditorRender)
+	, m_gameRender(new GameRender)
 	, m_collisionSystem()
 	/*MANAGERS*/
 	, m_entityMgr()
@@ -119,7 +121,7 @@ void Engine::EngineUpdate()
 			_editorLoop(exitProgram);
 		}
 	}
-
+	
 	//Cleanup imgui
 	ImGui_ImplSdlGL3_Shutdown();
 
@@ -212,14 +214,14 @@ void Engine::_initManagers()
 
 void Engine::_initSystems()
 {
+	m_editorRender->Initialize();
+	m_gameRender->Initialize();
+
 	m_transformSystem.Initialize();
 	m_systemContainer.emplace_back(&m_transformSystem);
 
 	m_movementSystem.Initialize();
 	m_systemContainer.emplace_back(&m_movementSystem);
-
-	m_renderSystem.Initialize();
-	m_systemContainer.emplace_back(&m_renderSystem);
 
 	m_collisionSystem.Initialize();
 	m_systemContainer.emplace_back(&m_collisionSystem);
@@ -313,7 +315,7 @@ bool Engine::_gameLoop()
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		m_renderSystem.Update(deltaTime);
+		m_gameRender->Update(deltaTime);
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 
 	}
@@ -350,7 +352,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
-			m_renderSystem.Update(deltaTime);
+			m_camera->Update(deltaTime);
+			m_editorRender->Update(deltaTime);
 			ImGui::Render();
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}

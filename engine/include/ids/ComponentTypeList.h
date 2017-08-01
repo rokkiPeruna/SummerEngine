@@ -21,7 +21,8 @@ enum class COMPONENT_TYPE : SEint
 	DYNAMIC,
 	COLLIDABLE,
 	TEXTURE,
-	SHAPE
+	SHAPE,
+	RENDERABLE
 };
 
 namespace priv
