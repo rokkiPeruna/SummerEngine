@@ -63,11 +63,10 @@ void EditorRender::Update(SEfloat deltaTime)
 
 		if (entity.second.components.count(COMPONENT_TYPE::SHAPE))
 		{
-			// this is how we find THE shape component of THE entity
 			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
 
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 3, shape_comp.points.data());
+			glVertexAttribPointer(0, shape_comp.points.size(), GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0).x) * 3, &shape_comp.points.at(0).x);
 
 			if (entity.second.components.count(COMPONENT_TYPE::TEXTURE))
 			{
@@ -80,7 +79,7 @@ void EditorRender::Update(SEfloat deltaTime)
 					glUniform1i(textureLocation, 0);
 
 					glEnableVertexAttribArray(2);
-					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 2, &texCoords[0]);
+					glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 2, &texCoords[0]);
 				}
 			}
 
