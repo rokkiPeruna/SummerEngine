@@ -65,7 +65,6 @@ void CollisionSystem::Update(SEfloat deltaTime)
 				)
 			{
 				//If true, check for narrow phase collision
-				std::cout << "Colliding!" << std::endl;
 			}
 		}
 	}

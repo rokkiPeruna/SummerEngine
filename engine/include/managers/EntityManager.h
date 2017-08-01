@@ -113,7 +113,7 @@ private:
 	std::unordered_map<std::string, Entity> m_entities_map;
 
 	///Container holding entity templates as json objects
-	std::unordered_map<std::string, Dataformat_itr> m_entity_templs_map;
+	std::unordered_map<std::string, nlohmann::json> m_entity_templs_map;
 
 	///Running number that differentiates entities created from templates
 	SEint m_templ_number;

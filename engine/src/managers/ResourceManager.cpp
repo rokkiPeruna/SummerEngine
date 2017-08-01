@@ -116,6 +116,8 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 	
 	m_imageResContainer.back().SetData(w, h, bpp, tmp);
 
+	stbi_image_free(tmp);
+
 	return &m_imageResContainer.back();
 }
 

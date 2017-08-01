@@ -4,7 +4,7 @@ namespace se
 {
 
 Camera::Camera()
-	: m_cameraPosition(0.0f, 0.0f, 3.0f)
+	: m_cameraPosition(0.0f, 0.0f, 10.0f)
 	, m_cameraTarget(0.0f)
 	, m_cameraDirection(0.0f)
 	, m_view(0.0f)

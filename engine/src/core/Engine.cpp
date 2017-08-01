@@ -68,6 +68,7 @@ Engine::~Engine()
 		g = nullptr;
 		delete tmp;
 	}
+	delete m_camera;
 }
 
 
@@ -121,7 +122,7 @@ void Engine::EngineUpdate()
 			_editorLoop(exitProgram);
 		}
 	}
-	
+
 	//Cleanup imgui
 	ImGui_ImplSdlGL3_Shutdown();
 
@@ -234,7 +235,7 @@ void Engine::_initGui()
 {
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
-	
+
 	//SE_TODO: Let macro decide if these get build
 	//Emplace manager classes' guis
 	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr());
@@ -284,20 +285,34 @@ void Engine::_updateGUI()
 	for (auto gui : m_engine_gui_container)
 	{
 		gui->Update();
-	}	
+	}
 }
 
 bool Engine::_gameLoop()
 {
 	ImVec4 clear_color = ImColor(114, 144, 154);
+	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiSetCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(200.f, 100.f), ImGuiSetCond_Always);
 
 	SDL_Event event;
 	SEbool gameloop = true;
 	m_engine_clock.restart();
 	while (gameloop)
 	{
+		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+
 		m_frame_time = m_engine_clock.restart();
 		SEfloat deltaTime = m_frame_time.asSeconds();
+
+		std::string fps = std::to_string(1.0f/deltaTime) + " -- e:" + std::to_string(m_entityMgr.GetEntities().size());
+		ImGui::Begin("framerate");
+		ImGui::Text(fps.c_str());
+		ImGui::Separator();
+		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+
+
+
 
 		_handleGameLoopEvents(gameloop);
 
@@ -315,7 +330,9 @@ bool Engine::_gameLoop()
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		m_gameRender->Update(deltaTime);
+		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
+		m_editorRender->Update(deltaTime);
+		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 
 	}
@@ -347,7 +364,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			m_messenger.PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, gui::_gui_width,gui:: _gui_heigth);
+			glViewport(0, 0, gui::_gui_width, gui::_gui_heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 

@@ -107,11 +107,22 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		std::string tmp = templateName + std::to_string(m_templ_number++);
 		m_entities_map.emplace(tmp, Entity(tmp, _findFreeEntityID()));
 
-		//m_entities_map.at(tmp).components = m_entity_templs_map.at(templateName + "_template").
+		//Add component types
+		auto& e = m_entities_map.at(tmp);
+		auto& itr = m_entity_templs_map.at(templateName + "_template").find(templateName + "_template");
+		for (auto c : (*itr))
+		{
+			if (c.count("_type"))
+			{
+				SEint type_as_int = c.at("_type");
+				e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
+			}
+		}
+
 
 		for (auto s : Engine::Instance().GetSystemsContainer())
 		{
-			s->OnEntityAdded(m_entities_map.at(tmp), m_entity_templs_map.at(templateName + "_template"));
+			s->OnEntityAdded(m_entities_map.at(tmp), itr);
 		}
 		return &m_entities_map.at(tmp);
 	}
@@ -122,10 +133,28 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		nlohmann::json entity;
 		util::ReadFileToJson(entity, m_rel_path_to_user_files + m_ent_templ_fold_name + templateName + "_template" + m_scene_file_suffix, EntityMgr_id);
 
-		for (auto& comp_itr : entity)
+		auto& itr = entity.find(templateName + "_template");
+
+		//Store json object
+		m_entity_templs_map.emplace(templateName + "_template", entity);
+
+		m_entities_map.emplace(templateName + "_template", Entity(templateName + "_template", _findFreeEntityID()));
+
+		auto& e = m_entities_map.at(templateName + "_template");
+		for (auto j = entity[templateName + "_template"].begin(); j != entity[templateName + "_template"].end(); j++)
 		{
-			//if(comp_itr.v)
+			if (j.key() != "id")
+			{
+				SEint type_as_int = j.value().at("_type");
+				e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
+			}
 		}
+
+		for (auto s : Engine::Instance().GetSystemsContainer())
+		{
+			s->OnEntityAdded(m_entities_map.at(templateName + "_template"), itr);
+		}
+		return &m_entities_map.at(templateName + "_template");
 	}
 }
 
@@ -149,21 +178,22 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 		//Find json object from which the template is made
 		auto json = m_currentScene->GetData();
 		auto& entities_obj = json->find(m_main_json_obj);
-		auto& components = entities_obj.value().find(entity->name);
+		auto components = entities_obj.value().find(entity->name);
 
 		nlohmann::json templateEntity;
 		util::ReadFileToJson(templateEntity, file, EntityMgr_id);
-		
-		templateEntity[tmpl_name] = (*components); 
 
-		templateEntity.at(tmpl_name).at("id");
+		templateEntity[tmpl_name] = (*components);
+
+		templateEntity.at(tmpl_name).at("id") = -1;
 		for (auto& itr : templateEntity.at(tmpl_name))
-		{	
-				if (itr.count("_ownerID"))
-				{
-					itr.at("_ownerID") = -1;
-				}
+		{
+			if (itr.count("_ownerID"))
+			{
+				itr.at("_ownerID") = -1;
+			}
 		}
+
 		util::RewriteFileWithJson(templateEntity, file, EntityMgr_id);
 	}
 	catch (const std::exception& exc)

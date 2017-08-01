@@ -9,10 +9,6 @@ namespace priv
 
 EditorRender::EditorRender()
 	: m_transform_system(nullptr)
-	, VAO(0)
-	, VBO(0)
-	, EBO(0)
-	, UV(0)
 {
 
 }
@@ -22,6 +18,11 @@ EditorRender::~EditorRender()
 
 }
 
+namespace
+{
+static SEuint vao;
+}
+
 void EditorRender::Initialize()
 {
 	glFrontFace(GL_CCW);
@@ -29,6 +30,9 @@ void EditorRender::Initialize()
 
 	// TODO : This shoud be related to entity
 	CurrentShader = Engine::Instance().GetResourceManager()->GetShaderProgram("testShader");
+
+
+	glGenVertexArrays(1, &vao);
 }
 
 void EditorRender::Uninitialize()
@@ -38,123 +42,69 @@ void EditorRender::Uninitialize()
 
 void EditorRender::Update(SEfloat deltaTime)
 {
-	//Get entities container
+	SEfloat texCoords[] =
+	{
+		0.0f,0.0f,
+		1.0f,0.0f,
+		1.0f,1.0f,
+		0.0f,1.0f
+	};
 
-	//RESOURCE LEAK HERE SOMEWHERE
-	/*
-	if (true)
-		return;
-	*/
+	auto shader = CurrentShader->GetShaderID();
+	glUseProgram(shader);
+	SEuint textureLocation = glGetUniformLocation(shader, "fragment_texture");
+	SEuint transformLocation = glGetUniformLocation(shader, "transform");
+	glBindAttribLocation(shader, 0, "vertexPosition");
+	glBindAttribLocation(shader, 2, "vertexTexture");
 
-	for (auto renderables : m_renderables)
+	glBindVertexArray(vao);
+	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 
+		if (entity.second.components.count(COMPONENT_TYPE::SHAPE))
+		{
+			// this is how we find THE shape component of THE entity
+			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
 
-	//		if (entity.second.components.count(COMPONENT_TYPE::TEXTURE))
-	//		{
-	//			auto i = GetTextureComponent(entity.second.components.at(COMPONENT_TYPE::TEXTURE))->handle;
-	//			if (i != -1)
-	//			{
-	//				glActiveTexture(GL_TEXTURE0);
-	//				glBindTexture(GL_TEXTURE_2D, GetTextureComponent(entity.second.components.at(COMPONENT_TYPE::TEXTURE))->handle);
-	//
-	//				SEuint textureLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "fragment_texture");
-	//				glUniform1i(textureLocation, 0);
-	//
-	//				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
-	//				glEnableVertexAttribArray(2);
-	//			}
-	//		}
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 3, shape_comp.points.data());
 
-	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+			if (entity.second.components.count(COMPONENT_TYPE::TEXTURE))
+			{
+				auto i = GetTextureComponent(entity.second.components.at(COMPONENT_TYPE::TEXTURE))->handle;
+				if (i != -1)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, GetTextureComponent(entity.second.components.at(COMPONENT_TYPE::TEXTURE))->handle);
+
+					glUniform1i(textureLocation, 0);
+
+					glEnableVertexAttribArray(2);
+					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 2, &texCoords[0]);
+				}
+			}
 
 
-			glUseProgram(CurrentShader->GetShaderID());
-
-			SEuint transformLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "transform");
-			Mat4f mvp = glm::perspective(45.f, 1200.f / 800.f, 0.1f, 100.f) * Engine::Instance().GetCamera()->GetCameraView() * m_transform_system->TransformableComponents.at(renderables->my_Transform).modelMatrix;
+			Mat4f mvp = glm::perspective(45.f, 1200.f / 800.f, 0.1f, 100.f) * Engine::Instance().GetCamera()->GetCameraView() * m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix;
 			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &mvp[0][0]);
 
-			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, renderables->indices.size(), GL_UNSIGNED_SHORT, 0);
-			glBindVertexArray(0);
+			glDrawElements(
+				GL_TRIANGLES,
+				shape_comp.indices.size(),
+				GL_UNSIGNED_SHORT,
+				shape_comp.indices.data()
+			);
 
-//		}
+			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(2);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 	}
-
-
-	//Loop
-
-		//If entity has Transform
-
-		//Create render batch
-
-		//Draw batch
-
-
+	glUseProgram(0);
 }
 
 void EditorRender::AddRenderable(CShape* shape, const Entity& entity)
 {
-	m_renderables.push_back(shape);
-
-	if (!VAO)
-	{
-		glGenVertexArrays(1, &VAO);
-	}
-	glBindVertexArray(VAO);
-
-	if (!VBO)
-	{
-		glGenBuffers(1, &VBO);
-	}
-	if (!EBO)
-	{
-		glGenBuffers(1, &EBO);
-	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(shape->points.at(0)) * shape->points.size(), shape->points.data(), GL_DYNAMIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(shape->indices.at(0)) * shape->indices.size(), shape->indices.data(), GL_DYNAMIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape->points.at(0)), (void*)0);
-	glEnableVertexAttribArray(0);
-	
-	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
-	{
-		auto i = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
-		if (i != -1)
-		{
-			if (!UV)
-			{
-				glGenBuffers(1, &UV);
-			}
-
-			float texCoords[] = 
-			{
-				1.0f, 1.0f,
-				1.0f, 0.0f,
-				0.0f, 0.0f,
-				0.0f, 1.0f
-			};
-
-			glBindBuffer(GL_ARRAY_BUFFER, UV);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle);
-
-			SEuint textureLocation = glGetUniformLocation(CurrentShader->GetShaderID(), "fragment_texture");
-			glUniform1i(textureLocation, 0);
-
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
-			glEnableVertexAttribArray(2);
-		}
-	}
-
-	glBindVertexArray(0);
 
 }
 
