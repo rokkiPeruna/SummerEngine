@@ -1,5 +1,5 @@
-#ifndef SE_EntityManager_H
-#define SE_EntityManager_H
+#ifndef SE_ENTITYMANAGER_H
+#define SE_ENTITYMANAGER_H
 
 //STL includes:
 #include <string>
@@ -17,6 +17,8 @@
 #include <core/Messages.h>
 #include <utility/Clock.h>
 #include <utility/Time.h>
+#include <utility/JsonUtilFunctions.h>
+
 
 
 namespace se

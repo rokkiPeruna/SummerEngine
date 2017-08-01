@@ -1,8 +1,8 @@
 #include <managers/EntityManager.h>
 #include <core/Engine.h>
 #include <nlohmann_json/json.hpp>
-//#include <imgui/imgui.h>
 #include <systems/TransformSystem.h>
+
 
 namespace se
 {
@@ -101,10 +101,13 @@ void EntityManager::CreateEntityOnEditor(Entity& other, std::string name)
 
 Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 {
+	//If this entity template has already been used in scene, it it added to run-time container
 	if (m_entity_templs_map.count(templateName + "_template"))
 	{
 		std::string tmp = templateName + std::to_string(m_templ_number++);
 		m_entities_map.emplace(tmp, Entity(tmp, _findFreeEntityID()));
+
+		//m_entities_map.at(tmp).components = m_entity_templs_map.at(templateName + "_template").
 
 		for (auto s : Engine::Instance().GetSystemsContainer())
 		{
@@ -112,41 +115,60 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		}
 		return &m_entities_map.at(tmp);
 	}
+	//Otherwise we create and add it to run-time container for further use
+	else
+	{
+		//Open file for reading and loop all components
+		nlohmann::json entity;
+		util::ReadFileToJson(entity, m_rel_path_to_user_files + m_ent_templ_fold_name + templateName + "_template" + m_scene_file_suffix, EntityMgr_id);
 
-	OLET TÄSSÄ !! LISÄÄ TEMPLAATTI ENTITY LUONTI RUNTIME SÄILIÖÖN!!
-
-
+		for (auto& comp_itr : entity)
+		{
+			//if(comp_itr.v)
+		}
+	}
 }
 
 void EntityManager::SaveEntityAsTemplate(Entity* entity)
 {
-	std::string filename = entity->name + "_template";
-	std::ofstream e_templ(m_rel_path_to_user_files + m_ent_templ_fold_name + filename + m_scene_file_suffix, std::ios::trunc);
-	if (!e_templ.is_open())
-	{
-		MessageError(EntityMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_ent_templ_fold_name + filename + "\nin SaveEntityAsTemplate()";
-		return;
-	}
 	try
 	{
+		auto& file = m_rel_path_to_user_files + m_ent_templ_fold_name + entity->name + "_template" + m_scene_file_suffix;
+		auto& tmpl_name = entity->name + "_template";
+
+		//Write base json object manually
+		std::ofstream entity_tmpl(file, std::ios::trunc);
+		if (!entity_tmpl.is_open())
+		{
+			MessageError(EntityMgr_id) << "Failed to create and open " + file + " in SaveEntityAsTemplate()";
+			return;
+		}
+		entity_tmpl << "{\n\"" + entity->name + "_template\": \n{\n}" + "\n}";
+		entity_tmpl.close();
+
+		//Find json object from which the template is made
 		auto json = m_currentScene->GetData();
 		auto& entities_obj = json->find(m_main_json_obj);
-		auto templateEntity = entities_obj.value().at(entity->name);
+		auto& components = entities_obj.value().find(entity->name);
 
-		templateEntity.at("id") = -1;
-		for (auto& itr : templateEntity)
+		nlohmann::json templateEntity;
+		util::ReadFileToJson(templateEntity, file, EntityMgr_id);
+		
+		templateEntity[tmpl_name] = (*components); 
+
+		templateEntity.at(tmpl_name).at("id");
+		for (auto& itr : templateEntity.at(tmpl_name))
 		{	
 				if (itr.count("_ownerID"))
 				{
 					itr.at("_ownerID") = -1;
 				}
 		}
-		e_templ << std::setw(4) << templateEntity;
-		e_templ.close();
+		util::RewriteFileWithJson(templateEntity, file, EntityMgr_id);
 	}
 	catch (const std::exception& exc)
 	{
-		e_templ.close();
+		//e_templ.close();
 		std::string tmp = exc.what();
 		MessageError(EntityMgr_id) << "Json exception in SaveEntityAsTemplate(),\njson exception message: " + tmp;
 	}
