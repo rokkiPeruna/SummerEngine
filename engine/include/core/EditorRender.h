@@ -40,18 +40,24 @@ public:
 	void Uninitialize();
 
 	void Update(SEfloat deltaTime);
-	void AddRenderable();
+	void AddRenderable(CShape* shape, const Entity& entity);
 	void RemoveRenderable();
 
 
 private:
 
-	//std::vector<RenderComponent> m_rendables;
+	std::vector<CShape*> m_renderables;
+	
+
 	TransformSystem* m_transform_system;
 
 	//testing
 	ShaderResource* CurrentShader;
-	std::vector<SEuint> bufferObjects;
+
+	SEuint VAO;
+	SEuint VBO;
+	SEuint EBO;
+	SEuint UV;
 
 };
 

@@ -7,6 +7,7 @@
 //Include external
 
 //Include SE
+#include <managers/Entity.h>
 #include <utility/Typedefs.h>
 
 namespace se
@@ -37,6 +38,9 @@ public:
 
 
 private:
+
+	std::vector<Entity*> m_static_renderables;
+	std::vector<Entity*> m_dynamic_renderables;
 
 
 
