@@ -26,6 +26,7 @@ static SEuint vao;
 void EditorRender::Initialize()
 {
 	glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);
 	m_transform_system = Engine::Instance().GetTransformSystem();
 
 	// TODO : This shoud be related to entity
@@ -33,7 +34,7 @@ void EditorRender::Initialize()
 
 
 	glGenVertexArrays(1, &vao);
-	
+
 }
 
 void EditorRender::Uninitialize()
@@ -77,6 +78,9 @@ void EditorRender::Update(SEfloat deltaTime)
 		m_cameraPosition.z -= 0.05f;
 	}
 
+	std::cout.precision(3);
+	std::cout << "CamPos: " << m_cameraPosition.x << " -- " << m_cameraPosition.y << " -- " << m_cameraPosition.z << std::endl;
+
 	SEfloat texCoords[] =
 	{
 		0.0f,0.0f,
@@ -97,9 +101,9 @@ void EditorRender::Update(SEfloat deltaTime)
 	SEuint view_m_loc = glGetUniformLocation(shader, "view");
 	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
 
-	
 
-	Mat4f persp = glm::perspectiveFov(glm::radians(90.f), 1200.f , 800.f, 0.1f, 100.f);
+	//Mat4f persp = glm::ortho(0.f, (SEfloat)gui::_gui_width, 0.f, (SEfloat)gui::_gui_heigth,0.01f, 100.0f);
+	Mat4f persp = glm::perspectiveFov(glm::radians(45.f), 1200.f, 800.f, 0.1f, 100.f);
 	glUniformMatrix4fv
 	(
 		persp_m_loc,
@@ -110,8 +114,8 @@ void EditorRender::Update(SEfloat deltaTime)
 
 	//Mat4f view = Engine::Instance().GetCamera()->GetCameraView();
 	//Mat4f view = glm::lookAt(Vec3f(0.0f, 0.0f, -10.0f), Vec3f(0.0f), Vec3f(0.0f, 1.0f, 0.0f));
-	//Mat4f view = glm::lookAt(m_cameraPosition, Vec3f(m_cameraPosition.x, m_cameraPosition.y, 0.0f),Vec3f(0.0f, 1.0f, 0.0f));
-	Mat4f view = glm::lookAt(m_cameraPosition, Vec3f(0.0f), Vec3f(0.0f, 1.0f, 0.0f));
+	Mat4f view = glm::lookAt(m_cameraPosition, Vec3f(m_cameraPosition.x, m_cameraPosition.y, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
+	//Mat4f view = glm::lookAt(m_cameraPosition, Vec3f(0.0f), Vec3f(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv
 	(
 		view_m_loc,
@@ -128,9 +132,18 @@ void EditorRender::Update(SEfloat deltaTime)
 		if (entity.second.components.count(COMPONENT_TYPE::SHAPE))
 		{
 			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
+			SEuint pos_buffer;
+			glGenBuffers(1, &pos_buffer);
+			glBindBuffer(GL_ARRAY_BUFFER, pos_buffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(shape_comp.points.at(0)) * shape_comp.points.size(), shape_comp.points.data(), GL_DYNAMIC_DRAW);
 
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0)), &shape_comp.points.at(0));
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0)), 0);
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			//glEnableVertexAttribArray(0);
+			//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0)), &shape_comp.points.at(0));
 
 			if (entity.second.components.count(COMPONENT_TYPE::TEXTURE))
 			{
@@ -147,7 +160,12 @@ void EditorRender::Update(SEfloat deltaTime)
 				}
 			}
 
-			Mat4f model = TransformSystem::TransformableComponents.at(shape_comp.ownerID).modelMatrix;
+			auto pos = TransformSystem::TransformableComponents.at(shape_comp.ownerID).position;
+
+			//Mat4f model = TransformSystem::TransformableComponents.at(shape_comp.ownerID).modelMatrix;
+			Mat4f model = glm::translate(Mat4f(1.0f), TransformSystem::TransformableComponents.at(shape_comp.ownerID).position);
+
+
 			glUniformMatrix4fv
 			(
 				model_m_loc,
@@ -166,6 +184,8 @@ void EditorRender::Update(SEfloat deltaTime)
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(2);
 			glBindTexture(GL_TEXTURE_2D, 0);
+
+			glDeleteBuffers(1, &pos_buffer);
 		}
 	}
 	glUseProgram(0);
