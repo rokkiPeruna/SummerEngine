@@ -42,7 +42,7 @@ void EditorRender::Uninitialize()
 
 }
 
-static Vec3f m_cameraPosition{ 0.0f, 0.0f, -1.0f };
+static Vec3f m_cameraPosition{ 0.0f, 0.0f, 5.0f };
 static Vec3f m_cameraTarget{ 0.0f, 0.0f, 1.0f };
 void EditorRender::Update(SEfloat deltaTime)
 {
