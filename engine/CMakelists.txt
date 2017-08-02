@@ -28,6 +28,8 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
+	include/systems/CompSystemEventHandler.h
+	src/systems/CompSystemEventHandler.cpp
 	include/systems/DummySystemCPP.txt
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp

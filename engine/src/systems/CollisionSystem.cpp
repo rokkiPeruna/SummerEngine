@@ -38,13 +38,29 @@ void CollisionSystem::Uninitialize()
 
 void CollisionSystem::Update(SEfloat deltaTime)
 {
-	//Doesn't modify transform components, should be thread safe?
 	if (m_cCollidables.empty())
 		return;
 
+	//Check TransformSystem's messages to determine if some CCollidable components need their model matric reinitialized
+	std::vector<SEint> recalc_indices = {};
+	auto* entities = &Engine::Instance().GetEntityMgr()->GetEntities();
+	for (auto m : TransformSystem::Messages)
+	{
+		if (m.msg_type == MESSAGETYPE::TRANSFORM_CHANGED)
+		{
+			Engine::Instance().GetEntityMgr()->GetEntities();
+		}
+	}
+
+	//Doesn't modify transform components, should be thread safe?
 	auto& transforms = TransformSystem::TransformableComponents;
+
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{
+		//Check if ownerless
+		if ((*itr).ownerID < 0)
+			continue;
+
 		//Translate bounding box to world coordinates
 		auto f_world_aabb = (*itr).aabb + Vec2f(transforms.at((*itr).ownerID).position);
 		for (auto& next = itr + 1; next != m_cCollidables.end(); ++next)
@@ -80,7 +96,9 @@ void CollisionSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 {
 	if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::COLLIDABLE, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		SEint index = _onEntityAdded_helper(e, COMPONENT_TYPE::COLLIDABLE, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		///Initialize CCollidable's run-time-only value
+		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(e.id).modelMatrix;
 	}
 }
 
@@ -98,9 +116,9 @@ SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::COLLIDABLE)
 	{
-		SEint testi = _createComponent_helper(entity, component_type, entity_obj, m_cCollidables, m_free_cCollidables_indices);
-		auto bugi = m_cCollidables.at(testi).ownerID;
-		return testi;
+		SEint index = _createComponent_helper(entity, component_type, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		///Initialize CCollidable's run-time-only value
+		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(entity.id).modelMatrix;
 	}
 	else
 	{

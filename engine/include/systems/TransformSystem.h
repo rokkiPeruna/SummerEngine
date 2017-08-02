@@ -64,8 +64,13 @@ public:
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
+	static std::vector<SysMessage> Messages;
+	
+
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
+
+
 
 	std::vector<CShape> m_cShapes;
 	

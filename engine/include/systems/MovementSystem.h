@@ -10,7 +10,7 @@
 namespace se
 {
 ///Getter method for CMovable components
-extern inline CDynamic* GetDynamicComponent(SEint index);
+CDynamic* GetDynamicComponent(SEint index);
 
 namespace priv
 {
@@ -55,6 +55,8 @@ public:
 
 	///Returns plain Component* used in editor function.
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container);
+
+	static std::vector<SysMessage> Messages;
 
 private:
 	///Component containers(vectors) and free index containers(queues)

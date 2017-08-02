@@ -14,6 +14,7 @@ public:
 		: Component(COMPONENT_TYPE::COLLIDABLE)
 		, aabb(_aabb)
 		, collision_polygon{}
+		, modelMat(1.0f)
 	{
 		SEfloat col_pol_offset = 0.1f;
 		collision_polygon.emplace_back(_aabb.x + col_pol_offset);
@@ -27,6 +28,9 @@ public:
 
 	///Contains points for collision polygon. Used for narrow phase collision check
 	std::vector<Vec2f> collision_polygon;
+
+	///Model matrix for translating aabb and collision polygon to world coordinates
+	Mat4f modelMat;		/////Run-time only value, not saved to json. System must init this separately!
 
 };
 

@@ -13,6 +13,9 @@ CDynamic* GetDynamicComponent(SEint index)
 
 namespace priv
 {
+
+std::vector<SysMessage> MovementSystem::Messages = {};
+
 MovementSystem::MovementSystem()
 	: m_cDynamics{}
 	, m_free_cDynamics_indices{}
@@ -43,7 +46,10 @@ void MovementSystem::Update(SEfloat deltaTime)
 	for (auto& c : m_cDynamics)
 	{
 		c.velocity += c.acceleration * deltaTime;
-		transforms.at(c.ownerID).position += c.velocity * deltaTime;
+
+		Messages.emplace_back(SysMessage(MESSAGETYPE::POSITION_CHANGED, MessageData(c.ownerID ,new Vec3f(c.velocity * deltaTime)))); //Vec3f represents the increment to the position
+
+		//transforms.at(c.ownerID).position += c.velocity * deltaTime;
 	}
 	Keyboard kb;
 	

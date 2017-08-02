@@ -264,7 +264,8 @@ void Engine::_updateSystems(SEfloat deltaTime)
 
 	m_collisionSystem.Update(deltaTime);
 
-
+	//Flush messages
+	m_movementSystem.Messages.clear();
 }
 
 void Engine::_updateGUI()

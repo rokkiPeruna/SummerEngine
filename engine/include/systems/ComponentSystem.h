@@ -15,6 +15,38 @@ namespace se
 {
 namespace priv
 {
+enum class MESSAGETYPE : SEint
+{
+	TRANSFORM_CHANGED,
+	POSITION_CHANGED
+};
+
+
+using MessageData = std::pair<SEint, void*>;
+struct SysMessage
+{
+	MESSAGETYPE msg_type;
+	MessageData data;
+
+	SysMessage(MESSAGETYPE _msg_type, MessageData _data) :msg_type(_msg_type), data(_data) {}
+	SysMessage(SysMessage& other)
+	{
+		msg_type = other.msg_type;
+		data.first = other.data.first;
+		data.second = other.data.second;
+		other.data.second = nullptr;
+	}
+	~SysMessage() 
+	{
+		auto tmp = data.second;
+		data.second = nullptr;
+		delete tmp;
+	}
+};
+
+
+
+
 ///Brief: ComponentSystem -class works as a abstract interface class for other
 ///systems that are responsible for updating components. 
 ///NOTE!!: Every system should friend method that enables getting component of given type. See MovementSystem.h and .cpp for details.
@@ -58,6 +90,7 @@ public:
 
 	///GetPlainComponentPtr returns plain Component* to be used in editor function. Can't be used for alternating data in game logic
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
+
 
 protected:
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
