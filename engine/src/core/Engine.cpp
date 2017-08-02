@@ -96,8 +96,11 @@ void Engine::Initialize(const std::string& projectName)
 
 	m_messenger.Initialize();
 
+
 	_initManagers();
 	_initSystems();
+
+	glewInit();
 
 	_initGui(); //Must be after manager and system init
 

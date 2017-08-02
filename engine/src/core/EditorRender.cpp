@@ -33,6 +33,7 @@ void EditorRender::Initialize()
 
 
 	glGenVertexArrays(1, &vao);
+	
 }
 
 void EditorRender::Uninitialize()
@@ -40,8 +41,42 @@ void EditorRender::Uninitialize()
 
 }
 
+static Vec3f m_cameraPosition{ 0.0f, 0.0f, -1.0f };
+static Vec3f m_cameraTarget{ 0.0f, 0.0f, 1.0f };
 void EditorRender::Update(SEfloat deltaTime)
 {
+	Keyboard m_keyboard;
+	Mouse m_mouse;
+
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::A))
+	{
+		m_cameraPosition.x -= 0.05f;
+		m_cameraTarget.x -= 0.05f;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::D))
+	{
+		m_cameraPosition.x += 0.05f;
+		m_cameraTarget.x += 0.05f;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::W))
+	{
+		m_cameraPosition.y += 0.05f;
+		m_cameraTarget.y += 0.05f;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::S))
+	{
+		m_cameraPosition.y -= 0.05f;
+		m_cameraTarget.y -= 0.05f;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::Q))
+	{
+		m_cameraPosition.z += 0.05f;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::E))
+	{
+		m_cameraPosition.z -= 0.05f;
+	}
+
 	SEfloat texCoords[] =
 	{
 		0.0f,0.0f,
@@ -57,7 +92,36 @@ void EditorRender::Update(SEfloat deltaTime)
 	glBindAttribLocation(shader, 0, "vertexPosition");
 	glBindAttribLocation(shader, 2, "vertexTexture");
 
+	//Uniform locations
+	SEuint model_m_loc = glGetUniformLocation(shader, "model");
+	SEuint view_m_loc = glGetUniformLocation(shader, "view");
+	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
+
+	
+
+	Mat4f persp = glm::perspectiveFov(glm::radians(90.f), 1200.f , 800.f, 0.1f, 100.f);
+	glUniformMatrix4fv
+	(
+		persp_m_loc,
+		1,
+		GL_FALSE,
+		&persp[0][0]
+	);
+
+	//Mat4f view = Engine::Instance().GetCamera()->GetCameraView();
+	//Mat4f view = glm::lookAt(Vec3f(0.0f, 0.0f, -10.0f), Vec3f(0.0f), Vec3f(0.0f, 1.0f, 0.0f));
+	//Mat4f view = glm::lookAt(m_cameraPosition, Vec3f(m_cameraPosition.x, m_cameraPosition.y, 0.0f),Vec3f(0.0f, 1.0f, 0.0f));
+	Mat4f view = glm::lookAt(m_cameraPosition, Vec3f(0.0f), Vec3f(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv
+	(
+		view_m_loc,
+		1,
+		GL_FALSE,
+		&view[0][0]
+	);
+
 	glBindVertexArray(vao);
+
 	for (auto entity : Engine::Instance().GetEntityMgr()->GetEntities())
 	{
 
@@ -66,7 +130,7 @@ void EditorRender::Update(SEfloat deltaTime)
 			auto& shape_comp = m_transform_system->m_cShapes.at(entity.second.components.at(COMPONENT_TYPE::SHAPE));
 
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, shape_comp.points.size(), GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0).x) * 3, &shape_comp.points.at(0).x);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(shape_comp.points.at(0)), &shape_comp.points.at(0));
 
 			if (entity.second.components.count(COMPONENT_TYPE::TEXTURE))
 			{
@@ -79,13 +143,18 @@ void EditorRender::Update(SEfloat deltaTime)
 					glUniform1i(textureLocation, 0);
 
 					glEnableVertexAttribArray(2);
-					glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 2, &texCoords[0]);
+					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(SEfloat) * 2, &texCoords[0]);
 				}
 			}
 
-
-			Mat4f mvp = glm::perspective(45.f, 1200.f / 800.f, 0.1f, 100.f) * Engine::Instance().GetCamera()->GetCameraView() * m_transform_system->TransformableComponents.at(shape_comp.my_Transform).modelMatrix;
-			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, &mvp[0][0]);
+			Mat4f model = TransformSystem::TransformableComponents.at(shape_comp.ownerID).modelMatrix;
+			glUniformMatrix4fv
+			(
+				model_m_loc,
+				1,
+				GL_FALSE,
+				&model[0][0]
+			);
 
 			glDrawElements(
 				GL_TRIANGLES,
