@@ -266,6 +266,7 @@ void Engine::_updateSystems(SEfloat deltaTime)
 
 	//Flush messages
 	m_movementSystem.Messages.clear();
+	m_transformSystem.Messages.clear();
 }
 
 void Engine::_updateGUI()
@@ -305,7 +306,7 @@ bool Engine::_gameLoop()
 		m_frame_time = m_engine_clock.restart();
 		SEfloat deltaTime = m_frame_time.asSeconds();
 
-		std::string fps = std::to_string(1.0f/deltaTime) + " -- e:" + std::to_string(m_entityMgr.GetEntities().size());
+		std::string fps = std::to_string(1.0f/deltaTime) + " -- e:" + std::to_string(m_entityMgr.GetEntityNameToID().size());
 		ImGui::Begin("framerate");
 		ImGui::Text(fps.c_str());
 		ImGui::Separator();

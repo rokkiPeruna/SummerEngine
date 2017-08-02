@@ -48,12 +48,11 @@ void CollisionSystem::Update(SEfloat deltaTime)
 	{
 		if (m.msg_type == MESSAGETYPE::TRANSFORM_CHANGED)
 		{
-			Engine::Instance().GetEntityMgr()->GetEntities();
+			auto& e = entities->at(m.data.first);
+			if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
+				m_cCollidables.at(entities->at(m.data.first).components.at(COMPONENT_TYPE::COLLIDABLE)).modelMat = TransformSystem::TransformableComponents.at(m.data.first).modelMatrix;
 		}
 	}
-
-	//Doesn't modify transform components, should be thread safe?
-	auto& transforms = TransformSystem::TransformableComponents;
 
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{
@@ -62,26 +61,20 @@ void CollisionSystem::Update(SEfloat deltaTime)
 			continue;
 
 		//Translate bounding box to world coordinates
-		auto f_world_aabb = (*itr).aabb + Vec2f(transforms.at((*itr).ownerID).position);
+		//auto f_world_aabb = (*itr).aabb + Vec2f(transforms.at((*itr).ownerID).position);
+		auto f = Vec4f((*itr).aabb, 0.0f, 0.0f) * (*itr).modelMat;
 		for (auto& next = itr + 1; next != m_cCollidables.end(); ++next)
 		{
 			//Check for broad phase collision (AABB)
-			auto s_world_aabb = (*next).aabb + Vec2f(transforms.at((*next).ownerID).position);
+			//auto s_world_aabb = (*next).aabb + Vec2f(transforms.at((*next).ownerID).position);
+			auto s = Vec4f((*next).aabb, 0.0f, 0.0f) * (*next).modelMat;
 
-			if (
-				f_world_aabb.y > s_world_aabb.x &&
-				f_world_aabb.x < s_world_aabb.y &&
-				f_world_aabb.y > s_world_aabb.x &&
-				f_world_aabb.x < s_world_aabb.y
-				||
-				s_world_aabb.y > f_world_aabb.x &&
-				s_world_aabb.x < f_world_aabb.y &&
-				s_world_aabb.y > f_world_aabb.x &&
-				s_world_aabb.x < f_world_aabb.y
-				)
+			if (_checkAABBcoll(f, s))
 			{
-				//If true, check for narrow phase collision
+				std::cout << "Collision" << std::endl;
 			}
+
+
 		}
 	}
 }
@@ -148,6 +141,21 @@ Component* CollisionSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 	}
 	else
 		return nullptr;
+}
+
+
+SEbool CollisionSystem::_checkAABBcoll(const Vec4f& a, const Vec4f& b)
+{
+	return
+		a.y > b.x &&
+		a.x < b.y &&
+		a.y > b.x &&
+		a.x < b.y
+		||
+		b.y > a.x &&
+		b.x < a.y &&
+		b.y > a.x &&
+		b.x < a.y;
 }
 
 }//namespace priv

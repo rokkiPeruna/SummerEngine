@@ -1,6 +1,8 @@
 {
     "scenenamelist": [
         "level1",
-		"Test"
+        "Test",
+        "endgame",
+        "testi"
     ]
 }

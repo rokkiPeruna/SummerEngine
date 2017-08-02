@@ -49,7 +49,7 @@ void ComponentManager::Update()
 
 }
 
-void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>& entities, Scene* scene)
+void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entities, Scene* scene)
 {
 	//SE_TODO: Move to logic separate functions
 
@@ -61,10 +61,10 @@ void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>&
 	//Loop all entities and COMPONENT_TYPEs to their map
 	for (auto& e : entities)
 	{
-		//Find match from scene file. Shouldn't fail because entities have been picked from that file just a moment ago
-		if (entities_obj.value().count(e.first))
+		//Find match from scene file.
+		if (entities_obj.value().count(e.second.name))
 		{
-			auto& entity_obj = entities_obj.value().at(e.first);
+			auto& entity_obj = entities_obj.value().at(e.second.name);
 			//Loop all components from entity_obj and add COMPONENT_TYPEs to entity's component map
 			for (auto& itr = entity_obj.begin(); itr != entity_obj.end(); itr++)
 			{
@@ -77,7 +77,7 @@ void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>&
 		}
 		else
 		{
-			MessageError(ComponentMgr_id) << "Could not find entity " + e.first + " from\n" + m_curr_scene->GetName();
+			MessageError(ComponentMgr_id) << "Could not find entity " + e.second.name + " from\n" + m_curr_scene->GetName();
 		}
 	}
 	//Send all entities to systems for component creation
@@ -85,7 +85,7 @@ void ComponentManager::InitWithNewScene(std::unordered_map<std::string, Entity>&
 	{
 		for (auto& e : entities)
 		{
-			auto& entity_obj = entities_obj.value().find(e.first);
+			auto& entity_obj = entities_obj.value().find(e.second.name);
 			s->OnEntityAdded(e.second, entity_obj);
 		}
 	}

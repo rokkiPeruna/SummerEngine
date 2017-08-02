@@ -22,34 +22,3 @@ Applying window settings..
 
 /*------DEBUG STARTS------*/
 
-[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
----[DEBUG]MESSAGE TYPE: INFO
-Entity [teemu_copy] already has that component in AddNewComponentToEntity()!
----

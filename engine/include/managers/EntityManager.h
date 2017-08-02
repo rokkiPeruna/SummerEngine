@@ -69,7 +69,9 @@ public:
 	///Delete entity from scene
 	void DeleteEntityOnEditor(std::string entity_name);
 
-	std::unordered_map<std::string, Entity>& GetEntities();
+	std::unordered_map<SEint, Entity>& GetEntities() { return m_entities; }
+
+	std::unordered_map<std::string, SEint>& GetEntityNameToID();
 
 	Scene* GetCurrentScene();
 
@@ -109,8 +111,11 @@ private:
 	///Const string naming the main json object
 	const std::string m_main_json_obj;
 
-	///Container holding entities and their access keys (names)
-	std::unordered_map<std::string, Entity> m_entities_map;
+	///Container holding entities and their ids as keys
+	std::unordered_map<SEint, Entity> m_entities;
+
+	///Container binding entity name to it's id
+	std::unordered_map<std::string, SEint> m_entities_names_map;
 
 	///Container holding entity templates as json objects
 	std::unordered_map<std::string, nlohmann::json> m_entity_templs_map;

@@ -43,7 +43,7 @@ public:
 	void Update() override final;
 
 	///Initialize with new scene. Takes in const ref of std::vector containing scene's entities and current scene ptr
-	void InitWithNewScene(std::unordered_map<std::string, Entity>& entities, Scene* scene);
+	void InitWithNewScene(std::unordered_map<SEint, Entity>& entities, Scene* scene);
 
 	///Add component of given type to given entity
 	void AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE component_type);

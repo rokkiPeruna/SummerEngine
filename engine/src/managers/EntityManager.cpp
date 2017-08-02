@@ -21,7 +21,8 @@ EntityManager::EntityManager()
 	, m_ent_templ_fold_name("entity_templates/")
 	, m_scene_file_suffix(".json")
 	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
-	, m_entities_map{}
+	, m_entities{}
+	, m_entities_names_map{}
 	, m_entity_templs_map{}
 	, m_templ_number(0)
 	, m_posb_gap_in_free_entity_ids(true)
@@ -42,7 +43,8 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson, Component
 	m_rel_path_to_user_files = relativePathToEntitiesJson;
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + m_scenes_subfolder_name;
 	m_compMgr = compMgr;
-	m_entities_map.clear();
+	m_entities.clear();
+	m_entities_names_map.clear();
 	while (!m_free_entity_ids.empty())
 		m_free_entity_ids.pop();
 }
@@ -59,7 +61,8 @@ void EntityManager::Update()
 
 void EntityManager::InitWithNewScene(Scene* scene)
 {
-	m_entities_map.clear();
+	m_entities.clear();
+	m_entities_names_map.clear();
 
 	m_currentScene = scene;
 
@@ -72,7 +75,7 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_curr_free_entity_id = _findFreeEntityID();
 
 	//Inform ComponentManager of scene change
-	m_compMgr->InitWithNewScene(m_entities_map, scene);
+	m_compMgr->InitWithNewScene(m_entities, scene);
 }
 
 
@@ -86,8 +89,10 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 		nlohmann::json({{"id", m_curr_free_entity_id }}),
 	});
 
-	m_entities_map.emplace(name, Entity(name, m_curr_free_entity_id));
-	m_currentEntity = &m_entities_map.at(name);
+	m_entities.emplace(m_curr_free_entity_id, Entity(name, m_curr_free_entity_id));
+	m_entities_names_map.emplace(name, m_curr_free_entity_id);
+
+	m_currentEntity = &m_entities.at(m_curr_free_entity_id);
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::TRANSFORMABLE);
 	m_compMgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_currentEntity->id);
@@ -105,10 +110,12 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 	if (m_entity_templs_map.count(templateName + "_template"))
 	{
 		std::string tmp = templateName + std::to_string(m_templ_number++);
-		m_entities_map.emplace(tmp, Entity(tmp, _findFreeEntityID()));
+		SEint freeid = _findFreeEntityID();
+		m_entities.emplace(freeid, Entity(tmp, freeid));
+		m_entities_names_map.emplace(tmp, freeid);
 
 		//Add component types
-		auto& e = m_entities_map.at(tmp);
+		auto& e = m_entities.at(freeid);
 		auto& itr = m_entity_templs_map.at(templateName + "_template").find(templateName + "_template");
 		for (auto c : (*itr))
 		{
@@ -122,9 +129,9 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 
 		for (auto s : Engine::Instance().GetSystemsContainer())
 		{
-			s->OnEntityAdded(m_entities_map.at(tmp), itr);
+			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
-		return &m_entities_map.at(tmp);
+		return &m_entities.at(freeid);
 	}
 	//Otherwise we create and add it to run-time container for further use
 	else
@@ -138,9 +145,12 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		//Store json object
 		m_entity_templs_map.emplace(templateName + "_template", entity);
 
-		m_entities_map.emplace(templateName + "_template", Entity(templateName + "_template", _findFreeEntityID()));
+		SEint freeid = _findFreeEntityID();
 
-		auto& e = m_entities_map.at(templateName + "_template");
+		m_entities.emplace(freeid, Entity(templateName + "_template", freeid));
+		m_entities_names_map.emplace(templateName + "_template", freeid);
+
+		auto& e = m_entities.at(freeid);
 		for (auto j = entity[templateName + "_template"].begin(); j != entity[templateName + "_template"].end(); j++)
 		{
 			if (j.key() != "id")
@@ -152,9 +162,9 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 
 		for (auto s : Engine::Instance().GetSystemsContainer())
 		{
-			s->OnEntityAdded(m_entities_map.at(templateName + "_template"), itr);
+			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
-		return &m_entities_map.at(templateName + "_template");
+		return &m_entities.at(freeid);
 	}
 }
 
@@ -212,25 +222,28 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 
 	entities_obj.value().erase(entity_name);
 
+	SEint entity_id = m_entities_names_map.at(entity_name);
+
 	for (auto s : Engine::Instance().GetSystemsContainer())
 	{
-		s->OnEntityRemoved(m_entities_map.at(entity_name));
+		s->OnEntityRemoved(m_entities.at(entity_id));
 	}
 
-	m_free_entity_ids.push(m_entities_map.at(entity_name).id);
+	m_free_entity_ids.push(m_entities.at(entity_id).id);
 
-	if (m_currentEntity == &m_entities_map.at(entity_name))
+	if (m_currentEntity == &m_entities.at(entity_id))
 	{
 		m_currentEntity = nullptr;
 		m_compMgr->SetCurrentEntity(nullptr);
 	}
 
-	m_entities_map.erase(entity_name);
+	m_entities.erase(entity_id);
+	m_entities_names_map.erase(entity_name);
 }
 
-std::unordered_map<std::string, Entity>& EntityManager::GetEntities()
+std::unordered_map<std::string, SEint>& EntityManager::GetEntityNameToID()
 {
-	return m_entities_map;
+	return m_entities_names_map;
 }
 
 Scene* EntityManager::GetCurrentScene()
@@ -261,7 +274,8 @@ SEint EntityManager::_loadSceneEntities()
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
 	{
 		SEint id = itr.value().at("id");
-		m_entities_map.emplace(itr.key(), Entity(itr.key(), id));
+		m_entities.emplace(id, Entity(itr.key(), id));
+		m_entities_names_map.emplace(itr.key(), id);
 		if (id > largestID)
 			largestID = id;
 	}
@@ -271,7 +285,6 @@ SEint EntityManager::_loadSceneEntities()
 void EntityManager::_res_space_CTransfComponents(SEint largest_id)
 {
 	SEint safetyFactor = 2.0f;
-	//PositionSystem::PositionComponents.reserve(largest_id * safetyFactor);
 	TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
 }
 

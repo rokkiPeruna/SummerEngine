@@ -48,6 +48,8 @@ public:
 private:
 	std::vector<CCollidable> m_cCollidables;
 	std::queue<SEint> m_free_cCollidables_indices;
+
+	SEbool _checkAABBcoll(const Vec4f& a, const Vec4f& b);
 };
 
 }//Namespace priv

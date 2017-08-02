@@ -62,6 +62,14 @@ void GuiEntityMgr::Update()
 			if (ImGui::Button("Create!"))
 			{
 				m_entity_mgr->CreateEntityOnEditor(entityname);
+
+				SEint entityid = m_entity_mgr->GetEntityNameToID().at(entityname);
+				m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));		
+				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));	
+				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, entityid);
+				//Inform GuiCompMgr that json object pointing to current component has been invalidated		
+				m_gui_comp_mgr->InvalidateComponentObj();
+
 				memset(&entityname[0], 0, sizeof(entityname));
 			}
 		}
@@ -69,26 +77,26 @@ void GuiEntityMgr::Update()
 	else if (ImGui::CollapsingHeader("Save as entity template"))
 	{
 		ImGui::Separator();
-		for (auto& e : m_entity_mgr->GetEntities())
+		for (auto& e : m_entity_mgr->GetEntityNameToID())
 		{
 			//ImGui::Bullet();
-			if (ImGui::SmallButton(e.second.name.c_str()))
+			if (ImGui::SmallButton(e.first.c_str()))
 			{
-				m_entity_mgr->SaveEntityAsTemplate(&e.second);
+				m_entity_mgr->SaveEntityAsTemplate(&m_entity_mgr->GetEntities().at(e.second));
 			}
 		}
 	}
 	else if (ImGui::CollapsingHeader("Entities"))
 	{
 		ImGui::Separator();
-		for (auto& e : m_entity_mgr->GetEntities())
+		for (auto& e : m_entity_mgr->GetEntityNameToID())
 		{
 			//ImGui::Bullet();
-			if (ImGui::SmallButton(e.second.name.c_str()))
+			if (ImGui::SmallButton(e.first.c_str()))
 			{
-				m_entity_mgr->SetCurrentEntity(&e.second);
-				m_comp_mgr->SetCurrentEntity(&e.second);
-				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e.second.id);
+				m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(e.second));
+				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(e.second));
+				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_entity_mgr->GetEntities().at(e.second).id);
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated
 				m_gui_comp_mgr->InvalidateComponentObj();				
 				_gui_show_component_mgr_window = true;
@@ -98,7 +106,7 @@ void GuiEntityMgr::Update()
 	else if (ImGui::CollapsingHeader("Delete entity"))
 	{
 		ImGui::Separator();
-		for (auto& e : m_entity_mgr->GetEntities())
+		for (auto& e : m_entity_mgr->GetEntityNameToID())
 		{
 			if (ImGui::Button(e.first.c_str()))
 			{

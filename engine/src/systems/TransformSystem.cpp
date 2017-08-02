@@ -129,6 +129,10 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 		//Add component to json object
 		entity_obj.value().push_back({ CompTypeAsString.at(COMPONENT_TYPE::TRANSFORMABLE), TransformableComponents.at(e.id) });
 
+		//Calculate model matrix
+		auto& c = TransformableComponents.at(e.id);
+		c.modelMatrix = glm::translate(Mat4f(1.0f), c.position) * glm::rotate(Mat4f(1.0f), glm::radians(c.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), c.scale);
+
 		return e.id;
 	}
 

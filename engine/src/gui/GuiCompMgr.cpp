@@ -62,7 +62,7 @@ void GuiCompMgr::Update()
 			}
 		}
 	}
-	if (ImGui::CollapsingHeader("Remove component"))
+	else if (ImGui::CollapsingHeader("Remove component"))
 	{
 		for (auto& component : curr_e->components)
 		{
@@ -76,7 +76,7 @@ void GuiCompMgr::Update()
 			}
 		}
 	}
-	if (ImGui::CollapsingHeader("Modify component"))
+	else if (ImGui::CollapsingHeader("Modify component"))
 	{
 		for (auto& component : curr_e->components)
 		{
