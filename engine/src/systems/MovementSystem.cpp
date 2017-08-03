@@ -55,7 +55,7 @@ void MovementSystem::Update(SEfloat deltaTime)
 	
 	if (kb.GetState(KeyboardState::Up))
 	{
-		auto e = Engine::Instance().GetEntityMgr()->CreateEntityFromTemplate("bullet");
+		auto e = Engine::Instance().GetEntityMgr()->CreateEntityFromTemplate("bulletNoColl");
 		auto& tr = TransformSystem::TransformableComponents.at(e->components.at(COMPONENT_TYPE::TRANSFORMABLE));
 		tr.position = Vec3f(0.0f, 1.0f, 0.0f);
 		auto dyn = GetDynamicComponent(e->components.at(COMPONENT_TYPE::DYNAMIC));

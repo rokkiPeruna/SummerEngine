@@ -1,6 +1,6 @@
 MESSAGE TYPE: ERROR
 EditorLoop failed from std::exception,
-exception message: invalid unordered_map<K, T> key
+exception message: invalid vector<T> subscript
 ---
 MESSAGE TYPE: INFO
 Compiling test.frag

@@ -71,7 +71,7 @@ void CollisionSystem::Update(SEfloat deltaTime)
 
 			if (_checkAABBcoll(f, s))
 			{
-				std::cout << "Collision" << std::endl;
+
 			}
 
 

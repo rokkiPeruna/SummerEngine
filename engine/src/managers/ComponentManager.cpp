@@ -89,6 +89,12 @@ void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entit
 			s->OnEntityAdded(e.second, entity_obj);
 		}
 	}
+	//Send all entities to renderer
+	auto rend = Engine::Instance().GetCurrentRenderer();
+	for (auto& e : entities)
+	{
+		rend->OnEntityAdded(e.second);
+	}
 
 }
 

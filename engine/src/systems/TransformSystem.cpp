@@ -142,8 +142,8 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 		m_cShapes.at(tmp).my_Transform = e.id;
 		
 		
-		Engine::Instance().GetEditorRender()->AddRenderable(&m_cShapes.at(tmp), e);
-		Engine::Instance().GetGameRender()->AddRenderable();
+		//Engine::Instance().GetEditorRender()->AddRenderable(&m_cShapes.at(tmp), e);
+		//Engine::Instance().GetGameRender()->AddRenderable();
 
 		return e.id;
 	}

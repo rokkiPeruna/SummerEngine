@@ -42,6 +42,7 @@ Engine::Engine()
 	, m_input_coolDown()
 	, m_window(new priv::Window)
 	, m_messenger()
+	, m_current_renderer(nullptr)
 	, m_camera(new Camera)
 	/*SYSTEMS*/
 	, m_movementSystem()
@@ -62,6 +63,8 @@ Engine::Engine()
 
 Engine::~Engine()
 {
+	m_current_renderer = nullptr;
+
 	for (auto g : m_engine_gui_container)
 	{
 		auto tmp = g;
@@ -302,14 +305,28 @@ bool Engine::_gameLoop()
 	SDL_Event event;
 	SEbool gameloop = true;
 	m_engine_clock.restart();
+
+	SEfloat second = 0.0f;
+	SEint frame_counter = 0;
+	std::string fps = "";
+
 	while (gameloop)
 	{
 		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
 
 		m_frame_time = m_engine_clock.restart();
 		SEfloat deltaTime = m_frame_time.asSeconds();
+		frame_counter++;
 
-		std::string fps = std::to_string(1.0f/deltaTime) + " -- e:" + std::to_string(m_entityMgr.GetEntityNameToID().size());
+		second += deltaTime;
+		if (second > 1.0f)
+		{
+			fps = std::to_string(static_cast<SEfloat>(frame_counter)) + " -- e:" + std::to_string(m_entityMgr.GetEntityNameToID().size());
+			second = 0.0f;
+			frame_counter = 0;
+		}
+
+
 		ImGui::Begin("framerate");
 		ImGui::Text(fps.c_str());
 		ImGui::Separator();
@@ -346,6 +363,10 @@ bool Engine::_gameLoop()
 
 void Engine::_editorLoop(SEbool& exitProgram)
 {
+	//Set current renderer to be editor type
+	m_current_renderer = m_editorRender.get();
+	assert(m_current_renderer);
+
 	ImVec4 clear_color = ImColor(114, 144, 154);
 
 	m_frame_time = m_engine_clock.restart();

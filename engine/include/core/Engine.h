@@ -96,6 +96,8 @@ public:
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 
 
+	EditorRender* GetCurrentRenderer() { return m_current_renderer; }
+
 	std::shared_ptr<EditorRender> GetEditorRender() { return m_editorRender; }
 	std::shared_ptr<GameRender> GetGameRender() { return m_gameRender;  }
 	Camera* GetCamera() { return m_camera; }
@@ -186,6 +188,9 @@ private:
 
 	///Messenger
 	Messenger m_messenger;
+
+	///Current renderer
+	EditorRender* m_current_renderer; //SE_TODO: Inherit all renderer from one base class so type can be e.g. Renderer*
 
 	//Camera
 	Camera* m_camera;

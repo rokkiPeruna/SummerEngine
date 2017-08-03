@@ -126,11 +126,18 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 			}
 		}
 
-
 		for (auto s : Engine::Instance().GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
+
+		//Clean up, one method to take care of all this entityAdded stuff!
+		auto rend = Engine::Instance().GetCurrentRenderer();
+		for (auto e : m_entities)
+		{
+			rend->OnEntityAdded(e.second);
+		}
+
 		return &m_entities.at(freeid);
 	}
 	//Otherwise we create and add it to run-time container for further use
