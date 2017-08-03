@@ -112,6 +112,7 @@ SEint CollisionSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 		SEint index = _createComponent_helper(entity, component_type, entity_obj, m_cCollidables, m_free_cCollidables_indices);
 		///Initialize CCollidable's run-time-only value
 		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(entity.id).modelMatrix;
+		return index;
 	}
 	else
 	{

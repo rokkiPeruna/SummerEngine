@@ -26,7 +26,7 @@ public:
 		, my_Transform(-1)
 	{
 
-		SEfloat theta = 2 * 3.1415926 / SEfloat(num_points);
+		SEfloat theta = 2.0f * 3.1415926f / SEfloat(num_points);
 		SEfloat tangential_factor = tanf(theta);
 		SEfloat radial_factor = cosf(theta);
 

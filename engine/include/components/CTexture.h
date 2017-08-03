@@ -12,7 +12,7 @@ public:
 	///Default constructor
 	CTexture()
 		: Component(COMPONENT_TYPE::TEXTURE)
-		, handle(-1)
+		, handle(SEuint_max)
 		, name("")
 		, has_alpha(false)
 	{}

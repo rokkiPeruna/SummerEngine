@@ -154,11 +154,11 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 
 	//Vertex positions
 	b.CreateBuffer(b.pos_buffer, shape->points.size() * sizeof(shape->points.at(0)), shape->points.data());
-	b.BindAttribPtr(SHADER_ATTRIB_INDEX::POSITION, 3, shape->points.data());
+	b.BindAttribPtr(SHADER_ATTRIB_INDEX::POSITION, 3);
 
 	//Indices
 	b.CreateBuffer(b.ind_buffer, shape->indices.size() * sizeof(shape->indices.at(0)), shape->indices.data(), true);
-	b.BindAttribPtr(SHADER_ATTRIB_INDEX::INDICES, 1, shape->indices.data());
+	b.BindAttribPtr(SHADER_ATTRIB_INDEX::INDICES, 1);
 
 	//Check for texture component
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
@@ -166,7 +166,7 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 		auto tex = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE));
 
 		b.CreateBuffer(b.texco_buffer, sizeof(texCoords[0]) * 8, texCoords);
-		b.BindAttribPtr(SHADER_ATTRIB_INDEX::TEX_COORDS, 2, texCoords);
+		b.BindAttribPtr(SHADER_ATTRIB_INDEX::TEX_COORDS, 2);
 		b.texture_handle = tex->handle;
 	}
 }

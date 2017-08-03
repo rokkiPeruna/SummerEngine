@@ -113,7 +113,7 @@ protected:
 		else
 		{
 			container.emplace_back(component);
-			SEint index = container.size() - 1;
+			SEint index = static_cast<SEint>(container.size() - 1);
 			e.components.at(component_type) = index;
 			_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(index)));
 			return index;
@@ -134,7 +134,7 @@ protected:
 		else
 		{
 			container.emplace_back(T());
-			index = container.size() - 1;
+			index = static_cast<SEint>(container.size() - 1);
 		}
 		e.components.emplace(type, index);
 		_addOwnerIDToComp(e.id, static_cast<Component*>(&container.at(index)));

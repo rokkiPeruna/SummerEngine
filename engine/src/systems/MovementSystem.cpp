@@ -42,7 +42,7 @@ void MovementSystem::Uninitialize()
 
 void MovementSystem::Update(SEfloat deltaTime)
 {
-	auto& transforms = TransformSystem::TransformableComponents;
+	//auto& transforms = TransformSystem::TransformableComponents;
 	for (auto& c : m_cDynamics)
 	{
 		c.velocity += c.acceleration * deltaTime;

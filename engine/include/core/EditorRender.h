@@ -37,12 +37,12 @@ struct DynRenderBatch //FOR single element at this point
 
 	SEuint vao;
 	SEuint  num_indices = 0;
-	SEuint texture_handle = -1;
+	SEuint texture_handle = SEuint_max;
 
-	SEuint pos_buffer = -1;
-	SEuint ind_buffer = -1;
-	SEuint texco_buffer = -1;
-	SEuint col_buffer = -1;
+	SEuint pos_buffer = SEuint_max;
+	SEuint ind_buffer = SEuint_max;
+	SEuint texco_buffer = SEuint_max;
+	SEuint col_buffer = SEuint_max;
 
 	SEuint CreateBuffer(SEuint& buf, SEuint sz_of_buf, void* data, SEbool is_elem_array = false)
 	{
@@ -56,7 +56,7 @@ struct DynRenderBatch //FOR single element at this point
 		return buf;
 	}
 
-	void BindAttribPtr(SHADER_ATTRIB_INDEX shrd_atr_ind, SEuint num_vert_data_elem, void* data)
+	void BindAttribPtr(SHADER_ATTRIB_INDEX shrd_atr_ind, SEuint num_vert_data_elem)
 	{
 		glBindVertexArray(vao);
 
@@ -140,13 +140,11 @@ private:
 	//);
 	struct cmpr_batch_values
 	{
-		bool operator()(const batch_values& a, const batch_values& b)
+		bool operator()(const batch_values& a, const batch_values& b) const
 		{
 			return a.x < b.x || a.y < b.y || a.z < b.z;
 		}
 	};
-
-
 
 	///Map that binds render batch values to it's pointer
 	std::map<batch_values, DynRenderBatch*, cmpr_batch_values> m_batch_value_map;
