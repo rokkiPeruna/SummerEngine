@@ -10,6 +10,7 @@
 //Include SE
 #include <systems/TransformSystem.h>
 #include <managers/ResourceManager.h>
+#include <utility/Math.h>
 
 
 ///Brief : Editor render won't create any static objects and will draw lines even to shapes 
@@ -32,12 +33,10 @@ enum class SHADER_ATTRIB_INDEX : SEuint
 
 struct DynRenderBatch //FOR single element at this point
 {
-	SEint entity_id;
+	std::vector<SEint> entity_ids;
 
 	SEuint vao;
-
 	SEuint  num_indices = 0;
-
 	SEuint texture_handle = -1;
 
 	SEuint pos_buffer = -1;
@@ -95,7 +94,7 @@ struct DynRenderBatch //FOR single element at this point
 		}*/
 	}
 
-	DynRenderBatch(SEint _entity_id, SEuint _num_indices) : entity_id(_entity_id) ,num_indices(_num_indices), vao(0)
+	DynRenderBatch(SEuint _num_indices) : num_indices(_num_indices), vao(0)
 	{
 		assert(num_indices > 2);
 		glGenVertexArrays(1, &vao);
@@ -128,19 +127,29 @@ public:
 		m_dyn_rend_batches.emplace_back(batch);
 	}
 
-	DynRenderBatch* GetDynRenderBatch(SEint entity_id)
-	{
-		for (auto rb : m_dyn_rend_batches)
-		{
-			if (rb.entity_id == entity_id)
-				return &rb;
-		}
-		return nullptr;
-	}
 
 private:
-	///
+	///Render batches
 	std::vector<DynRenderBatch> m_dyn_rend_batches;
+
+	using batch_values = Vec3u;
+	//(
+	//	SEuint, //Num indices
+	//	SEuint, //Texture handle
+	//	SEuint  //Num of vertices
+	//);
+	struct cmpr_batch_values
+	{
+		bool operator()(const batch_values& a, const batch_values& b)
+		{
+			return a.x < b.x || a.y < b.y || a.z < b.z;
+		}
+	};
+
+
+
+	///Map that binds render batch values to it's pointer
+	std::map<batch_values, DynRenderBatch*, cmpr_batch_values> m_batch_value_map;
 
 	//testing
 	ShaderResource* CurrentShader;

@@ -1,4 +1,5 @@
 #include <core/Camera.h>
+#include <managers/Mouse.h>
 
 namespace se
 {
@@ -29,38 +30,40 @@ Camera::~Camera()
 
 void Camera::Update(const SEfloat deltaTime)
 {
-	if (m_keyboard.GetState(KeyboardState::A))
-	{
-		m_cameraPosition.x -= 0.05f;
-		m_cameraTarget.x -= 0.05f;
-	}
-	if (m_keyboard.GetState(KeyboardState::D))
-	{
-		m_cameraPosition.x += 0.05f;
-		m_cameraTarget.x += 0.05f;
-	}
-	if (m_keyboard.GetState(KeyboardState::W))
-	{
-		m_cameraPosition.y += 0.05f;
-		m_cameraTarget.y += 0.05f;
-	}
-	if (m_keyboard.GetState(KeyboardState::S))
-	{
-		m_cameraPosition.y -= 0.05f;
-		m_cameraTarget.y -= 0.05f;
-	}
-	if (m_keyboard.GetState(KeyboardState::Q))
-	{
-		m_cameraPosition.z += 0.05f;
-	}
-	if (m_keyboard.GetState(KeyboardState::E))
-	{
-		m_cameraPosition.z -= 0.05f;
-	}
+	Keyboard m_keyboard;
+	Mouse m_mouse;
+	SEfloat cam_speed = 7.0f;
 
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::A))
+	{
+		m_cameraPosition.x -= cam_speed * deltaTime;
+		m_cameraTarget.x -=   cam_speed * deltaTime;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::D))
+	{
+		m_cameraPosition.x += cam_speed * deltaTime;
+		m_cameraTarget.x +=   cam_speed * deltaTime;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::W))
+	{
+		m_cameraPosition.y += cam_speed * deltaTime;
+		m_cameraTarget.y +=   cam_speed * deltaTime;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::S))
+	{
+		m_cameraPosition.y -= cam_speed * deltaTime;
+		m_cameraTarget.y -=   cam_speed * deltaTime;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::Q))
+	{
+		m_cameraPosition.z += cam_speed * deltaTime;
+	}
+	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::E))
+	{
+		m_cameraPosition.z -= cam_speed * deltaTime;
+	}
 
 	m_view = glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp);
-
 }
 
 Mat4f Camera::GetCameraView()

@@ -379,12 +379,14 @@ void Engine::_editorLoop(SEbool& exitProgram)
 	{
 		while (editorloop)
 		{
+			m_frame_time = m_engine_clock.restart();
+			deltaTime = m_frame_time.asSeconds();
+
 			exitProgram = _handleEditorEvents(editorloop);
 			//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
 
 			ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
 			_updateMgrs();
-
 
 			//Messenger should be last to update before render
 			m_messenger.PrintMessages(_messageLogType_console);
