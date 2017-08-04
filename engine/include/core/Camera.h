@@ -9,8 +9,9 @@
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <managers/Keyboard.h>
 
+#include <managers/Keyboard.h>
+#include <managers/Mouse.h>
 namespace se
 {
 
@@ -37,8 +38,6 @@ public:
 
 private:
 
-	///Keyboard for input handling
-	Keyboard m_keyboard;
 
 	///Where is the camera
 	Vec3f m_cameraPosition;
@@ -60,6 +59,14 @@ private:
 	
 	///Front direction (default -1.0f in Z axis)
 	Vec3f m_cameraFront;
+
+	///Keyboard and mouse for input handling
+	Keyboard m_keyboard;
+	Mouse m_mouse;
+
+	///camera speed
+	SEfloat m_cam_speed;
+
 };
 
 

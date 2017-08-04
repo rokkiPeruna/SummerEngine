@@ -84,14 +84,6 @@ struct DynRenderBatch //FOR single element at this point
 			glVertexAttribPointer(attr, num_vert_data_elem, GL_FLOAT, GL_FALSE, num_vert_data_elem * sizeof(SEfloat), 0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
-		/*else if (shrd_atr_ind == SHADER_ATTRIB_INDEX::INDICES)
-		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buffer);
-			SEuint attr = static_cast<SEuint>(shrd_atr_ind);
-			glEnableVertexAttribArray(attr);
-			glVertexAttribPointer(attr, num_vert_data_elem, GL_FLOAT, GL_FALSE, num_vert_data_elem * sizeof(SEushort), 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		}*/
 	}
 
 	DynRenderBatch(SEuint _num_indices) : num_indices(_num_indices), vao(0)
@@ -115,13 +107,23 @@ public:
 	EditorRender(const EditorRender&) = delete;
 	void operator=(const EditorRender&) = delete;
 	
+	///Initialize editor render
 	void Initialize();
 	void Uninitialize();
 
+	///Draw all render batches and entities in each batch
 	void Update(SEfloat deltaTime);
+
+	///Creates a new batch or adds entity to existing 
 	void OnEntityAdded(const Entity& entity);
 	void OnEntityRemoved();
 
+	///Creates new batch for component or moves it to another depending on entitys propertities
+	void CleanUp(const Entity& entity);
+	void OnComponentRemoved();
+
+
+	// Is this required?
 	void AddDynRenderBatch(DynRenderBatch&& batch)
 	{
 		m_dyn_rend_batches.emplace_back(batch);
@@ -129,15 +131,11 @@ public:
 
 
 private:
-	///Render batches
+	///Render batches which each contain n ammount of entity ids and buffer data
 	std::vector<DynRenderBatch> m_dyn_rend_batches;
 
 	using batch_values = Vec3u;
-	//(
-	//	SEuint, //Num indices
-	//	SEuint, //Texture handle
-	//	SEuint  //Num of vertices
-	//);
+
 	struct cmpr_batch_values
 	{
 		bool operator()(const batch_values& a, const batch_values& b) const
@@ -148,6 +146,8 @@ private:
 
 	///Map that binds render batch values to it's pointer
 	std::map<batch_values, DynRenderBatch*, cmpr_batch_values> m_batch_value_map;
+	
+	std::map<batch_values, std::vector<DynRenderBatch>, cmpr_batch_values> m_test_batch;
 
 	//testing
 	ShaderResource* CurrentShader;

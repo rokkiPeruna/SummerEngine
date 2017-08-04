@@ -128,7 +128,9 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 
 	//Add to run-time system and entity. Note that the system responsible for handling the component to be added, is also
 	//responsible for writing it to the json object. This way we avoid pointer casting.
+	Engine::Instance().GetCurrentRenderer()->CleanUp(entity);
 	Engine::ComponentTypeToSystemPtr.at(component_type)->CreateComponent(entity, component_type, entity_obj);
+	Engine::Instance().GetCurrentRenderer()->OnEntityAdded(entity);
 }
 
 void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE component_type)
