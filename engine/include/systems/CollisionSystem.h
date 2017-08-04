@@ -21,7 +21,7 @@ class CollisionSystem : public ComponentSystem
 public:
 	///Default constructor.
 	///1.param: const ptr to Engine -class
-	CollisionSystem(Engine* engine_ptr);
+	CollisionSystem(std::shared_ptr<Engine> engine_ptr);
 	///Destructor
 	~CollisionSystem();
 	///Deleted copy constructor and assign operator

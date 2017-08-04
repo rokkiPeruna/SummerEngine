@@ -4,6 +4,7 @@
 
 //STL includes:
 #include <string>
+#include <memory>
 #include <cassert>
 
 //External includes:
@@ -22,6 +23,7 @@
 
 #include <core/Window.h>
 
+
 #include <core/EditorRender.h>
 #include <core/GameRender.h>
 
@@ -32,17 +34,15 @@
 #include <core/Camera.h>
 
 //Systems
-#include <systems/ComponentSystem.h>
-#include <systems/MovementSystem.h>
-#include <systems/TransformSystem.h>
-#include <systems/CollisionSystem.h>
-#include <systems/AnimationSystem.h>
+
 
 //Managers
 #include <managers/IOManager.h>
 #include <managers/SceneManager.h>
 #include <managers/ResourceManager.h>
 #include <managers/ComponentManager.h>
+
+
 
 //Gui
 #include <gui/EngineGui.h>
@@ -53,9 +53,19 @@ namespace se
 {
 namespace priv
 {
+///Forward declarations.
+///
+///SYSTEMS
+class ComponentSystem;
+class MovementSystem;
+class TransformSystem;
+class CollisionSystem;
+class AnimationSystem;
+
+
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
-class Engine
+class Engine : public std::enable_shared_from_this<Engine>
 {
 public:
 	///Default engine constructor
@@ -80,10 +90,10 @@ public:
 	void EngineUpdate();
 
 	///System getters
-	MovementSystem* GetMovementSystem() { return &m_movementSystem; }
-	CollisionSystem* GetCollisionSystem() { return &m_collisionSystem; }
-	TransformSystem* GetTransformSystem() { return &m_transformSystem; }
-	AnimationSystem* GetAnimationSystem() { return &m_animationSystem; }
+	std::shared_ptr<MovementSystem>  GetMovementSystem() { return m_movementSystem; }
+	std::shared_ptr<CollisionSystem> GetCollisionSystem() { return m_collisionSystem; }
+	std::shared_ptr<TransformSystem> GetTransformSystem() { return m_transformSystem; }
+	std::shared_ptr<AnimationSystem> GetAnimationSystem() { return m_animationSystem; }
 	//
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
@@ -94,10 +104,14 @@ public:
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
 	IOManager* GetIOManager() { return &m_ioMgr; }
 
+
 	EditorRender* GetCurrentRenderer() { return m_current_renderer; }
+
 
 	std::shared_ptr<EditorRender> GetEditorRender() { return m_editorRender; }
 	std::shared_ptr<GameRender> GetGameRender() { return m_gameRender;  }
+
+
 	Camera* GetCamera() { return m_camera; }
 
 	///Static map for binding component type to correct system.
@@ -170,10 +184,10 @@ private:
 	std::shared_ptr<GameRender> m_gameRender;
 
 	///Systems
-	MovementSystem m_movementSystem;
-	TransformSystem m_transformSystem;
-	CollisionSystem m_collisionSystem;
-	AnimationSystem m_animationSystem;
+	std::shared_ptr<MovementSystem> m_movementSystem;
+	std::shared_ptr<TransformSystem> m_transformSystem;
+	std::shared_ptr<CollisionSystem> m_collisionSystem;
+	std::shared_ptr<AnimationSystem> m_animationSystem;
 
 	///System ptr container
 	std::vector<ComponentSystem*> m_systemContainer;

@@ -32,7 +32,7 @@ class ResourceManager : public Manager
 public:
 	///Default constructor
 	///1.param: const ptr to Engine -class
-	ResourceManager(Engine* engine_ptr);
+	ResourceManager(std::shared_ptr<Engine> engine_ptr);
 	///Destructor
 	~ResourceManager();
 	///Deleted copy constructor and assign operator

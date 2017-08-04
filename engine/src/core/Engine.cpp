@@ -12,6 +12,15 @@
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 
+///System includes:
+#include <systems/ComponentSystem.h>
+#include <systems/MovementSystem.h>
+#include <systems/TransformSystem.h>
+#include <systems/CollisionSystem.h>
+#include <systems/AnimationSystem.h>
+
+
+///Engine graphical user interface includes
 //SE_TODO: //SE_TODO: Let macro decide if these get included
 #include <gui/GuiSceneMgr.h>
 #include <gui/GuiEntityMgr.h>
@@ -44,19 +53,37 @@ Engine::Engine()
 	, m_messenger()
 	, m_current_renderer(nullptr)
 	, m_camera(new Camera)
+
+
 	/*SYSTEMS*/
-	, m_transformSystem(this)
-	, m_movementSystem(this)
-	, m_animationSystem(this)
-	, m_collisionSystem(this)
-	, m_editorRender(new EditorRender(this))
-	, m_gameRender(new GameRender(this))
+	, m_transformSystem(std::make_shared<TransformSystem>(shared_from_this())) olet tässä
+	, m_movementSystem(std::make_shared<MovementSystem>(shared_from_this()))
+	, m_animationSystem(std::make_shared<AnimationSystem>(shared_from_this()))
+	, m_collisionSystem(std::make_shared<CollisionSystem>(shared_from_this()))
+	, m_editorRender(std::make_shared<EditorRender>(shared_from_this()))
+	, m_gameRender(std::make_shared<GameRender>(shared_from_this()))
+
 	/*MANAGERS*/
-	, m_entityMgr(this)
-	, m_sceneMgr(this)
-	, m_resourceMgr(this)
-	, m_compMgr(this)
-	, m_ioMgr(this)
+	, m_entityMgr(shared_from_this())
+	, m_sceneMgr(shared_from_this())
+	, m_resourceMgr(shared_from_this())
+	, m_compMgr(shared_from_this())
+	, m_ioMgr(shared_from_this())
+
+	///*SYSTEMS*/
+	//, m_transformSystem(std::make_shared<TransformSystem>(std::make_shared<Engine>(*this)))
+	//, m_movementSystem(std::make_shared<MovementSystem>(std::make_shared<Engine>(*this)))
+	//, m_animationSystem(std::make_shared<AnimationSystem>(std::make_shared<Engine>(*this)))
+	//, m_collisionSystem(std::make_shared<CollisionSystem>(std::make_shared<Engine>(*this)))
+	//, m_editorRender(std::make_shared<EditorRender>(std::make_shared<Engine>(*this)))
+	//, m_gameRender(std::make_shared<GameRender>(std::make_shared<Engine>(*this)))
+
+	///*MANAGERS*/
+	//, m_entityMgr(std::make_shared<Engine>(*this))
+	//, m_sceneMgr(std::make_shared<Engine>(*this))
+	//, m_resourceMgr(std::make_shared<Engine>(*this))
+	//, m_compMgr(std::make_shared<Engine>(*this))
+	//, m_ioMgr(std::make_shared<Engine>(*this))
 	/*GUI ELEMENTS*/
 	, m_engine_gui_container{} //Elements here are allocated from heap so they MUST be released in destructor
 {
@@ -226,17 +253,17 @@ void Engine::_initSystems()
 	m_editorRender->Initialize();
 	m_gameRender->Initialize();
 
-	m_transformSystem.Initialize();
-	m_systemContainer.emplace_back(&m_transformSystem);
+	m_transformSystem->Initialize();
+	m_systemContainer.emplace_back(m_transformSystem.get());
 
-	m_movementSystem.Initialize();
-	m_systemContainer.emplace_back(&m_movementSystem);
+	m_movementSystem->Initialize();
+	m_systemContainer.emplace_back(m_movementSystem.get());
 
-	m_collisionSystem.Initialize();
-	m_systemContainer.emplace_back(&m_collisionSystem);
+	m_collisionSystem->Initialize();
+	m_systemContainer.emplace_back(m_collisionSystem.get());
 
-	m_animationSystem.Initialize();
-	m_systemContainer.emplace_back(&m_animationSystem);
+	m_animationSystem->Initialize();
+	m_systemContainer.emplace_back(m_animationSystem.get());
 }
 
 void Engine::_initGui()
@@ -246,16 +273,16 @@ void Engine::_initGui()
 
 	//SE_TODO: Let macro decide if these get build
 	//Emplace manager classes' guis
-	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr(this));
-	m_engine_gui_container.emplace_back(new gui::GuiCompMgr(this));		//Must be before GuiEntityMgr!!
-	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr(this));	//Must be after GuiCompMgr!!
-
+	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr(shared_from_this()));
+	m_engine_gui_container.emplace_back(new gui::GuiCompMgr(shared_from_this()));		//Must be before GuiEntityMgr!!
+	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr(shared_from_this()));	//Must be after GuiCompMgr!!
+	
 	//Emplace component editors
-	m_engine_gui_container.emplace_back(new gui::CCollidableEditor(this));
-	m_engine_gui_container.emplace_back(new gui::CDynamicEditor(this));
-	m_engine_gui_container.emplace_back(new gui::CShapeEditor(this));
-	m_engine_gui_container.emplace_back(new gui::CTextureEditor(this));
-	m_engine_gui_container.emplace_back(new gui::CTransformableEditor(this));
+	m_engine_gui_container.emplace_back(new gui::CCollidableEditor(shared_from_this()));
+	m_engine_gui_container.emplace_back(new gui::CDynamicEditor(shared_from_this()));
+	m_engine_gui_container.emplace_back(new gui::CShapeEditor(shared_from_this()));
+	m_engine_gui_container.emplace_back(new gui::CTextureEditor(shared_from_this()));
+	m_engine_gui_container.emplace_back(new gui::CTransformableEditor(shared_from_this()));
 }
 
 void Engine::_updateMgrs()
@@ -266,15 +293,15 @@ void Engine::_updateMgrs()
 
 void Engine::_updateSystems(SEfloat deltaTime)
 {
-	m_movementSystem.Update(deltaTime);
+	m_movementSystem->Update(deltaTime);
 
-	m_transformSystem.Update(deltaTime);
+	m_transformSystem->Update(deltaTime);
 
-	m_collisionSystem.Update(deltaTime);
+	m_collisionSystem->Update(deltaTime);
 
 	//Flush messages
-	m_movementSystem.Messages.clear();
-	m_transformSystem.Messages.clear();
+	m_movementSystem->Messages.clear();
+	m_transformSystem->Messages.clear();
 }
 
 void Engine::_updateGUI()

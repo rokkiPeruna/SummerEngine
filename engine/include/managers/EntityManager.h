@@ -34,7 +34,7 @@ class EntityManager : public Manager
 public:
 	///Default constructor.
 	///1.param: const ptr to Engine -class
-	EntityManager(Engine* engine_ptr);
+	EntityManager(std::shared_ptr<Engine> engine_ptr);
 	///Destructor
 	~EntityManager();
 	///No copies allowed

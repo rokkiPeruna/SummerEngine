@@ -11,7 +11,7 @@ CTexture* GetTextureComponent(SEint index)
 
 namespace priv
 {
-AnimationSystem::AnimationSystem(Engine* engine_ptr)
+AnimationSystem::AnimationSystem(std::shared_ptr<Engine> engine_ptr)
 	: ComponentSystem(engine_ptr)
 	, m_cTextures{}
 	, m_free_cTexture_indices{}

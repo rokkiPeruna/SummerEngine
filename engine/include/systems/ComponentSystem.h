@@ -55,7 +55,7 @@ class ComponentSystem
 public:
 	///Default constructor.
 	///1.param: Pointer to Engine -class
-	ComponentSystem(Engine* engine_ptr);
+	ComponentSystem(std::shared_ptr<Engine> engine_ptr);
 	///Destructor
 	virtual ~ComponentSystem();
 
@@ -95,7 +95,7 @@ public:
 
 protected:
 	///Pointer to Engine
-	static Engine* m_engine;
+	static std::shared_ptr<Engine> m_engine;
 
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
 	//Returns index off the newly created component if more measures need to be done in system's OnEntityAdded

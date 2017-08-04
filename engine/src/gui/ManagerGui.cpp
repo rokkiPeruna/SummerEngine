@@ -5,7 +5,7 @@ namespace se
 {
 namespace gui
 {
-ManagerGui::ManagerGui(priv::Engine* engine_ptr)
+ManagerGui::ManagerGui(std::shared_ptr<priv::Engine> engine_ptr)
 	: EngineGui(engine_ptr)
 {
 

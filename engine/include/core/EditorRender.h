@@ -100,7 +100,7 @@ class EditorRender : public Render
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	EditorRender(Engine* engine_ptr);
+	EditorRender(std::shared_ptr<Engine> engine_ptr);
 
 	~EditorRender();
 

@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 #include <ids/ComponentTypeList.h>
 #include <core/Engine.h>
+#include <systems/TransformSystem.h>
 
 namespace se
 {
@@ -17,7 +18,7 @@ namespace priv
 
 std::vector<SysMessage> MovementSystem::Messages = {};
 
-MovementSystem::MovementSystem(Engine* engine_ptr)
+MovementSystem::MovementSystem(std::shared_ptr<Engine> engine_ptr)
 	: ComponentSystem(engine_ptr)
 	, m_cDynamics{}
 	, m_free_cDynamics_indices{}

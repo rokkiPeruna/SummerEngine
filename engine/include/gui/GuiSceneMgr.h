@@ -16,7 +16,7 @@ class GuiSceneMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	GuiSceneMgr(priv::Engine* engine_ptr);
+	GuiSceneMgr(std::shared_ptr<priv::Engine> engine_ptr);
 	///Destructor
 	~GuiSceneMgr();
 	///No copies allowed

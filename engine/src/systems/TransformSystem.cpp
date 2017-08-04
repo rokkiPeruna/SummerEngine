@@ -1,4 +1,5 @@
 #include <systems/TransformSystem.h>
+#include <systems/MovementSystem.h>
 #include <core/Messages.h>
 #include <imgui/imgui.h>
 #include <ids/ComponentTypeList.h>
@@ -25,7 +26,7 @@ std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
 std::vector<SysMessage> TransformSystem::Messages = {};
 
-TransformSystem::TransformSystem(Engine* engine_ptr)
+TransformSystem::TransformSystem(std::shared_ptr<Engine> engine_ptr)
 	: ComponentSystem(engine_ptr)
 	, m_cShapes{}
 	, m_free_cShape_indices{}

@@ -7,7 +7,7 @@ namespace se
 {
 namespace gui
 {
-CDynamicEditor::CDynamicEditor(priv::Engine* engine_ptr)
+CDynamicEditor::CDynamicEditor(std::shared_ptr<priv::Engine> engine_ptr)
 	: CompEditorGui(engine_ptr)
 {
 	//This is IMPORTANT. It binds component to correct editor.

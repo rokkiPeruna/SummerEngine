@@ -5,9 +5,9 @@ namespace se
 {
 namespace priv
 {
-Engine* ComponentSystem::m_engine = nullptr;
+std::shared_ptr<Engine> ComponentSystem::m_engine = nullptr;
 
-ComponentSystem::ComponentSystem(Engine* engine_ptr)
+ComponentSystem::ComponentSystem(std::shared_ptr<Engine> engine_ptr)
 {
 	if (!ComponentSystem::m_engine)
 		m_engine = engine_ptr;
@@ -15,7 +15,7 @@ ComponentSystem::ComponentSystem(Engine* engine_ptr)
 
 ComponentSystem::~ComponentSystem()
 {
-	m_engine = nullptr;
+
 }
 }//namespace priv
 }//namespace se

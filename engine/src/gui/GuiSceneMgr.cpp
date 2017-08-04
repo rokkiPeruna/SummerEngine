@@ -6,7 +6,7 @@ namespace se
 {
 namespace gui
 {
-GuiSceneMgr::GuiSceneMgr(priv::Engine* engine_ptr)
+GuiSceneMgr::GuiSceneMgr(std::shared_ptr<priv::Engine> engine_ptr)
 	: ManagerGui(engine_ptr)
 	, m_sceneMgr(nullptr)
 	, m_gui_sceneAdded(false)

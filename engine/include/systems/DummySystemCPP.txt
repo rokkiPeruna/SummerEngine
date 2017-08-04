@@ -7,7 +7,7 @@ std::vector<component>* get component(SEint index)
 
 namespace priv
 {
-DummySystem::DummySystem(Engine* engine_ptr)
+DummySystem::DummySystem(std::shared_ptr<Engine> engine_ptr)
 	: ComponentSystem(engine_ptr)
 	, init containers
 {

@@ -17,7 +17,7 @@ class IOManager : public Manager
 public:
 	///Default constructor
 	///1.param: const ptr to Engine -class
-	IOManager(Engine* engine_ptr);
+	IOManager(std::shared_ptr<Engine> engine_ptr);
 	///Destructor
 	~IOManager();
 	///Deleted copy constructor and assign operator

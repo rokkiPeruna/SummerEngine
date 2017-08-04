@@ -1,4 +1,5 @@
 #include <systems/CollisionSystem.h>
+#include <systems/TransformSystem.h>
 #include <core/Engine.h>
 #include <imgui/imgui.h>
 
@@ -13,7 +14,7 @@ CCollidable* GetCollidableComponent(SEint index)
 
 namespace priv
 {
-CollisionSystem::CollisionSystem(Engine* engine_ptr)
+CollisionSystem::CollisionSystem(std::shared_ptr<Engine> engine_ptr)
 	: ComponentSystem(engine_ptr)
 	, m_cCollidables{}
 	, m_free_cCollidables_indices{}

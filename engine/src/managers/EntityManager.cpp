@@ -8,7 +8,7 @@ namespace se
 {
 namespace priv
 {
-EntityManager::EntityManager(Engine* engine_ptr)
+EntityManager::EntityManager(std::shared_ptr<Engine> engine_ptr)
 	: Manager(engine_ptr)
 	, m_compMgr(nullptr)
 	, m_clock()

@@ -1,5 +1,6 @@
 #include <managers/ResourceManager.h>
 #include <core/Engine.h>
+#include <systems/AnimationSystem.h>
 #include <stb_image.h>
 
 //C++17 feature used to get all filenames in resources folder
@@ -10,7 +11,7 @@ namespace se
 namespace priv
 {
 
-ResourceManager::ResourceManager(Engine* engine_ptr)
+ResourceManager::ResourceManager(std::shared_ptr<Engine> engine_ptr)
 	: Manager(engine_ptr)
 	, m_rel_path_to_user_files("")
 	, m_res_fold_name("resources/")
@@ -43,7 +44,9 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 		tex_names.emplace_back(f.path().filename().generic_string());
 	}
 	
-	m_engine->GetAnimationSystem()->SetTextureResourceNames(tex_names);
+	m_engine->GetAnimationSystem()->SetTextureResourceNames(tex_names); 
+	//SE_TODO: It is not ResourceManager's job to give AnimationSystem the texture names, it is AnimationSystem's job to fetch them!
+	//When this is refactored, remove AnimationSystem dependancy from top of this file!!!
 
 }
 

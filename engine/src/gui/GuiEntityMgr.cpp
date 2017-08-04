@@ -7,7 +7,7 @@ namespace se
 {
 namespace gui
 {
-GuiEntityMgr::GuiEntityMgr(priv::Engine* engine_ptr)
+GuiEntityMgr::GuiEntityMgr(std::shared_ptr<priv::Engine> engine_ptr)
 	: ManagerGui(engine_ptr)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)

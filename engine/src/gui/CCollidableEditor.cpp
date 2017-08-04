@@ -1,12 +1,12 @@
 #include <gui/CCollidableEditor.h>
 #include <core/Engine.h>
-#include <components/CCollidable.h>
+#include <systems/CollisionSystem.h>
 
 namespace se
 {
 namespace gui
 {
-CCollidableEditor::CCollidableEditor(priv::Engine* engine_ptr)
+CCollidableEditor::CCollidableEditor(std::shared_ptr<priv::Engine> engine_ptr)
 	: CompEditorGui(engine_ptr)
 {
 	//This is IMPORTANT. It binds component to correct editor.

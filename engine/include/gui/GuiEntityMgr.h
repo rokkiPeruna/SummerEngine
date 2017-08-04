@@ -19,7 +19,7 @@ class GuiEntityMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: const ptr to Engine -class
-	GuiEntityMgr(priv::Engine* engine_ptr);
+	GuiEntityMgr(std::shared_ptr<priv::Engine> engine_ptr);
 	///Destructor
 	~GuiEntityMgr();
 	///No copies allowed

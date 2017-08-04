@@ -34,7 +34,7 @@ public:
 
 	///Default constructor.
 	///1.param: const ptr to Engine -class
-	TransformSystem(Engine* engine_ptr);
+	TransformSystem(std::shared_ptr<Engine> engine_ptr);
 	///Destructor
 	~TransformSystem();
 	///Delete copy constructor and assingment operator

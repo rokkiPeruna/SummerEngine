@@ -17,7 +17,7 @@ class ManagerGui : public EngineGui
 public: 
 	///Default constructor.
 	///1.param: const ptr to Engine -class
-	ManagerGui(priv::Engine* engine_ptr);
+	ManagerGui(std::shared_ptr<priv::Engine> engine_ptr);
 	///Destructor
 	virtual ~ManagerGui();
 	///No copies allowed

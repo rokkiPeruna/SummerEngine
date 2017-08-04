@@ -1,11 +1,12 @@
 #ifndef SE_MANAGER_H
 #define SE_MANAGER_H
 
+///STL includes:
+#include <memory>
 
 //SE includes:
 #include <core/Messages.h>
 #include <core/SE_exceptions.h>
-//#include <core/Engine.h>
 
 namespace se
 {
@@ -26,10 +27,10 @@ class Manager
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Manager(Engine* engine_ptr) : m_engine(engine_ptr) {}
+	Manager(std::shared_ptr<Engine> engine_ptr) : m_engine(engine_ptr) {}
 
 	///Destructor
-	virtual ~Manager() { m_engine = nullptr; }
+	virtual ~Manager() {}
 
 	virtual void Initialize() { MessageInfo(Engine_id) << "Default Initialize() for Manager called"; }
 
@@ -39,7 +40,7 @@ public:
 
 protected:
 	///Pointer to engine
-	Engine* m_engine;
+	std::shared_ptr<Engine> m_engine;
 };
 
 }//namespace priv

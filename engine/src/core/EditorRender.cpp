@@ -1,13 +1,14 @@
 #include <core/EditorRender.h>
 #include <core/Engine.h>
 #include <systems/AnimationSystem.h>
+#include <systems/TransformSystem.h>
 
 namespace se
 {
 namespace priv
 {
 
-EditorRender::EditorRender(Engine* engine_ptr)
+EditorRender::EditorRender(std::shared_ptr<Engine> engine_ptr)
 	: Render(engine_ptr)
 	, m_dyn_rend_batches{}
 	, m_batch_value_map{}

@@ -3,6 +3,7 @@
 
 //STL includes:
 #include <cassert>
+#include <memory>
 
 //External includes:
 #include <nlohmann_json/json.hpp>
@@ -33,7 +34,7 @@ class EngineGui
 public:
 	///Default constructor.
 	///1.param: const ptr to Engine -class
-	EngineGui(priv::Engine* engine_ptr);
+	EngineGui(std::shared_ptr<priv::Engine> engine_ptr);
 	///Destructor
 	virtual ~EngineGui();
 	///No copies allowed
@@ -44,7 +45,7 @@ public:
 
 protected:
 	///Pointer to engine
-	priv::Engine* m_engine;
+	std::shared_ptr<priv::Engine> m_engine;
 
 	// void createPopUpWindow()
 };

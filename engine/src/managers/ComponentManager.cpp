@@ -11,7 +11,7 @@ namespace se
 {
 namespace priv
 {
-ComponentManager::ComponentManager(Engine* engine_ptr)
+ComponentManager::ComponentManager(std::shared_ptr<Engine> engine_ptr)
 	: Manager(engine_ptr)
 	, m_rel_path_to_json_scenes("")
 	, m_scenes_sub_folder("scenes")

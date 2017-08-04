@@ -6,7 +6,7 @@ namespace se
 {
 namespace gui
 {
-CTextureEditor::CTextureEditor(priv::Engine* engine_ptr)
+CTextureEditor::CTextureEditor(std::shared_ptr<priv::Engine> engine_ptr)
 	: CompEditorGui(engine_ptr)
 	, m_animation_sys(nullptr)
 {

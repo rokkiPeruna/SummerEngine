@@ -1,6 +1,6 @@
 #include <managers/SceneManager.h>
-//#include <imgui/imgui.h>
 #include <core/Engine.h>
+#include <systems/ComponentSystem.h>
 #include <core/Messages.h>
 #include <utility/JsonUtilFunctions.h>
 
@@ -8,7 +8,7 @@ namespace se
 {
 namespace priv
 {
-SceneManager::SceneManager(Engine* engine_ptr)
+SceneManager::SceneManager(std::shared_ptr<Engine> engine_ptr)
 	: Manager(engine_ptr)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
