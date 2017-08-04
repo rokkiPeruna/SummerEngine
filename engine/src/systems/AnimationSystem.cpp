@@ -79,9 +79,11 @@ SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
+		Engine::Instance().GetCurrentRenderer()->OnRendableComponentChanged(entity);
 		SEint index = _createComponent_helper<CTexture>(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
 		AssignTexture(m_def_tex_name, m_cTextures.at(index));
 		entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TEXTURE)).at("tex_name") = m_def_tex_name;
+		Engine::Instance().GetCurrentRenderer()->OnEntityAdded(entity);
 		return index;
 	}
 	else
@@ -95,7 +97,9 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
+		Engine::Instance().GetCurrentRenderer()->OnRendableComponentChanged(entity);
 		m_free_cTexture_indices.push(_removeComponent_helper(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures));
+		Engine::Instance().GetCurrentRenderer()->OnEntityAdded(entity);
 	}
 	else
 	{

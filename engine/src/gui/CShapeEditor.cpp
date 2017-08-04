@@ -24,35 +24,47 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		SEint id = GetShapeComponent(index_in_container)->my_Transform;
 		SEint owner_id = GetShapeComponent(index_in_container)->ownerID;
 		CShape& comp = *GetShapeComponent(index_in_container);
+		Entity* tmpEntity = priv::Engine::Instance().GetEntityMgr()->GetCurrentEntity();
+		auto* tmpRender = priv::Engine::Instance().GetCurrentRenderer();
 		if (ImGui::Button("Triangle"))
 		{
+			tmpRender->OnRendableComponentChanged(*tmpEntity);
 			comp = CShape();
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
+			tmpRender->OnEntityAdded(*tmpEntity);
 		}
 		if (ImGui::Button("Rectangle"))
 		{
+			tmpRender->OnRendableComponentChanged(*tmpEntity);
 			comp = CShape(4);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
+			tmpRender->OnEntityAdded(*tmpEntity);
 		}
 		if (ImGui::Button("Circle"))
 		{
+			tmpRender->OnRendableComponentChanged(*tmpEntity);
 			comp = CShape(30);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
+			tmpRender->OnEntityAdded(*tmpEntity);
 		}
 		if (ImGui::Button("Add indie"))
 		{
+			tmpRender->OnRendableComponentChanged(*tmpEntity);
 			comp = CShape(comp.points.size() + 1);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
+			tmpRender->OnEntityAdded(*tmpEntity);
 		}
 		if (ImGui::Button("Remove indice") && comp.points.size() > 3)
 		{
+			tmpRender->OnRendableComponentChanged(*tmpEntity);
 			comp = CShape(comp.points.size() - 1);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
+			tmpRender->OnEntityAdded(*tmpEntity);
 		}
 
 	}

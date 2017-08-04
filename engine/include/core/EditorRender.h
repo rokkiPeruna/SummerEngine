@@ -8,6 +8,7 @@
 
 
 //Include SE
+#include <core/Render.h>
 #include <systems/TransformSystem.h>
 #include <managers/ResourceManager.h>
 #include <utility/Math.h>
@@ -84,14 +85,7 @@ struct DynRenderBatch //FOR single element at this point
 			glVertexAttribPointer(attr, num_vert_data_elem, GL_FLOAT, GL_FALSE, num_vert_data_elem * sizeof(SEfloat), 0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
-		/*else if (shrd_atr_ind == SHADER_ATTRIB_INDEX::INDICES)
-		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buffer);
-			SEuint attr = static_cast<SEuint>(shrd_atr_ind);
-			glEnableVertexAttribArray(attr);
-			glVertexAttribPointer(attr, num_vert_data_elem, GL_FLOAT, GL_FALSE, num_vert_data_elem * sizeof(SEushort), 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		}*/
+
 	}
 
 	DynRenderBatch(SEuint _num_indices) : num_indices(_num_indices), vao(0)
@@ -102,7 +96,7 @@ struct DynRenderBatch //FOR single element at this point
 
 };
 
-class EditorRender
+class EditorRender : public Render
 {
 
 public:
@@ -115,12 +109,14 @@ public:
 	EditorRender(const EditorRender&) = delete;
 	void operator=(const EditorRender&) = delete;
 	
-	void Initialize();
-	void Uninitialize();
+	void Initialize() override final;
+	void Uninitialize() override final;
 
-	void Update(SEfloat deltaTime);
+	void Update(SEfloat deltaTime) override final;
+
 	void OnEntityAdded(const Entity& entity);
-	void OnEntityRemoved();
+
+	void OnRendableComponentChanged(const Entity& entiy);
 
 	void AddDynRenderBatch(DynRenderBatch&& batch)
 	{

@@ -138,13 +138,13 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 
 	if (component_type == COMPONENT_TYPE::SHAPE)
 	{
+
+		Engine::Instance().GetCurrentRenderer()->OnRendableComponentChanged(e);
 		SEint tmp = _createComponent_helper(e, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
+	 	Engine::Instance().GetCurrentRenderer()->OnEntityAdded(e);
 		m_cShapes.at(tmp).my_Transform = e.id;
 		
 		
-		//Engine::Instance().GetEditorRender()->AddRenderable(&m_cShapes.at(tmp), e);
-		//Engine::Instance().GetGameRender()->AddRenderable();
-
 		return e.id;
 	}
 
@@ -164,7 +164,9 @@ void TransformSystem::RemoveComponent(Entity& e, COMPONENT_TYPE component_type, 
 	}
 	if (component_type == COMPONENT_TYPE::SHAPE)
 	{
+		Engine::Instance().GetCurrentRenderer()->OnRendableComponentChanged(e);
 		m_free_cShape_indices.push(_removeComponent_helper(e, component_type, entity_obj, m_cShapes));
+		Engine::Instance().GetCurrentRenderer()->OnEntityAdded(e);
 	}
 	else
 	{
