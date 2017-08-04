@@ -6,7 +6,11 @@
 //External library includes
 
 //SE includes
+#include <GLES3/glew.h>
+#include <managers/Entity.h>
+#include <managers/Resource.h>
 #include <utility/Typedefs.h>
+#include <utility/Math.h>
 
 ///Brief: virual base class for all other renders (renderers)
 
@@ -25,6 +29,9 @@ public:
 	virtual void Uninitialize() = 0;
 
 	virtual void Update(SEfloat deltaTime) = 0;
+
+	virtual void OnEntityAdded(const Entity& entity) = 0;
+ 	virtual void OnRendableComponentChanged(const Entity& entiy) = 0;
 
 
 protected:

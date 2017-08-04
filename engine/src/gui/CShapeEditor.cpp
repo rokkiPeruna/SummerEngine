@@ -24,8 +24,10 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		SEint id = GetShapeComponent(index_in_container)->my_Transform;
 		SEint owner_id = GetShapeComponent(index_in_container)->ownerID;
 		CShape& comp = *GetShapeComponent(index_in_container);
+		
 		Entity* tmpEntity = priv::Engine::Instance().GetEntityMgr()->GetCurrentEntity();
-		auto* tmpRender = priv::Engine::Instance().GetCurrentRenderer();
+		priv::Render* tmpRender = priv::Engine::Instance().GetCurrentRenderer();
+		
 		if (ImGui::Button("Triangle"))
 		{
 			tmpRender->OnRendableComponentChanged(*tmpEntity);

@@ -189,7 +189,7 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 	if(m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
 	{
 		auto& temp = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
-		for (int i = 0; i < temp.size(); ++i)
+		for (SEuint i = 0; i < temp.size(); ++i)
 		{
 			if (entity.id == temp.at(i)) 
 			{

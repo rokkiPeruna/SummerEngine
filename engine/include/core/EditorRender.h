@@ -9,9 +9,7 @@
 
 //Include SE
 #include <core/Render.h>
-#include <systems/TransformSystem.h>
-#include <managers/ResourceManager.h>
-#include <utility/Math.h>
+
 
 
 ///Brief : Editor render won't create any static objects and will draw lines even to shapes 
@@ -114,9 +112,13 @@ public:
 
 	void Update(SEfloat deltaTime) override final;
 
-	void OnEntityAdded(const Entity& entity);
-
-	void OnRendableComponentChanged(const Entity& entiy);
+	///Checks if there is a batch for spesific type of entities. If there is this component will be added
+	///if not new one will be created
+	void OnEntityAdded(const Entity& entity) override final;
+	
+	///Checks if the component is rendable in the first place. If it is makes sure that
+	///the batch is changed
+	void OnRendableComponentChanged(const Entity& entiy) override final;
 
 	void AddDynRenderBatch(DynRenderBatch&& batch)
 	{
@@ -129,11 +131,7 @@ private:
 	std::vector<DynRenderBatch> m_dyn_rend_batches;
 
 	using batch_values = Vec3u;
-	//(
-	//	SEuint, //Num indices
-	//	SEuint, //Texture handle
-	//	SEuint  //Num of vertices
-	//);
+	
 	struct cmpr_batch_values
 	{
 		bool operator()(const batch_values& a, const batch_values& b) const
