@@ -20,8 +20,8 @@ class CollisionSystem : public ComponentSystem
 
 public:
 	///Default constructor.
-	///1.param: const ptr to Engine -class
-	CollisionSystem(std::shared_ptr<Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	CollisionSystem(Engine& engine_ref);
 	///Destructor
 	~CollisionSystem();
 	///Deleted copy constructor and assign operator

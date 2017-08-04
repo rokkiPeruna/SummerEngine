@@ -6,20 +6,20 @@ namespace se
 {
 namespace gui
 {
-GuiSceneMgr::GuiSceneMgr(std::shared_ptr<priv::Engine> engine_ptr)
-	: ManagerGui(engine_ptr)
+GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref)
+	: ManagerGui(engine_ref)
 	, m_sceneMgr(nullptr)
 	, m_gui_sceneAdded(false)
 	, m_gui_addSceneNameConflict(false)
 	, m_gui_sceneAlreadyLoaded(false)
 
 {
-	m_sceneMgr = m_engine->GetSceneMgr();
+	m_sceneMgr = &m_engine.GetSceneMgr();
 }
 
 GuiSceneMgr::~GuiSceneMgr()
 {
-
+	m_sceneMgr = nullptr;
 }
 
 void GuiSceneMgr::Update()

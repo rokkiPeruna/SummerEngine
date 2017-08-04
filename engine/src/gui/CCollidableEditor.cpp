@@ -6,8 +6,8 @@ namespace se
 {
 namespace gui
 {
-CCollidableEditor::CCollidableEditor(std::shared_ptr<priv::Engine> engine_ptr)
-	: CompEditorGui(engine_ptr)
+CCollidableEditor::CCollidableEditor(priv::Engine& engine_ref)
+	: CompEditorGui(engine_ref)
 {
 	//This is IMPORTANT. It binds component to correct editor.
 	//MUST be done in every new component editor's constructor

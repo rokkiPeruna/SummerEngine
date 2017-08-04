@@ -24,7 +24,7 @@ class Render
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Render(std::shared_ptr<Engine> engine_ptr):m_engine(engine_ptr) {};
+	Render(Engine& engine_ref):m_engine(engine_ref) {};
 
 	virtual ~Render(){}
 
@@ -38,8 +38,8 @@ public:
 
 
 protected:
-	///Pointer to Engine -class
-	std::shared_ptr<Engine> m_engine;
+	///Reference to Engine -class
+	Engine& m_engine;
 
 	// SE_TODO : Add some logic to engine (set / get current render etc..)
 	//(atm engine is hevaily being modified)

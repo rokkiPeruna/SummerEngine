@@ -23,7 +23,7 @@ class GameRender : public Render
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	GameRender(std::shared_ptr<Engine> engine_ptr);
+	GameRender(Engine& engine_ref);
 
 	~GameRender();
 

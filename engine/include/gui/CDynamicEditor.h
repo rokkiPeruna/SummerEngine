@@ -15,7 +15,7 @@ class CDynamicEditor : public CompEditorGui
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	CDynamicEditor(std::shared_ptr<priv::Engine> engine_ptr);
+	CDynamicEditor(priv::Engine& engine_ref);
 
 	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj) override final;
 };

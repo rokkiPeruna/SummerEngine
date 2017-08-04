@@ -33,8 +33,8 @@ class EngineGui
 {
 public:
 	///Default constructor.
-	///1.param: const ptr to Engine -class
-	EngineGui(std::shared_ptr<priv::Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	EngineGui(priv::Engine& engine_ref);
 	///Destructor
 	virtual ~EngineGui();
 	///No copies allowed
@@ -44,8 +44,8 @@ public:
 	virtual void Update() = 0;
 
 protected:
-	///Pointer to engine
-	std::shared_ptr<priv::Engine> m_engine;
+	///Reference to engine
+	priv::Engine& m_engine;
 
 	// void createPopUpWindow()
 };

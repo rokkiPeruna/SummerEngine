@@ -10,7 +10,7 @@ namespace se
 CDynamic* GetDynamicComponent(SEint index)
 {
 
-	return &priv::MovementSystem::m_engine->GetMovementSystem()->m_cDynamics.at(index);
+	return &priv::MovementSystem::m_engine_ptr->GetMovementSystem().m_cDynamics.at(index);
 }
 
 namespace priv
@@ -18,8 +18,8 @@ namespace priv
 
 std::vector<SysMessage> MovementSystem::Messages = {};
 
-MovementSystem::MovementSystem(std::shared_ptr<Engine> engine_ptr)
-	: ComponentSystem(engine_ptr)
+MovementSystem::MovementSystem(Engine& engine_ref)
+	: ComponentSystem(engine_ref)
 	, m_cDynamics{}
 	, m_free_cDynamics_indices{}
 {
@@ -58,7 +58,7 @@ void MovementSystem::Update(SEfloat deltaTime)
 	
 	if (kb.GetState(KeyboardState::Up))
 	{
-		auto e = m_engine->GetEntityMgr()->CreateEntityFromTemplate("bulletNoColl");
+		auto e = m_engine.GetEntityMgr().CreateEntityFromTemplate("bulletNoColl");
 		auto& tr = TransformSystem::TransformableComponents.at(e->components.at(COMPONENT_TYPE::TRANSFORMABLE));
 		tr.position = Vec3f(0.0f, 1.0f, 0.0f);
 		auto dyn = GetDynamicComponent(e->components.at(COMPONENT_TYPE::DYNAMIC));

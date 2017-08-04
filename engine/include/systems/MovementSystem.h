@@ -23,8 +23,8 @@ class MovementSystem : public ComponentSystem
 
 public:
 	///Default constructor.
-	///1.param: const ptr to Engine -class
-	MovementSystem(std::shared_ptr<Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	MovementSystem(Engine& engine_ref);
 	///Destructor
 	~MovementSystem();
 	///Deleted copy constructor and assign operator

@@ -6,8 +6,8 @@ namespace se
 {
 namespace gui
 {
-CShapeEditor::CShapeEditor(std::shared_ptr<priv::Engine> engine_ptr)
-	: CompEditorGui(engine_ptr)
+CShapeEditor::CShapeEditor(priv::Engine& engine_ref)
+	: CompEditorGui(engine_ref)
 {
 	//This is IMPORTANT. It binds component to correct editor.
 	//MUST be done in every new component editor's constructor
@@ -25,8 +25,8 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		SEint owner_id = GetShapeComponent(index_in_container)->ownerID;
 		CShape& comp = *GetShapeComponent(index_in_container);
 		
-		Entity* tmpEntity = m_engine->GetEntityMgr()->GetCurrentEntity();
-		priv::Render* tmpRender = m_engine->GetCurrentRenderer();
+		Entity* tmpEntity = m_engine.GetEntityMgr().GetCurrentEntity();
+		priv::Render* tmpRender = m_engine.GetCurrentRenderer();
 		
 		if (ImGui::Button("Triangle"))
 		{

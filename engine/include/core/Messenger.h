@@ -4,6 +4,7 @@
 //STL includes:
 #include <vector>
 #include <map>
+#include <fstream>
 
 //SE includes:
 #include <utility/Typedefs.h>

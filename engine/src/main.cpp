@@ -13,10 +13,10 @@ int main(int argc, char *argv[])
 		//SE_TODO: Get 'tinydir' or other library for handling directories and files, so that user can create new projects straigth in the GUI
 		const std::string CURRENT_PROJECT_NAME = "SummerGame";
 		//
-		std::shared_ptr<se::priv::Engine> SE_Engine = std::make_shared<se::priv::Engine>();
-		SE_Engine->Initialize(CURRENT_PROJECT_NAME);
-		SE_Engine->EngineUpdate();
-		SE_Engine->Uninitialize();
+		se::priv::Engine SE_Engine;
+		SE_Engine.Initialize(CURRENT_PROJECT_NAME);
+		SE_Engine.EngineUpdate();
+		SE_Engine.Uninitialize();
 	//}
 	//catch (...)
 	//{

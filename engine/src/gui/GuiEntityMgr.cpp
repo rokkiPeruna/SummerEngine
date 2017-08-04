@@ -7,23 +7,16 @@ namespace se
 {
 namespace gui
 {
-GuiEntityMgr::GuiEntityMgr(std::shared_ptr<priv::Engine> engine_ptr)
-	: ManagerGui(engine_ptr)
+GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_ptr)
+	: ManagerGui(engine_ref)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
-	, m_gui_comp_mgr(nullptr)
+	, m_gui_comp_mgr(gui_comp_mgr_ptr)
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
-	m_entity_mgr = m_engine->GetEntityMgr();
-	m_comp_mgr = m_engine->GetCompMgr();
-
-	for (auto g : m_engine->GetEngineGuiObjects())
-	{
-		if (typeid(*g) == typeid(GuiCompMgr))
-		{
-			m_gui_comp_mgr = dynamic_cast<GuiCompMgr*>(g);
-		}
-	}
+	m_entity_mgr = &m_engine.GetEntityMgr();
+	m_comp_mgr = &m_engine.GetCompMgr();
+	assert(m_entity_mgr && m_comp_mgr && m_gui_comp_mgr);
 }
 
 GuiEntityMgr::~GuiEntityMgr()
@@ -65,8 +58,8 @@ void GuiEntityMgr::Update()
 				m_entity_mgr->CreateEntityOnEditor(entityname);
 
 				SEint entityid = m_entity_mgr->GetEntityNameToID().at(entityname);
-				m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));		
-				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));	
+				m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
+				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
 				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, entityid);
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated		
 				m_gui_comp_mgr->InvalidateComponentObj();
@@ -99,7 +92,7 @@ void GuiEntityMgr::Update()
 				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(e.second));
 				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_entity_mgr->GetEntities().at(e.second).id);
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated
-				m_gui_comp_mgr->InvalidateComponentObj();				
+				m_gui_comp_mgr->InvalidateComponentObj();
 				_gui_show_component_mgr_window = true;
 			}
 		}
@@ -116,7 +109,7 @@ void GuiEntityMgr::Update()
 			}
 		}
 	}
-	
+
 	ImGui::End();
 }
 

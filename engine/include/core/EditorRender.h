@@ -100,7 +100,7 @@ class EditorRender : public Render
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	EditorRender(std::shared_ptr<Engine> engine_ptr);
+	EditorRender(Engine& engine_ref);
 
 	~EditorRender();
 
@@ -137,7 +137,7 @@ private:
 	{
 		bool operator()(const batch_values& a, const batch_values& b) const
 		{
-			return a.x < b.x || a.y < b.y || a.z < b.z;
+			return a.x < b.x || a.y < b.y || a.z < b.z; //SE_TODO: Create better comparator
 		}
 	};
 

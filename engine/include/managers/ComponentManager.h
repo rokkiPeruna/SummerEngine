@@ -26,8 +26,8 @@ class ComponentManager : public Manager
 {
 public:
 	///Default constructor
-	///1.param: const ptr to Engine -class
-	ComponentManager(std::shared_ptr<Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	ComponentManager(Engine& engine_ref);
 	///Destructor
 	~ComponentManager();
 	///Deleted copy ctor and assign operator

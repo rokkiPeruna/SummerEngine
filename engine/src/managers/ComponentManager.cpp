@@ -1,4 +1,5 @@
 #include <managers/ComponentManager.h>
+#include <gui/CompEditorGui.h>	//SE_TODO: Break this dependency?
 #include <components/Component.h>
 #include <imgui/imgui.h>
 #include <nlohmann_json/json.hpp>
@@ -11,8 +12,8 @@ namespace se
 {
 namespace priv
 {
-ComponentManager::ComponentManager(std::shared_ptr<Engine> engine_ptr)
-	: Manager(engine_ptr)
+ComponentManager::ComponentManager(Engine& engine_ref)
+	: Manager(engine_ref)
 	, m_rel_path_to_json_scenes("")
 	, m_scenes_sub_folder("scenes")
 	, m_scene_file_suffix(".json")
@@ -82,7 +83,7 @@ void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entit
 		}
 	}
 	//Send all entities to systems for component creation
-	for (auto s : m_engine->GetSystemsContainer())
+	for (auto s : m_engine.GetSystemsContainer())
 	{
 		for (auto& e : entities)
 		{
@@ -91,7 +92,7 @@ void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entit
 		}
 	}
 	//Send all entities to renderer
-	auto rend = m_engine->GetCurrentRenderer();
+	auto rend = m_engine.GetCurrentRenderer();
 	for (auto& e : entities)
 	{
 		rend->OnEntityAdded(e.second);

@@ -5,8 +5,8 @@ namespace se
 {
 namespace gui
 {
-CompEditorGui::CompEditorGui(std::shared_ptr<priv::Engine> engine_ptr)
-	: EngineGui(engine_ptr)
+CompEditorGui::CompEditorGui(priv::Engine& engine_ref)
+	: EngineGui(engine_ref)
 {
 
 }

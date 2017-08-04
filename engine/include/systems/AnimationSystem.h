@@ -24,8 +24,8 @@ class AnimationSystem : public ComponentSystem
 
 public:
 	///Default constructor.
-	///1.param: const ptr to Engine -class
-	AnimationSystem(std::shared_ptr<Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	AnimationSystem(Engine& engine_ref);
 	///Destructor
 	~AnimationSystem();
 	///Deleted copy constructor and assign operator

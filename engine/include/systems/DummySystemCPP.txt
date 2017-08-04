@@ -2,13 +2,13 @@ namespace se
 {
 std::vector<component>* get component(SEint index)
 {
-	return &priv::m_engine->GetDummySystem()->container.at(index);
+	return &priv::m_engine.GetDummySystem()->container.at(index);
 }
 
 namespace priv
 {
-DummySystem::DummySystem(std::shared_ptr<Engine> engine_ptr)
-	: ComponentSystem(engine_ptr)
+DummySystem::DummySystem(Engine& engine_ref)
+	: ComponentSystem(engine_ref)
 	, init containers
 {
 	//THIS IS VERY IMPORTANT:

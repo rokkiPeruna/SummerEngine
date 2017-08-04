@@ -6,13 +6,13 @@ namespace se
 {
 CTexture* GetTextureComponent(SEint index)
 {
-	return &priv::AnimationSystem::m_engine->GetAnimationSystem()->m_cTextures.at(index);
+	return &priv::AnimationSystem::m_engine_ptr->GetAnimationSystem().m_cTextures.at(index);
 }
 
 namespace priv
 {
-AnimationSystem::AnimationSystem(std::shared_ptr<Engine> engine_ptr)
-	: ComponentSystem(engine_ptr)
+AnimationSystem::AnimationSystem(Engine& engine_ref)
+	: ComponentSystem(engine_ref)
 	, m_cTextures{}
 	, m_free_cTexture_indices{}
 	, m_def_tex_name("default_texture.png")
@@ -20,6 +20,8 @@ AnimationSystem::AnimationSystem(std::shared_ptr<Engine> engine_ptr)
 	, m_res_mgr(nullptr)
 	, m_texture_map{}
 {
+	
+
 	//Allocate space for m_texture_map so that we possibly avoid rehashing of keys //SE_TODO: This value should be calculated somehow from the amount of possible textures!
 	m_texture_map.reserve(100);
 
@@ -36,7 +38,7 @@ AnimationSystem::~AnimationSystem()
 void AnimationSystem::Initialize()
 {
 	
-	m_res_mgr = m_engine->GetResourceManager();
+	m_res_mgr = &m_engine.GetResourceManager();
 
 	//Load default texture to be used as default when new CTexture components are added
 	m_texture_map.emplace(m_def_tex_name, _createTexture(m_def_tex_name));
@@ -81,11 +83,11 @@ SEint AnimationSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
-		m_engine->GetCurrentRenderer()->OnRendableComponentChanged(entity);
+		m_engine.GetCurrentRenderer()->OnRendableComponentChanged(entity);
 		SEint index = _createComponent_helper<CTexture>(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures, m_free_cTexture_indices);
 		AssignTexture(m_def_tex_name, m_cTextures.at(index));
 		entity_obj.value().at(CompTypeAsString.at(COMPONENT_TYPE::TEXTURE)).at("tex_name") = m_def_tex_name;
-		m_engine->GetCurrentRenderer()->OnEntityAdded(entity);
+		m_engine.GetCurrentRenderer()->OnEntityAdded(entity);
 		return index;
 	}
 	else
@@ -99,9 +101,9 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 {
 	if (component_type == COMPONENT_TYPE::TEXTURE)
 	{
-		m_engine->GetCurrentRenderer()->OnRendableComponentChanged(entity);
+		m_engine.GetCurrentRenderer()->OnRendableComponentChanged(entity);
 		m_free_cTexture_indices.push(_removeComponent_helper(entity, COMPONENT_TYPE::TEXTURE, entity_obj, m_cTextures));
-		m_engine->GetCurrentRenderer()->OnEntityAdded(entity);
+		m_engine.GetCurrentRenderer()->OnEntityAdded(entity);
 	}
 	else
 	{

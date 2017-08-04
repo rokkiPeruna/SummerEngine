@@ -15,12 +15,12 @@ class CTextureEditor : public CompEditorGui
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	CTextureEditor(std::shared_ptr<priv::Engine> engine_ptr);
+	CTextureEditor(priv::Engine& engine_ref);
 
 	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj) override final;
 
 private:
-	std::shared_ptr<priv::AnimationSystem> m_animation_sys;
+	priv::AnimationSystem* m_animation_sys;
 };
 
 }//namespace gui

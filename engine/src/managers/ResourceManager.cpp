@@ -11,8 +11,8 @@ namespace se
 namespace priv
 {
 
-ResourceManager::ResourceManager(std::shared_ptr<Engine> engine_ptr)
-	: Manager(engine_ptr)
+ResourceManager::ResourceManager(Engine& engine_ref)
+	: Manager(engine_ref)
 	, m_rel_path_to_user_files("")
 	, m_res_fold_name("resources/")
 	, m_textResourcesContainer{}
@@ -44,7 +44,7 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 		tex_names.emplace_back(f.path().filename().generic_string());
 	}
 	
-	m_engine->GetAnimationSystem()->SetTextureResourceNames(tex_names); 
+	m_engine.GetAnimationSystem().SetTextureResourceNames(tex_names); 
 	//SE_TODO: It is not ResourceManager's job to give AnimationSystem the texture names, it is AnimationSystem's job to fetch them!
 	//When this is refactored, remove AnimationSystem dependancy from top of this file!!!
 

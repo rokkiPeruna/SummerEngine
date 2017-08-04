@@ -8,8 +8,8 @@ namespace se
 {
 namespace priv
 {
-SceneManager::SceneManager(std::shared_ptr<Engine> engine_ptr)
-	: Manager(engine_ptr)
+SceneManager::SceneManager(Engine& engine_ref)
+	: Manager(engine_ref)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
 	, m_sceneJsonObject()
@@ -38,7 +38,7 @@ void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityMana
 	///Relative path to scenes.json file
 	m_rel_path_to_json_scenes = filepathToUserFiles + m_scenes_subfolder_name;
 
-	///EntityComponentManager pointer
+	///EntityManager pointer
 	m_entity_mgr = entityMgr_ptr;
 
 	///ComponentManager pointer
@@ -165,7 +165,7 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 	//And if it is, give it to m_currentScene, empty systems component containers and init new scene
 	m_currentScene.SetData(&m_sceneJsonObject);
 
-	for (auto& s : m_engine->GetSystemsContainer())
+	for (auto& s : m_engine.GetSystemsContainer())
 	{
 		s->ClearComponentContainers();
 	}

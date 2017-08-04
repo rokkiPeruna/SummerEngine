@@ -27,7 +27,7 @@ class Manager
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Manager(std::shared_ptr<Engine> engine_ptr) : m_engine(engine_ptr) {}
+	Manager(Engine& engine_ref) : m_engine(engine_ref) {}
 
 	///Destructor
 	virtual ~Manager() {}
@@ -40,7 +40,7 @@ public:
 
 protected:
 	///Pointer to engine
-	std::shared_ptr<Engine> m_engine;
+	Engine& m_engine;
 };
 
 }//namespace priv

@@ -1,4 +1,5 @@
 #include <managers/EntityManager.h>
+#include <managers/ComponentManager.h>
 #include <core/Engine.h>
 #include <nlohmann_json/json.hpp>
 #include <systems/TransformSystem.h>
@@ -8,8 +9,8 @@ namespace se
 {
 namespace priv
 {
-EntityManager::EntityManager(std::shared_ptr<Engine> engine_ptr)
-	: Manager(engine_ptr)
+EntityManager::EntityManager(Engine& engine_ref)
+	: Manager(engine_ref)
 	, m_compMgr(nullptr)
 	, m_clock()
 	, m_start_time()
@@ -127,13 +128,13 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 			}
 		}
 
-		for (auto s : m_engine->GetSystemsContainer())
+		for (auto s : m_engine.GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
 
 		//Clean up, one method to take care of all this entityAdded stuff!
-		auto rend = m_engine->GetCurrentRenderer();
+		auto rend = m_engine.GetCurrentRenderer();
 		for (auto e : m_entities)
 		{
 			rend->OnEntityAdded(e.second);
@@ -168,7 +169,7 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 			}
 		}
 
-		for (auto s : m_engine->GetSystemsContainer())
+		for (auto s : m_engine.GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
@@ -232,7 +233,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 
 	SEint entity_id = m_entities_names_map.at(entity_name);
 
-	for (auto s : m_engine->GetSystemsContainer())
+	for (auto s : m_engine.GetSystemsContainer())
 	{
 		s->OnEntityRemoved(m_entities.at(entity_id));
 	}

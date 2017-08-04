@@ -6,8 +6,8 @@ namespace se
 namespace priv
 {
 
-GameRender::GameRender(std::shared_ptr<Engine> engine_ptr)
-	: Render(engine_ptr)
+GameRender::GameRender(Engine& engine_ref)
+	: Render(engine_ref)
 {
 
 }

@@ -1,13 +1,16 @@
 #include <gui/GuiCompMgr.h>
 #include <core/Engine.h>
+#include <components/Component.h>
+#include <ids/ComponentTypeList.h>
+#include <gui/CompEditorGui.h>
 #include <nlohmann_json/json.hpp>
 
 namespace se
 {
 namespace gui
 {
-GuiCompMgr::GuiCompMgr(std::shared_ptr<priv::Engine> engine_ptr)
-	: ManagerGui(engine_ptr)
+GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref)
+	: ManagerGui(engine_ref)
 	, m_scene_mgr(nullptr)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
@@ -16,9 +19,9 @@ GuiCompMgr::GuiCompMgr(std::shared_ptr<priv::Engine> engine_ptr)
 	, m_curr_component(nullptr)
 	, m_curr_comp_index(-1)
 {
-	m_scene_mgr = m_engine->GetSceneMgr();
-	m_entity_mgr = m_engine->GetEntityMgr();
-	m_comp_mgr = m_engine->GetCompMgr();
+	m_scene_mgr = &m_engine.GetSceneMgr();
+	m_entity_mgr = &m_engine.GetEntityMgr();
+	m_comp_mgr = &m_engine.GetCompMgr();
 	assert(m_scene_mgr && m_entity_mgr && m_comp_mgr);
 }
 

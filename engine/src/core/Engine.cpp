@@ -12,6 +12,7 @@
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 
+
 ///System includes:
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
@@ -20,11 +21,24 @@
 #include <systems/AnimationSystem.h>
 
 
+///Manager includes:
+#include <managers/IOManager.h>
+#include <managers/SceneManager.h>
+#include <managers/EntityManager.h>
+#include <managers/ComponentManager.h>
+#include <managers/ResourceManager.h>
+
+
 ///Engine graphical user interface includes
+//SE_TODO: Move these and their creation logic to separate class!
 //SE_TODO: //SE_TODO: Let macro decide if these get included
-#include <gui/GuiSceneMgr.h>
-#include <gui/GuiEntityMgr.h>
+#include <gui/EngineGui.h>
 #include <gui/GuiCompMgr.h>
+#include <gui/GuiEntityMgr.h>
+#include <gui/GuiSceneMgr.h>
+#include <gui/ManagerGui.h>
+//COMPONENT EDITORS
+#include <gui/CompEditorGui.h>
 #include <gui/CCollidableEditor.h>
 #include <gui/CDynamicEditor.h>
 #include <gui/CShapeEditor.h>
@@ -54,36 +68,20 @@ Engine::Engine()
 	, m_current_renderer(nullptr)
 	, m_camera(new Camera)
 
-
 	/*SYSTEMS*/
-	, m_transformSystem(std::make_shared<TransformSystem>(shared_from_this())) olet tässä
-	, m_movementSystem(std::make_shared<MovementSystem>(shared_from_this()))
-	, m_animationSystem(std::make_shared<AnimationSystem>(shared_from_this()))
-	, m_collisionSystem(std::make_shared<CollisionSystem>(shared_from_this()))
-	, m_editorRender(std::make_shared<EditorRender>(shared_from_this()))
-	, m_gameRender(std::make_shared<GameRender>(shared_from_this()))
+	, m_transformSystem(std::make_unique<TransformSystem>(*this))
+	, m_movementSystem(std::make_unique<MovementSystem>(*this))
+	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
+	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
+	, m_editorRender(std::make_unique<EditorRender>(*this))
+	, m_gameRender(std::make_unique<GameRender>(*this))
 
 	/*MANAGERS*/
-	, m_entityMgr(shared_from_this())
-	, m_sceneMgr(shared_from_this())
-	, m_resourceMgr(shared_from_this())
-	, m_compMgr(shared_from_this())
-	, m_ioMgr(shared_from_this())
-
-	///*SYSTEMS*/
-	//, m_transformSystem(std::make_shared<TransformSystem>(std::make_shared<Engine>(*this)))
-	//, m_movementSystem(std::make_shared<MovementSystem>(std::make_shared<Engine>(*this)))
-	//, m_animationSystem(std::make_shared<AnimationSystem>(std::make_shared<Engine>(*this)))
-	//, m_collisionSystem(std::make_shared<CollisionSystem>(std::make_shared<Engine>(*this)))
-	//, m_editorRender(std::make_shared<EditorRender>(std::make_shared<Engine>(*this)))
-	//, m_gameRender(std::make_shared<GameRender>(std::make_shared<Engine>(*this)))
-
-	///*MANAGERS*/
-	//, m_entityMgr(std::make_shared<Engine>(*this))
-	//, m_sceneMgr(std::make_shared<Engine>(*this))
-	//, m_resourceMgr(std::make_shared<Engine>(*this))
-	//, m_compMgr(std::make_shared<Engine>(*this))
-	//, m_ioMgr(std::make_shared<Engine>(*this))
+	, m_entityMgr(std::make_unique<EntityManager>(*this))
+	, m_sceneMgr(std::make_unique<SceneManager>(*this))
+	, m_resourceMgr(std::make_unique<ResourceManager>(*this))
+	, m_compMgr(std::make_unique<ComponentManager>(*this))
+	, m_ioMgr(std::make_unique<IOManager>(*this))
 	/*GUI ELEMENTS*/
 	, m_engine_gui_container{} //Elements here are allocated from heap so they MUST be released in destructor
 {
@@ -94,12 +92,6 @@ Engine::~Engine()
 {
 	m_current_renderer = nullptr;
 
-	for (auto g : m_engine_gui_container)
-	{
-		auto tmp = g;
-		g = nullptr;
-		delete tmp;
-	}
 	delete m_camera;
 }
 
@@ -153,7 +145,7 @@ void Engine::EngineUpdate()
 			m_inEditorLoop = _gameLoop();
 		else
 		{
-			m_sceneMgr.ReinitScene();
+			m_sceneMgr->ReinitScene();
 			_editorLoop(exitProgram);
 		}
 	}
@@ -233,16 +225,16 @@ void Engine::_initAndApplyEngineSettings()
 void Engine::_initManagers()
 {
 	//SceneMgr
-	m_sceneMgr.Initialize(m_path_to_user_files, &m_entityMgr, &m_compMgr);
+	m_sceneMgr->Initialize(m_path_to_user_files, m_entityMgr.get(), m_compMgr.get());
 
 	//EntityManager
-	m_entityMgr.Initialize(m_path_to_user_files, &m_compMgr);
+	m_entityMgr->Initialize(m_path_to_user_files, m_compMgr.get());
 
 	//ComponentManager
-	m_compMgr.Initialize(m_path_to_user_files);
+	m_compMgr->Initialize(m_path_to_user_files);
 
 	//Resource Manager | default path to shaders.. todo: change so that it can be read fomr the engine_config.json or delete that part from json
-	m_resourceMgr.Initialize("../../engine/shaders/", m_path_to_user_files);
+	m_resourceMgr->Initialize("../../engine/shaders/", m_path_to_user_files);
 
 
 	//	m_renderMgr.Initialize();
@@ -273,22 +265,23 @@ void Engine::_initGui()
 
 	//SE_TODO: Let macro decide if these get build
 	//Emplace manager classes' guis
-	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr(shared_from_this()));
-	m_engine_gui_container.emplace_back(new gui::GuiCompMgr(shared_from_this()));		//Must be before GuiEntityMgr!!
-	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr(shared_from_this()));	//Must be after GuiCompMgr!!
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiSceneMgr>(*this));
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiCompMgr>(*this));		//Must be before GuiEntityMgr!!
+	auto gui_compMgr = m_engine_gui_container.back().get();
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiEntityMgr>(*this, static_cast<se::gui::GuiCompMgr*>(gui_compMgr)));	//Must be after GuiCompMgr!!
 	
 	//Emplace component editors
-	m_engine_gui_container.emplace_back(new gui::CCollidableEditor(shared_from_this()));
-	m_engine_gui_container.emplace_back(new gui::CDynamicEditor(shared_from_this()));
-	m_engine_gui_container.emplace_back(new gui::CShapeEditor(shared_from_this()));
-	m_engine_gui_container.emplace_back(new gui::CTextureEditor(shared_from_this()));
-	m_engine_gui_container.emplace_back(new gui::CTransformableEditor(shared_from_this()));
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CCollidableEditor>(*this));
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CDynamicEditor>(*this));
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CShapeEditor>(*this));
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CTextureEditor>(*this));
+	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CTransformableEditor>(*this));
 }
 
 void Engine::_updateMgrs()
 {
-	m_sceneMgr.Update();
-	m_entityMgr.Update();
+	m_sceneMgr->Update();
+	m_entityMgr->Update();
 }
 
 void Engine::_updateSystems(SEfloat deltaTime)
@@ -307,9 +300,9 @@ void Engine::_updateSystems(SEfloat deltaTime)
 void Engine::_updateGUI()
 {
 	//Engine window in editor
-	if (gui::_gui_show_main_window)
+	if (se::gui::_gui_show_main_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(gui::_gui_width / 2, gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(se::gui::_gui_width / 2, se::gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");
@@ -319,7 +312,7 @@ void Engine::_updateGUI()
 	}
 
 	//SE_TODO: Create better gui structure
-	for (auto gui : m_engine_gui_container)
+	for (auto& gui : m_engine_gui_container)
 	{
 		gui->Update();
 	}
@@ -350,7 +343,7 @@ bool Engine::_gameLoop()
 		second += deltaTime;
 		if (second > 1.0f)
 		{
-			fps = std::to_string(static_cast<SEfloat>(frame_counter)) + " -- e:" + std::to_string(m_entityMgr.GetEntityNameToID().size());
+			fps = std::to_string(static_cast<SEfloat>(frame_counter)) + " -- e:" + std::to_string(m_entityMgr->GetEntityNameToID().size());
 			second = 0.0f;
 			frame_counter = 0;
 		}
@@ -377,7 +370,7 @@ bool Engine::_gameLoop()
 		// Rendering
 
 
-		glViewport(0, 0, gui::_gui_width, gui::_gui_heigth);
+		glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -421,7 +414,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			m_messenger.PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, gui::_gui_width, gui::_gui_heigth);
+			glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -478,7 +471,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 				break;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				gui::_gui_show_main_window = (gui::_gui_show_main_window) ? false : true;
+				se::gui::_gui_show_main_window = (se::gui::_gui_show_main_window) ? false : true;
 				break;
 
 			default:
@@ -508,7 +501,7 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				m_inEditorLoop = true;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				gui::_gui_show_main_window = (gui::_gui_show_main_window) ? false : true;
+				se::gui::_gui_show_main_window = (se::gui::_gui_show_main_window) ? false : true;
 				break;
 			default:
 				break;

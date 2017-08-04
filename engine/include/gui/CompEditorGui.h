@@ -19,7 +19,7 @@ class CompEditorGui : public EngineGui
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	CompEditorGui(std::shared_ptr<priv::Engine> engine_ptr);
+	CompEditorGui(priv::Engine& engine_ref);
 	///Destructor
 	virtual ~CompEditorGui();
 	///No copies allowed

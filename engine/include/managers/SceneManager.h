@@ -26,8 +26,8 @@ class SceneManager : public Manager
 {
 public:
 	///Default constructor
-	///1.param: const ptr to Engine -class
-	SceneManager(std::shared_ptr<Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	SceneManager(Engine& engine_ref);
 	///Destructor
 	~SceneManager();
 	///No copies allowed

@@ -33,8 +33,8 @@ class TransformSystem : public ComponentSystem
 public:
 
 	///Default constructor.
-	///1.param: const ptr to Engine -class
-	TransformSystem(std::shared_ptr<Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	TransformSystem(Engine& engine_ref);
 	///Destructor
 	~TransformSystem();
 	///Delete copy constructor and assingment operator

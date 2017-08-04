@@ -33,28 +33,18 @@
 
 #include <core/Camera.h>
 
-//Systems
-
-
-//Managers
-#include <managers/IOManager.h>
-#include <managers/SceneManager.h>
-#include <managers/ResourceManager.h>
-#include <managers/ComponentManager.h>
-
-
-
-//Gui
-#include <gui/EngineGui.h>
-#include <gui/ManagerGui.h>
-#include <gui/CompEditorGui.h>
-
 namespace se
-{
-namespace priv
 {
 ///Forward declarations.
 ///
+///GUI CLASSES
+namespace gui
+{
+class EngineGui;
+class CompEditorGui;
+}
+namespace priv
+{
 ///SYSTEMS
 class ComponentSystem;
 class MovementSystem;
@@ -62,10 +52,16 @@ class TransformSystem;
 class CollisionSystem;
 class AnimationSystem;
 
+///MANAGERS
+class IOManager;
+class SceneManager;
+class EntityManager;
+class ComponentManager;
+class ResourceManager;
 
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
-class Engine : public std::enable_shared_from_this<Engine>
+class Engine
 {
 public:
 	///Default engine constructor
@@ -90,26 +86,26 @@ public:
 	void EngineUpdate();
 
 	///System getters
-	std::shared_ptr<MovementSystem>  GetMovementSystem() { return m_movementSystem; }
-	std::shared_ptr<CollisionSystem> GetCollisionSystem() { return m_collisionSystem; }
-	std::shared_ptr<TransformSystem> GetTransformSystem() { return m_transformSystem; }
-	std::shared_ptr<AnimationSystem> GetAnimationSystem() { return m_animationSystem; }
+	MovementSystem&  GetMovementSystem() { return *m_movementSystem; }
+	CollisionSystem& GetCollisionSystem() { return *m_collisionSystem; }
+	TransformSystem& GetTransformSystem() { return *m_transformSystem; }
+	AnimationSystem& GetAnimationSystem() { return *m_animationSystem; }
 	//
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
 	///Manager getters
-	SceneManager* GetSceneMgr() { return &m_sceneMgr; }
-	EntityManager* GetEntityMgr() { return &m_entityMgr; }
-	ComponentManager* GetCompMgr() { return &m_compMgr; }
-	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
-	IOManager* GetIOManager() { return &m_ioMgr; }
+	SceneManager& GetSceneMgr() { return *m_sceneMgr; }
+	EntityManager& GetEntityMgr() { return *m_entityMgr; }
+	ComponentManager& GetCompMgr() { return *m_compMgr; }
+	ResourceManager& GetResourceManager() { return *m_resourceMgr; }
+	IOManager& GetIOManager() { return *m_ioMgr; }
 
 
 	EditorRender* GetCurrentRenderer() { return m_current_renderer; }
 
 
-	std::shared_ptr<EditorRender> GetEditorRender() { return m_editorRender; }
-	std::shared_ptr<GameRender> GetGameRender() { return m_gameRender;  }
+	EditorRender& GetEditorRender() { return *m_editorRender; }
+	GameRender& GetGameRender() { return *m_gameRender;  }
 
 
 	Camera* GetCamera() { return m_camera; }
@@ -122,10 +118,10 @@ public:
 	static std::map<COMPONENT_TYPE, gui::CompEditorGui*> ComponentTypeToGuiEditor;
 
 	///Add EngineGui object
-	void AddEngineGuiToCont(gui::EngineGui* gui_to_add) { m_engine_gui_container.emplace_back(gui_to_add); }
+	//void AddEngineGuiToCont(se::gui::EngineGui* gui_to_add) { m_engine_gui_container.emplace_back(gui_to_add); }
 
 	///Get EngineGui objects
-	const std::vector<gui::EngineGui*>& GetEngineGuiObjects() { return m_engine_gui_container; }
+	const std::vector<std::unique_ptr<se::gui::EngineGui>>& GetEngineGuiObjects() { return m_engine_gui_container; }
 
 private:
 	///Const string naming the json file containing Engine configurations 
@@ -179,25 +175,25 @@ private:
 	Time m_frame_time;
 	Time m_input_coolDown;
 
-	std::shared_ptr<Window> m_window;
-	std::shared_ptr<EditorRender> m_editorRender;
-	std::shared_ptr<GameRender> m_gameRender;
+	std::unique_ptr<Window> m_window;
+	std::unique_ptr<EditorRender> m_editorRender;
+	std::unique_ptr<GameRender> m_gameRender;
 
 	///Systems
-	std::shared_ptr<MovementSystem> m_movementSystem;
-	std::shared_ptr<TransformSystem> m_transformSystem;
-	std::shared_ptr<CollisionSystem> m_collisionSystem;
-	std::shared_ptr<AnimationSystem> m_animationSystem;
+	std::unique_ptr<MovementSystem> m_movementSystem;
+	std::unique_ptr<TransformSystem> m_transformSystem;
+	std::unique_ptr<CollisionSystem> m_collisionSystem;
+	std::unique_ptr<AnimationSystem> m_animationSystem;
 
 	///System ptr container
 	std::vector<ComponentSystem*> m_systemContainer;
 
 	///Managers
-	EntityManager m_entityMgr;
-	SceneManager m_sceneMgr;
-	ResourceManager m_resourceMgr;
-	ComponentManager m_compMgr;
-	IOManager m_ioMgr;
+	std::unique_ptr<EntityManager> m_entityMgr;
+	std::unique_ptr<SceneManager> m_sceneMgr;
+	std::unique_ptr<ResourceManager> m_resourceMgr;
+	std::unique_ptr<ComponentManager> m_compMgr;
+	std::unique_ptr<IOManager> m_ioMgr;
 
 	///Messenger
 	Messenger m_messenger;
@@ -209,7 +205,7 @@ private:
 	Camera* m_camera;
 
 	///GUI //SE_TODO: Let macro define is gui is active
-	std::vector<gui::EngineGui*> m_engine_gui_container;
+	std::vector<std::unique_ptr<se::gui::EngineGui>> m_engine_gui_container;
 	void _initGui();
 
 

@@ -17,8 +17,8 @@ class GuiCompMgr : public ManagerGui
 {
 public:
 	///Default constructor.
-	///1.param: const ptr to Engine -class
-	GuiCompMgr(std::shared_ptr<priv::Engine> engine_ptr);
+	///1.param: reference to Engine -class
+	GuiCompMgr(priv::Engine& engine_ref);
 	///Destructor
 	~GuiCompMgr();
 	///No copies allowed
