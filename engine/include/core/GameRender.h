@@ -30,13 +30,13 @@ public:
 	GameRender(const GameRender&) = delete;
 	void operator=(const GameRender&) = delete;
 
-	void Initialize() override final {}
-	void Uninitialize()override final {}
+	void Initialize() override final;
+	void Uninitialize()override final;
 
-	void Update(SEfloat deltaTime) override final {}
+	void Update(SEfloat deltaTime) override final;
 
-	void OnEntityAdded(const Entity& entity) override final {}
-	void OnRendableComponentChanged(const Entity& entiy) override final {}
+	void OnEntityAdded(const Entity& entity) override final;
+	void OnRendableComponentChanged(const Entity& entiy) override final;
 
 
 

@@ -1,27 +1,14 @@
-#ifndef SE_EDITOR_RENDER_H
-#define SE_EDITOR_RENDER_H
-
-//Include standard library
+#ifndef SE_RENDER_BATCH_H
+#define SE_RENDER_BATCH_H
 
 
-//Include external
-
-
-//Include SE
-#include <core/RenderBatch.h>
-
-
-///Brief : Editor render won't create any static objects and will draw lines even to shapes 
-/// which would not othewise be drawn. 
-
-// TODO : highlight selected
+#include <core/Render.h>
 
 namespace se
 {
-
 namespace priv
 {
-/*
+
 enum class SHADER_ATTRIB_INDEX : SEuint
 {
 	POSITION,
@@ -29,6 +16,7 @@ enum class SHADER_ATTRIB_INDEX : SEuint
 	TEX_COORDS,
 	INDICES
 };
+
 struct DynRenderBatch //FOR single element at this point
 {
 	std::vector<SEint> entity_ids;
@@ -92,82 +80,11 @@ struct DynRenderBatch //FOR single element at this point
 	}
 
 };
-*/
 
 
-
-
-class EditorRender : public Render
-{
-
-public:
-	///Default constructor.
-	///1.param: pointer to Engine -class
-	EditorRender(Engine* engine_ptr);
-
-	~EditorRender();
-
-
-	EditorRender(const EditorRender&) = delete;
-	void operator=(const EditorRender&) = delete;
-	
-	void Initialize() override final;
-	void Uninitialize() override final;
-
-	void Update(SEfloat deltaTime) override final;
-
-	///Checks if there is a batch for spesific type of entities. If there is this component will be added
-	///if not new one will be created
-	void OnEntityAdded(const Entity& entity) override final;
-	
-	///Checks if the component is rendable in the first place. If it is makes sure that
-	///the batch is changed
-	void OnRendableComponentChanged(const Entity& entiy) override final;
-
-	void AddDynRenderBatch(DynRenderBatch&& batch)
-	{
-		m_dyn_rend_batches.emplace_back(batch);
-	}
-
-
-private:
-	///Render batches
-	std::vector<DynRenderBatch> m_dyn_rend_batches;
-
-	// Seuint indice.size, SEuint texture_handle, SEuint points.size
-	using batch_values = Vec3u;
-	
-	struct cmpr_batch_values
-	{
-		
-		bool operator()(const batch_values& a, const batch_values& b) const
-		{
-				return a.x < b.x || a.y < b.y || a.z < b.z;
-		}
-	};
-
-	//bool operator()(const batch_values& a, const batch_values& b) const
-	//{
-	//	if (a.x == b.x || a.y == b.y || a.z == b.z)
-	//		return true;
-	//	else
-	//		return a.x < b.x || a.y < b.y || a.z < b.z;
-	//}
-
-	///Map that binds render batch values to it's pointer
-	std::map<batch_values, DynRenderBatch*, cmpr_batch_values> m_batch_value_map;
-
-	//testing
-	ShaderResource* CurrentShader;
-	
-};
-
-
-
-}// !namepsace priv
+}// !namespace priv
 
 }// !namespace se
 
 
-
-#endif // !SE_DEBUG_RENDERER_H
+#endif // !

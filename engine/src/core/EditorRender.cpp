@@ -126,7 +126,7 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	//If we have shape, we can at least draw it as black
 	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
 
-	SEuint tex_handle = -1;
+	SEuint tex_handle = SEuint_max;
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
 	{
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;

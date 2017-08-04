@@ -89,6 +89,7 @@ set(CORE_FILES
     src/core/EditorRender.cpp
     include/core/GameRender.h
     src/core/GameRender.cpp
+    include/core/RenderBatch.h
     )
 source_group("core" FILES ${CORE_FILES})
 

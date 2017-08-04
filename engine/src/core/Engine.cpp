@@ -315,7 +315,7 @@ bool Engine::_gameLoop()
 	while (gameloop)
 	{
 		ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
-
+		
 		m_frame_time = m_engine_clock.restart();
 		SEfloat deltaTime = m_frame_time.asSeconds();
 		frame_counter++;
@@ -335,9 +335,6 @@ bool Engine::_gameLoop()
 		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 
-
-
-
 		_handleGameLoopEvents(gameloop);
 
 		_updateMgrs();
@@ -354,8 +351,8 @@ bool Engine::_gameLoop()
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
-		m_editorRender->Update(deltaTime);
+		//m_gameRender->Update(deltaTime); //SE_TODO: Switch to game render when it is implemented
+		//m_editorRender->Update(deltaTime);
 		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 
