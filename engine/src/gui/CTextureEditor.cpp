@@ -25,8 +25,8 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 	{
 		if (ImGui::CollapsingHeader("Add texture"))
 		{
-			Entity* tmpEntity = priv::Engine::Instance().GetEntityMgr()->GetCurrentEntity();
-			priv::Render* tmpRender = priv::Engine::Instance().GetCurrentRenderer();
+			Entity* tmpEntity = m_engine->GetEntityMgr()->GetCurrentEntity();
+			priv::Render* tmpRender = m_engine->GetCurrentRenderer();
 
 			if (m_animation_sys->GetTextureResourceNames().empty())
 			{

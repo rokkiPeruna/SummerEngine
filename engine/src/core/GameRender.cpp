@@ -6,7 +6,8 @@ namespace se
 namespace priv
 {
 
-GameRender::GameRender()
+GameRender::GameRender(Engine* engine_ptr)
+	: Render(engine_ptr)
 {
 
 }
@@ -15,29 +16,6 @@ GameRender::~GameRender()
 {
 
 }
-
-void GameRender::Initialize()
-{
-
-}
-
-void GameRender::Uninitialize()
-{
-
-}
-
-void GameRender::Update(SEfloat deltaTime)
-{
-
-}
-
-void GameRender::AddRenderable()
-{
-
-}
-
-
-
 
 }// !namespace priv
 

@@ -16,7 +16,7 @@ namespace se
 {
 CShape* GetShapeComponent(SEint index)
 {
-	return &priv::Engine::Instance().GetTransformSystem()->m_cShapes.at(index);
+	return &priv::TransformSystem::m_engine->GetTransformSystem()->m_cShapes.at(index);
 }
 
 namespace priv
@@ -25,8 +25,9 @@ std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
 std::vector<SysMessage> TransformSystem::Messages = {};
 
-TransformSystem::TransformSystem()
-	: m_cShapes{}
+TransformSystem::TransformSystem(Engine* engine_ptr)
+	: ComponentSystem(engine_ptr)
+	, m_cShapes{}
 	, m_free_cShape_indices{}
 {
 	//THIS IS VERY IMPORTANT:
@@ -139,9 +140,9 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 	if (component_type == COMPONENT_TYPE::SHAPE)
 	{
 
-		Engine::Instance().GetCurrentRenderer()->OnRendableComponentChanged(e);
+		m_engine->GetCurrentRenderer()->OnRendableComponentChanged(e);
 		SEint tmp = _createComponent_helper(e, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
-	 	Engine::Instance().GetCurrentRenderer()->OnEntityAdded(e);
+		m_engine->GetCurrentRenderer()->OnEntityAdded(e);
 		m_cShapes.at(tmp).my_Transform = e.id;
 		
 		
@@ -164,9 +165,9 @@ void TransformSystem::RemoveComponent(Entity& e, COMPONENT_TYPE component_type, 
 	}
 	if (component_type == COMPONENT_TYPE::SHAPE)
 	{
-		Engine::Instance().GetCurrentRenderer()->OnRendableComponentChanged(e);
+		m_engine->GetCurrentRenderer()->OnRendableComponentChanged(e);
 		m_free_cShape_indices.push(_removeComponent_helper(e, component_type, entity_obj, m_cShapes));
-		Engine::Instance().GetCurrentRenderer()->OnEntityAdded(e);
+		m_engine->GetCurrentRenderer()->OnEntityAdded(e);
 	}
 	else
 	{

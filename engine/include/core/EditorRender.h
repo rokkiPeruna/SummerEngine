@@ -98,8 +98,9 @@ class EditorRender : public Render
 {
 
 public:
-
-	EditorRender();
+	///Default constructor.
+	///1.param: pointer to Engine -class
+	EditorRender(Engine* engine_ptr);
 
 	~EditorRender();
 

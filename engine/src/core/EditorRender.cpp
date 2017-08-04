@@ -8,7 +8,7 @@ namespace priv
 {
 
 EditorRender::EditorRender(Engine* engine_ptr)
-	: m_engine(engine_ptr)
+	: Render(engine_ptr)
 	, m_dyn_rend_batches{}
 	, m_batch_value_map{}
 	, CurrentShader(nullptr)

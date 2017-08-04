@@ -50,7 +50,7 @@ Engine::Engine()
 	, m_animationSystem(this)
 	, m_collisionSystem(this)
 	, m_editorRender(new EditorRender(this))
-	, m_gameRender(new GameRender)
+	, m_gameRender(new GameRender(this))
 	/*MANAGERS*/
 	, m_entityMgr(this)
 	, m_sceneMgr(this)
