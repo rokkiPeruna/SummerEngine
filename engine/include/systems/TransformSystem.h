@@ -32,8 +32,9 @@ class TransformSystem : public ComponentSystem
 	friend CShape* se::GetShapeComponent(SEint index);
 public:
 
-	///Default constructor
-	TransformSystem();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	TransformSystem(Engine* engine_ptr);
 	///Destructor
 	~TransformSystem();
 	///Delete copy constructor and assingment operator

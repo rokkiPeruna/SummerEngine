@@ -2,13 +2,14 @@ namespace se
 {
 std::vector<component>* get component(SEint index)
 {
-	return &priv::Engine::Instance().GetDummySystem()->container.at(index);
+	return &priv::m_engine->GetDummySystem()->container.at(index);
 }
 
 namespace priv
 {
-DummySystem::DummySystem()
-	: init containers
+DummySystem::DummySystem(Engine* engine_ptr)
+	: ComponentSystem(engine_ptr)
+	, init containers
 {
 	//THIS IS VERY IMPORTANT:
 	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
@@ -40,19 +41,19 @@ void DummySystem::ClearComponentContainers()
 	clear containers
 }
 
-void DummySystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
+void DummySystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 {
-	if (e.components.count(component type)
+	if (entity.components.count(component type)
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::type, entity_obj, container, free indice container);
+		_onEntityAdded_helper(entity, COMPONENT_TYPE::type, entity_obj, container, free indice container);
 	}
 }
 
-void DummySystem::OnEntityRemoved(Entity& e)
+void DummySystem::OnEntityRemoved(Entity& entity)
 {
-	if (e.components.count(component type)
+	if (entity.components.count(component type)
 	{
-		free indices container.push(e.components.at(component type);
+		free indices container.push(entity.components.at(component type);
 	}
 }
 

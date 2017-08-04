@@ -10,8 +10,9 @@ namespace se
 namespace priv
 {
 
-ResourceManager::ResourceManager()
-	: m_rel_path_to_user_files("")
+ResourceManager::ResourceManager(Engine* engine_ptr)
+	: Manager(engine_ptr)
+	, m_rel_path_to_user_files("")
 	, m_res_fold_name("resources/")
 	, m_textResourcesContainer{}
 	, m_imageResContainer{}
@@ -42,7 +43,7 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 		tex_names.emplace_back(f.path().filename().generic_string());
 	}
 	
-	Engine::Instance().GetAnimationSystem()->SetTextureResourceNames(tex_names);
+	m_engine->GetAnimationSystem()->SetTextureResourceNames(tex_names);
 
 }
 

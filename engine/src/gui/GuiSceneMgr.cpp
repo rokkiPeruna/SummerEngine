@@ -6,14 +6,15 @@ namespace se
 {
 namespace gui
 {
-GuiSceneMgr::GuiSceneMgr()
-	: m_sceneMgr(nullptr)
+GuiSceneMgr::GuiSceneMgr(priv::Engine* engine_ptr)
+	: ManagerGui(engine_ptr)
+	, m_sceneMgr(nullptr)
 	, m_gui_sceneAdded(false)
 	, m_gui_addSceneNameConflict(false)
 	, m_gui_sceneAlreadyLoaded(false)
 
 {
-	m_sceneMgr = priv::Engine::Instance().GetSceneMgr();
+	m_sceneMgr = m_engine->GetSceneMgr();
 }
 
 GuiSceneMgr::~GuiSceneMgr()

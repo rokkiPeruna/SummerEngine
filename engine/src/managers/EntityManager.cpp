@@ -8,8 +8,9 @@ namespace se
 {
 namespace priv
 {
-EntityManager::EntityManager()
-	: m_compMgr(nullptr)
+EntityManager::EntityManager(Engine* engine_ptr)
+	: Manager(engine_ptr)
+	, m_compMgr(nullptr)
 	, m_clock()
 	, m_start_time()
 	, m_end_time()
@@ -126,13 +127,13 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 			}
 		}
 
-		for (auto s : Engine::Instance().GetSystemsContainer())
+		for (auto s : m_engine->GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
 
 		//Clean up, one method to take care of all this entityAdded stuff!
-		auto rend = Engine::Instance().GetCurrentRenderer();
+		auto rend = m_engine->GetCurrentRenderer();
 		for (auto e : m_entities)
 		{
 			rend->OnEntityAdded(e.second);
@@ -167,7 +168,7 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 			}
 		}
 
-		for (auto s : Engine::Instance().GetSystemsContainer())
+		for (auto s : m_engine->GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
 		}
@@ -231,7 +232,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 
 	SEint entity_id = m_entities_names_map.at(entity_name);
 
-	for (auto s : Engine::Instance().GetSystemsContainer())
+	for (auto s : m_engine->GetSystemsContainer())
 	{
 		s->OnEntityRemoved(m_entities.at(entity_id));
 	}

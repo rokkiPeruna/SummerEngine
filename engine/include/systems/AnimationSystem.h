@@ -23,8 +23,9 @@ class AnimationSystem : public ComponentSystem
 	friend CTexture* se::GetTextureComponent(SEint index);
 
 public:
-	///Default constructor
-	AnimationSystem();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	AnimationSystem(Engine* engine_ptr);
 	///Destructor
 	~AnimationSystem();
 	///Deleted copy constructor and assign operator

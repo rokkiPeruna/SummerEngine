@@ -12,8 +12,9 @@ namespace gui
 class CShapeEditor : public CompEditorGui
 {
 public:
-	///Default constructor
-	CShapeEditor();
+	///Default constructor.
+	///1.param: pointer to Engine -class
+	CShapeEditor(priv::Engine* engine_ptr);
 
 	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj) override final;
 };

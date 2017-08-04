@@ -5,14 +5,17 @@ namespace se
 {
 namespace priv
 {
-ComponentSystem::ComponentSystem()
+Engine* ComponentSystem::m_engine = nullptr;
+
+ComponentSystem::ComponentSystem(Engine* engine_ptr)
 {
-	
+	if (!ComponentSystem::m_engine)
+		m_engine = engine_ptr;
 }
 
 ComponentSystem::~ComponentSystem()
 {
-
+	m_engine = nullptr;
 }
 }//namespace priv
 }//namespace se

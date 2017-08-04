@@ -31,7 +31,8 @@ class ResourceManager : public Manager
 {
 public:
 	///Default constructor
-	ResourceManager();
+	///1.param: const ptr to Engine -class
+	ResourceManager(Engine* engine_ptr);
 	///Destructor
 	~ResourceManager();
 	///Deleted copy constructor and assign operator

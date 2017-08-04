@@ -7,16 +7,17 @@ namespace se
 {
 namespace gui
 {
-GuiEntityMgr::GuiEntityMgr()
-	: m_entity_mgr(nullptr)
+GuiEntityMgr::GuiEntityMgr(priv::Engine* engine_ptr)
+	: ManagerGui(engine_ptr)
+	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
 	, m_gui_comp_mgr(nullptr)
 	, m_gui_scene_name("NO ACTIVE SCENE")
 {
-	m_entity_mgr = priv::Engine::Instance().GetEntityMgr();
-	m_comp_mgr = priv::Engine::Instance().GetCompMgr();
+	m_entity_mgr = m_engine->GetEntityMgr();
+	m_comp_mgr = m_engine->GetCompMgr();
 
-	for (auto g : priv::Engine::Instance().GetEngineGuiObjects())
+	for (auto g : m_engine->GetEngineGuiObjects())
 	{
 		if (typeid(*g) == typeid(GuiCompMgr))
 		{

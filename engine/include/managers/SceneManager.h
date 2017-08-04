@@ -26,7 +26,8 @@ class SceneManager : public Manager
 {
 public:
 	///Default constructor
-	SceneManager();
+	///1.param: const ptr to Engine -class
+	SceneManager(Engine* engine_ptr);
 	///Destructor
 	~SceneManager();
 	///No copies allowed

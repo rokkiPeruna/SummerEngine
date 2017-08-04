@@ -21,6 +21,9 @@
 
 namespace se
 {
+///Every gui class has pointer Engine -class
+namespace priv { class Engine; }
+
 namespace gui
 {
 ///Brief: EngineGui works as a base class for all other gui classes that partly implementate SE Engine's 
@@ -28,8 +31,9 @@ namespace gui
 class EngineGui
 {
 public:
-	///Default constructor
-	EngineGui();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	EngineGui(priv::Engine* engine_ptr);
 	///Destructor
 	virtual ~EngineGui();
 	///No copies allowed
@@ -39,6 +43,8 @@ public:
 	virtual void Update() = 0;
 
 protected:
+	///Pointer to engine
+	priv::Engine* m_engine;
 
 	// void createPopUpWindow()
 };

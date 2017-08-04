@@ -6,13 +6,14 @@ namespace se
 {
 CTexture* GetTextureComponent(SEint index)
 {
-	return &priv::Engine::Instance().GetAnimationSystem()->m_cTextures.at(index);
+	return &priv::AnimationSystem::m_engine->GetAnimationSystem()->m_cTextures.at(index);
 }
 
 namespace priv
 {
-AnimationSystem::AnimationSystem()
-	: m_cTextures{}
+AnimationSystem::AnimationSystem(Engine* engine_ptr)
+	: ComponentSystem(engine_ptr)
+	, m_cTextures{}
 	, m_free_cTexture_indices{}
 	, m_def_tex_name("default_texture.png")
 	, m_tex_res_names{}
@@ -34,7 +35,8 @@ AnimationSystem::~AnimationSystem()
 
 void AnimationSystem::Initialize()
 {
-	m_res_mgr = Engine::Instance().GetResourceManager();
+	
+	m_res_mgr = m_engine->GetResourceManager();
 
 	//Load default texture to be used as default when new CTexture components are added
 	m_texture_map.emplace(m_def_tex_name, _createTexture(m_def_tex_name));

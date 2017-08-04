@@ -17,8 +17,9 @@ namespace gui
 class CompEditorGui : public EngineGui
 {
 public:
-	///Default constructor
-	CompEditorGui();
+	///Default constructor.
+	///1.param: pointer to Engine -class
+	CompEditorGui(priv::Engine* engine_ptr);
 	///Destructor
 	virtual ~CompEditorGui();
 	///No copies allowed

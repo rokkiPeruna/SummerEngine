@@ -16,8 +16,9 @@ namespace gui
 class GuiCompMgr : public ManagerGui
 {
 public:
-	///Default constructor
-	GuiCompMgr();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	GuiCompMgr(priv::Engine* engine_ptr);
 	///Destructor
 	~GuiCompMgr();
 	///No copies allowed

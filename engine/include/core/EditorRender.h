@@ -102,12 +102,12 @@ struct DynRenderBatch //FOR single element at this point
 
 };
 
+class Engine;
 class EditorRender
 {
-
 public:
 
-	EditorRender();
+	EditorRender(Engine* engine_ptr);
 
 	~EditorRender();
 
@@ -129,6 +129,9 @@ public:
 
 
 private:
+	///Pointer to Engine -class
+	Engine* m_engine;
+
 	///Render batches
 	std::vector<DynRenderBatch> m_dyn_rend_batches;
 

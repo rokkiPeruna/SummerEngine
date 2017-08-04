@@ -18,8 +18,8 @@ using Dataformat_itr = nlohmann::json::iterator;
 typedef bool					SEbool;
 
 typedef char					SEchar;
-constexpr  SEchar					SEchar_max = std::numeric_limits<SEchar>::max();
-constexpr SEchar					SEchar_min = std::numeric_limits<SEchar>::min();
+constexpr  SEchar				SEchar_max = std::numeric_limits<SEchar>::max();
+constexpr SEchar				SEchar_min = std::numeric_limits<SEchar>::min();
 
 typedef unsigned char			SEuchar;
 constexpr SEuchar				SEuchar_max = std::numeric_limits<SEuchar>::max();

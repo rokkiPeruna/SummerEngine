@@ -14,8 +14,9 @@ namespace gui
 class CTransformableEditor : public CompEditorGui
 {
 public:
-	///Default constructor
-	CTransformableEditor();
+	///Default constructor.
+	///1.param: pointer to Engine -class
+	CTransformableEditor(priv::Engine* engine_ptr);
 
 	void ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj) override final;
 };

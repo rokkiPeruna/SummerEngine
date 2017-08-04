@@ -57,11 +57,9 @@ namespace priv
 ///updating them.
 class Engine
 {
+public:
 	///Default engine constructor
 	Engine();
-public:
-	///Get engine instance
-	static Engine& Instance() { static Engine engine; return engine; }
 
 	///Default Engine destructor
 	~Engine();
@@ -94,7 +92,7 @@ public:
 	EntityManager* GetEntityMgr() { return &m_entityMgr; }
 	ComponentManager* GetCompMgr() { return &m_compMgr; }
 	ResourceManager* GetResourceManager() { return &m_resourceMgr; }
-
+	IOManager* GetIOManager() { return &m_ioMgr; }
 
 	EditorRender* GetCurrentRenderer() { return m_current_renderer; }
 
@@ -185,6 +183,7 @@ private:
 	SceneManager m_sceneMgr;
 	ResourceManager m_resourceMgr;
 	ComponentManager m_compMgr;
+	IOManager m_ioMgr;
 
 	///Messenger
 	Messenger m_messenger;

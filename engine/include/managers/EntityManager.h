@@ -32,8 +32,9 @@ class ComponentManager;
 class EntityManager : public Manager
 {
 public:
-	///Default constructor
-	EntityManager();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	EntityManager(Engine* engine_ptr);
 	///Destructor
 	~EntityManager();
 	///No copies allowed

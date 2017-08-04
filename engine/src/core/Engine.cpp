@@ -45,16 +45,18 @@ Engine::Engine()
 	, m_current_renderer(nullptr)
 	, m_camera(new Camera)
 	/*SYSTEMS*/
-	, m_movementSystem()
-	, m_animationSystem()
-	, m_editorRender(new EditorRender)
+	, m_transformSystem(this)
+	, m_movementSystem(this)
+	, m_animationSystem(this)
+	, m_collisionSystem(this)
+	, m_editorRender(new EditorRender(this))
 	, m_gameRender(new GameRender)
-	, m_collisionSystem()
 	/*MANAGERS*/
-	, m_entityMgr()
-	, m_sceneMgr()
-	, m_resourceMgr()
-	, m_compMgr()
+	, m_entityMgr(this)
+	, m_sceneMgr(this)
+	, m_resourceMgr(this)
+	, m_compMgr(this)
+	, m_ioMgr(this)
 	/*GUI ELEMENTS*/
 	, m_engine_gui_container{} //Elements here are allocated from heap so they MUST be released in destructor
 {
@@ -244,16 +246,16 @@ void Engine::_initGui()
 
 	//SE_TODO: Let macro decide if these get build
 	//Emplace manager classes' guis
-	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr());
-	m_engine_gui_container.emplace_back(new gui::GuiCompMgr());		//Must be before GuiEntityMgr!!
-	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr());	//Must be after GuiCompMgr!!
+	m_engine_gui_container.emplace_back(new gui::GuiSceneMgr(this));
+	m_engine_gui_container.emplace_back(new gui::GuiCompMgr(this));		//Must be before GuiEntityMgr!!
+	m_engine_gui_container.emplace_back(new gui::GuiEntityMgr(this));	//Must be after GuiCompMgr!!
 
 	//Emplace component editors
-	m_engine_gui_container.emplace_back(new gui::CCollidableEditor());
-	m_engine_gui_container.emplace_back(new gui::CDynamicEditor());
-	m_engine_gui_container.emplace_back(new gui::CShapeEditor());
-	m_engine_gui_container.emplace_back(new gui::CTextureEditor());
-	m_engine_gui_container.emplace_back(new gui::CTransformableEditor());
+	m_engine_gui_container.emplace_back(new gui::CCollidableEditor(this));
+	m_engine_gui_container.emplace_back(new gui::CDynamicEditor(this));
+	m_engine_gui_container.emplace_back(new gui::CShapeEditor(this));
+	m_engine_gui_container.emplace_back(new gui::CTextureEditor(this));
+	m_engine_gui_container.emplace_back(new gui::CTransformableEditor(this));
 }
 
 void Engine::_updateMgrs()

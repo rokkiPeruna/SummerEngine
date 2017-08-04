@@ -11,8 +11,9 @@ namespace se
 {
 namespace priv
 {
-ComponentManager::ComponentManager()
-	: m_rel_path_to_json_scenes("")
+ComponentManager::ComponentManager(Engine* engine_ptr)
+	: Manager(engine_ptr)
+	, m_rel_path_to_json_scenes("")
 	, m_scenes_sub_folder("scenes")
 	, m_scene_file_suffix(".json")
 	, m_main_json_obj("components")
@@ -81,7 +82,7 @@ void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entit
 		}
 	}
 	//Send all entities to systems for component creation
-	for (auto s : Engine::Instance().GetSystemsContainer())
+	for (auto s : m_engine->GetSystemsContainer())
 	{
 		for (auto& e : entities)
 		{
@@ -90,7 +91,7 @@ void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entit
 		}
 	}
 	//Send all entities to renderer
-	auto rend = Engine::Instance().GetCurrentRenderer();
+	auto rend = m_engine->GetCurrentRenderer();
 	for (auto& e : entities)
 	{
 		rend->OnEntityAdded(e.second);

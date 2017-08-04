@@ -6,8 +6,9 @@ namespace se
 {
 namespace gui
 {
-GuiCompMgr::GuiCompMgr()
-	: m_scene_mgr(nullptr)
+GuiCompMgr::GuiCompMgr(priv::Engine* engine_ptr)
+	: ManagerGui(engine_ptr)
+	, m_scene_mgr(nullptr)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
 	, m_reInitWithNewComp(true)
@@ -15,9 +16,9 @@ GuiCompMgr::GuiCompMgr()
 	, m_curr_component(nullptr)
 	, m_curr_comp_index(-1)
 {
-	m_scene_mgr = priv::Engine::Instance().GetSceneMgr();
-	m_entity_mgr = priv::Engine::Instance().GetEntityMgr();
-	m_comp_mgr = priv::Engine::Instance().GetCompMgr();
+	m_scene_mgr = m_engine->GetSceneMgr();
+	m_entity_mgr = m_engine->GetEntityMgr();
+	m_comp_mgr = m_engine->GetCompMgr();
 	assert(m_scene_mgr && m_entity_mgr && m_comp_mgr);
 }
 

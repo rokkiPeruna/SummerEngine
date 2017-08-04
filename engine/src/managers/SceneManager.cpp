@@ -8,8 +8,9 @@ namespace se
 {
 namespace priv
 {
-SceneManager::SceneManager()
-	: m_entity_mgr(nullptr)
+SceneManager::SceneManager(Engine* engine_ptr)
+	: Manager(engine_ptr)
+	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
 	, m_sceneJsonObject()
 	, m_sceneNamesJsonObject()
@@ -164,7 +165,7 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 	//And if it is, give it to m_currentScene, empty systems component containers and init new scene
 	m_currentScene.SetData(&m_sceneJsonObject);
 
-	for (auto& s : Engine::Instance().GetSystemsContainer())
+	for (auto& s : m_engine->GetSystemsContainer())
 	{
 		s->ClearComponentContainers();
 	}

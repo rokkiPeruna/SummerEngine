@@ -21,7 +21,6 @@ enum class MESSAGETYPE : SEint
 	POSITION_CHANGED
 };
 
-
 using MessageData = std::pair<SEint, void*>;
 struct SysMessage
 {
@@ -45,7 +44,8 @@ struct SysMessage
 };
 
 
-
+///Every system has pointer to Engine -class
+class Engine;
 
 ///Brief: ComponentSystem -class works as a abstract interface class for other
 ///systems that are responsible for updating components. 
@@ -53,8 +53,9 @@ struct SysMessage
 class ComponentSystem
 {
 public:
-	///Default constructor. Takes in dictionaries
-	ComponentSystem();
+	///Default constructor.
+	///1.param: Pointer to Engine -class
+	ComponentSystem(Engine* engine_ptr);
 	///Destructor
 	virtual ~ComponentSystem();
 
@@ -93,6 +94,9 @@ public:
 
 
 protected:
+	///Pointer to Engine
+	static Engine* m_engine;
+
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
 	//Returns index off the newly created component if more measures need to be done in system's OnEntityAdded
 	template<typename T>

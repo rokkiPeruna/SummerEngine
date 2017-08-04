@@ -16,7 +16,7 @@ namespace se
 {
 CShape* GetShapeComponent(SEint index)
 {
-	return &priv::Engine::Instance().GetTransformSystem()->m_cShapes.at(index);
+	return &priv::TransformSystem::m_engine->GetTransformSystem()->m_cShapes.at(index);
 }
 
 namespace priv
@@ -25,8 +25,9 @@ std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
 std::vector<SysMessage> TransformSystem::Messages = {};
 
-TransformSystem::TransformSystem()
-	: m_cShapes{}
+TransformSystem::TransformSystem(Engine* engine_ptr)
+	: ComponentSystem(engine_ptr)
+	, m_cShapes{}
 	, m_free_cShape_indices{}
 {
 	//THIS IS VERY IMPORTANT:
@@ -142,8 +143,8 @@ SEint TransformSystem::CreateComponent(Entity& e, COMPONENT_TYPE component_type,
 		m_cShapes.at(tmp).my_Transform = e.id;
 		
 		
-		//Engine::Instance().GetEditorRender()->AddRenderable(&m_cShapes.at(tmp), e);
-		//Engine::Instance().GetGameRender()->AddRenderable();
+		//m_engine->GetEditorRender()->AddRenderable(&m_cShapes.at(tmp), e);
+		//m_engine->GetGameRender()->AddRenderable();
 
 		return e.id;
 	}

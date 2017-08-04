@@ -16,7 +16,8 @@ class IOManager : public Manager
 {
 public:
 	///Default constructor
-	IOManager();
+	///1.param: const ptr to Engine -class
+	IOManager(Engine* engine_ptr);
 	///Destructor
 	~IOManager();
 	///Deleted copy constructor and assign operator

@@ -14,8 +14,9 @@ namespace gui
 class GuiSceneMgr : public ManagerGui
 {
 public:
-	///Default constructor
-	GuiSceneMgr();
+	///Default constructor.
+	///1.param: pointer to Engine -class
+	GuiSceneMgr(priv::Engine* engine_ptr);
 	///Destructor
 	~GuiSceneMgr();
 	///No copies allowed

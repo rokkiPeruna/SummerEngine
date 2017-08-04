@@ -7,13 +7,15 @@ namespace se
 {
 CCollidable* GetCollidableComponent(SEint index)
 {
-	return &priv::Engine::Instance().GetCollisionSystem()->m_cCollidables.at(index);
+
+	return &priv::CollisionSystem::m_engine->GetCollisionSystem()->m_cCollidables.at(index);
 }
 
 namespace priv
 {
-CollisionSystem::CollisionSystem()
-	: m_cCollidables{}
+CollisionSystem::CollisionSystem(Engine* engine_ptr)
+	: ComponentSystem(engine_ptr)
+	, m_cCollidables{}
 	, m_free_cCollidables_indices{}
 {
 	//THIS IS VERY IMPORTANT:
@@ -43,7 +45,7 @@ void CollisionSystem::Update(SEfloat deltaTime)
 
 	//Check TransformSystem's messages to determine if some CCollidable components need their model matric reinitialized
 	std::vector<SEint> recalc_indices = {};
-	auto* entities = &Engine::Instance().GetEntityMgr()->GetEntities();
+	auto* entities = &m_engine->GetEntityMgr()->GetEntities();
 	for (auto m : TransformSystem::Messages)
 	{
 		if (m.msg_type == MESSAGETYPE::TRANSFORM_CHANGED)

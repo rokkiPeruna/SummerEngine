@@ -15,8 +15,9 @@ namespace gui
 class ManagerGui : public EngineGui
 {
 public: 
-	///Default constructor
-	ManagerGui();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	ManagerGui(priv::Engine* engine_ptr);
 	///Destructor
 	virtual ~ManagerGui();
 	///No copies allowed

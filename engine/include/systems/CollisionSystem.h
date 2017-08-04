@@ -19,8 +19,9 @@ class CollisionSystem : public ComponentSystem
 	friend CCollidable* se::GetCollidableComponent(SEint index);
 
 public:
-	///Default constructor
-	CollisionSystem();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	CollisionSystem(Engine* engine_ptr);
 	///Destructor
 	~CollisionSystem();
 	///Deleted copy constructor and assign operator

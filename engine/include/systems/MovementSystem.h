@@ -22,8 +22,9 @@ class MovementSystem : public ComponentSystem
 	friend CDynamic* se::GetDynamicComponent(SEint index);
 
 public:
-	///Default constructor
-	MovementSystem();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	MovementSystem(Engine* engine_ptr);
 	///Destructor
 	~MovementSystem();
 	///Deleted copy constructor and assign operator

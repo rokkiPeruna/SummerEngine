@@ -17,8 +17,9 @@ class GuiCompMgr;
 class GuiEntityMgr : public ManagerGui
 {
 public:
-	///Default constructor
-	GuiEntityMgr();
+	///Default constructor.
+	///1.param: const ptr to Engine -class
+	GuiEntityMgr(priv::Engine* engine_ptr);
 	///Destructor
 	~GuiEntityMgr();
 	///No copies allowed

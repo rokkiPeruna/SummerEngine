@@ -6,7 +6,8 @@ namespace se
 {
 namespace priv
 {
-IOManager::IOManager()
+IOManager::IOManager(Engine* engine_ptr)
+	: Manager(engine_ptr)
 {
 
 }

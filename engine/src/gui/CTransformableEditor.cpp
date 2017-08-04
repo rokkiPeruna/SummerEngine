@@ -7,7 +7,8 @@ namespace se
 {
 namespace gui
 {
-CTransformableEditor::CTransformableEditor()
+CTransformableEditor::CTransformableEditor(priv::Engine* engine_ptr)
+	: CompEditorGui(engine_ptr)
 {
 	//This is IMPORTANT. It binds component to correct editor.
 	//MUST be done in every new component editor's constructor

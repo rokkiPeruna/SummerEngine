@@ -7,8 +7,9 @@ namespace se
 namespace priv
 {
 
-EditorRender::EditorRender()
-	: m_dyn_rend_batches{}
+EditorRender::EditorRender(Engine* engine_ptr)
+	: m_engine(engine_ptr)
+	, m_dyn_rend_batches{}
 	, m_batch_value_map{}
 	, CurrentShader(nullptr)
 {
@@ -31,7 +32,7 @@ void EditorRender::Initialize()
 	glEnable(GL_CULL_FACE);
 
 	// TODO : This shoud be related to entity
-	CurrentShader = Engine::Instance().GetResourceManager()->GetShaderProgram("testShader");
+	CurrentShader = m_engine->GetResourceManager()->GetShaderProgram("testShader");
 
 	SEuint shader = CurrentShader->GetShaderID();
 
@@ -74,7 +75,7 @@ void EditorRender::Update(SEfloat deltaTime)
 		&persp[0][0]
 	);
 
-	Mat4f view = Engine::Instance().GetCamera()->GetCameraView();
+	Mat4f view = m_engine->GetCamera()->GetCameraView();
 	glUniformMatrix4fv
 	(
 		view_m_loc,
