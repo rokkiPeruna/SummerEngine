@@ -1,5 +1,5 @@
 #include <core/Camera.h>
-#include <managers/Mouse.h>
+
 
 namespace se
 {
@@ -13,6 +13,8 @@ Camera::Camera()
 	, m_cameraUp(0.0f)
 	, m_cameraFront(0.0f, 0.0f, -1.0f)
 	, m_keyboard()
+	, m_mouse()
+	, m_cam_speed(7.0f)
 {
 	m_cameraDirection = glm::normalize(m_cameraPosition - m_cameraTarget);
 
@@ -20,7 +22,7 @@ Camera::Camera()
 	m_cameraUp = glm::cross(m_cameraDirection, m_cameraRight);
 
 	m_view = glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp);
-	
+
 }
 
 Camera::~Camera()
@@ -30,37 +32,35 @@ Camera::~Camera()
 
 void Camera::Update(const SEfloat deltaTime)
 {
-	Keyboard m_keyboard;
-	Mouse m_mouse;
-	SEfloat cam_speed = 7.0f;
+
 
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::A))
 	{
-		m_cameraPosition.x -= cam_speed * deltaTime;
-		m_cameraTarget.x -=   cam_speed * deltaTime;
+		m_cameraPosition.x -= m_cam_speed *deltaTime;
+		m_cameraTarget.x -= m_cam_speed * deltaTime;
 	}
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::D))
 	{
-		m_cameraPosition.x += cam_speed * deltaTime;
-		m_cameraTarget.x +=   cam_speed * deltaTime;
+		m_cameraPosition.x += m_cam_speed * deltaTime;
+		m_cameraTarget.x += m_cam_speed * deltaTime;
 	}
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::W))
 	{
-		m_cameraPosition.y += cam_speed * deltaTime;
-		m_cameraTarget.y +=   cam_speed * deltaTime;
+		m_cameraPosition.y += m_cam_speed * deltaTime;
+		m_cameraTarget.y += m_cam_speed * deltaTime;
 	}
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::S))
 	{
-		m_cameraPosition.y -= cam_speed * deltaTime;
-		m_cameraTarget.y -=   cam_speed * deltaTime;
+		m_cameraPosition.y -= m_cam_speed * deltaTime;
+		m_cameraTarget.y -= m_cam_speed * deltaTime;
 	}
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::Q))
 	{
-		m_cameraPosition.z += cam_speed * deltaTime;
+		m_cameraPosition.z += m_cam_speed * deltaTime;
 	}
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::E))
 	{
-		m_cameraPosition.z -= cam_speed * deltaTime;
+		m_cameraPosition.z -= m_cam_speed * deltaTime;
 	}
 
 	m_view = glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp);

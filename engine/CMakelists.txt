@@ -65,8 +65,6 @@ set(MANAGERS_FILES
 	src/managers/Keyboard.cpp
 	include/managers/Mouse.h
 	src/managers/Mouse.cpp
-	include/managers/Batch.h
-	src/managers/Batch.cpp
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
@@ -85,6 +83,8 @@ set(CORE_FILES
 	include/core/SE_exceptions.h
     include/core/Camera.h
     src/core/Camera.cpp
+    include/core/Render.h
+    src/core/Render.cpp
     include/core/EditorRender.h
     src/core/EditorRender.cpp
     include/core/GameRender.h

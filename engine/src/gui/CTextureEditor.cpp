@@ -25,6 +25,8 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 	{
 		if (ImGui::CollapsingHeader("Add texture"))
 		{
+			Entity* tmpEntity = priv::Engine::Instance().GetEntityMgr()->GetCurrentEntity();
+			priv::Render* tmpRender = priv::Engine::Instance().GetCurrentRenderer();
 
 			if (m_animation_sys->GetTextureResourceNames().empty())
 			{
@@ -37,8 +39,12 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 			{
 				if (ImGui::Button(t_n.c_str()))
 				{
+					tmpRender->OnRendableComponentChanged(*tmpEntity);
+				
 					m_animation_sys->AssignTexture(t_n, *GetTextureComponent(index_in_container));
 					component_obj.value().at("tex_name") = t_n;
+					
+					tmpRender->OnEntityAdded(*tmpEntity);
 				}
 			}
 		}

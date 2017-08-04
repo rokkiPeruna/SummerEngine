@@ -6,6 +6,7 @@
 
 //SE includes
 #include <utility/Typedefs.h>
+#include <core/Messages.h>
 
 namespace se
 {

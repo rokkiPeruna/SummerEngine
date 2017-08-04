@@ -67,7 +67,6 @@ public:
 
 	static std::vector<SysMessage> Messages;
 	
-
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
 

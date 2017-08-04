@@ -113,7 +113,6 @@ void EditorRender::Update(SEfloat deltaTime)
 				0
 			);
 		}
-
 	}
 	glUseProgram(0);
 }
@@ -172,11 +171,35 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	}
 }
 
-void EditorRender::OnEntityRemoved()
-{
-	//SE_TODO: Add logic
-}
 
+void EditorRender::OnRendableComponentChanged(const Entity& entity)
+{
+	//If we add renable component we have to make sure that it is deleted from the former location
+
+	if (!entity.components.count(COMPONENT_TYPE::SHAPE))
+		return;
+
+	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
+
+	SEuint tex_handle = -1;
+	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
+	{
+		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
+	}
+
+	if(m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
+	{
+		auto& temp = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
+		for (SEuint i = 0; i < temp.size(); ++i)
+		{
+			if (entity.id == temp.at(i)) 
+			{
+				temp.erase(temp.begin() + i);
+				break;
+			}
+		}
+	}
+}
 
 
 
