@@ -27,10 +27,7 @@ GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref)
 
 GuiCompMgr::~GuiCompMgr()
 {
-	m_scene_mgr = nullptr;
-	m_entity_mgr = nullptr;
-	m_comp_mgr = nullptr;
-	m_curr_component = nullptr;
+
 }
 
 void GuiCompMgr::Update()

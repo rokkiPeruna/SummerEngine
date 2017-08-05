@@ -35,9 +35,7 @@ EntityManager::EntityManager(Engine& engine_ref)
 
 EntityManager::~EntityManager()
 {
-	m_compMgr = nullptr;
-	m_currentScene = nullptr;
-	m_currentEntity = nullptr;
+
 }
 
 void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)

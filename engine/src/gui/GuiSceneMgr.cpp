@@ -19,7 +19,7 @@ GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref)
 
 GuiSceneMgr::~GuiSceneMgr()
 {
-	m_sceneMgr = nullptr;
+
 }
 
 void GuiSceneMgr::Update()

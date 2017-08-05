@@ -90,8 +90,6 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	m_current_renderer = nullptr;
-
 	delete m_camera;
 }
 

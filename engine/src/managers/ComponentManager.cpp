@@ -31,9 +31,7 @@ ComponentManager::ComponentManager(Engine& engine_ref)
 
 ComponentManager::~ComponentManager()
 {
-	m_curr_component = nullptr;
-	m_curr_entity = nullptr;
-	m_curr_scene = nullptr;
+
 }
 
 void ComponentManager::Initialize(std::string relativeFilePathToComponentsJson)

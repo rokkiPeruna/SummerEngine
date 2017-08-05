@@ -32,7 +32,7 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 
 AnimationSystem::~AnimationSystem()
 {
-	m_res_mgr = nullptr;
+	
 }
 
 void AnimationSystem::Initialize()

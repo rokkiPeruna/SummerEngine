@@ -21,9 +21,7 @@ GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_pt
 
 GuiEntityMgr::~GuiEntityMgr()
 {
-	m_entity_mgr = nullptr;
-	m_comp_mgr = nullptr;
-	m_gui_comp_mgr = nullptr;
+
 }
 
 void GuiEntityMgr::Update()

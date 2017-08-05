@@ -29,8 +29,7 @@ SceneManager::SceneManager(Engine& engine_ref)
 
 SceneManager::~SceneManager()
 {
-	m_entity_mgr = nullptr;
-	m_comp_mgr = nullptr;
+
 }
 
 void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr, ComponentManager* compMgr_ptr)

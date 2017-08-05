@@ -57,7 +57,7 @@ private:
 	std::string m_name;
 
 	///Json object holding scene data
-	nlohmann::json *m_data;
+	nlohmann::json* m_data;
 
 	///Type of the scene
 	SCENE_TYPE m_type;

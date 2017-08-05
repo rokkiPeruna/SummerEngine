@@ -66,15 +66,14 @@ class Engine
 public:
 	///Default engine constructor
 	Engine();
-
 	///Default Engine destructor
 	~Engine();
-
-	///Delete copy constructor
+	///Deleted copy constructor and copy assignment operator
 	Engine(const Engine&) = delete;
-
-	///Delete copy assignment operator
 	void operator=(const Engine&) = delete;
+	///Deleted move constructror and move assignment
+	Engine(const Engine&&) = delete;
+	void operator=(const Engine&&) = delete;
 
 	// Initialize engine 
 	void Initialize(const std::string& projectName);
