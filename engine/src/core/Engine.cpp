@@ -53,9 +53,9 @@ std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {}
 
 std::map<COMPONENT_TYPE, gui::CompEditorGui*> Engine::ComponentTypeToGuiEditor = {};
 
-Engine::Engine()
+Engine::Engine(const std::string& curr_proj_name)
 	: m_eng_conf_file_name("engine_config.json")
-	, m_current_project_name("")
+	, m_current_project_name(curr_proj_name)
 	, m_json_data_files_fold_name("data")
 	, m_path_to_user_files("")
 	, j_config()
@@ -66,7 +66,7 @@ Engine::Engine()
 	, m_window(new priv::Window)
 	, m_messenger()
 	, m_current_renderer(nullptr)
-	, m_camera(new Camera)
+	, m_camera(std::make_unique<Camera>())
 
 	/*SYSTEMS*/
 	, m_transformSystem(std::make_unique<TransformSystem>(*this))
@@ -90,16 +90,15 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	delete m_camera;
+
 }
 
 
-void Engine::Initialize(const std::string& projectName)
+void Engine::Initialize()
 {
 	//Set to start at editor loop //SE_TODO: Create switch(macro, etc.) to decide loop mode
 	m_inEditorLoop = true;
 
-	m_current_project_name = projectName;
 	//Create path from .vcproj or .exe to the json files containing game data.
 	_findPathToUserFiles();
 
