@@ -22,7 +22,7 @@ enum class COMPONENT_TYPE : SEint
 	COLLIDABLE,
 	TEXTURE,
 	SHAPE,
-	RENDERABLE
+	ANIMATION
 };
 
 namespace priv
@@ -35,7 +35,8 @@ static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 	{ COMPONENT_TYPE::DYNAMIC, "dynamic" },
 	{ COMPONENT_TYPE::COLLIDABLE, "collidable" },
 	{ COMPONENT_TYPE::TEXTURE, "texture" },
-	{ COMPONENT_TYPE::SHAPE, "shape" }
+	{ COMPONENT_TYPE::SHAPE, "shape" },
+	{ COMPONENT_TYPE::ANIMATION, "animation" }
 };
 }//namespace priv
 }//namespace se

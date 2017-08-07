@@ -21,6 +21,7 @@ set(COMPONENTS_FILES
     include/components/CShape.h
     include/components/CTransformable.h
 	include/components/CTexture.h
+	include/components/CAnimation.h
     )
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------

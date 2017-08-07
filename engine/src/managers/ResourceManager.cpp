@@ -106,7 +106,9 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 	SEint w, h, bpp = 0;
 	std::string filepath(m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name + name);
 
-	stbi_set_flip_vertically_on_load(flip_vertically);
+	//Images seem to be upside down when loaded, hence this:
+	SEbool complement_flip_value = (flip_vertically) ? false : true;
+	stbi_set_flip_vertically_on_load(complement_flip_value);
 
 	SEuchar* tmp = stbi_load(
 		filepath.c_str(),

@@ -88,7 +88,7 @@ void TransformSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
 		c.modelMatrix = glm::translate(Mat4f(1.0f), c.position) * glm::rotate(Mat4f(1.0f), glm::radians(c.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), c.scale);
 
 		//Build run-time component on the index that matches owning entity's id
-		TransformableComponents.emplace(TransformableComponents.begin() + c.ownerID, c);
+		TransformableComponents.at(c.ownerID) = c;
 	}
 	if (e.components.count(COMPONENT_TYPE::SHAPE))
 	{

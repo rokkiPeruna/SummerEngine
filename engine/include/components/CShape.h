@@ -21,11 +21,10 @@ class CShape : public Component
 
 public:
 
-	CShape(SEushort num_points = 3)
+	CShape(SEushort num_points = 4)
 		: Component(COMPONENT_TYPE::SHAPE)
 		, my_Transform(-1)
 	{
-
 		SEfloat theta = 2.0f * 3.1415926f / SEfloat(num_points);
 		SEfloat tangential_factor = tanf(theta);
 		SEfloat radial_factor = cosf(theta);

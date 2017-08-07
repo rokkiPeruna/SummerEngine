@@ -115,15 +115,19 @@ void AnimationSystem::AssignTexture(const std::string& texture_name, CTexture& t
 	//Check if we have texture loaded already
 	if (m_texture_map.count(texture_name))
 	{
-		tex_comp.handle = m_texture_map.at(texture_name).first;
-		tex_comp.has_alpha = m_texture_map.at(texture_name).second;
+		tex_comp.handle = m_texture_map.at(texture_name).handle;
+		tex_comp.has_alpha = m_texture_map.at(texture_name).alpha;
+		tex_comp.parent_img_w = m_texture_map.at(texture_name).parent_i_w;
+		tex_comp.parent_img_h = m_texture_map.at(texture_name).parent_i_h;
 	}
 	//If not, create texture
 	else
 	{
 		auto data = _createTexture(texture_name);
-		tex_comp.handle = data.first;
-		tex_comp.has_alpha = data.second;
+		tex_comp.handle = m_texture_map.at(texture_name).handle;
+		tex_comp.has_alpha = m_texture_map.at(texture_name).alpha;
+		tex_comp.parent_img_w = m_texture_map.at(texture_name).parent_i_w;
+		tex_comp.parent_img_h = m_texture_map.at(texture_name).parent_i_h;
 	}
 }
 
@@ -138,7 +142,7 @@ Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 }
 
 
-std::pair<SEuint, SEbool> AnimationSystem::_createTexture(const std::string& texture_name)
+AnimationSystem::_texture_data& AnimationSystem::_createTexture(const std::string& texture_name)
 {
 	//Create pixeldata
 	auto image = m_res_mgr->LoadImageResource(texture_name);
@@ -148,10 +152,10 @@ std::pair<SEuint, SEbool> AnimationSystem::_createTexture(const std::string& tex
 	SEint h{ image->GetData().heigth };
 	assert(w > 0 && h > 0);
 
-	std::pair<SEuint, SEbool> ret{ -1, false };
+	_texture_data data(SEuint_max, false, w, h);
 
-	glGenTextures(1, &ret.first);
-	glBindTexture(GL_TEXTURE_2D, ret.first);
+	glGenTextures(1, &data.handle);
+	glBindTexture(GL_TEXTURE_2D, data.handle);
 
 	//Check for bytes per pixel
 	assert(image->GetData().bpp == 3 || image->GetData().bpp == 4);
@@ -180,10 +184,10 @@ std::pair<SEuint, SEbool> AnimationSystem::_createTexture(const std::string& tex
 		image->GetData().pixelData.data()
 	);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	ret.second = alpha;
+	data.alpha = alpha;
 
-	m_texture_map.emplace(texture_name, std::make_pair(ret.first, ret.second));
-	return ret;
+	m_texture_map.emplace(texture_name, data);
+	return m_texture_map.at(texture_name);
 }
 
 }//namespace priv

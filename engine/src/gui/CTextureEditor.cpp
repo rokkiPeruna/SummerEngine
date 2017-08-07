@@ -47,6 +47,21 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 				}
 			}
 		}
+		else if (ImGui::CollapsingHeader("Change pos and loc"))
+		{
+			auto tex = GetTextureComponent(index_in_container);
+			
+			ImGui::SliderInt("X", &tex->x, 0, tex->parent_img_w - tex->width);
+			ImGui::SliderInt("Y", &tex->y, 0, tex->parent_img_h - tex->heigth);
+
+			ImGui::SliderInt("Width", &tex->width, 0, tex->parent_img_w - tex->x);
+			ImGui::SliderInt("Heigth", &tex->heigth, 0, tex->parent_img_h - tex->y);
+
+			component_obj.value().at("x") = tex->x;
+			component_obj.value().at("y") = tex->y;
+			component_obj.value().at("w") = tex->width;
+			component_obj.value().at("h") = tex->heigth;
+		}
 	}
 }
 

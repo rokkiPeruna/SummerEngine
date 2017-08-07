@@ -2,6 +2,7 @@
 #include <systems/AnimationSystem.h>
 #include <systems/TransformSystem.h>
 
+#include <managers/EntityManager.h>
 
 namespace se
 {
@@ -48,16 +49,14 @@ void EditorRender::Uninitialize()
 
 }
 
-SEfloat texCoords[] = {
-	0.0f, 0.0f,
-	1.0f, 0.0f,
-	1.0f, 1.0f,
-	0.0f, 1.0f
-};
-
 void EditorRender::Update(SEfloat)
 {
 	auto shader = CurrentShader->GetShaderID();
+
+	//SE_TODO: REMOVE for testing tex coords
+	auto entities = m_engine.GetEntityMgr().GetEntities();
+	SEuint _test_tex_coords_loc = glGetUniformLocation(shader, "texture_coords");
+
 	glUseProgram(shader);
 	SEuint textureLocation = glGetUniformLocation(shader, "fragment_texture");
 	//SEuint transformLocation = glGetUniformLocation(shader, "transform");
@@ -99,6 +98,33 @@ void EditorRender::Update(SEfloat)
 
 		for (auto& e_id : b.entity_ids)
 		{
+			//UGLY WAY FOR TEX COORDS
+			auto tex = GetTextureComponent(entities.at(e_id).components.at(COMPONENT_TYPE::TEXTURE));
+			SEint width = (tex->width) ? tex->width : tex->parent_img_w;
+			SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
+
+			Vec2f first(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
+			Vec2f sec(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
+			Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
+			Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
+
+			SEfloat tex_coords[] =
+			{
+				fourth.x, fourth.y,
+				third.x, third.y,
+				sec.x, sec.y,
+				first.x, first.y
+			};
+
+			
+			//SEuint attr = static_cast<SEuint>(SHADER_ATTRIB_INDEX::TEX_COORDS);
+			glBindBuffer(GL_ARRAY_BUFFER, b.texco_buffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tex_coords), tex_coords);
+			//glVertexAttribPointer(b.texco_buffer, 2, GL_FLOAT, GL_FALSE, 0/*2 * sizeof(SEfloat)*/, &tex_coords[0]);
+			//glBindBuffer(GL_ARRAY_BUFFER, 0);
+			//glEnableVertexAttribArray(b.texco_buffer);
+			//UGLY WAY FOR TEX COORDS ENDS
+
 			Mat4f model = TransformSystem::TransformableComponents.at(e_id).modelMatrix;
 			glUniformMatrix4fv
 			(
@@ -166,7 +192,9 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	{
 		auto tex = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE));
 
-		b.CreateBuffer(b.texco_buffer, sizeof(texCoords[0]) * 8, texCoords);
+		//b.CreateBuffer(b.texco_buffer, sizeof(texCoords[0]) * 8, texCoords);
+		//b.BindAttribPtr(SHADER_ATTRIB_INDEX::TEX_COORDS, 2);
+		b.CreateBuffer(b.texco_buffer, sizeof(SEfloat) * 8, 0);
 		b.BindAttribPtr(SHADER_ATTRIB_INDEX::TEX_COORDS, 2);
 		b.texture_handle = tex->handle;
 	}
@@ -188,12 +216,12 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
 	}
 
-	if(m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
+	if (m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
 	{
 		auto& temp = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
 		for (SEint i = 0; i < temp.size(); ++i)
 		{
-			if (entity.id == static_cast<SEuint>(temp.at(i))) 
+			if (entity.id == static_cast<SEuint>(temp.at(i)))
 			{
 				temp.erase(temp.begin() + i);
 				break;
