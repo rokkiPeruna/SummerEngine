@@ -4,7 +4,11 @@
 ///STL includes:
 #include <memory>
 
+///External includes:
+#include <nlohmann_json/json.hpp>
+
 //SE includes:
+#include <core/Engine.h>
 #include <core/Messages.h>
 #include <core/SE_exceptions.h>
 

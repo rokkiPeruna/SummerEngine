@@ -1,5 +1,4 @@
 #include <gui/CompEditorGui.h>
-#include <core/Engine.h>
 
 namespace se
 {

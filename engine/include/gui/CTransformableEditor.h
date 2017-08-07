@@ -3,8 +3,6 @@
 
 //SE includes:
 #include <gui/CompEditorGui.h>
-#include <systems/TransformSystem.h>
-#include <utility/EditorFunctions.h>
 
 namespace se
 {

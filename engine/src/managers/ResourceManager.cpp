@@ -1,5 +1,4 @@
 #include <managers/ResourceManager.h>
-#include <core/Engine.h>
 #include <systems/AnimationSystem.h>
 #include <stb_image.h>
 

@@ -1,5 +1,4 @@
 #include <gui/CCollidableEditor.h>
-#include <core/Engine.h>
 #include <systems/CollisionSystem.h>
 
 namespace se

@@ -1,9 +1,6 @@
 #include <systems/MovementSystem.h>
-#include <core/Messages.h>
-#include <imgui/imgui.h>
-#include <ids/ComponentTypeList.h>
-#include <core/Engine.h>
 #include <systems/TransformSystem.h>
+#include <managers/Keyboard.h>
 
 namespace se
 {

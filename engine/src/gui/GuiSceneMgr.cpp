@@ -1,6 +1,5 @@
 #include <gui/GuiSceneMgr.h>
 #include <managers/Scene.h>
-#include <core/Engine.h>
 
 namespace se
 {

@@ -1,9 +1,10 @@
 #ifndef SE_COMPONENT_EDITOR_GUI_H
 #define SE_COMPONENT_EDITOR_GUI_H
 
-
 //SE includes:
 #include <gui/EngineGui.h>
+#include <core/Engine.h>
+#include <managers/EntityManager.h>
 
 namespace se
 {

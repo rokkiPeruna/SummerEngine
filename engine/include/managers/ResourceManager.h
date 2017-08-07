@@ -18,7 +18,6 @@
 //SE includes:
 #include <managers/Manager.h>
 #include <managers/Resource.h>
-#include <core/Messages.h>
 
 const std::string REL_PATH_TO_SHADER_CONFIG = "../../engine/json_files/shader_config.json";
 

@@ -1,5 +1,4 @@
 #include <systems/ComponentSystem.h>
-#include <core/Engine.h>
 
 namespace se
 {

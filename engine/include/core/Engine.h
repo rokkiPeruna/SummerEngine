@@ -6,6 +6,10 @@
 #include <string>
 #include <memory>
 #include <cassert>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <exception>
 
 //External includes:
 #include <SDL2/include/SDL.h>
@@ -13,38 +17,34 @@
 #include <nlohmann_json/json.hpp>
 
 //SE includes:
+#include <utility/Typedefs.h>
 #include <utility/Clock.h>
 #include <utility/Time.h>
-#include <core/Messages.h>
-
-#include <core/SE_exceptions.h>
-
-#include <core/gui_values.h>
-
-#include <core/Window.h>
-
-
-#include <core/EditorRender.h>
-#include <core/GameRender.h>
-
-#include <utility/Typedefs.h>
-
-#include <core/Messenger.h>
-
-#include <core/Camera.h>
+#include <ids/ComponentTypeList.h>
+#include <ids/SystemAndManagerIDList.h>
 
 namespace se
 {
-///Forward declarations.
-///
-///GUI CLASSES
+///Forward declarations for classes in namespace se
+///CORE
+class Camera;
+
 namespace gui
 {
+///Forward declarations for classes in namespace se::gui
 class EngineGui;
 class CompEditorGui;
 }
 namespace priv
 {
+///Forward declarations for classes in namespace se::priv
+///CORE
+class Window;
+class Messenger;
+class Render;
+class EditorRender;
+class GameRender;
+
 ///SYSTEMS
 class ComponentSystem;
 class MovementSystem;
@@ -117,24 +117,17 @@ public:
 	///Static map for binding component type to correct gui editor
 	static std::map<COMPONENT_TYPE, gui::CompEditorGui*> ComponentTypeToGuiEditor;
 
-	///Add EngineGui object
-	//void AddEngineGuiToCont(se::gui::EngineGui* gui_to_add) { m_engine_gui_container.emplace_back(gui_to_add); }
-
 	///Get EngineGui objects
 	const std::vector<std::unique_ptr<se::gui::EngineGui>>& GetEngineGuiObjects() { return m_engine_gui_container; }
 
 private:
-	const std::string m_eng_conf_file_name;			///Const string naming the json file containing Engine configurations 
+	const std::string m_eng_conf_file_name;					///Const string naming the json file containing Engine configurations 
 	const std::string m_current_project_name;				///Current active project. Name must match the one in 'projects/' folder
-
-		///Const string naming the folder in project folder that contains all json data files
-	const std::string m_json_data_files_fold_name;
-
-	///Relative file path to user's data files. This is passed to managers and it varies depenging if we are doing editor build or deploy build
-	std::string m_path_to_user_files;
+	const std::string m_json_data_files_fold_name;			///Const string naming the folder in project folder that contains all json data files
+	std::string m_path_to_user_files;						///Relative file path to user's data files. This is passed to managers and it varies depenging if we are doing editor build or deploy build
+	nlohmann::json j_config;								///nlohmann::json object holding engine's configuration data
 
 	///Initialize nlohmann::json object with engine_congif.json
-	nlohmann::json j_config;
 	bool _initJConfigObject();
 
 	///Finds the path to user files
@@ -172,19 +165,22 @@ private:
 	Time m_frame_time;
 	Time m_input_coolDown;
 
+	///Messenger
+	std::unique_ptr<Messenger> m_messenger;
+
 	std::unique_ptr<Window> m_window;
 	std::unique_ptr<EditorRender> m_editorRender;
 	std::unique_ptr<GameRender> m_gameRender;
+
 	///Current renderer
 	Render* m_current_renderer;
 
-	///Systems
+	///Systems and system ptrs container
 	std::unique_ptr<MovementSystem> m_movementSystem;
 	std::unique_ptr<TransformSystem> m_transformSystem;
 	std::unique_ptr<CollisionSystem> m_collisionSystem;
 	std::unique_ptr<AnimationSystem> m_animationSystem;
-
-	///System ptr container
+	///
 	std::vector<ComponentSystem*> m_systemContainer;
 
 	///Managers
@@ -194,17 +190,12 @@ private:
 	std::unique_ptr<ComponentManager> m_compMgr;
 	std::unique_ptr<IOManager> m_ioMgr;
 
-	///Messenger
-	Messenger m_messenger;
-
 	//Camera
 	std::unique_ptr<Camera> m_camera;
 
 	///GUI //SE_TODO: Let macro define is gui is active
 	std::vector<std::unique_ptr<se::gui::EngineGui>> m_engine_gui_container;
 	void _initGui();
-
-
 };
 }//namespace priv
 }//namespace se

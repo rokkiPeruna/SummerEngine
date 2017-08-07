@@ -1,6 +1,7 @@
 #include <gui/CTransformableEditor.h>
-#include <core/Engine.h>
 #include <components/CTransformable.h>
+#include <systems/TransformSystem.h>
+#include <utility/EditorFunctions.h>
 
 
 namespace se

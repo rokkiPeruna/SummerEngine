@@ -1,6 +1,8 @@
 #include <core/Messenger.h>
 #include <imgui/imgui.h>
+#include <core/gui_values.h>
 #include <core/Engine.h>
+#include <core/Messages.h>
 
 namespace se
 {

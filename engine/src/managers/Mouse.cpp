@@ -1,4 +1,5 @@
 #include <managers/Mouse.h>
+#include <SDL2/include/SDL.h>
 
 namespace se
 {

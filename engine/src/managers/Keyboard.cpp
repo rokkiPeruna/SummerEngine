@@ -1,5 +1,5 @@
 #include <managers/Keyboard.h>
-#include <core/Engine.h>
+#include <SDL2/include/SDL.h>
 
 namespace se
 {
@@ -16,7 +16,7 @@ Keyboard::~Keyboard()
 
 SEbool Keyboard::GetState(SEint key)
 {
-	return (m_key_state_struct[key]);
+	return static_cast<SEbool>(m_key_state_struct[key]);
 }
 
 }//namespace se

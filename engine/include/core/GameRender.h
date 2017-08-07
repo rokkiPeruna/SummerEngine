@@ -33,10 +33,10 @@ public:
 	void Initialize() override final {}
 	void Uninitialize()override final {}
 
-	void Update(SEfloat deltaTime) override final {}
+	void Update(SEfloat) override final {}
 
-	void OnEntityAdded(const Entity& entity) override final {}
-	void OnRendableComponentChanged(const Entity& entiy) override final {}
+	void OnEntityAdded(const Entity&) override final {}
+	void OnRendableComponentChanged(const Entity&) override final {}
 
 
 

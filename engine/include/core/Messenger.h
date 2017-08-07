@@ -24,6 +24,7 @@ enum class MESSAGE_TYPE_INTERNAL: SEint
 
 namespace priv
 {
+
 const SEint _messageLogType_console = 0x01;
 const SEint _messageLogType_file = 0x02;
 

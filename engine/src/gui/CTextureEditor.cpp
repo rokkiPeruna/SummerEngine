@@ -1,5 +1,4 @@
 #include <gui/CTextureEditor.h>
-#include <core/Engine.h>
 #include <components/CTexture.h>
 
 namespace se

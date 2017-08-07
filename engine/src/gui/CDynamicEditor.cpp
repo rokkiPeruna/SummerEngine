@@ -1,5 +1,4 @@
 #include <gui/CDynamicEditor.h>
-#include <core/Engine.h>
 #include <components/CDynamic.h>
 #include <systems/MovementSystem.h>
 

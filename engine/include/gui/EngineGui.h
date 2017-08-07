@@ -10,21 +10,18 @@
 #include <imgui/imgui.h>
 
 //SE includes:
+#include <core/Engine.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <ids/ComponentTypeList.h>
 #include <ids/SystemAndManagerIDList.h>
 #include <core/gui_values.h>
 #include <core/SE_exceptions.h>
-#include <managers/Entity.h>
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 
 namespace se
 {
-///Every gui class has pointer Engine -class
-namespace priv { class Engine; }
-
 namespace gui
 {
 ///Brief: EngineGui works as a base class for all other gui classes that partly implementate SE Engine's 

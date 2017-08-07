@@ -1,20 +1,14 @@
 #ifndef SE_CTRANSFORMABLE_H
 #define SE_CTRANSFORMABLE_H
 
-//Include standard library
 
-//Include external
-
-//Include se
+//SE includes:
 #include <components/Component.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace se
 {
-
-
 ///Brief : Position, rotation and scale. Every object has transformable component
-
 class CTransformable : public Component
 {
 public:
@@ -27,18 +21,11 @@ public:
 		, scale(_scale)
 		, points {}
 	{
-			
-			Mat4f translationMatrix(1.0f);
-			translationMatrix = glm::translate(translationMatrix, position);
-
-			Mat4f rotationMatrix(1.0f);
-			rotationMatrix = glm::rotate(rotationMatrix, rotation, Vec3f(0.0f, 0.0f, 1.0f));
-
-			Mat4f scaleMatrix(1.0f);
-			scaleMatrix = glm::scale(scaleMatrix, scale);
+			Mat4f translationMatrix = glm::translate(Mat4f(1.0f), position);
+			Mat4f rotationMatrix = glm::rotate(Mat4f(1.0f), rotation, Vec3f(0.0f, 0.0f, 1.0f));
+			Mat4f scaleMatrix = glm::scale(Mat4f(1.0f), scale);
 						
-			modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
-			
+			modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;		
 	};
 
 	Vec3f position;

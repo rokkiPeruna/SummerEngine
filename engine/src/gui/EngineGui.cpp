@@ -1,5 +1,4 @@
 #include <gui/EngineGui.h>
-#include <core/Engine.h>
 
 namespace se
 {

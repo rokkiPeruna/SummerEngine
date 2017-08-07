@@ -1,31 +1,22 @@
 #ifndef SE_CAMERA_H
 #define SE_CAMERA_H
 
-//Include Standard library
 
-//Include external
-
-//Include se
+//SE includes:
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
-#include <glm/gtc/matrix_transform.hpp>
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 
 namespace se
 {
-
 class Camera 
 {
-
 public:
-
 	///Default constructor
 	Camera();
-
 	///Desturctor
 	~Camera();
-
 	///Delete copy constructor and assignment operator
 	Camera(const Camera&) = delete;
 	void operator=(const Camera&) = delete;
@@ -37,8 +28,6 @@ public:
 	Mat4f GetCameraView();
 
 private:
-
-
 	///Where is the camera
 	Vec3f m_cameraPosition;
 	
@@ -67,10 +56,6 @@ private:
 	///Camera speed
 	SEfloat m_cam_speed;
 };
-
-
-
 }// !namespace se
-
 
 #endif // !camera

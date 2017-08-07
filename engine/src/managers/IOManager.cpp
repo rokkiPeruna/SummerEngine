@@ -34,7 +34,7 @@ void IOManager::Update()
 
 void IOManager::_handleEvents()
 {
-	SDL_Event event;
+	//SDL_Event event;
 }
 
 }//namespace priv

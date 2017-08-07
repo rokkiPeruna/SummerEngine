@@ -1,16 +1,9 @@
 #ifndef SE_EDITOR_RENDER_H
 #define SE_EDITOR_RENDER_H
 
-//Include standard library
-
-
-//Include external
-
 
 //Include SE
 #include <core/Render.h>
-
-
 
 ///Brief : Editor render won't create any static objects and will draw lines even to shapes 
 /// which would not othewise be drawn. 

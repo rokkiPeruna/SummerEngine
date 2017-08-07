@@ -1,7 +1,5 @@
 #include <managers/EntityManager.h>
 #include <managers/ComponentManager.h>
-#include <core/Engine.h>
-#include <nlohmann_json/json.hpp>
 #include <systems/TransformSystem.h>
 
 
@@ -100,7 +98,7 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	m_curr_free_entity_id = _findFreeEntityID();
 }
 
-void EntityManager::CreateEntityOnEditor(Entity& other, std::string name)
+void EntityManager::CreateEntityOnEditor(Entity&, std::string)
 {
 }
 
@@ -115,14 +113,14 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		m_entities_names_map.emplace(tmp, freeid);
 
 		//Add component types
-		auto& e = m_entities.at(freeid);
+		auto& entity = m_entities.at(freeid);
 		auto& itr = m_entity_templs_map.at(templateName + "_template").find(templateName + "_template");
 		for (auto c : (*itr))
 		{
 			if (c.count("_type"))
 			{
 				SEint type_as_int = c.at("_type");
-				e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
+				entity.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
 			}
 		}
 
@@ -291,7 +289,7 @@ SEint EntityManager::_loadSceneEntities()
 
 void EntityManager::_res_space_CTransfComponents(SEint largest_id)
 {
-	SEint safetyFactor = 2.0f;
+	SEint safetyFactor = 2;
 	TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
 }
 

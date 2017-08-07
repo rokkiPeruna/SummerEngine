@@ -8,6 +8,7 @@
 #include <systems/ComponentSystem.h>
 #include <components/CTexture.h>
 #include <managers/ResourceManager.h>
+#include <core/Render.h>
 
 namespace se
 {

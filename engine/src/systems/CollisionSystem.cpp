@@ -1,8 +1,6 @@
 #include <systems/CollisionSystem.h>
 #include <systems/TransformSystem.h>
-#include <core/Engine.h>
-#include <imgui/imgui.h>
-
+#include <managers/EntityManager.h>
 
 namespace se
 {
@@ -39,7 +37,7 @@ void CollisionSystem::Uninitialize()
 
 }
 
-void CollisionSystem::Update(SEfloat deltaTime)
+void CollisionSystem::Update(SEfloat)
 {
 	if (m_cCollidables.empty())
 		return;

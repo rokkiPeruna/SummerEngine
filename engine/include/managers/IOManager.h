@@ -1,7 +1,6 @@
 #ifndef SE_IO_MANAGER_H
 #define SE_IO_MANAGER_H
 
-
 //SE includes:
 #include <managers/Manager.h>
 #include <managers/IOLowLevelInputBinding.h>

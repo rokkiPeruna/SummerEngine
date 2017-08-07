@@ -1,6 +1,6 @@
 #include <gui/CShapeEditor.h>
-#include <core/Engine.h>
 #include <systems/TransformSystem.h>
+#include <core/Render.h>
 
 namespace se
 {
@@ -55,7 +55,7 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		if (ImGui::Button("Add indie"))
 		{
 			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(comp.points.size() + 1);
+			comp = CShape(static_cast<SEushort>(comp.points.size()) + 1);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
 			tmpRender->OnEntityAdded(*tmpEntity);
@@ -63,7 +63,7 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		if (ImGui::Button("Remove indice") && comp.points.size() > 3)
 		{
 			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(comp.points.size() - 1);
+			comp = CShape(static_cast<SEushort>(comp.points.size()) - 1);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
 			tmpRender->OnEntityAdded(*tmpEntity);

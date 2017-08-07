@@ -2,11 +2,16 @@
 #include <vld.h>
 
 //Essential includes
+#include <string>
 #include <memory>
 #include <core/Engine.h>
 
 int main(int argc, char *argv[])
 {
+	//Print enviroment arguments to console
+	for (int i = 0; i < argc; ++i)
+		std::cout << *argv[i] << std::endl;
+
 	//try
 	//{
 		///This is the name of the current project. Name MUST match folder name for desired project in 'projects/' folder. 

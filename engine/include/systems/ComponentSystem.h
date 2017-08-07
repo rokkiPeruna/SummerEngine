@@ -7,9 +7,13 @@
 #include <queue>
 
 //SE includes:
+#include <managers/Entity.h>
+#include <core/Engine.h>
+#include <core/Messages.h>
 #include <utility/Typedefs.h>
+#include <utility/Math.h>
 #include <components/Component.h>
-#include <managers/EntityManager.h>
+#include <ids/ComponentTypeList.h>
 
 namespace se
 {

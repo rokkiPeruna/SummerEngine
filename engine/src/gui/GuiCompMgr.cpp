@@ -1,9 +1,7 @@
 #include <gui/GuiCompMgr.h>
-#include <core/Engine.h>
 #include <components/Component.h>
-#include <ids/ComponentTypeList.h>
 #include <gui/CompEditorGui.h>
-#include <nlohmann_json/json.hpp>
+
 
 namespace se
 {

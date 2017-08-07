@@ -1,7 +1,5 @@
 #include <managers/SceneManager.h>
-#include <core/Engine.h>
 #include <systems/ComponentSystem.h>
-#include <core/Messages.h>
 #include <utility/JsonUtilFunctions.h>
 
 namespace se
@@ -115,7 +113,7 @@ SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint widt
 	return true;
 }
 
-void SceneManager::SaveScene(std::string scenename, SCENE_TYPE type, SEint width, SEint heigth)
+void SceneManager::SaveScene(std::string, SCENE_TYPE, SEint, SEint)
 {
 
 

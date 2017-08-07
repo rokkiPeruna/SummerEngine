@@ -1,17 +1,9 @@
 #include <systems/TransformSystem.h>
 #include <systems/MovementSystem.h>
-#include <core/Messages.h>
-#include <imgui/imgui.h>
-#include <ids/ComponentTypeList.h>
-
-#include <core/Engine.h>
-
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 #include <utility/EditorFunctions.h>
 
-#include <utility/Math.h>
-#include <glm/glm.hpp>
 
 namespace se
 {
@@ -53,7 +45,7 @@ void TransformSystem::Uninitialize()
 
 }
 
-void TransformSystem::Update(SEfloat deltaTime)
+void TransformSystem::Update(SEfloat)
 {
 	//Check messages from movement system to see if model matrix needs to be recalculated
 	for (auto& m : MovementSystem::Messages)

@@ -1,16 +1,16 @@
 #include <core/Engine.h>
-#include <iostream>
-#include <istream>
-#include <ostream>
-#include <fstream>
-#include <iomanip>
-#include <exception>
-#include <utility/JsonUtilFunctions.h>
-#include <imgui/imgui.h>
-#include <core/imgui_impl_sdl_gl3.h>
 
-#include <managers/Keyboard.h>
-#include <managers/Mouse.h>
+
+#include <imgui/imgui.h>
+
+///Core includes:
+#include <core/SE_exceptions.h>
+#include <core/gui_values.h>
+#include <core/imgui_impl_sdl_gl3.h>
+#include <core/Window.h>
+#include <core/Camera.h>
+#include <core/EditorRender.h>
+#include <core/GameRender.h>
 
 
 ///System includes:
@@ -23,11 +23,16 @@
 
 ///Manager includes:
 #include <managers/IOManager.h>
+#include <managers/Keyboard.h>
+#include <managers/Mouse.h>
 #include <managers/SceneManager.h>
 #include <managers/EntityManager.h>
 #include <managers/ComponentManager.h>
 #include <managers/ResourceManager.h>
 
+
+///Utility includes:
+#include <utility/JsonUtilFunctions.h>
 
 ///Engine graphical user interface includes
 //SE_TODO: Move these and their creation logic to separate class!
@@ -63,8 +68,10 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_engine_clock()
 	, m_frame_time()
 	, m_input_coolDown()
-	, m_window(new priv::Window)
-	, m_messenger()
+	, m_messenger(std::make_unique<Messenger>())
+	, m_window(std::make_unique<Window>())
+	, m_editorRender(std::make_unique<EditorRender>(*this))
+	, m_gameRender(std::make_unique<GameRender>(*this))
 	, m_current_renderer(nullptr)
 	, m_camera(std::make_unique<Camera>())
 
@@ -73,8 +80,6 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_movementSystem(std::make_unique<MovementSystem>(*this))
 	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
 	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
-	, m_editorRender(std::make_unique<EditorRender>(*this))
-	, m_gameRender(std::make_unique<GameRender>(*this))
 
 	/*MANAGERS*/
 	, m_entityMgr(std::make_unique<EntityManager>(*this))
@@ -115,7 +120,7 @@ void Engine::Initialize()
 
 	m_window->Initialize();
 
-	m_messenger.Initialize();
+	m_messenger->Initialize();
 
 
 	_initManagers();
@@ -321,7 +326,6 @@ bool Engine::_gameLoop()
 	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiSetCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(200.f, 100.f), ImGuiSetCond_Always);
 
-	SDL_Event event;
 	SEbool gameloop = true;
 	m_engine_clock.restart();
 
@@ -408,7 +412,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			_updateMgrs();
 
 			//Messenger should be last to update before render
-			m_messenger.PrintMessages(_messageLogType_console);
+			m_messenger->PrintMessages(_messageLogType_console);
 
 			// Rendering
 			glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
@@ -428,7 +432,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 		std::cout << "Failure in EditorLoop, check crash dump for messages!!" << std::endl;
 		std::string crash_dump_file_n = "msg_crash_dump";
 		std::string suffix = ".txt";
-		m_messenger.CrashDumbToFile(m_path_to_user_files, crash_dump_file_n, suffix);
+		m_messenger->CrashDumbToFile(m_path_to_user_files, crash_dump_file_n, suffix);
 		exitProgram = true;
 		return;
 	}
@@ -439,7 +443,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 		std::cout << "Failure in EditorLoop, check crash dump for messages!!" << std::endl;
 		std::string crash_dump_file_n = "msg_crash_dump";
 		std::string suffix = ".txt";
-		m_messenger.CrashDumbToFile(m_path_to_user_files, crash_dump_file_n, suffix);
+		m_messenger->CrashDumbToFile(m_path_to_user_files, crash_dump_file_n, suffix);
 		exitProgram = true;
 		return;
 	}

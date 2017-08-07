@@ -1,6 +1,4 @@
 #include <systems/AnimationSystem.h>
-#include <core/Engine.h>
-#include <imgui/imgui.h>
 
 namespace se
 {
@@ -49,7 +47,7 @@ void AnimationSystem::Uninitialize()
 	m_texture_map.clear();
 }
 
-void AnimationSystem::Update(SEfloat deltaTime)
+void AnimationSystem::Update(SEfloat)
 {
 
 }

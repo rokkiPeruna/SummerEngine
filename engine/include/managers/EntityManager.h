@@ -11,14 +11,14 @@
 
 //SE includes:
 #include <managers/Manager.h>
-#include <components/Component.h>
 #include <managers/Entity.h>
+#include <managers/ComponentManager.h>
+#include <components/Component.h>
 #include <managers/Scene.h>
-#include <core/Messages.h>
+#include <core/Render.h>
 #include <utility/Clock.h>
 #include <utility/Time.h>
 #include <utility/JsonUtilFunctions.h>
-
 
 
 namespace se

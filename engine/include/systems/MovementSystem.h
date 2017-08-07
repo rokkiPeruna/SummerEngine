@@ -4,8 +4,8 @@
 
 //SE includes:
 #include <systems/ComponentSystem.h>
-
 #include <components/CDynamic.h>
+#include <managers/EntityManager.h>
 
 namespace se
 {

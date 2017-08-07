@@ -1,11 +1,8 @@
 #include <managers/ComponentManager.h>
 #include <gui/CompEditorGui.h>	//SE_TODO: Break this dependency?
 #include <components/Component.h>
-#include <imgui/imgui.h>
-#include <nlohmann_json/json.hpp>
 #include <systems/ComponentSystem.h>
 #include <managers/Entity.h>
-#include <core/Engine.h>
 
 
 namespace se
@@ -167,7 +164,7 @@ void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE 
 		return;
 	}
 	//Check that if removed component is same m_curr_component, make m_curr_component nullptr
-	if (Engine::ComponentTypeToSystemPtr.at(component_type)->GetPlainComponentPtr(component_type, entity.components.at(component_type)) == m_curr_component);
+	//if (Engine::ComponentTypeToSystemPtr.at(component_type)->GetPlainComponentPtr(component_type, entity.components.at(component_type)) == m_curr_component);
 		//SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
 
 	//Remove from run-time system and entity. Note that system responsible for handling the component to be added, is also

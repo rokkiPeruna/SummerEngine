@@ -1,24 +1,25 @@
 #ifndef SE_RENDER_H
 #define SE_RENDER_H
 
-//Standard library includes
-
-//External library includes
+//External includes:
+#include <glm/gtc/matrix_transform.hpp>
 
 //SE includes
+#include <core/Engine.h>
+#include <core/gui_values.h>
+#include <core/Camera.h>
 #include <GLES3/glew.h>
 #include <managers/Entity.h>
 #include <managers/Resource.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 
-///Brief: virual base class for all other renders (renderers)
 
 namespace se
 {
 namespace priv
 {
-class Engine;
+///Brief: Virtual base class for all other renders (renderers)
 class Render
 {
 public:
@@ -46,14 +47,7 @@ protected:
 
 };
 
-
-
-
-
 }// !namespace priv
-
 }// !namespace se
-
-
 
 #endif //! SE_RENDER_H

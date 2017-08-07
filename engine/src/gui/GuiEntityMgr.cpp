@@ -1,7 +1,6 @@
 #include <gui/GuiEntityMgr.h>
 #include <gui/GuiCompMgr.h>
 #include <typeindex>
-#include <core/Engine.h>
 
 namespace se
 {

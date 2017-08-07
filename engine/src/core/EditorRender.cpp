@@ -1,7 +1,7 @@
 #include <core/EditorRender.h>
-#include <core/Engine.h>
 #include <systems/AnimationSystem.h>
 #include <systems/TransformSystem.h>
+
 
 namespace se
 {
@@ -55,12 +55,12 @@ SEfloat texCoords[] = {
 	0.0f, 1.0f
 };
 
-void EditorRender::Update(SEfloat deltaTime)
+void EditorRender::Update(SEfloat)
 {
 	auto shader = CurrentShader->GetShaderID();
 	glUseProgram(shader);
 	SEuint textureLocation = glGetUniformLocation(shader, "fragment_texture");
-	SEuint transformLocation = glGetUniformLocation(shader, "transform");
+	//SEuint transformLocation = glGetUniformLocation(shader, "transform");
 
 	//Uniform locations
 	SEuint model_m_loc = glGetUniformLocation(shader, "model");
@@ -127,7 +127,7 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	//If we have shape, we can at least draw it as black
 	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
 
-	SEuint tex_handle = -1;
+	SEuint tex_handle = SEuint_max;
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
 	{
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
@@ -141,7 +141,7 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	}
 
 	//If there is no approriate batch, create one
-	m_dyn_rend_batches.emplace_back(DynRenderBatch(shape->indices.size()));
+	m_dyn_rend_batches.emplace_back(DynRenderBatch(static_cast<SEuint>(shape->indices.size())));
 	auto& b = m_dyn_rend_batches.back();
 	b.entity_ids.emplace_back(entity.id);
 
@@ -154,11 +154,11 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	);
 
 	//Vertex positions
-	b.CreateBuffer(b.pos_buffer, shape->points.size() * sizeof(shape->points.at(0)), shape->points.data());
+	b.CreateBuffer(b.pos_buffer, static_cast<SEuint>(shape->points.size()) * sizeof(shape->points.at(0)), shape->points.data());
 	b.BindAttribPtr(SHADER_ATTRIB_INDEX::POSITION, 3);
 
 	//Indices
-	b.CreateBuffer(b.ind_buffer, shape->indices.size() * sizeof(shape->indices.at(0)), shape->indices.data(), true);
+	b.CreateBuffer(b.ind_buffer, static_cast<SEuint>(shape->indices.size()) * sizeof(shape->indices.at(0)), shape->indices.data(), true);
 	b.BindAttribPtr(SHADER_ATTRIB_INDEX::INDICES, 1);
 
 	//Check for texture component
@@ -182,7 +182,7 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 
 	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
 
-	SEuint tex_handle = -1;
+	SEuint tex_handle = SEuint_max;
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
 	{
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
@@ -191,9 +191,9 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 	if(m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
 	{
 		auto& temp = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
-		for (SEuint i = 0; i < temp.size(); ++i)
+		for (SEint i = 0; i < temp.size(); ++i)
 		{
-			if (entity.id == temp.at(i)) 
+			if (entity.id == static_cast<SEuint>(temp.at(i))) 
 			{
 				temp.erase(temp.begin() + i);
 				break;
@@ -202,9 +202,5 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 	}
 }
 
-
-
 }// !namespace priv
-
-
 }// !namespace se
