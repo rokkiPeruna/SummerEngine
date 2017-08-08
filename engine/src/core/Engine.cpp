@@ -144,7 +144,9 @@ void Engine::EngineUpdate()
 	while (!exitProgram)
 	{
 		if (!m_inEditorLoop)
+		{
 			m_inEditorLoop = _gameLoop();
+		}
 		else
 		{
 			m_sceneMgr->ReinitScene();
@@ -244,8 +246,6 @@ void Engine::_initManagers()
 
 void Engine::_initSystems()
 {
-	m_editorRender->Initialize();
-	m_gameRender->Initialize();
 
 	m_transformSystem->Initialize();
 	m_systemContainer.emplace_back(m_transformSystem.get());
@@ -322,6 +322,12 @@ void Engine::_updateGUI()
 
 bool Engine::_gameLoop()
 {
+
+	m_current_renderer = m_gameRender.get();
+	assert(m_current_renderer);
+	m_current_renderer->Initialize();
+
+
 	ImVec4 clear_color = ImColor(114, 144, 154);
 	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiSetCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(200.f, 100.f), ImGuiSetCond_Always);
@@ -332,6 +338,7 @@ bool Engine::_gameLoop()
 	SEfloat second = 0.0f;
 	SEint frame_counter = 0;
 	std::string fps = "";
+
 
 	while (gameloop)
 	{
@@ -356,9 +363,6 @@ bool Engine::_gameLoop()
 		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 
-
-
-
 		_handleGameLoopEvents(gameloop);
 
 		_updateMgrs();
@@ -376,11 +380,13 @@ bool Engine::_gameLoop()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
-		m_editorRender->Update(deltaTime);
+		m_gameRender->Update(deltaTime);
 		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 
 	}
+
+	m_current_renderer->Uninitialize();
 	return true;
 }
 
@@ -389,6 +395,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 	//Set current renderer to be editor type
 	m_current_renderer = m_editorRender.get();
 	assert(m_current_renderer);
+
+	m_current_renderer->Initialize();
 
 	ImVec4 clear_color = ImColor(114, 144, 154);
 
@@ -421,7 +429,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 
 			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
 			m_camera->Update(deltaTime);
-			m_editorRender->Update(deltaTime);
+			m_current_renderer->Update(deltaTime);
 			ImGui::Render();
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}
@@ -447,6 +455,9 @@ void Engine::_editorLoop(SEbool& exitProgram)
 		exitProgram = true;
 		return;
 	}
+
+	m_current_renderer->Uninitialize();
+
 }
 
 SEbool Engine::_handleEditorEvents(SEbool& editorloop)

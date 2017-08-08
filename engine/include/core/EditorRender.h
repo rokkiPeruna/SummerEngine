@@ -15,13 +15,6 @@ namespace se
 
 namespace priv
 { 
-enum class SHADER_ATTRIB_INDEX : SEuint
-{
-	POSITION,
-	COLOR,
-	TEX_COORDS,
-	INDICES
-};
 
 struct DynRenderBatch //FOR single element at this point
 {

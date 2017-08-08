@@ -99,6 +99,9 @@ void EditorRender::Update(SEfloat)
 		for (auto& e_id : b.entity_ids)
 		{
 			//UGLY WAY FOR TEX COORDS
+
+			if (entities.at(e_id).components.count(COMPONENT_TYPE::TEXTURE))
+			{
 			auto tex = GetTextureComponent(entities.at(e_id).components.at(COMPONENT_TYPE::TEXTURE));
 			SEint width = (tex->width) ? tex->width : tex->parent_img_w;
 			SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
@@ -124,6 +127,7 @@ void EditorRender::Update(SEfloat)
 			//glBindBuffer(GL_ARRAY_BUFFER, 0);
 			//glEnableVertexAttribArray(b.texco_buffer);
 			//UGLY WAY FOR TEX COORDS ENDS
+			}
 
 			Mat4f model = TransformSystem::TransformableComponents.at(e_id).modelMatrix;
 			glUniformMatrix4fv

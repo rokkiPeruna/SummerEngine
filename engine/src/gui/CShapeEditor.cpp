@@ -31,7 +31,7 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		if (ImGui::Button("Triangle"))
 		{
 			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape();
+			comp = CShape(3);
 			comp.my_Transform = id;
 			comp.ownerID = owner_id;
 			tmpRender->OnEntityAdded(*tmpEntity);

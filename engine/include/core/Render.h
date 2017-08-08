@@ -1,3 +1,4 @@
+
 #ifndef SE_RENDER_H
 #define SE_RENDER_H
 
@@ -19,7 +20,17 @@ namespace se
 {
 namespace priv
 {
+
 ///Brief: Virtual base class for all other renders (renderers)
+
+enum class SHADER_ATTRIB_INDEX : SEuint
+{
+	POSITION,
+	COLOR,
+	TEX_COORDS,
+	INDICES
+};
+
 class Render
 {
 public:
@@ -42,8 +53,6 @@ protected:
 	///Reference to Engine -class
 	Engine& m_engine;
 
-	// SE_TODO : Add some logic to engine (set / get current render etc..)
-	//(atm engine is hevaily being modified)
 
 };
 
