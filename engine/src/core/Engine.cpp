@@ -11,6 +11,7 @@
 #include <core/Camera.h>
 #include <core/EditorRender.h>
 #include <core/GameRender.h>
+#include <core/DebugRender.h>
 
 
 ///System includes:
@@ -72,6 +73,7 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_window(std::make_unique<Window>())
 	, m_editorRender(std::make_unique<EditorRender>(*this))
 	, m_gameRender(std::make_unique<GameRender>(*this))
+	, m_debugRender(std::make_unique<DebugRender>(*this))
 	, m_current_renderer(nullptr)
 	, m_camera(std::make_unique<Camera>())
 
@@ -246,6 +248,7 @@ void Engine::_initSystems()
 {
 	m_editorRender->Initialize();
 	m_gameRender->Initialize();
+	m_debugRender->Initialize();
 
 	m_transformSystem->Initialize();
 	m_systemContainer.emplace_back(m_transformSystem.get());
@@ -424,6 +427,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
 			m_camera->Update(deltaTime);
 			m_editorRender->Update(deltaTime);
+			m_debugRender->Update(deltaTime);
 			ImGui::Render();
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}

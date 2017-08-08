@@ -11,6 +11,7 @@
 
 //SE includes:
 #include <core/Engine.h>
+#include <core/DebugRender.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <ids/ComponentTypeList.h>

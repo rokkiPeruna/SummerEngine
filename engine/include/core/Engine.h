@@ -44,6 +44,7 @@ class Messenger;
 class Render;
 class EditorRender;
 class GameRender;
+class DebugRender;
 
 ///SYSTEMS
 class ComponentSystem;
@@ -106,7 +107,7 @@ public:
 
 	EditorRender& GetEditorRender() { return *m_editorRender; }
 	GameRender& GetGameRender() { return *m_gameRender; }
-
+	DebugRender& GetDebugRender() { return *m_debugRender; }
 
 	Camera* GetCamera() { return m_camera.get(); }
 
@@ -171,6 +172,7 @@ private:
 	std::unique_ptr<Window> m_window;
 	std::unique_ptr<EditorRender> m_editorRender;
 	std::unique_ptr<GameRender> m_gameRender;
+	std::unique_ptr<DebugRender> m_debugRender;
 
 	///Current renderer
 	Render* m_current_renderer;

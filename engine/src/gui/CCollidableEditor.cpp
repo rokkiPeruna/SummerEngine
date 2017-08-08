@@ -1,5 +1,6 @@
 #include <gui/CCollidableEditor.h>
 #include <systems/CollisionSystem.h>
+#include <systems/TransformSystem.h>
 
 namespace se
 {
@@ -25,6 +26,8 @@ void CCollidableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_cont
 
 		component_obj.value().at("min") = comp->aabb.x;
 		component_obj.value().at("max") = comp->aabb.y;
+
+		m_engine.GetDebugRender().AddDebugVertices(comp->collision_polygon, priv::TransformSystem::TransformableComponents.at(comp->ownerID).modelMatrix);
 	}
 }
 

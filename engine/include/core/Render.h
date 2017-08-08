@@ -19,6 +19,14 @@ namespace se
 {
 namespace priv
 {
+enum class SHADER_ATTRIB_INDEX : SEuint
+{
+	POSITION,
+	COLOR,
+	TEX_COORDS,
+	INDICES
+};
+
 ///Brief: Virtual base class for all other renders (renderers)
 class Render
 {
