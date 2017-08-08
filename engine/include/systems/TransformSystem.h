@@ -53,15 +53,15 @@ public:
 	void ClearComponentContainers() override final;
 
 	///OnEntityAdded checks if entity has components that need to be builded to this system
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
 	///Creates component to entity and add it to container and jsonobject
-	SEint CreateComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) override final;
+	SEint CreateComponent(Entity& entity, COMPONENT_TYPE, Dataformat_itr& entity_obj) override final;
 	
 	///Removes component from entity and container and json object
-	void RemoveComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) override final;
+	void RemoveComponent(Entity& entity, COMPONENT_TYPE, Dataformat_itr& entity_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 

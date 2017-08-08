@@ -46,7 +46,9 @@ void EditorRender::Initialize()
 
 void EditorRender::Uninitialize()
 {
-
+	//Flush all batches
+	m_dyn_rend_batches.clear();
+	m_batch_value_map.clear();
 }
 
 void EditorRender::Update(SEfloat)
@@ -98,32 +100,42 @@ void EditorRender::Update(SEfloat)
 
 		for (auto& e_id : b.entity_ids)
 		{
-			//UGLY WAY FOR TEX COORDS
-			auto tex = GetTextureComponent(entities.at(e_id).components.at(COMPONENT_TYPE::TEXTURE));
-			SEint width = (tex->width) ? tex->width : tex->parent_img_w;
-			SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
-
-			Vec2f first(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
-			Vec2f sec(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
-			Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
-			Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
-
-			SEfloat tex_coords[] =
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UGLY WAY FOR TEX COORDS
+			SEfloat tex_coords[8];			 
+			if (entities.at(e_id).components.count(COMPONENT_TYPE::TEXTURE))
 			{
-				fourth.x, fourth.y,
-				third.x, third.y,
-				sec.x, sec.y,
-				first.x, first.y
-			};
+				auto tex = GetTextureComponent(entities.at(e_id).components.at(COMPONENT_TYPE::TEXTURE));
+				SEint width = (tex->width) ? tex->width : tex->parent_img_w;
+				SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
 
-			
-			//SEuint attr = static_cast<SEuint>(SHADER_ATTRIB_INDEX::TEX_COORDS);
+				Vec2f first(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
+				Vec2f sec(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
+				Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
+				Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
+
+				tex_coords[0] = fourth.x;
+				tex_coords[1] = fourth.y;
+				tex_coords[2] = third.x;
+				tex_coords[3] = third.y;
+				tex_coords[4] = sec.x;
+				tex_coords[5] = sec.y;
+				tex_coords[6] = first.x;
+				tex_coords[7] = first.y;
+			}
+			else
+			{
+				tex_coords[0] = 0.0f;
+				tex_coords[1] = 0.0f;
+				tex_coords[2] = 1.0f;
+				tex_coords[3] = 0.0f;
+				tex_coords[4] = 1.0f;
+				tex_coords[5] = 1.0f;
+				tex_coords[6] = 0.0f;
+				tex_coords[7] = 1.0f;
+			}
 			glBindBuffer(GL_ARRAY_BUFFER, b.texco_buffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tex_coords), tex_coords);
-			//glVertexAttribPointer(b.texco_buffer, 2, GL_FLOAT, GL_FALSE, 0/*2 * sizeof(SEfloat)*/, &tex_coords[0]);
-			//glBindBuffer(GL_ARRAY_BUFFER, 0);
-			//glEnableVertexAttribArray(b.texco_buffer);
-			//UGLY WAY FOR TEX COORDS ENDS
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UGLY WAY FOR TEX COORDS ENDS
 
 			Mat4f model = TransformSystem::TransformableComponents.at(e_id).modelMatrix;
 			glUniformMatrix4fv
@@ -230,5 +242,10 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 	}
 }
 
+void EditorRender::ClearRenderBatches()
+{
+	m_dyn_rend_batches.clear();
+	m_batch_value_map.clear();
+}
 }// !namespace priv
 }// !namespace se

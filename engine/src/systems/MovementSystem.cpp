@@ -69,19 +69,19 @@ void MovementSystem::ClearComponentContainers()
 	m_free_cDynamics_indices = {};
 }
 
-void MovementSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
+void MovementSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 {
-	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
+	if (entity.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::DYNAMIC, entity_obj, m_cDynamics, m_free_cDynamics_indices);
+		_onEntityAdded_helper(entity, COMPONENT_TYPE::DYNAMIC, entity_obj, m_cDynamics, m_free_cDynamics_indices);
 	}
 }
 
-void MovementSystem::OnEntityRemoved(Entity& e)
+void MovementSystem::OnEntityRemoved(Entity& entity)
 {
-	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
+	if (entity.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		m_free_cDynamics_indices.push(e.components.at(COMPONENT_TYPE::DYNAMIC));
+		m_free_cDynamics_indices.push(entity.components.at(COMPONENT_TYPE::DYNAMIC));
 	}
 }
 

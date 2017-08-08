@@ -38,7 +38,7 @@ public:
 	void OnEntityAdded(const Entity&) override final {}
 	void OnRendableComponentChanged(const Entity&) override final {}
 
-
+	virtual void ClearRenderBatches() {}
 
 };
 

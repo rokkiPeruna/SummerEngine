@@ -290,7 +290,11 @@ SEint EntityManager::_loadSceneEntities()
 void EntityManager::_res_space_CTransfComponents(SEint largest_id)
 {
 	SEint safetyFactor = 2;
-	TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
+	if (largest_id)
+		TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
+	else
+		TransformSystem::TransformableComponents.resize(100 * safetyFactor);
+
 }
 
 SEint EntityManager::_findFreeEntityID()

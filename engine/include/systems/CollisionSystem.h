@@ -36,9 +36,9 @@ public:
 
 	void ClearComponentContainers() override final;
 
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
 

@@ -114,6 +114,8 @@ public:
 	///the batch is changed
 	void OnRendableComponentChanged(const Entity& entiy) override final;
 
+	void ClearRenderBatches() override final;
+
 	void AddDynRenderBatch(DynRenderBatch&& batch)
 	{
 		m_dyn_rend_batches.emplace_back(batch);

@@ -290,6 +290,8 @@ void Engine::_updateSystems(SEfloat deltaTime)
 {
 	m_movementSystem->Update(deltaTime);
 
+	m_animationSystem->Update(deltaTime);
+
 	m_transformSystem->Update(deltaTime);
 
 	m_collisionSystem->Update(deltaTime);

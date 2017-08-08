@@ -86,21 +86,21 @@ void CollisionSystem::ClearComponentContainers()
 	m_free_cCollidables_indices = {};
 }
 
-void CollisionSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
+void CollisionSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 {
-	if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
+	if (entity.components.count(COMPONENT_TYPE::COLLIDABLE))
 	{
-		SEint index = _onEntityAdded_helper(e, COMPONENT_TYPE::COLLIDABLE, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		SEint index = _onEntityAdded_helper(entity, COMPONENT_TYPE::COLLIDABLE, entity_obj, m_cCollidables, m_free_cCollidables_indices);
 		///Initialize CCollidable's run-time-only value
-		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(e.id).modelMatrix;
+		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(entity.id).modelMatrix;
 	}
 }
 
-void CollisionSystem::OnEntityRemoved(Entity& e)
+void CollisionSystem::OnEntityRemoved(Entity& entity)
 {
-	if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
+	if (entity.components.count(COMPONENT_TYPE::COLLIDABLE))
 	{
-		m_free_cCollidables_indices.push(e.components.at(COMPONENT_TYPE::COLLIDABLE));
+		m_free_cCollidables_indices.push(entity.components.at(COMPONENT_TYPE::COLLIDABLE));
 	}
 }
 

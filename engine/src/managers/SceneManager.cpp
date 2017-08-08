@@ -128,6 +128,9 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 	}
 	m_sceneJsonObject.clear();
 
+	//Delete current renderer's render batches
+	m_engine.GetCurrentRenderer()->ClearRenderBatches();
+
 	try { util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id); }
 	catch (const se_exception& exc)
 	{

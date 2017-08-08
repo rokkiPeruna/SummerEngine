@@ -37,6 +37,7 @@ public:
 	virtual void OnEntityAdded(const Entity& entity) = 0;
  	virtual void OnRendableComponentChanged(const Entity& entiy) = 0;
 
+	virtual void ClearRenderBatches() = 0;
 
 protected:
 	///Reference to Engine -class

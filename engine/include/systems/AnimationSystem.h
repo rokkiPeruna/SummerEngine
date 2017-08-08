@@ -7,6 +7,7 @@
 //SE includes:
 #include <systems/ComponentSystem.h>
 #include <components/CTexture.h>
+#include <components/CAnimation.h>
 #include <managers/ResourceManager.h>
 #include <core/Render.h>
 
@@ -15,13 +16,18 @@ namespace se
 ///Getter method for CTexture components
 CTexture* GetTextureComponent(SEint index);
 
+///Getter method for CTexture components
+CAnimation* GetAnimationComponent(SEint index);
+
 namespace priv
 {
 ///Brief: SE_TODO: Add description
 class AnimationSystem : public ComponentSystem
 {
-	//Friend getter method for CMovables components
+	//Friend getter method for CTexture components
 	friend CTexture* se::GetTextureComponent(SEint index);
+	//Friend getter method for CAnimation components
+	friend CAnimation* se::GetAnimationComponent(SEint index);
 
 public:
 	///Default constructor.
@@ -41,9 +47,9 @@ public:
 
 	void ClearComponentContainers() override final;
 
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
 	void SetTextureResourceNames(const std::vector<std::string>& tex_names) { m_tex_res_names = { tex_names }; }
 
@@ -66,6 +72,9 @@ public:
 private:
 	std::vector<CTexture> m_cTextures;
 	std::queue<SEint> m_free_cTexture_indices;
+
+	std::vector<CAnimation> m_cAnimations;
+	std::queue<SEint> m_free_cAnimation_indices;
 
 	///Const string naming the default texture
 	const std::string m_def_tex_name;
