@@ -23,9 +23,10 @@ namespace util
 extern Vec2f ScreenCoordsToNormOpenGLCoords(SEint scr_x, SEint scr_y, Vec2i win_size, Vec3f cam_position);
 
 
-///Add points to engine's debug draw. .....
-
-extern SEbool AddToDebugLines(const std::vector<Vec2f>& points);
+inline void SwitchBoolean(SEbool& bool_to_switch)
+{
+	bool_to_switch = (bool_to_switch) ? false : true;
+}
 
 }//namespace util
 }//namespace se

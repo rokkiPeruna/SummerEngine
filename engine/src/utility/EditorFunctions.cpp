@@ -33,5 +33,6 @@ Vec2f ScreenCoordsToNormOpenGLCoords(SEint scr_x, SEint scr_y, Vec2i win_size, V
 	);
 
 }
+
 }//namespace util
 }//namespace se

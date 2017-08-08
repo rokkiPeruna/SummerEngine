@@ -81,6 +81,7 @@ set(CORE_FILES
 	include/core/Messenger.h
 	src/core/Messenger.cpp
 	include/core/gui_values.h
+	src/core/gui_values.cpp
 	include/core/SE_exceptions.h
     include/core/Camera.h
     src/core/Camera.cpp

@@ -29,8 +29,8 @@ void GuiEntityMgr::Update()
 	assert(m_comp_mgr);
 
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Entity editor", &_gui_show_entity_comp_mgr_window); ImGui::SameLine();
+	ImGui::SetNextWindowPos(ImVec2(win_width / 2, win_heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Entity editor", &show_entity_comp_mgr_window); ImGui::SameLine();
 	ImGui::Text(m_gui_scene_name.c_str());
 	ImGui::Separator();
 
@@ -90,7 +90,7 @@ void GuiEntityMgr::Update()
 				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_entity_mgr->GetEntities().at(e.second).id);
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated
 				m_gui_comp_mgr->InvalidateComponentObj();
-				_gui_show_component_mgr_window = true;
+				show_component_mgr_window = true;
 			}
 		}
 	}

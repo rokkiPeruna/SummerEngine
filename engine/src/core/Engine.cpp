@@ -34,6 +34,7 @@
 
 ///Utility includes:
 #include <utility/JsonUtilFunctions.h>
+#include <utility/EditorFunctions.h>	//SE_TODO: Remove this when gui moves to it's own class
 
 ///Engine graphical user interface includes
 //SE_TODO: Move these and their creation logic to separate class!
@@ -217,8 +218,8 @@ void Engine::_initAndApplyEngineSettings()
 			windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
 
 		//Set window size to global values for GUI
-		//_gui_width = windata.width;
-		//_gui_heigth = windata.heigth;
+		//win_width = windata.width;
+		//win_heigth = windata.heigth;
 	}
 
 	//Initialize imgui IO. This file will hold users preference window positions and sizes. SE_TODO: Create switch for editor mode and deploy mode builds
@@ -307,12 +308,20 @@ void Engine::_updateSystems(SEfloat deltaTime)
 void Engine::_updateGUI()
 {
 	//Engine window in editor
-	if (se::gui::_gui_show_main_window)
+	if (se::gui::show_main_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(se::gui::_gui_width / 2, se::gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(se::gui::win_width / 2, se::gui::win_heigth / 2), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");
+
+		if (ImGui::Button("Draw AABBs"))
+			util::SwitchBoolean(gui::debug_draw_values::drawAABBs);
+		if (ImGui::Button("Draw coll polys"))
+			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys);
+		if (ImGui::Button("Draw shapes"))
+			util::SwitchBoolean(gui::debug_draw_values::drawShapes);
+
 		ImGui::Separator();
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
@@ -376,7 +385,7 @@ bool Engine::_gameLoop()
 		// Rendering
 
 
-		glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
+		glViewport(0, 0, se::gui::win_width, se::gui::win_heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -420,7 +429,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			m_messenger->PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
+			glViewport(0, 0, se::gui::win_width, se::gui::win_heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -478,7 +487,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 				break;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				se::gui::_gui_show_main_window = (se::gui::_gui_show_main_window) ? false : true;
+				se::gui::show_main_window = (se::gui::show_main_window) ? false : true;
 				break;
 
 			default:
@@ -508,7 +517,7 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				m_inEditorLoop = true;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				se::gui::_gui_show_main_window = (se::gui::_gui_show_main_window) ? false : true;
+				se::gui::show_main_window = (se::gui::show_main_window) ? false : true;
 				break;
 			default:
 				break;

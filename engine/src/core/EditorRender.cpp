@@ -68,7 +68,7 @@ void EditorRender::Update(SEfloat)
 	SEuint view_m_loc = glGetUniformLocation(shader, "view");
 	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
 
-	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::_gui_width / (SEfloat)gui::_gui_heigth, 0.1f, 100.f);
+	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::win_width / (SEfloat)gui::win_heigth, 0.1f, 100.f);
 	glUniformMatrix4fv
 	(
 		persp_m_loc,

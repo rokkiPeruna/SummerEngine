@@ -46,6 +46,8 @@ public:
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
+	const std::vector<CCollidable>& GetCCollidableContainer() { return m_cCollidables; }
+
 private:
 	std::vector<CCollidable> m_cCollidables;
 	std::queue<SEint> m_free_cCollidables_indices;
