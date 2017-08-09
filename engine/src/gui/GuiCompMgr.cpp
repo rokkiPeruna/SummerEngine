@@ -95,7 +95,7 @@ void GuiCompMgr::Update()
 		}
 		if (curr_e && m_curr_component && m_curr_comp_index != -1)
 		{
-			priv::Engine::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_component_obj);
+			GraphicalUserInterface::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_component_obj);
 		}
 	}
 

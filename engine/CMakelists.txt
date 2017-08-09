@@ -75,13 +75,9 @@ set(CORE_FILES
 	src/core/Engine.cpp
 	include/core/Window.h
 	src/core/Window.cpp	
-	include/core/imgui_impl_sdl_gl3.h
-	src/core/imgui_impl_sdl_gl3.cpp
 	include/core/Messages.h
 	include/core/Messenger.h
 	src/core/Messenger.cpp
-	include/core/gui_values.h
-	src/core/gui_values.cpp
 	include/core/SE_exceptions.h
     include/core/Camera.h
     src/core/Camera.cpp
@@ -121,6 +117,12 @@ source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
 #Engine Gui
 set(ENGINE_GUI_MANAGER_FILES
+	include/gui/GraphicalUserInterface.h
+	include/gui/imgui_impl_sdl_gl3.h
+	src/gui/imgui_impl_sdl_gl3.cpp
+	include/gui/gui_values.h
+	src/gui/gui_values.cpp
+	src/gui/GraphicalUserInterface.cpp
 	include/gui/EngineGui.h
 	src/gui/EngineGui.cpp
 	include/gui/ManagerGui.h

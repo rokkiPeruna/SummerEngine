@@ -5,8 +5,6 @@
 
 ///Core includes:
 #include <core/SE_exceptions.h>
-#include <core/gui_values.h>
-#include <core/imgui_impl_sdl_gl3.h>
 #include <core/Window.h>
 #include <core/Camera.h>
 #include <core/EditorRender.h>
@@ -36,29 +34,15 @@
 #include <utility/JsonUtilFunctions.h>
 #include <utility/EditorFunctions.h>	//SE_TODO: Remove this when gui moves to it's own class
 
+
 ///Engine graphical user interface includes
-//SE_TODO: Move these and their creation logic to separate class!
-//SE_TODO: //SE_TODO: Let macro decide if these get included
-#include <gui/EngineGui.h>
-#include <gui/GuiCompMgr.h>
-#include <gui/GuiEntityMgr.h>
-#include <gui/GuiSceneMgr.h>
-#include <gui/ManagerGui.h>
-//COMPONENT EDITORS
-#include <gui/CompEditorGui.h>
-#include <gui/CCollidableEditor.h>
-#include <gui/CDynamicEditor.h>
-#include <gui/CShapeEditor.h>
-#include <gui/CTextureEditor.h>
-#include <gui/CTransformableEditor.h>
+#include <gui/GraphicalUserInterface.h>
 
 namespace se
 {
 namespace priv
 {
 std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {};
-
-std::map<COMPONENT_TYPE, gui::CompEditorGui*> Engine::ComponentTypeToGuiEditor = {};
 
 Engine::Engine(const std::string& curr_proj_name)
 	: m_eng_conf_file_name("engine_config.json")
@@ -90,8 +74,9 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_resourceMgr(std::make_unique<ResourceManager>(*this))
 	, m_compMgr(std::make_unique<ComponentManager>(*this))
 	, m_ioMgr(std::make_unique<IOManager>(*this))
-	/*GUI ELEMENTS*/
-	, m_engine_gui_container{} //Elements here are allocated from heap so they MUST be released in destructor
+
+	/*GUI*/
+	, m_gui(std::make_unique<gui::GraphicalUserInterface>(*this))
 {
 
 }
@@ -129,10 +114,9 @@ void Engine::Initialize()
 	_initManagers();
 	_initSystems();
 
+	m_gui->Initialize();
+
 	glewInit();
-
-	_initGui(); //Must be after manager and system init
-
 }
 
 void Engine::Uninitialize()
@@ -154,10 +138,6 @@ void Engine::EngineUpdate()
 			_editorLoop(exitProgram);
 		}
 	}
-
-	//Cleanup imgui
-	ImGui_ImplSdlGL3_Shutdown();
-
 }
 
 bool Engine::_initJConfigObject()
@@ -186,8 +166,6 @@ void Engine::_findPathToUserFiles()
 	{
 		m_path_to_user_files = "../../projects/" + m_current_project_name + "/" + m_json_data_files_fold_name + "/";
 	}
-
-
 }
 
 void Engine::_initAndApplyEngineSettings()
@@ -221,10 +199,6 @@ void Engine::_initAndApplyEngineSettings()
 		//win_width = windata.width;
 		//win_heigth = windata.heigth;
 	}
-
-	//Initialize imgui IO. This file will hold users preference window positions and sizes. SE_TODO: Create switch for editor mode and deploy mode builds
-	ImGui::GetIO().IniFilename = "engine_gui_conf.ini";
-
 }
 
 void Engine::_initManagers()
@@ -240,9 +214,6 @@ void Engine::_initManagers()
 
 	//Resource Manager | default path to shaders.. todo: change so that it can be read fomr the engine_config.json or delete that part from json
 	m_resourceMgr->Initialize("../../engine/shaders/", m_path_to_user_files);
-
-
-	//	m_renderMgr.Initialize();
 }
 
 void Engine::_initSystems()
@@ -264,26 +235,6 @@ void Engine::_initSystems()
 	m_systemContainer.emplace_back(m_animationSystem.get());
 }
 
-void Engine::_initGui()
-{
-	//Init imgui using implementation provided in examples
-	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
-
-	//SE_TODO: Let macro decide if these get build
-	//Emplace manager classes' guis
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiSceneMgr>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiCompMgr>(*this));		//Must be before GuiEntityMgr!!
-	auto gui_compMgr = m_engine_gui_container.back().get();
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiEntityMgr>(*this, static_cast<se::gui::GuiCompMgr*>(gui_compMgr)));	//Must be after GuiCompMgr!!
-	
-	//Emplace component editors
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CCollidableEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CDynamicEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CShapeEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CTextureEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CTransformableEditor>(*this));
-}
-
 void Engine::_updateMgrs()
 {
 	m_sceneMgr->Update();
@@ -303,49 +254,6 @@ void Engine::_updateSystems(SEfloat deltaTime)
 	//Flush messages
 	m_movementSystem->Messages.clear();
 	m_transformSystem->Messages.clear();
-}
-
-void Engine::_updateGUI()
-{
-	//Engine window in editor
-	if (se::gui::show_main_window)
-	{
-		ImGui::SetNextWindowPos(ImVec2(se::gui::win_width / 2, se::gui::win_heigth / 2), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("Engine");
-		ImGui::Text("SE Engine, %s");
-
-		if (ImGui::Button("Draw AABBs' lines"))
-			util::SwitchBoolean(gui::debug_draw_values::drawAABBs_lines);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw AABBs' points"))
-			util::SwitchBoolean(gui::debug_draw_values::drawAABBs_points);
-
-		if (ImGui::Button("Draw coll polys' lines"))
-			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys_lines);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw coll polys' points"))
-			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys_points);
-
-		if (ImGui::Button("Draw shapes' outline"))
-			util::SwitchBoolean(gui::debug_draw_values::drawShapes_lines);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw shapes' vertices"))
-			util::SwitchBoolean(gui::debug_draw_values::drawShapes_points);
-
-		if (ImGui::Button("Draw positions"))
-			util::SwitchBoolean(gui::debug_draw_values::drawPositions);
-
-		ImGui::Separator();
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
-	}
-
-	//SE_TODO: Create better gui structure
-	for (auto& gui : m_engine_gui_container)
-	{
-		gui->Update();
-	}
 }
 
 bool Engine::_gameLoop()
@@ -447,7 +355,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
+			m_gui->Update(); //SE_TODO: Switch by macro, bool, etc.
 			m_camera->Update(deltaTime);
 			m_editorRender->Update(deltaTime);
 			m_debugRender->Update(deltaTime);

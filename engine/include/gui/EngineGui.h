@@ -11,12 +11,13 @@
 
 //SE includes:
 #include <core/Engine.h>
+#include <gui/GraphicalUserInterface.h>
 #include <core/DebugRender.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <ids/ComponentTypeList.h>
 #include <ids/SystemAndManagerIDList.h>
-#include <core/gui_values.h>
+#include <gui/gui_values.h>
 #include <core/SE_exceptions.h>
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>

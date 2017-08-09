@@ -12,7 +12,7 @@ CTextureEditor::CTextureEditor(priv::Engine& engine_ref)
 	//This is IMPORTANT. It binds component to correct editor.
 	//MUST be done in every new component editor's constructor
 	//ALSO remember to add editor to Engine::m_engine_gui_container in Engine::_initGui()
-	priv::Engine::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::TEXTURE, this);
+	GraphicalUserInterface::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::TEXTURE, this);
 
 	m_animation_sys = &m_engine.GetAnimationSystem();
 	assert(m_animation_sys);

@@ -9,7 +9,7 @@
 
 //SE includes
 #include <core/Engine.h>
-#include <core/gui_values.h>
+#include <gui/gui_values.h>
 #include <core/Camera.h>
 #include <GLES3/glew.h>
 #include <managers/Entity.h>

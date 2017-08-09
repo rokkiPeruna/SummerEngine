@@ -29,12 +29,9 @@ namespace se
 ///CORE
 class Camera;
 
-namespace gui
-{
 ///Forward declarations for classes in namespace se::gui
-class EngineGui;
-class CompEditorGui;
-}
+namespace gui { class GraphicalUserInterface; }
+
 namespace priv
 {
 ///Forward declarations for classes in namespace se::priv
@@ -102,9 +99,9 @@ public:
 	IOManager& GetIOManager() { return *m_ioMgr; }
 
 
+	Window& GetWindow() { return *m_window; }
+
 	Render* GetCurrentRenderer() { return m_current_renderer; }
-
-
 	EditorRender& GetEditorRender() { return *m_editorRender; }
 	GameRender& GetGameRender() { return *m_gameRender; }
 	DebugRender& GetDebugRender() { return *m_debugRender; }
@@ -115,11 +112,10 @@ public:
 	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
 
-	///Static map for binding component type to correct gui editor
-	static std::map<COMPONENT_TYPE, gui::CompEditorGui*> ComponentTypeToGuiEditor;
+	
 
-	///Get EngineGui objects
-	const std::vector<std::unique_ptr<se::gui::EngineGui>>& GetEngineGuiObjects() { return m_engine_gui_container; }
+	///Get graphical user interface object
+	const gui::GraphicalUserInterface& GetEngineGuiObjects() { return *m_gui; }
 
 private:
 	const std::string m_eng_conf_file_name;					///Const string naming the json file containing Engine configurations 
@@ -148,9 +144,6 @@ private:
 
 	///Update systems
 	void _updateSystems(SEfloat deltaTime);
-
-	///GUI
-	void _updateGUI();
 
 	//Game loop and editor loop
 	SEbool _gameLoop();
@@ -195,9 +188,9 @@ private:
 	//Camera
 	std::unique_ptr<Camera> m_camera;
 
-	///GUI //SE_TODO: Let macro define is gui is active
-	std::vector<std::unique_ptr<se::gui::EngineGui>> m_engine_gui_container;
-	void _initGui();
+	///GUI
+	std::unique_ptr<gui::GraphicalUserInterface> m_gui;
+
 };
 }//namespace priv
 }//namespace se
