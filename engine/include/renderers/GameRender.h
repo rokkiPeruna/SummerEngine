@@ -11,15 +11,10 @@
 
 namespace se
 {
-
 namespace priv
 {
-
-
-
 ///Brief: Game Render is not drawing any debug stuff and will divide entities in static and 
 ///dynamic containers
-
 class GameRender : public Render
 {
 public:
@@ -38,6 +33,11 @@ public:
 	void Update(SEfloat deltaTime) override final;
 
 	void OnEntityAdded(const Entity& entity) override final;
+
+	void OnEntityRemoved(const Entity&) override final;
+
+	void ClearRenderBatches() override final;
+
 	void OnRendableComponentChanged(const Entity&) override final;
 
 private:
@@ -62,11 +62,11 @@ private:
 
 	//testing
 	ShaderResource* CurrentShader;
-	
+
 	void _createStaticBuffers(StaticRenderBatch& staticBatch);
 	void _inserValues(StaticRenderBatch& staticBatch, const Entity& entity);
 
-	
+
 };
 
 }// !namespace priv

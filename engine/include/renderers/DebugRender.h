@@ -34,7 +34,7 @@ public:
 
 	void OnRendableComponentChanged(const Entity&) override final {}
 
-	virtual void ClearRenderBatches();
+	void ClearRenderBatches() override final;
 
 
 	void AddDebugLines(const std::vector<Vec3f>& vertices, Mat4f modelMatrix);

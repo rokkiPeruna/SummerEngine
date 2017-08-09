@@ -26,7 +26,7 @@ void GuiSceneMgr::Update()
 	assert(m_sceneMgr);
 
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(window_data::width / 2, window_data::heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(window_data::width / 2.0f, window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("SceneManager", &elem_visibility::show_scene_mgr_window);
 
 	if (ImGui::CollapsingHeader("Create scene"))

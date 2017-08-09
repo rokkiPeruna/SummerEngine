@@ -7,7 +7,7 @@
 
 //SE includes
 #include <core/Engine.h>
-#include <core/gui_values.h>
+#include <gui/gui_values.h>
 #include <core/Camera.h>
 #include <GLES3/glew.h>
 #include <managers/Entity.h>
@@ -20,11 +20,6 @@ namespace se
 {
 namespace priv
 {
-
-///Brief: Virtual base class for all other renders (renderers)
-
-
-
 enum class SHADER_ATTRIB_INDEX : SEuint
 {
 	POSITION,
@@ -35,12 +30,11 @@ enum class SHADER_ATTRIB_INDEX : SEuint
 
 
 // ADD TO OWN CLASSES | HEADER 
-
 struct StaticRenderBatch //FOR single element at this point
 {
 	std::vector<SEint> entity_ids;
 
-	SEushort index_offset = SEuint_max;
+	SEushort index_offset = SEushort_max;
 	SEushort offset_size;
 
 	SEuint vao;
@@ -196,7 +190,12 @@ public:
 	virtual void Update(SEfloat deltaTime) = 0;
 
 	virtual void OnEntityAdded(const Entity& entity) = 0;
+
+	virtual void OnEntityRemoved(const Entity& entity) = 0;
+
  	virtual void OnRendableComponentChanged(const Entity& entiy) = 0;
+
+	virtual void ClearRenderBatches() = 0;
 
 
 protected:

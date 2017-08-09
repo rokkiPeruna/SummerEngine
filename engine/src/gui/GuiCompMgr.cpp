@@ -32,7 +32,7 @@ void GuiCompMgr::Update()
 {
 
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(gui::window_data::width / 2, gui::window_data::heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(gui::window_data::width / 2.0f, gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Component Editor", &gui::elem_visibility::show_component_mgr_window);
 
 	auto curr_e = m_entity_mgr->GetCurrentEntity();

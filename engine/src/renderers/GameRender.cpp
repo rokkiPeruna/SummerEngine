@@ -62,7 +62,7 @@ void GameRender::Uninitialize()
 
 }
 
-void GameRender::Update(SEfloat deltaTime)
+void GameRender::Update(SEfloat)
 {
 	auto shader = CurrentShader->GetShaderID();
 
@@ -74,7 +74,7 @@ void GameRender::Update(SEfloat deltaTime)
 	SEuint view_m_loc = glGetUniformLocation(shader, "view");
 	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
 
-	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::_gui_width / (SEfloat)gui::_gui_heigth, 0.1f, 100.f);
+	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::window_data::width / (SEfloat)gui::window_data::heigth, 0.1f, 100.f);
 	glUniformMatrix4fv
 	(
 		persp_m_loc,
@@ -106,7 +106,11 @@ void GameRender::Update(SEfloat deltaTime)
 		}
 
 
-		glDrawElements(GL_TRIANGLES, b.indice_container.size(), GL_UNSIGNED_SHORT, 0);
+		glDrawElements(
+			GL_TRIANGLES, 
+			static_cast<SEuint>(b.indice_container.size()),
+			GL_UNSIGNED_SHORT,
+			0);
 
 	}
 
@@ -123,7 +127,7 @@ void GameRender::OnEntityAdded(const Entity& entity)
 	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
 
 	//And if it has texture or not
-	auto tex_handle = SEfloat_max;
+	auto tex_handle = SEuint_max;
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
 	{
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
@@ -190,6 +194,17 @@ void GameRender::OnEntityAdded(const Entity& entity)
 			return;
 		}
 	}
+}
+
+void GameRender::OnEntityRemoved(const Entity&)
+{
+	//SE_TODO: Add logic
+}
+
+void GameRender::ClearRenderBatches()
+{
+	m_stat_rend_batches.clear();
+	m_dyn_rend_batches.clear();
 }
 
 void GameRender::OnRendableComponentChanged(const Entity& entity)
@@ -266,7 +281,7 @@ void GameRender::_inserValues(StaticRenderBatch& staticBatch,const Entity& entit
 		staticBatch.indice_container.insert(staticBatch.indice_container.begin(), shape->indices.begin(), shape->indices.end());
 	}
 	//Make sure total indice size is updated
-	staticBatch.num_indices = staticBatch.indice_container.size();
+	staticBatch.num_indices = static_cast<SEuint>(staticBatch.indice_container.size());
 
 	// See if this entity has texture
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))

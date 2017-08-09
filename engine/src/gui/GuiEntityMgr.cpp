@@ -29,7 +29,7 @@ void GuiEntityMgr::Update()
 	assert(m_comp_mgr);
 
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(window_data::width / 2, window_data::heigth / 2), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(window_data::width / 2.0f, window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Entity editor", &elem_visibility::show_entity_comp_mgr_window); ImGui::SameLine();
 	ImGui::Text(m_gui_scene_name.c_str());
 	ImGui::Separator();

@@ -68,7 +68,7 @@ void GraphicalUserInterface::Update()
 	//Engine window in editor
 	if (se::gui::elem_visibility::show_main_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(se::gui::window_data::width / 2, se::gui::window_data::heigth / 2), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(se::gui::window_data::width / 2.0f, se::gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");

@@ -79,19 +79,24 @@ set(CORE_FILES
 	include/core/Messenger.h
 	src/core/Messenger.cpp
 	include/core/SE_exceptions.h
-    include/core/Camera.h
-    src/core/Camera.cpp
-    include/core/Render.h
-    src/core/Render.cpp
-    include/core/EditorRender.h
-    src/core/EditorRender.cpp
-    include/core/GameRender.h
-    src/core/GameRender.cpp
-	include/core/DebugRender.h
-	src/core/DebugRender.cpp
     )
 source_group("core" FILES ${CORE_FILES})
 
+#-----------------------------------------------------------------
+#Renderers
+set(RENDERERS_FILES	
+    include/renderers/Render.h
+    src/renderers/Render.cpp
+    include/renderers/EditorRender.h
+    src/renderers/EditorRender.cpp
+    include/renderers/GameRender.h
+    src/renderers/GameRender.cpp
+	include/renderers/DebugRender.h
+	src/renderers/DebugRender.cpp
+	include/renderers/Camera.h
+    src/renderers/Camera.cpp
+	)
+source_group("renderers" FILES ${RENDERERS_FILES})
 #-----------------------------------------------------------------
 #IDs
 set(IDS_FILES
@@ -185,6 +190,7 @@ add_executable(engine
 	${SYSTEMS_FILES}
 	${MANAGERS_FILES}
 	${CORE_FILES}
+	${RENDERERS_FILES}
 	${IDS_FILES}
 	${UTILITY_FILES}
 	${ENGINE_GUI_FILES}
