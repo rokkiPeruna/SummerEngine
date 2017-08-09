@@ -233,6 +233,9 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	{
 		s->OnEntityRemoved(m_entities.at(entity_id));
 	}
+	
+	//SE_TODO: Should this be event based?
+	m_engine.GetCurrentRenderer()->OnEntityRemoved(m_entities.at(entity_id));
 
 	m_free_entity_ids.push(m_entities.at(entity_id).id);
 

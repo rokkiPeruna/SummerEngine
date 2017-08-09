@@ -14,27 +14,29 @@ namespace se
 namespace gui
 {
 ///Window size for GUI windows
-const SEint win_width = 1200;
-const SEint win_heigth = 800;
+struct window_data
+{
+	static SEint width;
+	static SEint heigth;
+};
 
-///Main window
-static SEbool show_main_window = true;
-
-///Scene manager
-static SEbool show_scene_mgr_window = false;
-
-
-///Console
-static SEbool show_console_window = false;
-
-///EntityComponent manager
-static SEbool show_entity_comp_mgr_window = false;
-
-///Component manager
-static SEbool show_component_mgr_window = false;
+///Gui elements' visibility indicators
+struct elem_visibility
+{
+	///Main window
+	static SEbool show_main_window;
+	///Scene manager
+	static SEbool show_scene_mgr_window;
+	///Console
+	static SEbool show_console_window;
+	///EntityComponent manager
+	static SEbool show_entity_comp_mgr_window;
+	///Component manager
+	static SEbool show_component_mgr_window;
+};
 
 //DEBUG DRAW VALUES
-static struct debug_draw_values
+struct debug_draw_values
 {
 	static SEbool drawAABBs_lines;
 	static SEbool drawAABBs_points;

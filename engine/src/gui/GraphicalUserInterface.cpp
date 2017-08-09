@@ -38,9 +38,12 @@ GraphicalUserInterface::~GraphicalUserInterface()
 
 void GraphicalUserInterface::Initialize()
 {
+	//Set gui values
+	window_data::width = m_engine.GetWindow().windowInitData.width;
+	window_data::heigth = m_engine.GetWindow().windowInitData.heigth;
+
 	//Initialize imgui IO. This file will hold users preference window positions and sizes. SE_TODO: Create switch for editor mode and deploy mode builds
 	ImGui::GetIO().IniFilename = "engine_gui_conf.ini";
-
 
 	//Init imgui using implementation provided in examples
 	ImGui_ImplSdlGL3_Init(m_engine.GetWindow().GetWindowHandle());
@@ -63,9 +66,9 @@ void GraphicalUserInterface::Initialize()
 void GraphicalUserInterface::Update()
 {
 	//Engine window in editor
-	if (se::gui::show_main_window)
+	if (se::gui::elem_visibility::show_main_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(se::gui::win_width / 2, se::gui::win_heigth / 2), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(se::gui::window_data::width / 2, se::gui::window_data::heigth / 2), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");

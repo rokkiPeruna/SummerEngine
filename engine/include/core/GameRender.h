@@ -36,6 +36,9 @@ public:
 	void Update(SEfloat) override final {}
 
 	void OnEntityAdded(const Entity&) override final {}
+
+	void OnEntityRemoved(const Entity& entity) override final {}
+
 	void OnRendableComponentChanged(const Entity&) override final {}
 
 	virtual void ClearRenderBatches() {}

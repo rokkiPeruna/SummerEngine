@@ -46,6 +46,9 @@ public:
 	virtual void Update(SEfloat deltaTime) = 0;
 
 	virtual void OnEntityAdded(const Entity& entity) = 0;
+
+	virtual void OnEntityRemoved(const Entity& entity) = 0;
+
  	virtual void OnRendableComponentChanged(const Entity& entiy) = 0;
 
 	virtual void ClearRenderBatches() = 0;

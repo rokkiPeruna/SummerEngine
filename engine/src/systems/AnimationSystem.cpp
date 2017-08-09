@@ -87,7 +87,7 @@ void AnimationSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 	SEbool has_CAnimation = false;
 	if (entity.components.count(COMPONENT_TYPE::ANIMATION)) //Creation of CAnimation must be before CTexture
 	{
-		SEint index = _onEntityAdded_helper(entity, COMPONENT_TYPE::ANIMATION, entity_obj, m_cAnimations, m_free_cAnimation_indices);
+		_onEntityAdded_helper(entity, COMPONENT_TYPE::ANIMATION, entity_obj, m_cAnimations, m_free_cAnimation_indices);
 		has_CAnimation = true;
 	}
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))

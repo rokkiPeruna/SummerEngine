@@ -101,6 +101,8 @@ public:
 	///Checks if there is a batch for spesific type of entities. If there is this component will be added
 	///if not new one will be created
 	void OnEntityAdded(const Entity& entity) override final;
+
+	void OnEntityRemoved(const Entity& entity) override final;
 	
 	///Checks if the component is rendable in the first place. If it is makes sure that
 	///the batch is changed

@@ -67,7 +67,7 @@ void EditorRender::Update(SEfloat)
 	SEuint view_m_loc = glGetUniformLocation(shader, "view");
 	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
 
-	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::win_width / (SEfloat)gui::win_heigth, 0.1f, 100.f);
+	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::window_data::width / (SEfloat)gui::window_data::heigth, 0.1f, 100.f);
 	glUniformMatrix4fv
 	(
 		persp_m_loc,
@@ -90,7 +90,7 @@ void EditorRender::Update(SEfloat)
 		glBindVertexArray(b.vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b.ind_buffer);
 
-		if (b.texco_buffer != -1)
+		if (b.texco_buffer != SEuint_max)
 		{
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, b.texture_handle);
@@ -211,6 +211,23 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	}
 }
 
+void EditorRender::OnEntityRemoved(const Entity& entity)
+{
+	//If no shape, it's not in any batch
+	if (!entity.components.count(COMPONENT_TYPE::SHAPE))
+		return;
+
+	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
+
+	SEuint tex_handle = SEuint_max;
+	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
+	{
+		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
+	}
+
+	auto & e_ids = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
+	e_ids.erase(std::find(e_ids.begin(), e_ids.end(), entity.id));
+}
 
 void EditorRender::OnRendableComponentChanged(const Entity& entity)
 {

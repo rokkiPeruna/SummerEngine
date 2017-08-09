@@ -1,8 +1,5 @@
 #include <core/Engine.h>
 
-
-#include <imgui/imgui.h>
-
 ///Core includes:
 #include <core/SE_exceptions.h>
 #include <core/Window.h>
@@ -11,14 +8,12 @@
 #include <core/GameRender.h>
 #include <core/DebugRender.h>
 
-
 ///System includes:
 #include <systems/ComponentSystem.h>
 #include <systems/MovementSystem.h>
 #include <systems/TransformSystem.h>
 #include <systems/CollisionSystem.h>
 #include <systems/AnimationSystem.h>
-
 
 ///Manager includes:
 #include <managers/IOManager.h>
@@ -29,11 +24,8 @@
 #include <managers/ComponentManager.h>
 #include <managers/ResourceManager.h>
 
-
 ///Utility includes:
 #include <utility/JsonUtilFunctions.h>
-#include <utility/EditorFunctions.h>	//SE_TODO: Remove this when gui moves to it's own class
-
 
 ///Engine graphical user interface includes
 #include <gui/GraphicalUserInterface.h>
@@ -107,15 +99,15 @@ void Engine::Initialize()
 	}
 
 	m_window->Initialize();
-
+	//
 	m_messenger->Initialize();
-
-
+	//
 	_initManagers();
+	//
 	_initSystems();
-
+	//
 	m_gui->Initialize();
-
+	//
 	glewInit();
 }
 
@@ -194,10 +186,6 @@ void Engine::_initAndApplyEngineSettings()
 			windata.sdl_settings_mask += SDL_WINDOW_FULLSCREEN;
 		if (stngs.find("window_borderless") != stngs.end() && stngs.at("window_borderless") != 0)
 			windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
-
-		//Set window size to global values for GUI
-		//win_width = windata.width;
-		//win_heigth = windata.heigth;
 	}
 }
 
@@ -307,7 +295,7 @@ bool Engine::_gameLoop()
 		// Rendering
 
 
-		glViewport(0, 0, se::gui::win_width, se::gui::win_heigth);
+		glViewport(0, 0, se::gui::window_data::width, se::gui::window_data::heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -351,7 +339,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			m_messenger->PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, se::gui::win_width, se::gui::win_heigth);
+			glViewport(0, 0, se::gui::window_data::width, se::gui::window_data::heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -409,7 +397,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 				break;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				se::gui::show_main_window = (se::gui::show_main_window) ? false : true;
+				se::gui::elem_visibility::show_main_window = (se::gui::elem_visibility::show_main_window) ? false : true;
 				break;
 
 			default:
@@ -439,7 +427,7 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				m_inEditorLoop = true;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				se::gui::show_main_window = (se::gui::show_main_window) ? false : true;
+				se::gui::elem_visibility::show_main_window = (se::gui::elem_visibility::show_main_window) ? false : true;
 				break;
 			default:
 				break;

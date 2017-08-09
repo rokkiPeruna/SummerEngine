@@ -55,7 +55,7 @@ void DebugRender::Update(SEfloat)
 		SEuint persp_m_loc = glGetUniformLocation(shader_handle, "persp");
 		SEuint color_loc = glGetUniformLocation(shader_handle, "line_color");
 
-		Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::win_width / (SEfloat)gui::win_heigth, 0.1f, 100.f);
+		Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::window_data::width / (SEfloat)gui::window_data::heigth, 0.1f, 100.f);
 		glUniformMatrix4fv
 		(
 			persp_m_loc,
