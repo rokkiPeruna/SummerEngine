@@ -1,3 +1,4 @@
+
 #ifndef SE_EDITOR_RENDER_H
 #define SE_EDITOR_RENDER_H
 
@@ -15,8 +16,6 @@ namespace se
 
 namespace priv
 { 
-
-
 
 class EditorRender : public Render
 {
