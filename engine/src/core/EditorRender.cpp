@@ -57,7 +57,6 @@ void EditorRender::Update(SEfloat)
 
 	//SE_TODO: REMOVE for testing tex coords
 	auto entities = m_engine.GetEntityMgr().GetEntities();
-	SEuint _test_tex_coords_loc = glGetUniformLocation(shader, "texture_coords");
 
 	glUseProgram(shader);
 	SEuint textureLocation = glGetUniformLocation(shader, "fragment_texture");

@@ -36,14 +36,20 @@ static SEbool show_component_mgr_window = false;
 //DEBUG DRAW VALUES
 static struct debug_draw_values
 {
-	static SEbool drawAABBs;
+	static SEbool drawAABBs_lines;
+	static SEbool drawAABBs_points;
 	static const Vec4f color_AABB;
 
-	static SEbool drawCollPolys;
+	static SEbool drawCollPolys_lines;
+	static SEbool drawCollPolys_points;
 	static const Vec4f color_CollPoly;
 
-	static SEbool drawShapes;
+	static SEbool drawShapes_lines;
+	static SEbool drawShapes_points;
 	static const Vec4f color_Shape;
+
+	static SEbool drawPositions;
+	static const Vec4f color_pos_points;
 };
 
 }//namespace gui

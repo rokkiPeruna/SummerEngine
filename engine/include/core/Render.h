@@ -1,6 +1,9 @@
 #ifndef SE_RENDER_H
 #define SE_RENDER_H
 
+///STL includes:
+#include <vector>
+
 //External includes:
 #include <glm/gtc/matrix_transform.hpp>
 

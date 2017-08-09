@@ -315,12 +315,26 @@ void Engine::_updateGUI()
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");
 
-		if (ImGui::Button("Draw AABBs"))
-			util::SwitchBoolean(gui::debug_draw_values::drawAABBs);
-		if (ImGui::Button("Draw coll polys"))
-			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys);
-		if (ImGui::Button("Draw shapes"))
-			util::SwitchBoolean(gui::debug_draw_values::drawShapes);
+		if (ImGui::Button("Draw AABBs' lines"))
+			util::SwitchBoolean(gui::debug_draw_values::drawAABBs_lines);
+		ImGui::SameLine();
+		if (ImGui::Button("Draw AABBs' points"))
+			util::SwitchBoolean(gui::debug_draw_values::drawAABBs_points);
+
+		if (ImGui::Button("Draw coll polys' lines"))
+			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys_lines);
+		ImGui::SameLine();
+		if (ImGui::Button("Draw coll polys' points"))
+			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys_points);
+
+		if (ImGui::Button("Draw shapes' outline"))
+			util::SwitchBoolean(gui::debug_draw_values::drawShapes_lines);
+		ImGui::SameLine();
+		if (ImGui::Button("Draw shapes' vertices"))
+			util::SwitchBoolean(gui::debug_draw_values::drawShapes_points);
+
+		if (ImGui::Button("Draw positions"))
+			util::SwitchBoolean(gui::debug_draw_values::drawPositions);
 
 		ImGui::Separator();
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
