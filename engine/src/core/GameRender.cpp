@@ -14,8 +14,9 @@ GameRender::GameRender(Engine& engine_ref)
 	: Render(engine_ref)
 	, CurrentShader(nullptr)
 {
-
+	m_stat_rend_batches.reserve(1000);
 }
+
 
 GameRender::~GameRender()
 {
@@ -62,6 +63,45 @@ void GameRender::Uninitialize()
 
 void GameRender::Update(SEfloat deltaTime)
 {
+	auto shader = CurrentShader->GetShaderID();
+
+	glUseProgram(shader);
+	SEuint textureLocation = glGetUniformLocation(shader, "fragment_texture");
+
+	//Uniform locations
+	SEuint model_m_loc = glGetUniformLocation(shader, "model");
+	SEuint view_m_loc = glGetUniformLocation(shader, "view");
+	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
+
+	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::_gui_width / (SEfloat)gui::_gui_heigth, 0.1f, 100.f);
+	glUniformMatrix4fv
+	(
+		persp_m_loc,
+		1,
+		GL_FALSE,
+		&persp[0][0]
+	);
+	
+	Mat4f view = m_engine.GetCamera()->GetCameraView();
+	glUniformMatrix4fv
+	(
+		view_m_loc,
+		1,
+		GL_FALSE,
+		&view[0][0]
+	);
+
+	//static batches
+	for (auto& b : m_stat_rend_batches)
+	{
+		glBindVertexArray(b.vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b.ind_buffer);
+
+		glDrawElements(GL_TRIANGLES, b.indice_container.size(), GL_UNSIGNED_SHORT, 0);
+
+	}
+
+	glUseProgram(0);
 
 }
 
@@ -107,7 +147,12 @@ void GameRender::OnEntityAdded(const Entity& entity)
 			}
 
 			//Add current component indices to this batches indice conainer
-			batch_ptr->indice_container.insert(batch_ptr->indice_container.end() - 1, shape->indices.begin(), shape->indices.end());
+			for (auto i : shape->indices)
+			{
+				batch_ptr->indice_container.emplace_back(i + batch_ptr->index_offset);
+			}
+			batch_ptr->index_offset += batch_ptr->index_offset;
+			//batch_ptr->indice_container.insert(batch_ptr->indice_container.end() - 1, shape->indices.begin(), shape->indices.end());
 
 			//Make sure total indice size is updated
 			batch_ptr->num_indices = batch_ptr->indice_container.size();
@@ -176,11 +221,19 @@ void GameRender::OnEntityAdded(const Entity& entity)
 
 			//Add current component indices to this batches indice conainer
 			if (batch.indice_container.size())
-			{
-				batch.indice_container.insert(batch.indice_container.end() - 1, shape->indices.begin(), shape->indices.end());			
+			{	
+				for (auto i : shape->indices)
+				{
+					batch.indice_container.emplace_back(i + batch.index_offset);
+				}
+				batch.index_offset += batch.index_offset;
+
+				//batch.indice_container.insert(batch.indice_container.end() - 1, shape->indices.begin(), shape->indices.end());
 			}
 			else if (!batch.indice_container.size())
 			{
+				auto val = std::max_element(shape->indices.begin(), shape->indices.end());
+				batch.index_offset = (*val) + 1;
 				batch.indice_container.insert(batch.indice_container.begin(), shape->indices.begin(), shape->indices.end());
 			}
 			//Make sure total indice size is updated
@@ -201,7 +254,7 @@ void GameRender::OnEntityAdded(const Entity& entity)
 				Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
 
 				std::vector<Vec2f> tex_coords;
-				
+
 				// SE_TODO : See if this 'can be' tweaked a bit
 				tex_coords.emplace_back(fourth.x, fourth.y);
 				tex_coords.emplace_back(third.x, third.y);
@@ -226,15 +279,17 @@ void GameRender::OnRendableComponentChanged(const Entity& entity)
 
 }
 
-void GameRender::_createStaticBuffers(StaticRenderBatch staticBatch)
+void GameRender::_createStaticBuffers(StaticRenderBatch& staticBatch)
 {
 	//Create position vertex buffer object
 	staticBatch.CreateBuffer(
 		staticBatch.pos_buffer,
-		static_cast<SEuint>(staticBatch.position_container.size() 
+		static_cast<SEuint>(staticBatch.position_container.size()
 			* sizeof(staticBatch.position_container.at(0))),
 		staticBatch.position_container.data());
-	
+
+	staticBatch.BindAttribPtr(SHADER_ATTRIB_INDEX::POSITION, 3);
+
 	//Create indice vertex buffer object
 	staticBatch.CreateBuffer(
 		staticBatch.ind_buffer,
@@ -243,6 +298,7 @@ void GameRender::_createStaticBuffers(StaticRenderBatch staticBatch)
 		staticBatch.indice_container.data(),
 		true);
 
+	staticBatch.BindAttribPtr(SHADER_ATTRIB_INDEX::INDICES, 1);
 }
 
 

@@ -19,6 +19,8 @@ struct StaticRenderBatch //FOR single element at this point
 {
 	std::vector<SEint> entity_ids;
 
+	SEushort index_offset = SEuint_max;
+
 	SEuint vao;
 	SEuint  num_indices = 0;
 	SEuint texture_handle = SEuint_max;
@@ -137,7 +139,7 @@ private:
 	//testing
 	ShaderResource* CurrentShader;
 	
-	void _createStaticBuffers(StaticRenderBatch staticBatch);
+	void _createStaticBuffers(StaticRenderBatch& staticBatch);
 
 
 	
