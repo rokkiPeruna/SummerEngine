@@ -207,7 +207,7 @@ void GameRender::ClearRenderBatches()
 	m_dyn_rend_batches.clear();
 }
 
-void GameRender::OnRendableComponentChanged(const Entity& entity)
+void GameRender::OnRendableComponentChanged(const Entity&)
 {
 
 }
