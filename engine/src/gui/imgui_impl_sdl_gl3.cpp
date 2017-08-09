@@ -9,7 +9,7 @@
 //#include "imgui.h"
 #include <imgui/imgui.h>
 //#include "imgui_impl_sdl_gl3.h"
-#include <core/imgui_impl_sdl_gl3.h>
+#include <gui/imgui_impl_sdl_gl3.h>
 
 // SDL,GL3W
 //#include <SDL.h>
