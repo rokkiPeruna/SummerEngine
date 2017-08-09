@@ -1,4 +1,4 @@
-#include <core/EditorRender.h>
+#include <renderers/EditorRender.h>
 #include <systems/AnimationSystem.h>
 #include <systems/TransformSystem.h>
 

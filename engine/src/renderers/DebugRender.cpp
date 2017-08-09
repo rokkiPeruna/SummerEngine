@@ -1,4 +1,4 @@
-#include <core/DebugRender.h>
+#include <renderers/DebugRender.h>
 #include <managers/ResourceManager.h>
 #include <systems/CollisionSystem.h> //For AABB and collision polygon drawing
 #include <systems/TransformSystem.h> //For shape drawing

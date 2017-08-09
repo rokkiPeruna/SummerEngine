@@ -1,4 +1,4 @@
-#include <core/GameRender.h>
+#include <renderers/GameRender.h>
 #include <systems/AnimationSystem.h>
 #include <systems/TransformSystem.h>
 

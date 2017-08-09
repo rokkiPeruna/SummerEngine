@@ -12,7 +12,7 @@
 //SE includes:
 #include <core/Engine.h>
 #include <gui/GraphicalUserInterface.h>
-#include <core/DebugRender.h>
+#include <renderers/DebugRender.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <ids/ComponentTypeList.h>

@@ -9,7 +9,7 @@
 #include <components/CTexture.h>
 #include <components/CAnimation.h>
 #include <managers/ResourceManager.h>
-#include <core/Render.h>
+#include <renderers/Render.h>
 
 namespace se
 {

@@ -8,7 +8,7 @@
 //SE includes
 #include <core/Engine.h>
 #include <gui/gui_values.h>
-#include <core/Camera.h>
+#include <renderers/Camera.h>
 #include <GLES3/glew.h>
 #include <managers/Entity.h>
 #include <managers/Resource.h>

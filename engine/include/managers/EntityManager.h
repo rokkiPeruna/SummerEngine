@@ -15,7 +15,7 @@
 #include <managers/ComponentManager.h>
 #include <components/Component.h>
 #include <managers/Scene.h>
-#include <core/Render.h>
+#include <renderers/Render.h>
 #include <utility/Clock.h>
 #include <utility/Time.h>
 #include <utility/JsonUtilFunctions.h>

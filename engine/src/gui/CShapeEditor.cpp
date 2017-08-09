@@ -1,6 +1,6 @@
 #include <gui/CShapeEditor.h>
 #include <systems/TransformSystem.h>
-#include <core/Render.h>
+#include <renderers/Render.h>
 
 namespace se
 {

@@ -3,10 +3,12 @@
 ///Core includes:
 #include <core/SE_exceptions.h>
 #include <core/Window.h>
-#include <core/Camera.h>
-#include <core/EditorRender.h>
-#include <core/GameRender.h>
-#include <core/DebugRender.h>
+
+///Renderer includes:
+#include <renderers/Camera.h>
+#include <renderers/EditorRender.h>
+#include <renderers/GameRender.h>
+#include <renderers/DebugRender.h>
 
 ///System includes:
 #include <systems/ComponentSystem.h>
