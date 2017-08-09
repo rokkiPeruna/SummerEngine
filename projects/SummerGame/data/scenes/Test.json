@@ -1,10 +1,54 @@
 {
-"scene_info":{
-	"name":"Test",
-	"type":2,
-	"width":30,
-	"heigth":30
-},
-"entities":{
-  }
+    "entities": {
+        "awe": {
+            "id": 0,
+            "shape": {
+                "_ownerID": 0,
+                "_type": 4,
+                "points": [
+                    -0.25,
+                    -0.25,
+                    0.0,
+                    0.25,
+                    -0.250000029802322,
+                    0.0,
+                    0.250000059604645,
+                    0.25,
+                    0.0,
+                    -0.25,
+                    0.250000089406967,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 0,
+                "_type": 3,
+                "h": 0,
+                "tex_name": "default_texture.png",
+                "w": 0,
+                "x": 0,
+                "y": 0
+            },
+            "transformable": {
+                "_ownerID": 0,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        }
+    },
+    "scene_info": {
+        "heigth": 30,
+        "name": "Test",
+        "type": 2,
+        "width": 30
+    }
 }

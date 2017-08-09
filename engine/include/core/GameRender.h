@@ -20,9 +20,10 @@ struct StaticRenderBatch //FOR single element at this point
 	std::vector<SEint> entity_ids;
 
 	SEushort index_offset = SEuint_max;
+	SEushort offset_size;
 
 	SEuint vao;
-	SEuint  num_indices = 0;
+	SEuint num_indices = 0;
 	SEuint texture_handle = SEuint_max;
 
 	SEuint pos_buffer = SEuint_max;
@@ -50,7 +51,7 @@ struct StaticRenderBatch //FOR single element at this point
 
 		glGenBuffers(1, &buf);
 		glBindBuffer((is_elem_array) ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER, buf);
-		glBufferData((is_elem_array) ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER, sz_of_buf, data, GL_DYNAMIC_DRAW);
+		glBufferData((is_elem_array) ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER, sz_of_buf, data, GL_STATIC_DRAW);
 		glBindBuffer((is_elem_array) ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		return buf;
@@ -140,7 +141,7 @@ private:
 	ShaderResource* CurrentShader;
 	
 	void _createStaticBuffers(StaticRenderBatch& staticBatch);
-
+	void _inserValues(StaticRenderBatch& staticBatch, const Entity& entity);
 
 	
 };

@@ -52,6 +52,7 @@ void GameRender::Initialize()
 	for (auto& i : m_stat_rend_batches)
 	{
 		_createStaticBuffers(i);
+
 	}
 
 }
@@ -81,7 +82,7 @@ void GameRender::Update(SEfloat deltaTime)
 		GL_FALSE,
 		&persp[0][0]
 	);
-	
+
 	Mat4f view = m_engine.GetCamera()->GetCameraView();
 	glUniformMatrix4fv
 	(
@@ -97,9 +98,19 @@ void GameRender::Update(SEfloat deltaTime)
 		glBindVertexArray(b.vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b.ind_buffer);
 
+		if (b.texco_buffer != SEuint_max)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, b.texture_handle);
+			glUniform1i(textureLocation, 0);
+		}
+
+
 		glDrawElements(GL_TRIANGLES, b.indice_container.size(), GL_UNSIGNED_SHORT, 0);
 
 	}
+
+	//Loop throug dynamic entities
 
 	glUseProgram(0);
 
@@ -121,7 +132,11 @@ void GameRender::OnEntityAdded(const Entity& entity)
 	//Next we need to determine if it is dynamic or static
 	if (entity.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		// SE_TODO Add to dynamic Batch
+
+
+		// SE_TODO ADD !! DYNAMICS BATCHES !! 
+	
+	
 	}
 	else
 	{
@@ -136,57 +151,7 @@ void GameRender::OnEntityAdded(const Entity& entity)
 			batch_ptr->entity_ids.emplace_back(entity.id);
 
 			//Before pushing shape positions we need to translate them with model matrix
-			auto transform = m_engine.GetTransformSystem().TransformableComponents.at(entity.id);
-
-			for (unsigned int i = 0; i < shape->points.size(); ++i)
-			{
-				Vec3f temp = transform.modelMatrix * Vec4f(shape->points.at(i), 1.0);
-
-				//Add current components positions to this batches position container
-				batch_ptr->position_container.emplace_back(temp);
-			}
-
-			//Add current component indices to this batches indice conainer
-			for (auto i : shape->indices)
-			{
-				batch_ptr->indice_container.emplace_back(i + batch_ptr->index_offset);
-			}
-			batch_ptr->index_offset += batch_ptr->index_offset;
-			//batch_ptr->indice_container.insert(batch_ptr->indice_container.end() - 1, shape->indices.begin(), shape->indices.end());
-
-			//Make sure total indice size is updated
-			batch_ptr->num_indices = batch_ptr->indice_container.size();
-
-			//See if this entity has texture
-			if (entity.components.count(COMPONENT_TYPE::TEXTURE))
-			{
-				//if entity has texture we need to create texture coodrinate for it
-				auto tex = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE));
-
-				SEint width = (tex->width) ? tex->width : tex->parent_img_w;
-				SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
-
-				Vec2f first(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
-				Vec2f sec(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
-				Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
-				Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
-
-				std::vector<Vec2f> tex_coords;
-
-				// SE_TODO : See if this 'can be' tweaked a bit
-				tex_coords.emplace_back(fourth.x, fourth.y);
-				tex_coords.emplace_back(third.x, third.y);
-				tex_coords.emplace_back(sec.x, sec.y);
-				tex_coords.emplace_back(first.x, first.y);
-
-				//After texture coordination creation we need to push it into conainer with similar coordinates
-				batch_ptr->texture_coordinate_container.insert(
-					batch_ptr->texture_coordinate_container.end() - 1,
-					tex_coords.begin(),
-					tex_coords.end());
-
-			}
-
+			_inserValues(*batch_ptr, entity);
 			return;
 		}
 		//If we don't have proper existing batch, we have to create one
@@ -204,71 +169,10 @@ void GameRender::OnEntityAdded(const Entity& entity)
 				shape->indices.size(),
 				tex_handle,
 				shape->points.size()),
-				&batch
-			);
+				&batch);
 
 			//After the new batch has been created we have to insert values of the current entity into it
-
-			auto transform = m_engine.GetTransformSystem().TransformableComponents.at(entity.id);
-
-			for (unsigned int i = 0; i < shape->points.size(); ++i)
-			{
-				Vec3f temp = transform.modelMatrix * Vec4f(shape->points.at(i), 1.0);
-
-				//Add current components positions to this batches position container
-				batch.position_container.emplace_back(temp);
-			}
-
-			//Add current component indices to this batches indice conainer
-			if (batch.indice_container.size())
-			{	
-				for (auto i : shape->indices)
-				{
-					batch.indice_container.emplace_back(i + batch.index_offset);
-				}
-				batch.index_offset += batch.index_offset;
-
-				//batch.indice_container.insert(batch.indice_container.end() - 1, shape->indices.begin(), shape->indices.end());
-			}
-			else if (!batch.indice_container.size())
-			{
-				auto val = std::max_element(shape->indices.begin(), shape->indices.end());
-				batch.index_offset = (*val) + 1;
-				batch.indice_container.insert(batch.indice_container.begin(), shape->indices.begin(), shape->indices.end());
-			}
-			//Make sure total indice size is updated
-			batch.num_indices = batch.indice_container.size();
-
-			// See if this entity has texture
-			if (entity.components.count(COMPONENT_TYPE::TEXTURE))
-			{
-				//if entity has texture we need to create texture coodrinate for it
-				auto tex = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE));
-
-				SEint width = (tex->width) ? tex->width : tex->parent_img_w;
-				SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
-
-				Vec2f first(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
-				Vec2f sec(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
-				Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
-				Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
-
-				std::vector<Vec2f> tex_coords;
-
-				// SE_TODO : See if this 'can be' tweaked a bit
-				tex_coords.emplace_back(fourth.x, fourth.y);
-				tex_coords.emplace_back(third.x, third.y);
-				tex_coords.emplace_back(sec.x, sec.y);
-				tex_coords.emplace_back(first.x, first.y);
-
-				//After texture coordination creation we need to push it into conainer with similar coordinates
-				batch.texture_coordinate_container.insert(
-					batch.texture_coordinate_container.end() - 1,
-					tex_coords.begin(),
-					tex_coords.end());
-
-			}
-
+			_inserValues(batch, entity);
 			return;
 		}
 	}
@@ -299,8 +203,84 @@ void GameRender::_createStaticBuffers(StaticRenderBatch& staticBatch)
 		true);
 
 	staticBatch.BindAttribPtr(SHADER_ATTRIB_INDEX::INDICES, 1);
+
+	
+	//Check for texture component
+	if (staticBatch.texture_handle != SEuint_max)
+	{
+		staticBatch.CreateBuffer(
+			staticBatch.texco_buffer,
+			sizeof(staticBatch.texture_coordinate_container.at(0)) * staticBatch.offset_size,
+			staticBatch.texture_coordinate_container.data());
+
+		staticBatch.BindAttribPtr(SHADER_ATTRIB_INDEX::TEX_COORDS, 2);
+	}
+
 }
 
+
+void GameRender::_inserValues(StaticRenderBatch& staticBatch,const Entity& entity)
+{
+	auto transform = m_engine.GetTransformSystem().TransformableComponents.at(entity.id);
+	auto shape = GetShapeComponent(entity.components.at(COMPONENT_TYPE::SHAPE));
+
+
+	for (unsigned int i = 0; i < shape->points.size(); ++i)
+	{
+		Vec3f temp = transform.modelMatrix * Vec4f(shape->points.at(i), 1.0);
+
+		//Add current components positions to this batches position container
+		staticBatch.position_container.emplace_back(temp);
+	}
+
+	//Add current component indices to this batches indice conainer
+	if (staticBatch.indice_container.size())
+	{
+		for (auto i : shape->indices)
+		{
+			staticBatch.indice_container.emplace_back(i + staticBatch.index_offset);
+		}
+		staticBatch.index_offset += staticBatch.offset_size;
+
+		//batch.indice_container.insert(batch.indice_container.end() - 1, shape->indices.begin(), shape->indices.end());
+	}
+	else if (!staticBatch.indice_container.size())
+	{
+		auto val = std::max_element(shape->indices.begin(), shape->indices.end());
+		staticBatch.offset_size = (*val) + 1;
+		staticBatch.index_offset = (*val) + 1;
+		staticBatch.indice_container.insert(staticBatch.indice_container.begin(), shape->indices.begin(), shape->indices.end());
+	}
+	//Make sure total indice size is updated
+	staticBatch.num_indices = staticBatch.indice_container.size();
+
+	// See if this entity has texture
+	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
+	{
+		//if entity has texture we need to create texture coodrinate for it
+		auto tex = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE));
+		
+		//Take handle to texture
+		staticBatch.texture_handle = tex->handle;
+
+		SEint width = (tex->width) ? tex->width : tex->parent_img_w;
+		SEint heigth = (tex->heigth) ? tex->heigth : tex->parent_img_h;
+
+		Vec2f first(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
+		Vec2f sec(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>((tex->y + heigth)) / tex->parent_img_h);
+		Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
+		Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
+
+		staticBatch.texture_coordinate_container.emplace_back(fourth.x, fourth.y);
+		staticBatch.texture_coordinate_container.emplace_back(third.x, third.y);
+		staticBatch.texture_coordinate_container.emplace_back(sec.x, sec.y);
+		staticBatch.texture_coordinate_container.emplace_back(first.x, first.y);
+
+	}
+
+	return;
+
+}
 
 
 }// !namespace priv
