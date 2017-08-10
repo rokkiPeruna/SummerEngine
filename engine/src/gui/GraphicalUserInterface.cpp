@@ -50,10 +50,10 @@ void GraphicalUserInterface::Initialize()
 
 	//SE_TODO: Let macro decide if these get build
 	//Emplace manager classes' guis
-	m_gui_container.emplace_back(std::make_unique<GuiSceneMgr>(m_engine));
-	m_gui_container.emplace_back(std::make_unique<GuiCompMgr>(m_engine));		//Must be before GuiEntityMgr!!
+	m_gui_container.emplace_back(std::make_unique<GuiSceneMgr>(m_engine, 1));
+	m_gui_container.emplace_back(std::make_unique<GuiCompMgr>(m_engine, 3));		//Must be before GuiEntityMgr!!
 	auto gui_compMgr = m_gui_container.back().get();
-	m_gui_container.emplace_back(std::make_unique<gui::GuiEntityMgr>(m_engine, static_cast<se::gui::GuiCompMgr*>(gui_compMgr)));	//Must be after GuiCompMgr!!
+	m_gui_container.emplace_back(std::make_unique<gui::GuiEntityMgr>(m_engine, static_cast<se::gui::GuiCompMgr*>(gui_compMgr), 2));	//Must be after GuiCompMgr!!
 
 	//Emplace component editors
 	m_gui_container.emplace_back(std::make_unique<gui::CCollidableEditor>(m_engine));
@@ -61,6 +61,12 @@ void GraphicalUserInterface::Initialize()
 	m_gui_container.emplace_back(std::make_unique<gui::CShapeEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CTextureEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CTransformableEditor>(m_engine));
+
+
+	//Sort elements according to their priority
+	std::sort(m_gui_container.begin(), m_gui_container.end(), [&](const std::unique_ptr<EngineGui>& a, const std::unique_ptr<EngineGui>& b) {
+		return a->GetUpdatePriotity() < b->GetUpdatePriotity();
+	});
 }
 
 void GraphicalUserInterface::Update()
@@ -73,29 +79,14 @@ void GraphicalUserInterface::Update()
 		ImGui::Begin("Engine");
 		ImGui::Text("SE Engine, %s");
 
-		if (ImGui::Button("Draw AABBs' lines"))
-			util::SwitchBoolean(gui::debug_draw_values::drawAABBs_lines);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw AABBs' points"))
-			util::SwitchBoolean(gui::debug_draw_values::drawAABBs_points);
-
-		if (ImGui::Button("Draw coll polys' lines"))
-			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys_lines);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw coll polys' points"))
-			util::SwitchBoolean(gui::debug_draw_values::drawCollPolys_points);
-
-		if (ImGui::Button("Draw shapes' outline"))
-			util::SwitchBoolean(gui::debug_draw_values::drawShapes_lines);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw shapes' vertices"))
-			util::SwitchBoolean(gui::debug_draw_values::drawShapes_points);
-
-		if (ImGui::Button("Draw positions"))
-			util::SwitchBoolean(gui::debug_draw_values::drawPositions);
-		ImGui::SameLine();
-		if (ImGui::Button("Draw grid"))
-			util::SwitchBoolean(gui::debug_draw_values::drawGrid);
+		ImGui::Checkbox("Draw AABBs' lines", &gui::debug_draw_values::drawAABBs_lines); ImGui::SameLine();
+		ImGui::Checkbox("Draw AABBs' points", &gui::debug_draw_values::drawAABBs_points);
+		ImGui::Checkbox("Draw coll polys' lines", &gui::debug_draw_values::drawCollPolys_lines); ImGui::SameLine();
+		ImGui::Checkbox("Draw coll polys' points", &gui::debug_draw_values::drawCollPolys_points);
+		ImGui::Checkbox("Draw shapes' outline", &gui::debug_draw_values::drawShapes_lines); ImGui::SameLine();
+		ImGui::Checkbox("Draw shapes' vertices", &gui::debug_draw_values::drawShapes_points);
+		ImGui::Checkbox("Draw positions", &gui::debug_draw_values::drawPositions); ImGui::SameLine();
+		ImGui::Checkbox("Draw grid", &gui::debug_draw_values::drawGrid);
 
 		ImGui::Separator();
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

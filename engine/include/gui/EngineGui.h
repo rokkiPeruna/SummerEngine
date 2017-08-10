@@ -11,6 +11,7 @@
 
 //SE includes:
 #include <core/Engine.h>
+#include <systems/TransformSystem.h> //For setting camera position when new entity is created or entity is choosed
 #include <gui/GraphicalUserInterface.h>
 #include <renderers/DebugRender.h>
 #include <utility/Typedefs.h>
@@ -33,7 +34,7 @@ class EngineGui
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
-	EngineGui(priv::Engine& engine_ref);
+	EngineGui(priv::Engine& engine_ref, SEuint update_priority);
 	///Destructor
 	virtual ~EngineGui();
 	///No copies allowed
@@ -42,11 +43,19 @@ public:
 
 	virtual void Update() = 0;
 
+	SEuint GetUpdatePriotity() const { return m_update_priority; }
+
 protected:
 	///Reference to engine
 	priv::Engine& m_engine;
 
-	// void createPopUpWindow()
+	///Update priority
+	SEuint m_update_priority;
+
+	//void createPopUpWindow()
+
+	//Center camera to given entity
+	void _setCamPosToEntity(SEuint entity_id, SEfloat z_pos = 10.0f);
 };
 
 }//namespace gui

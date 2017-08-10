@@ -5,8 +5,8 @@ namespace se
 {
 namespace gui
 {
-GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref)
-	: ManagerGui(engine_ref)
+GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority)
+	: ManagerGui(engine_ref, update_priority)
 	, m_sceneMgr(nullptr)
 	, m_gui_sceneAdded(false)
 	, m_gui_addSceneNameConflict(false)

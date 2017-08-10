@@ -19,7 +19,7 @@ class GuiEntityMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
-	GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* comp_mgr_ptr);
+	GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* comp_mgr_ptr, SEuint update_priority);
 	///Destructor
 	~GuiEntityMgr();
 	///No copies allowed

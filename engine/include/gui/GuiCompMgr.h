@@ -18,7 +18,7 @@ class GuiCompMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
-	GuiCompMgr(priv::Engine& engine_ref);
+	GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority);
 	///Destructor
 	~GuiCompMgr();
 	///No copies allowed

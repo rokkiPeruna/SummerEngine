@@ -1,14 +1,14 @@
 #include <gui/GuiEntityMgr.h>
 #include <gui/GuiCompMgr.h>
 #include <typeindex>
-#include <systems/TransformSystem.h> //For setting camera position when new entity is created or entity is choosed
+
 
 namespace se
 {
 namespace gui
 {
-GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_ptr)
-	: ManagerGui(engine_ref)
+GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_ptr, SEuint update_priority)
+	: ManagerGui(engine_ref, update_priority)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
 	, m_gui_comp_mgr(gui_comp_mgr_ptr)
@@ -62,8 +62,7 @@ void GuiEntityMgr::Update()
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated		
 				m_gui_comp_mgr->InvalidateComponentObj();
 
-				auto& epos = priv::TransformSystem::TransformableComponents.at(entityid).position;
-				m_engine.GetCamera()->SetPosition(Vec3f(epos.x, epos.y, 10.0f));
+				_setCamPosToEntity(entityid);
 
 				memset(&entityname[0], 0, sizeof(entityname));
 			}
@@ -96,8 +95,7 @@ void GuiEntityMgr::Update()
 				m_gui_comp_mgr->InvalidateComponentObj();
 				elem_visibility::show_component_mgr_window = true;
 
-				auto& epos = priv::TransformSystem::TransformableComponents.at(m_entity_mgr->GetCurrentEntity()->id).position;
-				m_engine.GetCamera()->SetPosition(Vec3f(epos.x, epos.y, 10.0f));
+				_setCamPosToEntity(m_entity_mgr->GetCurrentEntity()->id);
 			}
 		}
 	}

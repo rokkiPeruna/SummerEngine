@@ -5,7 +5,7 @@ namespace se
 namespace gui
 {
 CompEditorGui::CompEditorGui(priv::Engine& engine_ref)
-	: EngineGui(engine_ref)
+	: EngineGui(engine_ref, SEuint_max)
 {
 
 }

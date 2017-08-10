@@ -17,7 +17,7 @@ class ManagerGui : public EngineGui
 public: 
 	///Default constructor.
 	///1.param: reference to Engine -class
-	ManagerGui(priv::Engine& engine_ref);
+	ManagerGui(priv::Engine& engine_ref, SEuint update_priority);
 	///Destructor
 	virtual ~ManagerGui();
 	///No copies allowed

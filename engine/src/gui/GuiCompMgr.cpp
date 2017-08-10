@@ -7,8 +7,8 @@ namespace se
 {
 namespace gui
 {
-GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref)
-	: ManagerGui(engine_ref)
+GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority)
+	: ManagerGui(engine_ref, update_priority)
 	, m_scene_mgr(nullptr)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)

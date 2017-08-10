@@ -16,7 +16,7 @@ class GuiSceneMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	GuiSceneMgr(priv::Engine& engine_ref);
+	GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority);
 	///Destructor
 	~GuiSceneMgr();
 	///No copies allowed
