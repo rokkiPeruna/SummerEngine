@@ -208,11 +208,7 @@ Scene* SceneManager::GetCurrentScene()
 {
 	if (m_currentScene.GetType() != SCENE_TYPE::FAULTY)
 		return &m_currentScene;
-	else
-	{
-		MessageWarning(SceneMgr_id) << "GetCurrentScene() returns nullptr!";
-		return nullptr;
-	}
+	return nullptr;
 }
 
 const std::vector<std::string>& SceneManager::GetSceneNames()

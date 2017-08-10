@@ -56,21 +56,29 @@ public:
 private:
 	///Prints console messages
 	void _printToConsole();
-	///Prints log file messages
+
+	///Map for binding message sender to id
+	std::map<SEuint64, std::string> sender_name_map;
+
+	///Previous m_messages size
+	SEuint m_prev_msgs_size;
+	///Previous m_debugMessages size
+	SEuint m_prev_dbgmsgs_size;
+
+	///Tells if new messages have arrived
+	SEbool m_newMessagesArrived;
 
 	///Static containers for messages
 	static std::vector<Message*> m_messages;
 	static std::vector<DebugMessage*> m_debugMessages;
 
-	///Map for binding message sender to id
-	std::map<SEuint64, std::string> sender_name_map;
 
 	//ImGui checkbox booleans
-	bool m_msgtype_default_checkbox;
-	bool m_msgtype_info_checkbox;
-	bool m_msgtype_warning_checkbox;
-	bool m_msgtype_error_checkbox;
-	bool m_print_debug_msgs;
+	SEbool m_msgtype_default_checkbox;
+	SEbool m_msgtype_info_checkbox;
+	SEbool m_msgtype_warning_checkbox;
+	SEbool m_msgtype_error_checkbox;
+	SEbool m_print_debug_msgs;
 };
 
 }//namespace priv

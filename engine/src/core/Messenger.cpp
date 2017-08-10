@@ -13,6 +13,9 @@ std::vector<DebugMessage*> Messenger::m_debugMessages{};
 
 Messenger::Messenger()
 	: sender_name_map{}
+	, m_newMessagesArrived(false)
+	, m_prev_msgs_size(0)
+	, m_prev_dbgmsgs_size(0)
 	, m_msgtype_default_checkbox(true)
 	, m_msgtype_info_checkbox(true)
 	, m_msgtype_warning_checkbox(true)
@@ -56,7 +59,6 @@ void Messenger::PrintMessages(SEint flags)
 	{
 		_printToConsole();
 	}
-
 	ImGui::End();
 }
 
@@ -111,26 +113,34 @@ void Messenger::_printToConsole()
 	ImGui::Checkbox("Error", &m_msgtype_error_checkbox);
 	ImGui::Checkbox("Print debug messages", &m_print_debug_msgs);
 
+	ImGui::Separator();
+	ImGui::BeginChild("DataRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+	m_newMessagesArrived = (m_messages.size() == m_prev_msgs_size) ? false : true;
+
 	ImVec4 textcolor;
+	for (auto m : m_messages)
+	{
+		//Set color according to message type
+		if (m_msgtype_default_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_NO_TYPE)
+			textcolor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		else if (m_msgtype_info_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_INFO)
+			textcolor = ImVec4(0.5f, 0.7f, 1.0f, 1.0f);
+		else if (m_msgtype_warning_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_WARNING)
+			textcolor = ImVec4(1.0f, 0.6f, 0.25f, 1.0f);
+		else if (m_msgtype_error_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_ERROR)
+			textcolor = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
-		for (auto m : m_messages)
-		{
-			//Set color according to message type
-			if (m_msgtype_default_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_NO_TYPE)
-				textcolor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-			else if (m_msgtype_info_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_INFO)
-				textcolor = ImVec4(0.5f, 0.7f, 1.0f, 1.0f);
-			else if (m_msgtype_warning_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_WARNING)
-				textcolor = ImVec4(1.0f, 0.6f, 0.25f, 1.0f);
-			else if (m_msgtype_error_checkbox && m->msgtype == MESSAGE_TYPE_INTERNAL::_ERROR)
-				textcolor = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
-
-			std::string sender = "[" + sender_name_map.at(m->sndr) + "]";
-			const char* message = m->msg.data();
-			ImGui::TextColored(textcolor, sender.c_str());
-			ImGui::TextColored(textcolor, message);
-		}
+		std::string sender = "[" + sender_name_map.at(m->sndr) + "]";
+		const char* message = m->msg.data();
+		ImGui::TextColored(textcolor, sender.c_str());
+		ImGui::TextColored(textcolor, message);
+		if (m_newMessagesArrived)
+			ImGui::SetScrollHere();
+	}
+	m_prev_msgs_size = m_messages.size();
 #ifndef NDEBUG
+	m_newMessagesArrived = (m_debugMessages.size() == m_prev_dbgmsgs_size) ? false : true;
 	if (m_print_debug_msgs)
 	{
 		for (auto m : m_debugMessages)
@@ -149,9 +159,14 @@ void Messenger::_printToConsole()
 			const char* message = m->msg.data();
 			ImGui::TextColored(textcolor, sender.c_str());
 			ImGui::TextColored(textcolor, message);
+			if (m_newMessagesArrived)
+				ImGui::SetScrollHere();
 		}
 	}
+	m_prev_dbgmsgs_size = m_debugMessages.size();
 #endif
+	ImGui::EndChild();
+	ImGui::Separator();
 }
 
 }//namespace priv
