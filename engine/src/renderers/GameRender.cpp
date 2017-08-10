@@ -74,13 +74,12 @@ void GameRender::Update(SEfloat)
 	SEuint view_m_loc = glGetUniformLocation(shader, "view");
 	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
 
-	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::window_data::width / (SEfloat)gui::window_data::heigth, 0.1f, 100.f);
 	glUniformMatrix4fv
 	(
 		persp_m_loc,
 		1,
 		GL_FALSE,
-		&persp[0][0]
+		&m_perps_matrix[0][0]
 	);
 
 	Mat4f view = m_engine.GetCamera()->GetCameraView();

@@ -29,8 +29,8 @@ public:
 		SEfloat tangential_factor = tanf(theta);
 		SEfloat radial_factor = cosf(theta);
 
-		SEfloat x = -0.25;
-		SEfloat y = -0.25;
+		SEfloat x = -0.5f;
+		SEfloat y = -0.5f;
 
 		if (num_points < 4)
 		{

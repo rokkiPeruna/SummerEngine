@@ -23,8 +23,6 @@ Window::~Window()
 
 void Window::Initialize()
 {
-
-
 	// Setup SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
 	{

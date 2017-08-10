@@ -27,6 +27,10 @@ public:
 	///Get view matrix
 	Mat4f GetCameraView();
 
+	void SetPosition(Vec3f position);
+
+	void SetTarget(Vec3f target);
+
 private:
 	///Where is the camera
 	Vec3f m_cameraPosition;

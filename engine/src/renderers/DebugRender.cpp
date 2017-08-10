@@ -3,6 +3,7 @@
 #include <systems/CollisionSystem.h> //For AABB and collision polygon drawing
 #include <systems/TransformSystem.h> //For shape drawing
 #include <components/CTransformable.h> //For shape drawing
+#include <managers/SceneManager.h> //For grid drawing
 
 namespace se
 {
@@ -10,6 +11,7 @@ namespace priv
 {
 DebugRender::DebugRender(Engine& engine_ref)
 	: Render(engine_ref)
+	, m_dbg_verts_for_grid{}
 	, m_dbg_verts_for_lines{}
 	, m_dbg_verts_for_points{}
 	, m_model_matrices{}
@@ -27,6 +29,14 @@ DebugRender::~DebugRender()
 
 void DebugRender::Initialize()
 {
+	///Set various OpenGL settings
+	glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);								///Draw only triangles that are facing the camera with order for vertices as counter-clockwise
+	glEnable(GL_DEPTH_TEST);							///Enable depth buffer testing so that fragments that cannot be seen are not drawn
+	//glDepthFunc(GL_LESS);								///Give desired depth testing function, in this case if fragment's Z is less than current Z, discard fragment
+	glEnable(GL_BLEND);									///Enable blending so that use of alpha values in textures is possible
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	///Give desired blending function, in this case source color affects N% and destination color affects 1-N%
+
 	m_debug_shader = *m_engine.GetResourceManager().GetShaderProgram("debug_rend");
 
 	glGenVertexArrays(1, &m_vao);
@@ -55,13 +65,12 @@ void DebugRender::Update(SEfloat)
 		SEuint persp_m_loc = glGetUniformLocation(shader_handle, "persp");
 		SEuint color_loc = glGetUniformLocation(shader_handle, "line_color");
 
-		Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::window_data::width / (SEfloat)gui::window_data::heigth, 0.1f, 100.f);
 		glUniformMatrix4fv
 		(
 			persp_m_loc,
 			1,
 			GL_FALSE,
-			&persp[0][0]
+			&m_perps_matrix[0][0]
 		);
 
 		Mat4f view = m_engine.GetCamera()->GetCameraView();
@@ -77,6 +86,8 @@ void DebugRender::Update(SEfloat)
 		_initModelMatrs(gui::debug_draw_values::drawPositions);
 
 		//Draw calls
+		if (gui::debug_draw_values::drawGrid)
+			_drawGrid(color_loc);
 		if (gui::debug_draw_values::drawAABBs_lines || gui::debug_draw_values::drawAABBs_points)
 			_drawAABBs(color_loc, gui::debug_draw_values::drawAABBs_lines, gui::debug_draw_values::drawAABBs_points);
 		if (gui::debug_draw_values::drawCollPolys_lines || gui::debug_draw_values::drawCollPolys_points)
@@ -164,6 +175,7 @@ void DebugRender::AddDebugPoints(Vec2f vertex, Mat4f modelMatrix, SEbool not_aab
 SEbool DebugRender::_somethingToDraw()
 {
 	return
+		gui::debug_draw_values::drawGrid |
 		gui::debug_draw_values::drawAABBs_lines |
 		gui::debug_draw_values::drawAABBs_points |
 		gui::debug_draw_values::drawCollPolys_lines |
@@ -181,6 +193,50 @@ void DebugRender::_initModelMatrs(const SEbool fetch_positions_also)
 		if (fetch_positions_also)
 			m_dbg_verts_for_positions.emplace_back(transf_c.position);
 	}
+}
+
+void DebugRender::_createGrid(const Scene& current_scene)
+{
+	SEfloat width{};
+	SEfloat heigth{};
+	SEfloat offset = -0.5f; //We want our integer positions to be in the center of each grid square, so gird draw must start at -0.5f!
+	if (SCENE_TYPE::LEVEL == current_scene.GetType())
+	{
+		width =  static_cast<SEfloat>(current_scene.GetWidth());
+		heigth = static_cast<SEfloat>(current_scene.GetHeigth());
+	}
+	else
+	{
+		width = 25.0f;
+		heigth = 25.0f;
+	}
+	//Horizontal lines
+	for (SEuint horiz = 0; horiz <= heigth; ++horiz)
+	{
+		m_dbg_verts_for_grid.emplace_back(Vec3f(0.0f + offset, horiz + offset, 0.0f));
+		m_dbg_verts_for_grid.emplace_back(Vec3f(width + offset, horiz + offset, 0.0f));
+	}
+	//Vertical lines
+	for (SEuint verti = 0; verti <= width; ++verti)
+	{
+		m_dbg_verts_for_grid.emplace_back(Vec3f(verti + offset, 0.0f + offset, 0.0f));
+		m_dbg_verts_for_grid.emplace_back(Vec3f(verti + offset, heigth + offset, 0.0f));
+	}
+}
+
+void DebugRender::_drawGrid(SEuint color_attr_loc)
+{
+	static SEbool grid_created = false; //SE_TODO: This is ugly as fuck, chaage it after you have implemented events!
+	if (!grid_created && m_engine.GetSceneMgr().GetCurrentScene())
+	{
+		_createGrid(*m_engine.GetSceneMgr().GetCurrentScene());
+		grid_created = true;
+	}
+
+	SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_grid);
+	_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_grid);
+	_drawLines(static_cast<SEuint>(m_dbg_verts_for_grid.size()));
+	_cleanBuffData(buffer);
 }
 
 void DebugRender::_drawAABBs(SEuint color_attr_loc, const SEbool lines, const SEbool points)

@@ -18,6 +18,9 @@ SEbool elem_visibility::show_component_mgr_window = false;
 
 
 //DEBUG DRAW VALUES
+SEbool debug_draw_values::drawGrid = true;
+const Vec4f debug_draw_values::color_grid{ 0.0f, 0.0f, 0.0f, 0.3f };
+
 SEbool debug_draw_values::drawAABBs_lines = false;
 SEbool debug_draw_values::drawAABBs_points = false;
 const Vec4f debug_draw_values::color_AABB{ 1.0f, 1.0f, 0.0f, 1.0f };

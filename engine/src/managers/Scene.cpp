@@ -35,7 +35,7 @@ void Scene::operator=(const Scene& o)
 	m_heigth = o.m_heigth;
 }
 
-std::string Scene::GetName()
+std::string Scene::GetName() const
 {
 	return m_name;
 }
@@ -45,17 +45,17 @@ nlohmann::json* Scene::GetData()
 	return m_data;
 }
 
-SCENE_TYPE Scene::GetType()
+SCENE_TYPE Scene::GetType() const
 {
 	return m_type;
 }
 
-SEuint Scene::GetWidth()
+SEuint Scene::GetWidth() const
 {
 	return m_width;
 }
 
-SEuint Scene::GetHeigth()
+SEuint Scene::GetHeigth() const
 {
 	return m_heigth;
 }

@@ -30,8 +30,13 @@ static SEuint vao;
 
 void EditorRender::Initialize()
 {
+	///Set various OpenGL settings
 	glFrontFace(GL_CCW);
-	glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);								///Draw only triangles that are facing the camera with order for vertices as counter-clockwise
+	glEnable(GL_DEPTH_TEST);							///Enable depth buffer testing so that fragments that cannot be seen are not drawn
+	//glDepthFunc(GL_LESS);								///Give desired depth testing function, in this case if fragment's Z is less than current Z, discard fragment
+	glEnable(GL_BLEND);									///Enable blending so that use of alpha values in textures is possible
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	///Give desired blending function, in this case source color affects N% and destination color affects 1-N%
 
 	// TODO : This shoud be related to entity
 	CurrentShader = m_engine.GetResourceManager().GetShaderProgram("testShader");
@@ -67,13 +72,12 @@ void EditorRender::Update(SEfloat)
 	SEuint view_m_loc = glGetUniformLocation(shader, "view");
 	SEuint persp_m_loc = glGetUniformLocation(shader, "persp");
 
-	Mat4f persp = glm::perspective(glm::radians(45.f), (SEfloat)gui::window_data::width / (SEfloat)gui::window_data::heigth, 0.1f, 100.f);
 	glUniformMatrix4fv
 	(
 		persp_m_loc,
 		1,
 		GL_FALSE,
-		&persp[0][0]
+		&m_perps_matrix[0][0]
 	);
 
 	Mat4f view = m_engine.GetCamera()->GetCameraView();

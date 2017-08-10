@@ -44,11 +44,11 @@ public:
 
 
 	///Getters for variables
-	std::string GetName();
+	std::string GetName() const;
 	nlohmann::json* GetData();
-	SCENE_TYPE GetType();
-	SEuint GetWidth();
-	SEuint GetHeigth();
+	SCENE_TYPE GetType() const;
+	SEuint GetWidth() const;
+	SEuint GetHeigth() const;
 
 	void SetData(nlohmann::json* j);
 

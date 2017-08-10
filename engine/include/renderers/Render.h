@@ -180,9 +180,9 @@ class Render
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Render(Engine& engine_ref):m_engine(engine_ref) {};
+	Render(Engine& engine_ref);
 
-	virtual ~Render(){}
+	virtual ~Render();
 
 	virtual void Initialize() = 0;
 	virtual void Uninitialize() = 0;
@@ -197,12 +197,15 @@ public:
 
 	virtual void ClearRenderBatches() = 0;
 
+	static void SetPerspMatrix(Mat4f perspective_matrix);
+	static void SetPerspMatrix(SEfloat fov_as_deg, SEfloat ratio, SEfloat near_z, SEfloat far_z);
 
 protected:
 	///Reference to Engine -class
 	Engine& m_engine;
 
-
+	///Perspective matrix
+	static Mat4f m_perps_matrix;
 };
 
 }// !namespace priv
