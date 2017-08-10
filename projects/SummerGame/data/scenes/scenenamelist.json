@@ -1,6 +1,7 @@
 {
     "scenenamelist": [
         "level1",
-        "main_menu"
+        "main_menu",
+        "Test"
     ]
 }

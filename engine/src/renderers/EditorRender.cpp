@@ -182,7 +182,7 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	}
 
 	//If there is no approriate batch, create one
-	m_dyn_rend_batches.emplace_back(DynRenderBatch(static_cast<SEuint>(shape->indices.size())));
+	m_dyn_rend_batches.emplace_back(DynamicRenderBatch(static_cast<SEuint>(shape->indices.size())));
 	auto& b = m_dyn_rend_batches.back();
 	b.entity_ids.emplace_back(entity.id);
 
