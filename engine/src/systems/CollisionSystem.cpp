@@ -22,11 +22,6 @@ CollisionSystem::CollisionSystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::COLLIDABLE, this);
 }
 
-CollisionSystem::~CollisionSystem()
-{
-
-}
-
 void CollisionSystem::Initialize()
 {
 

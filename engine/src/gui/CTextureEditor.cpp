@@ -62,6 +62,23 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 			component_obj.value().at("w") = tex->width;
 			component_obj.value().at("h") = tex->heigth;
 		}
+		else if (ImGui::CollapsingHeader("Image"))
+		{
+			ImGui::BeginChild("Imagedata", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+			auto tex = GetTextureComponent(index_in_container);
+
+			ImGui::GetWindowDrawList()->AddImage(
+				(void*)static_cast<SEuint64>(tex->handle),
+				Vec2f(ImGui::GetItemRectMax().x, ImGui::GetItemRectMax().y),
+				Vec2f(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y)
+			);
+			ImGui::Image(
+				&tex->handle,
+				ImVec2(static_cast<SEfloat>(tex->parent_img_w), static_cast<SEfloat>(tex->parent_img_h))
+			);
+
+			ImGui::EndChild();
+		}
 	}
 }
 

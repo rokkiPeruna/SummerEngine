@@ -18,11 +18,6 @@ EditorRender::EditorRender(Engine& engine_ref)
 	m_dyn_rend_batches.reserve(1000);
 }
 
-EditorRender::~EditorRender()
-{
-
-}
-
 namespace
 {
 static SEuint vao;

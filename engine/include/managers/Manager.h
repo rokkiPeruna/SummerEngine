@@ -32,9 +32,12 @@ public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
 	Manager(Engine& engine_ref) : m_engine(engine_ref) {}
-
-	///Destructor
-	virtual ~Manager() {}
+	//
+	virtual ~Manager() = default;
+	Manager(const Manager&) = delete;
+	void operator=(const Manager&) = delete;
+	Manager(Manager&&) = delete;
+	void operator=(Manager&&) = delete;
 
 	virtual void Initialize() { MessageInfo(Engine_id) << "Default Initialize() for Manager called"; }
 

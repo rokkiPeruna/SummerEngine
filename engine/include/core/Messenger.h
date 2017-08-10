@@ -37,8 +37,11 @@ class Messenger
 public:
 	///Default constructor
 	Messenger();
-	///Destructor
 	~Messenger();
+	Messenger(const Messenger&) = delete;
+	void operator=(const Messenger&) = delete;
+	Messenger(Messenger&&) = delete;
+	void operator=(Messenger&&) = delete;
 
 	///Initialize Messenger
 	void Initialize();

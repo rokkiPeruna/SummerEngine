@@ -35,11 +35,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	EntityManager(Engine& engine_ref);
-	///Destructor
-	~EntityManager();
-	///No copies allowed
+	//
+	~EntityManager() = default;
 	EntityManager(const EntityManager&) = delete;
 	void operator=(const EntityManager&) = delete;
+	EntityManager(EntityManager&&) = delete;
+	void operator=(EntityManager&&) = delete;
 
 	///Init method, called by Engine at start up
 	void Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr);

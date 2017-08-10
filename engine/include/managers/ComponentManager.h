@@ -28,11 +28,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	ComponentManager(Engine& engine_ref);
-	///Destructor
-	~ComponentManager();
-	///Deleted copy ctor and assign operator
+	//
+	~ComponentManager() = default;
 	ComponentManager(const ComponentManager&) = delete;
 	void operator=(const ComponentManager&) = delete;
+	ComponentManager(ComponentManager&&) = delete;
+	void operator=(ComponentManager&&) = delete;
 
 	///Init method
 	void Initialize(std::string relativeFilePathToComponentsJson);

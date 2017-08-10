@@ -23,11 +23,6 @@ GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority)
 	assert(m_scene_mgr && m_entity_mgr && m_comp_mgr);
 }
 
-GuiCompMgr::~GuiCompMgr()
-{
-
-}
-
 void GuiCompMgr::Update()
 {
 

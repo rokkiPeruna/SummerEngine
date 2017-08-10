@@ -9,11 +9,5 @@ ManagerGui::ManagerGui(priv::Engine& engine_ref, SEuint update_priority)
 {
 
 }
-
-ManagerGui::~ManagerGui()
-{
-
-}
-
 }//namespace gui
 }//namespace se

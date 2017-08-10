@@ -12,10 +12,5 @@ ComponentSystem::ComponentSystem(Engine& engine_ref)
 	if (!ComponentSystem::m_engine_ptr)
 		m_engine_ptr = &m_engine;
 }
-
-ComponentSystem::~ComponentSystem()
-{
-
-}
 }//namespace priv
 }//namespace se

@@ -15,11 +15,6 @@ class Camera
 public:
 	///Default constructor
 	Camera();
-	///Desturctor
-	~Camera();
-	///Delete copy constructor and assignment operator
-	Camera(const Camera&) = delete;
-	void operator=(const Camera&) = delete;
 
 	///Update camera position
 	void Update(const SEfloat deltaTime);

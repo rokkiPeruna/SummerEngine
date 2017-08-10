@@ -22,11 +22,6 @@ DebugRender::DebugRender(Engine& engine_ref)
 
 }
 
-DebugRender::~DebugRender()
-{
-
-}
-
 void DebugRender::Initialize()
 {
 	///Set various OpenGL settings

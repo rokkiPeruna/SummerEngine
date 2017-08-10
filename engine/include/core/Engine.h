@@ -65,13 +65,12 @@ public:
 	///Default engine constructor
 	///1.param: string naming the current project
 	Engine(const std::string& curr_proj_name);
-	///Default Engine destructor
+	//
+	//~Engine() = default;
 	~Engine();
-	///Deleted copy constructor and copy assignment operator
 	Engine(const Engine&) = delete;
 	void operator=(const Engine&) = delete;
-	///Deleted move constructror and move assignment
-	Engine(const Engine&&) = delete;
+	Engine(Engine&&) = delete;
 	void operator=(const Engine&&) = delete;
 
 	// Initialize engine 

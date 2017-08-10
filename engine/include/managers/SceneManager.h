@@ -28,11 +28,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	SceneManager(Engine& engine_ref);
-	///Destructor
-	~SceneManager();
-	///No copies allowed
+	//
+	~SceneManager() = default;
 	SceneManager(const SceneManager&) = delete;
 	void operator=(const SceneManager&) = delete;
+	SceneManager(SceneManager&&) = delete;
+	void operator=(SceneManager&&) = delete;
 
 	///Init SceneManager
 	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr, ComponentManager* compMgr_ptr);

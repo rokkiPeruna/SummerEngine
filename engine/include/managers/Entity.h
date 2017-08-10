@@ -25,6 +25,8 @@ public:
 	///Assign operator deleted
 	Entity& operator=(const Entity&) = delete;
 
+	//SE_TODO: Add move operations!
+
 	///Const name
 	std::string name;
 	

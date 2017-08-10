@@ -4,6 +4,8 @@
 // Other options (memory allocation overrides, callbacks, etc.) can be set at runtime via the ImGuiIO structure - ImGui::GetIO().
 //-----------------------------------------------------------------------------
 
+#include <utility/Math.h> //For converting between Vec2f to ImVec2 and Vec4f to ImVec4
+
 #pragma once
 
 
@@ -34,15 +36,15 @@
 #define IMGUI_STB_NAMESPACE     ImGuiStb
 
 //---- Define constructor and implicit cast operators to convert back<>forth from your math types and ImVec2/ImVec4.
-/*
+
 #define IM_VEC2_CLASS_EXTRA                                                 \
-        ImVec2(const MyVec2& f) { x = f.x; y = f.y; }                       \
-        operator MyVec2() const { return MyVec2(x,y); }
+        ImVec2(const se::Vec2f& f) { x = f.x; y = f.y; }                       \
+        operator se::Vec2f() const { return se::Vec2f(x,y); }
 
 #define IM_VEC4_CLASS_EXTRA                                                 \
-        ImVec4(const MyVec4& f) { x = f.x; y = f.y; z = f.z; w = f.w; }     \
-        operator MyVec4() const { return MyVec4(x,y,z,w); }
-*/
+        ImVec4(const se::Vec4f& f) { x = f.x; y = f.y; z = f.z; w = f.w; }     \
+        operator se::Vec4f() const { return se::Vec4f(x,y,z,w); }
+
 
 //---- Use 32-bit vertex indices (instead of default: 16-bit) to allow meshes with more than 64K vertices
 //#define ImDrawIdx unsigned int

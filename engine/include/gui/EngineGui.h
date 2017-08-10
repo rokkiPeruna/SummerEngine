@@ -35,11 +35,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	EngineGui(priv::Engine& engine_ref, SEuint update_priority);
-	///Destructor
-	virtual ~EngineGui();
-	///No copies allowed
+
+	virtual ~EngineGui() = default;
 	EngineGui(const EngineGui&) = delete;
 	void operator=(const EngineGui&) = delete;
+	EngineGui(EngineGui&&) = delete;
+	void operator=(EngineGui&&) = delete;
 
 	virtual void Update() = 0;
 

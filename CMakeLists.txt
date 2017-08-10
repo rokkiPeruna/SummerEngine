@@ -14,7 +14,7 @@
 #-- Properties->Linker->Input->Additional Dependencies 				target_link_libraries
 #----------------------------------------------------------------------------------------------------------------------------------
 
-#This is root file
+#This is the root file
 cmake_minimum_required(VERSION 3.7)
 
 #Solution name

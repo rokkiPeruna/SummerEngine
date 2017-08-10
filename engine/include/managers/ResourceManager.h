@@ -32,11 +32,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	ResourceManager(Engine& engine_ref);
-	///Destructor
-	~ResourceManager();
-	///Deleted copy constructor and assign operator
+	//
+	~ResourceManager() = default;
 	ResourceManager(const ResourceManager&) = delete;
 	void operator=(const ResourceManager&) = delete;
+	ResourceManager(ResourceManager&&) = delete;
+	void operator=(ResourceManager&&) = delete;
 
 	///Initialize resource manager with paths to resources. Also fetches all resource file names for gui to use.
 	///1.param: path to shader files

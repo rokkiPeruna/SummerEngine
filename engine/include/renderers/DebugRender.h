@@ -17,11 +17,12 @@ public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
 	DebugRender(Engine& engine_ref);
-	///Destructor
-	~DebugRender();
-	///Deleted copy ctor and assign operator
+	//
+	~DebugRender() = default;
 	DebugRender(const DebugRender&) = delete;
 	void operator=(const DebugRender&) = delete;
+	DebugRender(DebugRender&&) = delete;
+	void operator=(DebugRender&&) = delete;
 
 	void Initialize() override final;
 	void Uninitialize() override final;

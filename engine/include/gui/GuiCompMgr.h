@@ -19,11 +19,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority);
-	///Destructor
-	~GuiCompMgr();
-	///No copies allowed
+	//
+	~GuiCompMgr() = default;
 	GuiCompMgr(const GuiCompMgr&) = delete;
 	void operator=(const GuiCompMgr&) = delete;
+	GuiCompMgr(GuiCompMgr&&) = delete;
+	void operator=(GuiCompMgr&&) = delete;
 
 	void Update() override final;
 

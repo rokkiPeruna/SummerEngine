@@ -22,11 +22,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	CollisionSystem(Engine& engine_ref);
-	///Destructor
-	~CollisionSystem();
-	///Deleted copy constructor and assign operator
+	//
+	~CollisionSystem() = default;
 	CollisionSystem(const CollisionSystem&) = delete;
 	void operator=(const CollisionSystem&) = delete;
+	CollisionSystem(CollisionSystem&&) = delete;
+	void operator=(CollisionSystem&&) = delete;
 
 	void Initialize() override final;
 

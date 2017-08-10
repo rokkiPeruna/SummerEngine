@@ -12,11 +12,6 @@ IOManager::IOManager(Engine& engine_ref)
 
 }
 
-IOManager::~IOManager()
-{
-
-}
-
 void IOManager::Initialize()
 {
 

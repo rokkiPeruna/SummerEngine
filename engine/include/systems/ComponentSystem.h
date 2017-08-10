@@ -60,8 +60,12 @@ public:
 	///Default constructor.
 	///1.param: Pointer to Engine -class
 	ComponentSystem(Engine& engine_ref);
-	///Destructor
-	virtual ~ComponentSystem();
+	//
+	virtual ~ComponentSystem() = default;
+	ComponentSystem(const ComponentSystem&) = delete;
+	void operator=(const ComponentSystem&) = delete;
+	ComponentSystem(ComponentSystem&&) = delete;
+	void operator=(ComponentSystem&&) = delete;
 
 	///ComponentSystem's initializing method.
 	///Must be overridden in inheriting class.

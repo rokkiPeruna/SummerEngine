@@ -32,11 +32,12 @@ class GraphicalUserInterface
 public:
 	///Default constructor
 	GraphicalUserInterface(priv::Engine& engine_ref);
-	///Destructor
+	//
 	~GraphicalUserInterface();
-	///Only one allowed
 	GraphicalUserInterface(const GraphicalUserInterface&) = delete;
 	void operator=(const GraphicalUserInterface&) = delete;
+	GraphicalUserInterface(GraphicalUserInterface&&) = delete;
+	void operator=(GraphicalUserInterface&&) = delete;
 
 	void Initialize();
 

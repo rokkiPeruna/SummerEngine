@@ -25,11 +25,6 @@ Camera::Camera()
 
 }
 
-Camera::~Camera()
-{
-
-}
-
 void Camera::Update(const SEfloat deltaTime)
 {
 

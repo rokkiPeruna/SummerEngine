@@ -22,11 +22,6 @@ ResourceManager::ResourceManager(Engine& engine_ref)
 
 }
 
-ResourceManager::~ResourceManager()
-{
-
-}
-
 //Recived path is where the actual shader files are.
 void ResourceManager::Initialize(const std::string& sourcePath, const std::string& rel_path_to_user_files)
 {

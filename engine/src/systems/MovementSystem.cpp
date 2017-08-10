@@ -25,11 +25,6 @@ MovementSystem::MovementSystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::DYNAMIC, this);
 }
 
-MovementSystem::~MovementSystem()
-{
-
-}
-
 void MovementSystem::Initialize()
 {
 

@@ -9,11 +9,6 @@ Keyboard::Keyboard()
 	assert(m_key_state_struct);
 }
 
-Keyboard::~Keyboard()
-{
-
-}
-
 SEbool Keyboard::GetState(SEint key)
 {
 	if (m_key_state_struct[key])

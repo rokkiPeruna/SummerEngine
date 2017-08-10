@@ -79,16 +79,7 @@ struct StaticRenderBatch : public RenderBatch
 
 };
 
-
-
-
-
-
-
-
 }//! namespace se
 }//! namespace priv
-
-
 
 #endif//! SE_RENDER_BATCH_SE

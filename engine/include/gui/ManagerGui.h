@@ -18,11 +18,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	ManagerGui(priv::Engine& engine_ref, SEuint update_priority);
-	///Destructor
-	virtual ~ManagerGui();
-	///No copies allowed
+	//
+	virtual ~ManagerGui() = default;
 	ManagerGui(const ManagerGui&) = delete;
 	void operator=(const ManagerGui&) = delete;
+	ManagerGui(const ManagerGui&&) = delete;
+	void operator=(const ManagerGui&&) = delete;
 
 	virtual void Update() = 0;
 

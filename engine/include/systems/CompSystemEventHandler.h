@@ -13,11 +13,12 @@ class CompSystemEventHandler
 public:
 	///Default constructor
 	CompSystemEventHandler();
-	///Destructor
-	~CompSystemEventHandler();
-	///No copies allowed
+	//
+	~CompSystemEventHandler() = default;
 	CompSystemEventHandler(const CompSystemEventHandler&) = delete;
 	void operator=(const CompSystemEventHandler&) = delete;
+	CompSystemEventHandler(CompSystemEventHandler&&) = delete;
+	void operator=(CompSystemEventHandler&&) = delete;
 
 
 

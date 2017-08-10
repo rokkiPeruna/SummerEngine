@@ -38,6 +38,8 @@ public:
 	///Deleted assign operator
 	void operator=(const Scene&);
 
+	//SE_TODO: Add move operations
+
 	///Load resources to current scene
 
 	///Load entities

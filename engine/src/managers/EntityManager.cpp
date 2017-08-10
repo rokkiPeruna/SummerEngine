@@ -29,10 +29,6 @@ EntityManager::EntityManager(Engine& engine_ref)
 	, m_curr_free_entity_id(-1)
 	, m_free_entity_ids{}
 {
-}
-
-EntityManager::~EntityManager()
-{
 
 }
 

@@ -25,11 +25,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	MovementSystem(Engine& engine_ref);
-	///Destructor
-	~MovementSystem();
-	///Deleted copy constructor and assign operator
+	//
+	~MovementSystem() = default;
 	MovementSystem(const MovementSystem&) = delete;
 	void operator=(const MovementSystem&) = delete;
+	MovementSystem(MovementSystem&&) = delete;
+	void operator=(MovementSystem&&) = delete;
 
 	///Initialize system
 	void Initialize() override final;

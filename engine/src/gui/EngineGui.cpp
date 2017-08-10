@@ -11,11 +11,6 @@ EngineGui::EngineGui(priv::Engine& engine_ref, SEuint update_priority)
 
 }
 
-EngineGui::~EngineGui()
-{
-
-}
-
 void EngineGui::_setCamPosToEntity(SEuint entity_id, SEfloat z_pos)
 {
 	auto& epos = priv::TransformSystem::TransformableComponents.at(entity_id).position;

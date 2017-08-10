@@ -35,11 +35,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	TransformSystem(Engine& engine_ref);
-	///Destructor
-	~TransformSystem();
-	///Delete copy constructor and assingment operator
+	//
+	~TransformSystem() = default;
 	TransformSystem(const TransformSystem&) = delete;
 	void operator=(const TransformSystem&) = delete;
+	TransformSystem(TransformSystem&&) = delete;
+	void operator=(TransformSystem&&) = delete;
 
 	///Initialize this system
 	void Initialize() override final;
@@ -59,21 +60,21 @@ public:
 
 	///Creates component to entity and add it to container and jsonobject
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE, Dataformat_itr& entity_obj) override final;
-	
+
 	///Removes component from entity and container and json object
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE, Dataformat_itr& entity_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
 	static std::vector<SysMessage> Messages;
-	
+
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
 
 	const std::vector<CShape>& GetCShapesContainer() { return m_cShapes; }
 
 	std::vector<CShape> m_cShapes;
-	
+
 private:
 
 	///Every shape in program is stored in this container

@@ -16,11 +16,6 @@ Window::Window()
 
 }
 
-Window::~Window()
-{
-
-}
-
 void Window::Initialize()
 {
 	// Setup SDL

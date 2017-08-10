@@ -33,11 +33,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	AnimationSystem(Engine& engine_ref);
-	///Destructor
-	~AnimationSystem();
-	///Deleted copy constructor and assign operator
+	//
+	~AnimationSystem() = default;
 	AnimationSystem(const AnimationSystem&) = delete;
 	void operator=(const AnimationSystem&) = delete;
+	AnimationSystem(AnimationSystem&&) = delete;
+	void operator=(AnimationSystem&&) = delete;
 
 	void Initialize() override final;
 

@@ -16,11 +16,6 @@ DummySystem::DummySystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(component types, this);
 }
 
-DummySystem::~DummySystem()
-{
-
-}
-
 void DummySystem::Initialize()
 {
 

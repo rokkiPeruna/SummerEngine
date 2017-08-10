@@ -20,11 +20,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* comp_mgr_ptr, SEuint update_priority);
-	///Destructor
-	~GuiEntityMgr();
-	///No copies allowed
+	//
+	~GuiEntityMgr() = default;
 	GuiEntityMgr(const GuiEntityMgr&) = delete;
 	void operator=(const GuiEntityMgr&) = delete;
+	GuiEntityMgr(GuiEntityMgr&&) = delete;
+	void operator=(GuiEntityMgr&&) = delete;
 
 	void Update() override final;
 

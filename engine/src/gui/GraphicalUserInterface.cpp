@@ -71,29 +71,38 @@ void GraphicalUserInterface::Initialize()
 
 void GraphicalUserInterface::Update()
 {
-	//Engine window in editor
-	if (se::gui::elem_visibility::show_main_window)
+
+	//ImGui::SetNextWindowPos(ImVec2(se::gui::window_data::width / 2.0f, se::gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
+	//ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
+	//ImGui::Begin("Engine");
+	//ImGui::Text("SE Engine, %s");
+
+	if (ImGui::BeginMainMenuBar())
 	{
-		ImGui::SetNextWindowPos(ImVec2(se::gui::window_data::width / 2.0f, se::gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("Engine");
-		ImGui::Text("SE Engine, %s");
-
-		ImGui::Checkbox("Draw AABBs' lines", &gui::debug_draw_values::drawAABBs_lines); ImGui::SameLine();
-		ImGui::Checkbox("Draw AABBs' points", &gui::debug_draw_values::drawAABBs_points);
-		ImGui::Checkbox("Draw coll polys' lines", &gui::debug_draw_values::drawCollPolys_lines); ImGui::SameLine();
-		ImGui::Checkbox("Draw coll polys' points", &gui::debug_draw_values::drawCollPolys_points);
-		ImGui::Checkbox("Draw shapes' outline", &gui::debug_draw_values::drawShapes_lines); ImGui::SameLine();
-		ImGui::Checkbox("Draw shapes' vertices", &gui::debug_draw_values::drawShapes_points);
-		ImGui::Checkbox("Draw positions", &gui::debug_draw_values::drawPositions); ImGui::SameLine();
-		ImGui::Checkbox("Draw grid", &gui::debug_draw_values::drawGrid);
-
+		if (ImGui::BeginMenu("Debug settings"))
+		{
+			if (ImGui::BeginMenu("Draw settings"))
+			{
+				ImGui::Checkbox("Draw AABBs' lines", &gui::debug_draw_values::drawAABBs_lines);
+				ImGui::Checkbox("Draw AABBs' points", &gui::debug_draw_values::drawAABBs_points);
+				ImGui::Checkbox("Draw coll polys' lines", &gui::debug_draw_values::drawCollPolys_lines);
+				ImGui::Checkbox("Draw coll polys' points", &gui::debug_draw_values::drawCollPolys_points);
+				ImGui::Checkbox("Draw shapes' outline", &gui::debug_draw_values::drawShapes_lines);
+				ImGui::Checkbox("Draw shapes' vertices", &gui::debug_draw_values::drawShapes_points);
+				ImGui::Checkbox("Draw positions", &gui::debug_draw_values::drawPositions);;
+				ImGui::Checkbox("Draw grid", &gui::debug_draw_values::drawGrid);
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
 		ImGui::Separator();
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
+		ImGui::EndMainMenuBar();
 	}
+	//ImGui::End();
 
-	//SE_TODO: Create better gui structure
+
+//SE_TODO: Create better gui structure
 	for (auto& gui : m_gui_container)
 	{
 		gui->Update();

@@ -13,11 +13,6 @@ class Mouse
 public:
 	///Default constructor
 	Mouse();
-	///Destructor
-	~Mouse();
-	///Deleted copy constructor and assign operator
-	Mouse(const Mouse&) = delete;
-	void operator=(const Mouse&) = delete;
 
 	///GetState returns boolean defining if given mouse button is pressed. 
 	///If pos_x and/or pos_y are given, mouse position in current active window is placed to these values.

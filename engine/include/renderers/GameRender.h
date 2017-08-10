@@ -21,11 +21,12 @@ public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
 	GameRender(Engine& engine_ref);
-
-	~GameRender();
-
+	//
+	~GameRender() = default;
 	GameRender(const GameRender&) = delete;
 	void operator=(const GameRender&) = delete;
+	GameRender(GameRender&&) = delete;
+	void operator=(GameRender&&) = delete;
 
 	void Initialize() override final;
 	void Uninitialize() override final;

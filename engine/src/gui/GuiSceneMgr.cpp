@@ -16,11 +16,6 @@ GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority)
 	m_sceneMgr = &m_engine.GetSceneMgr();
 }
 
-GuiSceneMgr::~GuiSceneMgr()
-{
-
-}
-
 void GuiSceneMgr::Update()
 {
 	assert(m_sceneMgr);
@@ -29,7 +24,7 @@ void GuiSceneMgr::Update()
 	ImGui::SetNextWindowPos(ImVec2(window_data::width / 2.0f, window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("SceneManager", &elem_visibility::show_scene_mgr_window);
 
-	if (ImGui::CollapsingHeader("Create scene"))
+	if (ImGui::TreeNode("Create scene"))
 	{
 		ImGui::Text("Scene name:");
 		static SEchar scenename[64];
@@ -63,8 +58,9 @@ void GuiSceneMgr::Update()
 				}
 			}
 		}
+		ImGui::TreePop();
 	}
-	if (ImGui::CollapsingHeader("Load scene"))
+	if (ImGui::TreeNode("Load scene"))
 	{
 		ImGui::Separator();
 		if (ImGui::TreeNode("Scene list"))
@@ -82,6 +78,7 @@ void GuiSceneMgr::Update()
 			}
 			ImGui::TreePop();
 		}
+		ImGui::TreePop();
 	}
 	if (ImGui::Button("SAVE CURRENT PROGRESS"))
 	{

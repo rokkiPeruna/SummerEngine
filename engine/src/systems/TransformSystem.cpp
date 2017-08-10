@@ -29,12 +29,6 @@ TransformSystem::TransformSystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::SHAPE, this);
 }
 
-
-TransformSystem::~TransformSystem()
-{
-
-}
-
 void TransformSystem::Initialize()
 {
 

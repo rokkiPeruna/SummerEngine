@@ -28,8 +28,12 @@ public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
 	Render(Engine& engine_ref);
-
-	virtual ~Render();
+	//
+	virtual ~Render() = default;
+	Render(const Render&) = delete;
+	void operator=(const Render&) = delete;
+	Render(Render&&) = delete;
+	void operator=(Render&&) = delete;
 
 	virtual void Initialize() = 0;
 	virtual void Uninitialize() = 0;

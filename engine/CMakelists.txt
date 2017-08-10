@@ -185,6 +185,10 @@ set(MAIN_CPP
 	)
 source_group("" FILES ${MAIN_CPP})
 #-----------------------------------------------------------------
+
+#Using C++11
+set(CMAKE_CXX_STANDARD 11)
+
 #Project name
 add_executable(engine
 	src/main.cpp

@@ -17,12 +17,6 @@ GameRender::GameRender(Engine& engine_ref)
 	m_stat_rend_batches.reserve(1000);
 }
 
-
-GameRender::~GameRender()
-{
-
-}
-
 void GameRender::Initialize()
 {
 	glFrontFace(GL_CCW);

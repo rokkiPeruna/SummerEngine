@@ -26,11 +26,6 @@ ComponentManager::ComponentManager(Engine& engine_ref)
 
 }
 
-ComponentManager::~ComponentManager()
-{
-
-}
-
 void ComponentManager::Initialize(std::string relativeFilePathToComponentsJson)
 {
 	m_rel_path_to_json_scenes = relativeFilePathToComponentsJson + m_scenes_sub_folder;

@@ -19,11 +19,6 @@ GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_pt
 	assert(m_entity_mgr && m_comp_mgr && m_gui_comp_mgr);
 }
 
-GuiEntityMgr::~GuiEntityMgr()
-{
-
-}
-
 void GuiEntityMgr::Update()
 {
 	assert(m_entity_mgr);

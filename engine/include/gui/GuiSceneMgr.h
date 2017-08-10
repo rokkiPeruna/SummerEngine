@@ -17,11 +17,12 @@ public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
 	GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority);
-	///Destructor
-	~GuiSceneMgr();
-	///No copies allowed
+	//
+	~GuiSceneMgr() = default;
 	GuiSceneMgr(const GuiSceneMgr&) = delete;
 	void operator=(const GuiSceneMgr&) = delete;
+	GuiSceneMgr(GuiSceneMgr&&) = delete;
+	void operator=(GuiSceneMgr&&) = delete;
 
 	void Update() override final;
 

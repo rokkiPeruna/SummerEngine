@@ -138,7 +138,7 @@ void Messenger::_printToConsole()
 		if (m_newMessagesArrived)
 			ImGui::SetScrollHere();
 	}
-	m_prev_msgs_size = m_messages.size();
+	m_prev_msgs_size = static_cast<SEuint>(m_messages.size());
 #ifndef NDEBUG
 	m_newMessagesArrived = (m_debugMessages.size() == m_prev_dbgmsgs_size) ? false : true;
 	if (m_print_debug_msgs)
@@ -163,7 +163,7 @@ void Messenger::_printToConsole()
 				ImGui::SetScrollHere();
 		}
 	}
-	m_prev_dbgmsgs_size = m_debugMessages.size();
+	m_prev_dbgmsgs_size = static_cast<SEuint>(m_debugMessages.size());
 #endif
 	ImGui::EndChild();
 	ImGui::Separator();

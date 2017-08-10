@@ -24,12 +24,12 @@ public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
 	EditorRender(Engine& engine_ref);
-
-	~EditorRender();
-
-
+	//
+	~EditorRender() = default;
 	EditorRender(const EditorRender&) = delete;
 	void operator=(const EditorRender&) = delete;
+	EditorRender(EditorRender&&) = delete;
+	void operator=(EditorRender&&) = delete;
 	
 	void Initialize() override final;
 	void Uninitialize() override final;

@@ -8,11 +8,5 @@ CompSystemEventHandler::CompSystemEventHandler()
 {
 
 }
-
-CompSystemEventHandler::~CompSystemEventHandler()
-{
-
-}
-
 }//namespace priv
 }//namespace se

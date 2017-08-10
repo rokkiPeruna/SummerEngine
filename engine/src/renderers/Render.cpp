@@ -13,11 +13,6 @@ Render::Render(Engine& m_engine_ref)
 
 }
 
-Render::~Render()
-{
-
-}
-
 void Render::SetPerspMatrix(Mat4f perspective_matrix)
 {
 	m_perps_matrix = perspective_matrix; 

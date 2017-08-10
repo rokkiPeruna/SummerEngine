@@ -25,11 +25,6 @@ SceneManager::SceneManager(Engine& engine_ref)
 
 }
 
-SceneManager::~SceneManager()
-{
-
-}
-
 void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr, ComponentManager* compMgr_ptr)
 {
 	///Relative path to scenes.json file

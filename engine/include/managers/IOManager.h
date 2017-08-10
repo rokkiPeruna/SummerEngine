@@ -17,11 +17,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	IOManager(Engine& engine_ref);
-	///Destructor
-	~IOManager();
-	///Deleted copy constructor and assign operator
+	//
+	~IOManager() = default;
 	IOManager(const IOManager&) = delete;
 	void operator=(const IOManager&) = delete;
+	IOManager(IOManager&&) = delete;
+	void operator=(IOManager&&) = delete;
 
 	void Initialize() override final;
 

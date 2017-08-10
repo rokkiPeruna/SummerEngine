@@ -35,11 +35,6 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::ANIMATION, this);
 }
 
-AnimationSystem::~AnimationSystem()
-{
-
-}
-
 void AnimationSystem::Initialize()
 {
 
