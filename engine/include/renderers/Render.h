@@ -44,6 +44,7 @@ public:
 
 	virtual void ClearRenderBatches() = 0;
 
+	using batch_values = std::tuple<SEuint, SEuint, SEuint>;
 
 protected:
 	///Reference to Engine -class

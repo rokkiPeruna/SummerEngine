@@ -205,10 +205,10 @@ void GameRender::OnEntityAdded(const Entity& entity)
 		//If the entity is dynamic we have to see throug dynamic batches if there is one 
 		//with similar values
 
-		if (m_batch_values_map_dynamic.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
+		if (m_batch_values_map_dynamic.count(batch_values(shape->indices.size(), tex_handle, shape->points.size())))
 		{
 			//If we have a similar batch we can add this new value to it
-			m_batch_values_map_dynamic.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids.emplace_back(entity.id);
+			m_batch_values_map_dynamic.at(batch_values(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids.emplace_back(entity.id);
 			return;
 		}
 
@@ -223,7 +223,7 @@ void GameRender::OnEntityAdded(const Entity& entity)
 
 			//Add entity to dynamic batch values
 
-			m_batch_values_map_dynamic.emplace(Vec3u(
+			m_batch_values_map_dynamic.emplace(batch_values(
 				shape->indices.size(),
 				tex_handle,
 				shape->points.size()),
@@ -253,13 +253,13 @@ void GameRender::OnEntityAdded(const Entity& entity)
 	else
 	{
 		//Adding to static batch : Fist we need to find out if we already have this kind of batch
-		if (m_batch_value_map_static.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
+		if (m_batch_value_map_static.count(batch_values(shape->indices.size(), tex_handle, shape->points.size())))
 		{
 
 			//SE_TODO Make sure that this works with gameLoop
 
 			//If we have found suitable batch we can push this component into it
-			auto batch_ptr = m_batch_value_map_static.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()));
+			auto batch_ptr = m_batch_value_map_static.at(batch_values(shape->indices.size(), tex_handle, shape->points.size()));
 			batch_ptr->entity_ids.emplace_back(entity.id);
 
 			//Before pushing shape positions we need to translate them with model matrix
@@ -277,7 +277,7 @@ void GameRender::OnEntityAdded(const Entity& entity)
 			batch.entity_ids.emplace_back(entity.id);
 
 			//Add it to batch values so in future we can compare if there are similar objects
-			m_batch_value_map_static.emplace(Vec3u(
+			m_batch_value_map_static.emplace(batch_values(
 				shape->indices.size(),
 				tex_handle,
 				shape->points.size()),

@@ -171,9 +171,9 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	}
 
 	//Then we check if there is batch that matches our needs
-	if (m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
+	if (m_batch_value_map.count(batch_values(shape->indices.size(), tex_handle, shape->points.size())))
 	{
-		m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids.emplace_back(entity.id);
+		m_batch_value_map.at(batch_values(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids.emplace_back(entity.id);
 		return;
 	}
 
@@ -183,7 +183,7 @@ void EditorRender::OnEntityAdded(const Entity& entity)
 	b.entity_ids.emplace_back(entity.id);
 
 	//and add it also to m_batch_values_map
-	m_batch_value_map.emplace(Vec3u(
+	m_batch_value_map.emplace(batch_values(
 		shape->indices.size(),
 		tex_handle,
 		shape->points.size()),
@@ -224,8 +224,8 @@ void EditorRender::OnEntityRemoved(const Entity& entity)
 	{
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
 	}
-
-	auto & e_ids = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
+	
+	auto& e_ids = m_batch_value_map.at(batch_values(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
 	e_ids.erase(std::find(e_ids.begin(), e_ids.end(), entity.id));
 }
 
@@ -244,9 +244,9 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 		tex_handle = GetTextureComponent(entity.components.at(COMPONENT_TYPE::TEXTURE))->handle;
 	}
 
-	if (m_batch_value_map.count(Vec3u(shape->indices.size(), tex_handle, shape->points.size())))
+	if (m_batch_value_map.count(batch_values(shape->indices.size(), tex_handle, shape->points.size())))
 	{
-		auto& temp = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
+		auto& temp = m_batch_value_map.at(batch_values(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
 		for (SEint i = 0; i < temp.size(); ++i)
 		{
 			if (entity.id == static_cast<SEuint>(temp.at(i)))
