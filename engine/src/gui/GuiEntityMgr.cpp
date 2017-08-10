@@ -1,6 +1,7 @@
 #include <gui/GuiEntityMgr.h>
 #include <gui/GuiCompMgr.h>
 #include <typeindex>
+#include <systems/TransformSystem.h> //For setting camera position when new entity is created or entity is choosed
 
 namespace se
 {
@@ -61,6 +62,9 @@ void GuiEntityMgr::Update()
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated		
 				m_gui_comp_mgr->InvalidateComponentObj();
 
+				auto& epos = priv::TransformSystem::TransformableComponents.at(entityid).position;
+				m_engine.GetCamera()->SetPosition(Vec3f(epos.x, epos.y, 10.0f));
+
 				memset(&entityname[0], 0, sizeof(entityname));
 			}
 		}
@@ -91,6 +95,9 @@ void GuiEntityMgr::Update()
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated
 				m_gui_comp_mgr->InvalidateComponentObj();
 				elem_visibility::show_component_mgr_window = true;
+
+				auto& epos = priv::TransformSystem::TransformableComponents.at(m_entity_mgr->GetCurrentEntity()->id).position;
+				m_engine.GetCamera()->SetPosition(Vec3f(epos.x, epos.y, 10.0f));
 			}
 		}
 	}

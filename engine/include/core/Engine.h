@@ -136,6 +136,9 @@ private:
 	///Init managers
 	void _initManagers();
 
+	///Init renderers
+	void _initRenderers();
+
 	///Init systems and add pointer to them in m_systemContainer
 	void _initSystems();
 

@@ -77,6 +77,7 @@ void GuiSceneMgr::Update()
 				{
 					if (!m_sceneMgr->LoadScene(sn))
 						m_gui_sceneAlreadyLoaded = true;
+					m_engine.GetCamera()->SetPosition(Vec3f(m_sceneMgr->GetCurrentScene()->GetWidth() / 2.0f, m_sceneMgr->GetCurrentScene()->GetHeigth() / 2.0f, 50.0f));
 				}
 			}
 			ImGui::TreePop();

@@ -71,6 +71,14 @@ Mat4f Camera::GetCameraView()
 	return m_view;
 }
 
+void Camera::SetPosition(Vec3f position)
+{
+	m_cameraPosition = position;
+}
 
+void Camera::SetTarget(Vec3f target)
+{
+	m_cameraTarget = target;
+}
 
 }

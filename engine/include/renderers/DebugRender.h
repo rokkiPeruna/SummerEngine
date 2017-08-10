@@ -1,10 +1,10 @@
 #ifndef SE_DEBUGRENDER_H
 #define SE_DEBUGRENDER_H
 
-///
 
 ///SE includes:
 #include <renderers/Render.h>
+#include <managers/Scene.h>
 
 namespace se
 {
@@ -46,6 +46,7 @@ public:
 	void AddDebugPoints(Vec2f vertex, Mat4f modelMatrix, SEbool not_aabb = false);	//If only one Vec2f vertex is given and not_aabb is false, four vertices are calculated from negated and non-negated x and y (Assumed use for AABB)
 
 private:
+	std::vector<Vec3f> m_dbg_verts_for_grid;		///Container holding vertives from which the editor grid is formed
 	std::vector<Vec3f> m_dbg_verts_for_lines;		///Container holding vertices from which the debug lines are drawn
 	std::vector<Vec3f> m_dbg_verts_for_points;		///Container holding vertices from which the debug points are drawn
 	std::vector<Mat4f> m_model_matrices;			///Container holding model matrices for each frame.
@@ -57,6 +58,9 @@ private:
 
 	void _initModelMatrs(const SEbool fetch_positions_also); ///Inits also m_dbg_verts_for_positions if boolean is true
 
+	void _createGrid(const Scene& current_scene, SEfloat grid_z_offset);
+
+	void _drawGrid(SEuint color_attr_loc);
 
 	void _drawAABBs(SEuint color_attr_loc, const SEbool lines, const SEbool points);
 

@@ -93,6 +93,9 @@ void GraphicalUserInterface::Update()
 
 		if (ImGui::Button("Draw positions"))
 			util::SwitchBoolean(gui::debug_draw_values::drawPositions);
+		ImGui::SameLine();
+		if (ImGui::Button("Draw grid"))
+			util::SwitchBoolean(gui::debug_draw_values::drawGrid);
 
 		ImGui::Separator();
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

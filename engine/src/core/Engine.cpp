@@ -106,6 +106,8 @@ void Engine::Initialize()
 	//
 	_initManagers();
 	//
+	_initRenderers();
+	//
 	_initSystems();
 	//
 	m_gui->Initialize();
@@ -206,12 +208,22 @@ void Engine::_initManagers()
 	m_resourceMgr->Initialize("../../engine/shaders/", m_path_to_user_files);
 }
 
-void Engine::_initSystems()
+void Engine::_initRenderers()
 {
+	//Set perspective matrix
+	Render::SetPerspMatrix(
+		45.0f,	//Field of view as degrees
+		static_cast<SEfloat>(m_window->windowInitData.width) / static_cast<SEfloat>(m_window->windowInitData.heigth), //Screen ratio
+		0.1f, //Near clipping plane
+		100.0f //Far clipping plane
+	);
 	m_editorRender->Initialize();
 	m_gameRender->Initialize();
 	m_debugRender->Initialize();
+}
 
+void Engine::_initSystems()
+{
 	m_transformSystem->Initialize();
 	m_systemContainer.emplace_back(m_transformSystem.get());
 
@@ -300,7 +312,7 @@ bool Engine::_gameLoop()
 
 		glViewport(0, 0, se::gui::window_data::width, se::gui::window_data::heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
 		m_gameRender->Update(deltaTime);
@@ -342,15 +354,20 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			m_messenger->PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, se::gui::window_data::width, se::gui::window_data::heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+			glViewport(se::gui::window_data::width / 4, se::gui::window_data::heigth / 4, se::gui::window_data::width / 2, se::gui::window_data::heigth / 2);
+			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			//glClear(GL_COLOR_BUFFER_BIT);
 
 			m_gui->Update(); //SE_TODO: Switch by macro, bool, etc.
 			m_camera->Update(deltaTime);
-			m_editorRender->Update(deltaTime);
 			m_debugRender->Update(deltaTime);
+			m_editorRender->Update(deltaTime);
 			ImGui::Render();
+
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}
 	}
