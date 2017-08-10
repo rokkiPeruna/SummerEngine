@@ -48,7 +48,7 @@ public:
 
 	void EditorRender::ClearRenderBatches() override final;
 
-	void AddDynRenderBatch(DynRenderBatch&& batch)
+	void AddDynRenderBatch(DynamicRenderBatch&& batch)
 	{
 		m_dyn_rend_batches.emplace_back(batch);
 	}
@@ -56,7 +56,7 @@ public:
 
 private:
 	///Render batches
-	std::vector<DynRenderBatch> m_dyn_rend_batches;
+	std::vector<DynamicRenderBatch> m_dyn_rend_batches;
 
 	using batch_values = Vec3u;
 	
@@ -69,7 +69,7 @@ private:
 	};
 
 	///Map that binds render batch values to it's pointer
-	std::map<batch_values, DynRenderBatch*, cmpr_batch_values> m_batch_value_map;
+	std::map<batch_values, DynamicRenderBatch*, cmpr_batch_values> m_batch_value_map;
 
 	//testing
 	ShaderResource* CurrentShader;

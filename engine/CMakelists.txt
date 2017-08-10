@@ -95,6 +95,8 @@ set(RENDERERS_FILES
 	src/renderers/DebugRender.cpp
 	include/renderers/Camera.h
     src/renderers/Camera.cpp
+    include/renderers/RenderBatch.h
+    src/renderers/RenderBatch.cpp
 	)
 source_group("renderers" FILES ${RENDERERS_FILES})
 #-----------------------------------------------------------------

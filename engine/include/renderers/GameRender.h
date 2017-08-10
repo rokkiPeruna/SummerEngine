@@ -44,7 +44,7 @@ private:
 
 	///Render batches
 	std::vector<StaticRenderBatch> m_stat_rend_batches;
-	std::vector<DynRenderBatch> m_dyn_rend_batches;
+	std::vector<DynamicRenderBatch> m_dyn_rend_batches;
 
 	using batch_values = Vec3u;
 
@@ -58,7 +58,7 @@ private:
 
 	///Map that binds render batch values to it's pointer
 	std::map<batch_values, StaticRenderBatch*, cmpr_batch_values> m_batch_value_map_static;
-	std::map<batch_values, DynRenderBatch*, cmpr_batch_values> m_batch_values_map_dynamic;
+	std::map<batch_values, DynamicRenderBatch*, cmpr_batch_values> m_batch_values_map_dynamic;
 
 	//testing
 	ShaderResource* CurrentShader;
