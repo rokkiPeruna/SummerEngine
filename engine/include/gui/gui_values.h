@@ -40,6 +40,7 @@ struct debug_draw_values
 {
 	static SEbool drawGrid;
 	static const Vec4f color_grid;
+	static const SEfloat grid_z_offset;
 
 	static SEbool drawAABBs_lines;
 	static SEbool drawAABBs_points;

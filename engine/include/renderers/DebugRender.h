@@ -58,7 +58,7 @@ private:
 
 	void _initModelMatrs(const SEbool fetch_positions_also); ///Inits also m_dbg_verts_for_positions if boolean is true
 
-	void _createGrid(const Scene& current_scene);
+	void _createGrid(const Scene& current_scene, SEfloat grid_z_offset);
 
 	void _drawGrid(SEuint color_attr_loc);
 

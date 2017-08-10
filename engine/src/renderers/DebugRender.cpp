@@ -195,8 +195,9 @@ void DebugRender::_initModelMatrs(const SEbool fetch_positions_also)
 	}
 }
 
-void DebugRender::_createGrid(const Scene& current_scene)
+void DebugRender::_createGrid(const Scene& current_scene, SEfloat grid_z_offset)
 {
+	SEfloat z_pos = 0.0f + grid_z_offset;
 	SEfloat width{};
 	SEfloat heigth{};
 	SEfloat offset = -0.5f; //We want our integer positions to be in the center of each grid square, so gird draw must start at -0.5f!
@@ -213,14 +214,14 @@ void DebugRender::_createGrid(const Scene& current_scene)
 	//Horizontal lines
 	for (SEuint horiz = 0; horiz <= heigth; ++horiz)
 	{
-		m_dbg_verts_for_grid.emplace_back(Vec3f(0.0f + offset, horiz + offset, 0.0f));
-		m_dbg_verts_for_grid.emplace_back(Vec3f(width + offset, horiz + offset, 0.0f));
+		m_dbg_verts_for_grid.emplace_back(Vec3f(0.0f + offset, horiz + offset, z_pos));
+		m_dbg_verts_for_grid.emplace_back(Vec3f(width + offset, horiz + offset, z_pos));
 	}
 	//Vertical lines
 	for (SEuint verti = 0; verti <= width; ++verti)
 	{
-		m_dbg_verts_for_grid.emplace_back(Vec3f(verti + offset, 0.0f + offset, 0.0f));
-		m_dbg_verts_for_grid.emplace_back(Vec3f(verti + offset, heigth + offset, 0.0f));
+		m_dbg_verts_for_grid.emplace_back(Vec3f(verti + offset, 0.0f + offset, z_pos));
+		m_dbg_verts_for_grid.emplace_back(Vec3f(verti + offset, heigth + offset, z_pos));
 	}
 }
 
@@ -229,7 +230,7 @@ void DebugRender::_drawGrid(SEuint color_attr_loc)
 	static SEbool grid_created = false; //SE_TODO: This is ugly as fuck, chaage it after you have implemented events!
 	if (!grid_created && m_engine.GetSceneMgr().GetCurrentScene())
 	{
-		_createGrid(*m_engine.GetSceneMgr().GetCurrentScene());
+		_createGrid(*m_engine.GetSceneMgr().GetCurrentScene(), gui::debug_draw_values::grid_z_offset);
 		grid_created = true;
 	}
 
