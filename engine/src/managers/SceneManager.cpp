@@ -13,14 +13,11 @@ SceneManager::SceneManager(Engine& engine_ref)
 	, m_sceneJsonObject()
 	, m_sceneNamesJsonObject()
 	, m_rel_path_to_json_scenes("")
-	, m_scenes_subfolder_name("scenes/")
-	, m_scene_file_suffix(".json")
-	, m_scene_name_list_file("scenenamelist.json")
-	, m_scene_names_json_obj("scenenamelist")
-	, m_scene_struct_info_obj_name("scene_info")
-	, m_scene_struct_main_obj_name("entities")
 	, m_currentScene("", SCENE_TYPE::FAULTY, 0, 0)
 	, m_sceneNames{}
+	, ffd()
+	, sf_struct()
+	, snaf_struct()
 {
 
 }
@@ -28,7 +25,7 @@ SceneManager::SceneManager(Engine& engine_ref)
 void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr, ComponentManager* compMgr_ptr)
 {
 	///Relative path to scenes.json file
-	m_rel_path_to_json_scenes = filepathToUserFiles + m_scenes_subfolder_name;
+	m_rel_path_to_json_scenes = filepathToUserFiles + ffd.scene_folder_name;
 
 	///EntityManager pointer
 	m_entity_mgr = entityMgr_ptr;
@@ -65,7 +62,7 @@ SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint widt
 	}
 
 	//If name passes, create a new file with std::ofstream
-	std::ofstream newScene(m_rel_path_to_json_scenes + scenename + m_scene_file_suffix);
+	std::ofstream newScene(m_rel_path_to_json_scenes + scenename + ffd.scene_file_suffix);
 	if (!newScene.is_open())
 	{
 		MessageError(SceneMgr_id) << "Failed to create new scene file[" + scenename + "],\nin AddScene, scene not added, returning";
@@ -76,7 +73,7 @@ SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint widt
 
 	//Rewrite m_scene_name_list_file
 	m_sceneNamesJsonObject.clear(); //SE_TODO: Is there need to rewrite the object??
-	try { util::ReadFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file, SceneMgr_id); }
+	try { util::ReadFileToJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + ffd.scene_names_file_name, SceneMgr_id); }
 	catch (const se_exc_file_open_failed& exc)
 	{
 		MessageError(SceneMgr_id) << exc.msg + ",\nreturning, scene not added, delete empty file in scene folder";
@@ -89,18 +86,18 @@ SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint widt
 	}
 
 
-	auto& names_obj = m_sceneNamesJsonObject.find(m_scene_names_json_obj);
+	auto& names_obj = m_sceneNamesJsonObject.find(snaf_struct.scenenamelist_obj_name);
 
 	if (names_obj == m_sceneNamesJsonObject.end())
 	{
-		MessageError(SceneMgr_id) << "Failed to open json object" + m_scene_names_json_obj + ",\n, scene name not added to " +
-			m_scene_names_json_obj + ", removing scene file, scene not added";
-		std::remove((m_rel_path_to_json_scenes + scenename + m_scene_file_suffix).c_str());
+		MessageError(SceneMgr_id) << "Failed to open json object" + snaf_struct.scenenamelist_obj_name + ",\n, scene name not added to " +
+			snaf_struct.scenenamelist_obj_name + ", removing scene file, scene not added";
+		std::remove((m_rel_path_to_json_scenes + scenename + ffd.scene_file_suffix).c_str());
 		return false;
 	}
 	names_obj.value().push_back(scenename);
 
-	util::RewriteFileWithJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + m_scene_name_list_file, SceneMgr_id);
+	util::RewriteFileWithJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + snaf_struct.scenenamelist_obj_name, SceneMgr_id);
 
 	//Add name to runtime container
 	m_sceneNames.emplace_back(scenename);
@@ -126,19 +123,19 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 	//Delete current renderer's render batches
 	m_engine.GetCurrentRenderer()->ClearRenderBatches();
 
-	try { util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + m_scene_file_suffix, SceneMgr_id); }
+	try { util::ReadFileToJson(m_sceneJsonObject, m_rel_path_to_json_scenes + scenename + ffd.scene_file_suffix, SceneMgr_id); }
 	catch (const se_exception& exc)
 	{
-		MessageError(SceneMgr_id) << "Failed to parse [" + scenename + "] json object or failed to open\nfile " + m_rel_path_to_json_scenes + scenename + m_scene_file_suffix
+		MessageError(SceneMgr_id) << "Failed to parse [" + scenename + "] json object or failed to open\nfile " + m_rel_path_to_json_scenes + scenename + ffd.scene_file_suffix
 			+ ",\nexception message: " + exc.msg;
 		return false;
 	}
 
 	//Read scene's info to json object and create new current scene
-	auto& info_obj = m_sceneJsonObject.find(m_scene_struct_info_obj_name);
+	auto& info_obj = m_sceneJsonObject.find(sf_struct.info_obj_name);
 	if (info_obj == m_sceneJsonObject.end())
 	{
-		MessageError(SceneMgr_id) << "Failed to open json object " + m_scene_struct_info_obj_name + "\nin LoadScene, scene not loaded!";
+		MessageError(SceneMgr_id) << "Failed to open json object " + snaf_struct.scenenamelist_obj_name + "\nin LoadScene, scene not loaded!";
 		return false;
 	}
 	auto& name = info_obj.value().at("name");
@@ -150,11 +147,11 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 		static_cast<SCENE_TYPE>(type_as_int),
 		w, h
 	};
-	//Check that m_scene_struct_main_obj_name is valid
-	auto& main_obj = m_sceneJsonObject.find(m_scene_struct_main_obj_name);
+	//Check that main object is valid
+	auto& main_obj = m_sceneJsonObject.find(sf_struct.prim_obj_name);
 	if (main_obj == m_sceneJsonObject.end())
 	{
-		MessageError(SceneMgr_id) << "Could not find " + m_scene_struct_main_obj_name + " in " + scenename + m_scene_file_suffix + "\n, scene not loaded!";
+		MessageError(SceneMgr_id) << "Could not find " + sf_struct.prim_obj_name + " in " + scenename + ffd.scene_file_suffix + "\n, scene not loaded!";
 		return false;
 	}
 	//And if it is, give it to m_currentScene, empty systems component containers and init new scene
@@ -190,7 +187,7 @@ void SceneManager::SaveProgress()
 	if (m_currentScene.GetType() == SCENE_TYPE::FAULTY)
 		return;
 
-	std::ofstream file(m_rel_path_to_json_scenes + m_currentScene.GetName() + m_scene_file_suffix, std::ios::trunc);
+	std::ofstream file(m_rel_path_to_json_scenes + m_currentScene.GetName() + ffd.scene_file_suffix, std::ios::trunc);
 	if (!file.is_open())
 	{
 		MessageError(SceneMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_currentScene.GetName() + "\n, scene not saved";
@@ -213,16 +210,16 @@ const std::vector<std::string>& SceneManager::GetSceneNames()
 
 void SceneManager::_loadSceneNames()
 {
-	std::ifstream data(m_rel_path_to_json_scenes + m_scene_name_list_file);
+	std::ifstream data(m_rel_path_to_json_scenes + ffd.scene_names_file_name);
 	if (!data.is_open())
 	{
-		MessageError(SceneMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + m_scene_name_list_file + "\n for reading, no scenes loaded, returning";
+		MessageError(SceneMgr_id) << "Failed to open " + m_rel_path_to_json_scenes + ffd.scene_names_file_name + "\n for reading, no scenes loaded, returning";
 		return;
 	}
 	//Check if m_scene_name_list_file is empty //SE_TODO: Better way to check emptiness exists
 	if (data.peek() == std::ifstream::traits_type::eof())
 	{
-		MessageInfo(SceneMgr_id) << m_scene_name_list_file + " is empty, no basic json structure available, creating json structure";
+		MessageInfo(SceneMgr_id) << ffd.scene_names_file_name + " is empty, no basic json structure available, creating json structure";
 		_createStructToScnNamesJson();
 		return;
 	}
@@ -235,10 +232,10 @@ void SceneManager::_loadSceneNames()
 		return;
 	}
 
-	auto& names_obj = j.find(m_scene_names_json_obj);
+	auto& names_obj = j.find(snaf_struct.scenenamelist_obj_name);
 	if (names_obj == j.end())
 	{
-		MessageError(SceneMgr_id) << "Failed to open json object " + m_scene_names_json_obj + " in " + m_scene_name_list_file + ",\nscenes not loaded";
+		MessageError(SceneMgr_id) << "Failed to open json object " + snaf_struct.scenenamelist_obj_name + " in " + ffd.scene_names_file_name + ",\nscenes not loaded";
 		return;
 	}
 	for (auto& n : names_obj.value())
@@ -254,28 +251,28 @@ void SceneManager::_createStructToNewScene(std::ofstream& file, std::string scen
 	std::string w = std::to_string(width);
 	std::string h = std::to_string(heigth);
 	file << "{\n" <<
-		"\"" + m_scene_struct_info_obj_name + "\":{\n" <<
+		"\"" + sf_struct.info_obj_name + "\":{\n" <<
 		"\t\"name\":\"" + scenename + "\",\n" <<
 		"\t\"type\":" + typestr + ",\n" <<
 		"\t\"width\":" + w + ",\n" <<
 		"\t\"heigth\":" + h + "\n" <<
 		"},\n"
-		"\"" + m_scene_struct_main_obj_name + "\":{\n" <<
+		"\"" + sf_struct.prim_obj_name + "\":{\n" <<
 		"  }\n" <<
 		"}" << std::endl;
 }
 
 void SceneManager::_createStructToScnNamesJson()
 {
-	std::ofstream data(m_rel_path_to_json_scenes + m_scene_name_list_file);
+	std::ofstream data(m_rel_path_to_json_scenes + ffd.scene_names_file_name);
 	if (!data.is_open())
 	{
-		MessageWarning(SceneMgr_id) << "Failed to open " + m_scene_name_list_file + " in _createStructToScnNamesJson()";
+		MessageWarning(SceneMgr_id) << "Failed to open " + ffd.scene_names_file_name + " in _createStructToScnNamesJson()";
 		return;
 	}
 	//
 	data << "{\n" <<
-		"\"" + m_scene_names_json_obj + "\":[\n" <<
+		"\"" + snaf_struct.scenenamelist_obj_name + "\":[\n" <<
 		"  ]\n" <<
 		"}" << std::endl;
 	data.close();

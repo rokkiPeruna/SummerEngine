@@ -76,7 +76,7 @@ private:
 
 	void _applyUnifColor(SEuint color_location, const Vec4f& color);
 
-	void _cleanBuffData(SEuint buffer);
+	void _cleanBuffd(SEuint buffer);
 
 	void _drawLines(SEuint count);
 

@@ -10,6 +10,7 @@
 //SE includes:
 #include <core/Engine.h>
 #include <core/Messages.h>
+#include <core/file_folder_json_data.h>
 #include <core/SE_exceptions.h>
 
 namespace se

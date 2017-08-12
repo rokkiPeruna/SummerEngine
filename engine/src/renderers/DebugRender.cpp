@@ -232,7 +232,7 @@ void DebugRender::_drawGrid(SEuint color_attr_loc)
 	SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_grid);
 	_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_grid);
 	_drawLines(static_cast<SEuint>(m_dbg_verts_for_grid.size()));
-	_cleanBuffData(buffer);
+	_cleanBuffd(buffer);
 }
 
 void DebugRender::_drawAABBs(SEuint color_attr_loc, const SEbool lines, const SEbool points)
@@ -251,14 +251,14 @@ void DebugRender::_drawAABBs(SEuint color_attr_loc, const SEbool lines, const SE
 		SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_lines);
 		_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_AABB);
 		_drawLines(static_cast<SEuint>(m_dbg_verts_for_lines.size()));
-		_cleanBuffData(buffer);
+		_cleanBuffd(buffer);
 	}
 	if (points)
 	{
 		SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_points);
 		_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_AABB);
 		_drawPoints(static_cast<SEuint>(m_dbg_verts_for_points.size()));
-		_cleanBuffData(buffer);
+		_cleanBuffd(buffer);
 	}
 
 	ClearRenderBatches();
@@ -280,14 +280,14 @@ void DebugRender::_drawCollPolys(SEuint color_attr_loc, const SEbool lines, cons
 		SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_lines);
 		_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_CollPoly);
 		_drawLines(static_cast<SEuint>(m_dbg_verts_for_lines.size()));
-		_cleanBuffData(buffer);
+		_cleanBuffd(buffer);
 	}
 	if (points)
 	{
 		SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_points);
 		_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_CollPoly);
 		_drawPoints(static_cast<SEuint>(m_dbg_verts_for_points.size()));
-		_cleanBuffData(buffer);
+		_cleanBuffd(buffer);
 	}
 	ClearRenderBatches();
 }
@@ -308,14 +308,14 @@ void DebugRender::_drawShapes(SEuint color_attr_loc, const SEbool lines, const S
 		SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_lines);
 		_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_Shape);
 		_drawLines(static_cast<SEuint>(m_dbg_verts_for_lines.size()));
-		_cleanBuffData(buffer);
+		_cleanBuffd(buffer);
 	}
 	if (points)
 	{
 		SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_points);
 		_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_Shape);
 		_drawPoints(static_cast<SEuint>(m_dbg_verts_for_points.size()));
-		_cleanBuffData(buffer);
+		_cleanBuffd(buffer);
 	}
 	ClearRenderBatches();
 }
@@ -325,7 +325,7 @@ void DebugRender::_drawPositions(SEuint color_attr_loc)
 	SEuint buffer = _createBufferAndEnableAttrPtr(m_dbg_verts_for_positions);
 	_applyUnifColor(color_attr_loc, gui::debug_draw_values::color_pos_points);
 	_drawPoints(static_cast<SEuint>(m_dbg_verts_for_positions.size()));
-	_cleanBuffData(buffer);
+	_cleanBuffd(buffer);
 	ClearRenderBatches();
 }
 
@@ -346,7 +346,7 @@ void DebugRender::_applyUnifColor(SEuint color_location, const Vec4f& color)
 	glUniform4f(color_location, color.r, color.g, color.b, color.a);
 }
 
-void DebugRender::_cleanBuffData(SEuint buffer)
+void DebugRender::_cleanBuffd(SEuint buffer)
 {
 	glDeleteBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

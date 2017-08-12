@@ -81,49 +81,29 @@ public:
 	void SetCurrentEntity(Entity* e);
 
 private:
-	///Pointer to ComponentManager
-	ComponentManager* m_compMgr;
+	ComponentManager* m_compMgr;					///Pointer to ComponentManager
+	Scene* m_currentScene;							///Current scene
+	Entity* m_currentEntity;						///Current entity
+	std::string m_rel_path_to_json_scenes;			///Relative path to scenes.json
+	std::string m_rel_path_to_user_files;			///Relative path to user files
+	SEint m_templ_number;							///Running number that differentiates entities created from templates
+	
+	file_and_folder_data ffd;						///See file_folder_json_data.h
+	scene_file_structure sf_struct;					///See file_folder_json_data.h
+	scene_names_file_structure snaf_struct;			///See file_folder_json_data.h
 
-	///Clock and times for measuring performance
-	Clock m_clock;
-	Time m_start_time;
-	Time m_end_time;
+	std::unordered_map<SEint, Entity> m_entities;							///Container holding entities and their ids as keys
+	std::unordered_map<std::string, SEint> m_entities_names_map;			///Container binding entity name to it's id
+	std::unordered_map<std::string, nlohmann::json> m_entity_templs_map;	///Container holding entity templates as json objects
 
-	///Current scene
-	Scene* m_currentScene;
+	Clock m_clock;									///Clock and times for measuring performance
+	Time m_start_time;								///Clock and times for measuring performance
+	Time m_end_time;								///Clock and times for measuring performance
 
-	///Current entity
-	Entity* m_currentEntity;
+	SEint m_curr_free_entity_id;					///Next current free entity id to be used
+	SEbool m_posb_gap_in_free_entity_ids;			///Indicates if there is possible gap in entity id's (e.g. 1,2,3,-gap-5
+	std::stack<SEint> m_free_entity_ids;			///Stack holding free entity ids
 
-	///Relative path to scenes.json
-	std::string m_rel_path_to_json_scenes;
-
-	///Relative path to user files
-	std::string m_rel_path_to_user_files;
-
-	///Name of the subfolder where scenes exist
-	const std::string m_scenes_subfolder_name;
-
-	///Name of the folder containing entity templates
-	const std::string m_ent_templ_fold_name;
-
-	///Const string naming the suffix for scene files
-	const std::string m_scene_file_suffix;
-
-	///Const string naming the main json object
-	const std::string m_main_json_obj;
-
-	///Container holding entities and their ids as keys
-	std::unordered_map<SEint, Entity> m_entities;
-
-	///Container binding entity name to it's id
-	std::unordered_map<std::string, SEint> m_entities_names_map;
-
-	///Container holding entity templates as json objects
-	std::unordered_map<std::string, nlohmann::json> m_entity_templs_map;
-
-	///Running number that differentiates entities created from templates
-	SEint m_templ_number;
 
 	///Loads current scene's entities. Returns largest id found.
 	SEint _loadSceneEntities();
@@ -134,9 +114,6 @@ private:
 
 	///Finds scene's next  free entity id and returns first free index
 	SEint _findFreeEntityID();
-	SEint m_curr_free_entity_id;
-	SEbool m_posb_gap_in_free_entity_ids;
-	std::stack<SEint> m_free_entity_ids;
 
 };
 }//namespace priv

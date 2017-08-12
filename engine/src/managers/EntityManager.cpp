@@ -10,21 +10,20 @@ namespace priv
 EntityManager::EntityManager(Engine& engine_ref)
 	: Manager(engine_ref)
 	, m_compMgr(nullptr)
-	, m_clock()
-	, m_start_time()
-	, m_end_time()
 	, m_currentScene(nullptr)
 	, m_currentEntity(nullptr)
 	, m_rel_path_to_json_scenes("")
 	, m_rel_path_to_user_files("")
-	, m_scenes_subfolder_name("scenes/")
-	, m_ent_templ_fold_name("entity_templates/")
-	, m_scene_file_suffix(".json")
-	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
+	, m_templ_number(0)
+	, ffd()
+	, sf_struct()
+	, snaf_struct()
 	, m_entities{}
 	, m_entities_names_map{}
 	, m_entity_templs_map{}
-	, m_templ_number(0)
+	, m_clock()
+	, m_start_time()
+	, m_end_time()
 	, m_posb_gap_in_free_entity_ids(true)
 	, m_curr_free_entity_id(-1)
 	, m_free_entity_ids{}
@@ -35,7 +34,7 @@ EntityManager::EntityManager(Engine& engine_ref)
 void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)
 {
 	m_rel_path_to_user_files = relativePathToEntitiesJson;
-	m_rel_path_to_json_scenes = relativePathToEntitiesJson + m_scenes_subfolder_name;
+	m_rel_path_to_json_scenes = relativePathToEntitiesJson + ffd.scene_folder_name;
 	m_compMgr = compMgr;
 	m_entities.clear();
 	m_entities_names_map.clear();
@@ -77,7 +76,7 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 {
 	//Get json object holding entities
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 
 	entities_obj.value().push_back({ name,
 		nlohmann::json({{"id", m_curr_free_entity_id }}),
@@ -139,7 +138,7 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 	{
 		//Open file for reading and loop all components
 		nlohmann::json entity;
-		util::ReadFileToJson(entity, m_rel_path_to_user_files + m_ent_templ_fold_name + templateName + "_template" + m_scene_file_suffix, EntityMgr_id);
+		util::ReadFileToJson(entity, m_rel_path_to_user_files + ffd.entity_tmpl_fold_name + templateName + "_template" + ffd.scene_file_suffix, EntityMgr_id);
 
 		auto& itr = entity.find(templateName + "_template");
 
@@ -173,7 +172,7 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 {
 	try
 	{
-		auto& file = m_rel_path_to_user_files + m_ent_templ_fold_name + entity->name + "_template" + m_scene_file_suffix;
+		auto& file = m_rel_path_to_user_files + ffd.entity_tmpl_fold_name + entity->name + "_template" + ffd.scene_file_suffix;
 		auto& tmpl_name = entity->name + "_template";
 
 		//Write base json object manually
@@ -188,7 +187,7 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 
 		//Find json object from which the template is made
 		auto json = m_currentScene->GetData();
-		auto& entities_obj = json->find(m_main_json_obj);
+		auto& entities_obj = json->find(sf_struct.prim_obj_name);
 		auto components = entities_obj.value().find(entity->name);
 
 		nlohmann::json templateEntity;
@@ -219,7 +218,7 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 {
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 
 	entities_obj.value().erase(entity_name);
 
@@ -268,10 +267,10 @@ void EntityManager::SetCurrentEntity(Entity* e)
 SEint EntityManager::_loadSceneEntities()
 {
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 	if (entities_obj == json->end())
 	{
-		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _loadSceneEntities()\nscene's entities not loaded!";
+		MessageError(EntityMgr_id) << "Could not open json object [" + sf_struct.prim_obj_name + "] in _loadSceneEntities()\nscene's entities not loaded!";
 		return -1;
 	}
 	SEint largestID = 0;
@@ -308,10 +307,10 @@ SEint EntityManager::_findFreeEntityID()
 
 	//Else we have to loop through all entities, and push possible gap values to stack
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 	if (entities_obj == json->end())
 	{
-		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _findFreeEntityID()\nscene's entities not loaded!";
+		MessageError(EntityMgr_id) << "Could not open json object [" + sf_struct.prim_obj_name + "] in _findFreeEntityID()\nscene's entities not loaded!";
 		return 0;
 	}
 
