@@ -44,7 +44,8 @@ void ComponentManager::Update()
 void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entities, Scene* scene)
 {
 	assert(scene);
-	auto scene_obj = scene->GetData();
+	m_curr_scene = scene;
+	auto scene_obj = m_curr_scene->GetData();
 	auto entities_obj = scene_obj->find(sf_struct.prim_obj_name);
 
 	//Loop all entities and COMPONENT_TYPEs to their map
@@ -65,27 +66,10 @@ void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entit
 			}
 		}
 		else
-			MessageError(ComponentMgr_id) << "Could not find entity " + e.second.name + " from\n" + scene->GetName();
+			MessageError(ComponentMgr_id) << "Could not find entity " + e.second.name + " from\n" + m_curr_scene->GetName();
 	}
 
 	_onEntitiesAdded(entities, entities_obj);
-
-	////Send all entities to systems for component creation
-	//for (auto s : m_engine.GetSystemsContainer())
-	//{
-	//	for (auto& e : entities)
-	//	{
-	//		auto& entity_obj = entities_obj.value().find(e.second.name);
-	//		s->OnEntityAdded(e.second, entity_obj);
-	//	}
-	//}
-	////Send all entities to renderer
-	//auto rend = m_engine.GetCurrentRenderer();
-	//for (auto& e : entities)
-	//{
-	//	rend->OnEntityAdded(e.second);
-	//}
-
 }
 
 void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE component_type)
