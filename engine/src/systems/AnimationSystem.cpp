@@ -23,6 +23,7 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 	, m_tex_res_names{}
 	, m_res_mgr(nullptr)
 	, m_texture_map{}
+	, m_animation_map{}
 {
 
 
@@ -67,7 +68,7 @@ void AnimationSystem::Update(SEfloat deltaTime)
 		c_tex.x = current_frame.x;
 		c_tex.y = current_frame.y;
 		c_tex.width = current_frame.width;
-		c_tex.heigth =current_frame.heigth;
+		c_tex.heigth = current_frame.heigth;
 	}
 }
 
@@ -165,6 +166,16 @@ void AnimationSystem::RemoveComponent(Entity& entity, COMPONENT_TYPE component_t
 	}
 }
 
+Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
+{
+	if (type == COMPONENT_TYPE::TEXTURE)
+	{
+		return &m_cTextures.at(index_in_container);
+	}
+	else
+		return nullptr;
+}
+
 void AnimationSystem::AssignTexture(const std::string& texture_name, CTexture& tex_comp)
 {
 	_texture_data* data = nullptr;
@@ -181,16 +192,17 @@ void AnimationSystem::AssignTexture(const std::string& texture_name, CTexture& t
 	tex_comp.parent_img_h = data->parent_i_h;
 }
 
-Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container)
+void AnimationSystem::AssingAnimation(const std::string& animation_name, CAnimation& anim_comp)
 {
-	if (type == COMPONENT_TYPE::TEXTURE)
-	{
-		return &m_cTextures.at(index_in_container);
-	}
-	else
-		return nullptr;
+
 }
 
+SEbool AnimationSystem::CreateAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames)
+{
+	//frames.
+
+	return false;
+}
 
 AnimationSystem::_texture_data& AnimationSystem::_createTexture(const std::string& texture_name)
 {

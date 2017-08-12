@@ -18,6 +18,8 @@ EntityManager::EntityManager(Engine& engine_ref)
 	, ffd()
 	, sf_struct()
 	, snaf_struct()
+	, eobj_struct()
+	, cobj_struct()
 	, m_entities{}
 	, m_entities_names_map{}
 	, m_entity_templs_map{}
@@ -79,7 +81,7 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 
 	entities_obj.value().push_back({ name,
-		nlohmann::json({{"id", m_curr_free_entity_id }}),
+		nlohmann::json({{eobj_struct.id_obj_name, m_curr_free_entity_id }}),
 	});
 
 	m_entities.emplace(m_curr_free_entity_id, Entity(name, m_curr_free_entity_id));
@@ -112,9 +114,9 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		auto& itr = m_entity_templs_map.at(templateName + "_template").find(templateName + "_template");
 		for (auto c : (*itr))
 		{
-			if (c.count("_type"))
+			if (c.count(cobj_struct.type_obj_name))
 			{
-				SEint type_as_int = c.at("_type");
+				SEint type_as_int = c.at(cobj_struct.type_obj_name);
 				entity.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
 			}
 		}
@@ -140,7 +142,6 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		nlohmann::json entity;
 		util::ReadFileToJson(entity, m_rel_path_to_user_files + ffd.entity_tmpl_fold_name + templateName + "_template" + ffd.scene_file_suffix, EntityMgr_id);
 
-		auto& itr = entity.find(templateName + "_template");
 
 		//Store json object
 		m_entity_templs_map.emplace(templateName + "_template", entity);
@@ -155,11 +156,12 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		{
 			if (j.key() != "id")
 			{
-				SEint type_as_int = j.value().at("_type");
+				SEint type_as_int = j.value().at(cobj_struct.type_obj_name);
 				e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
 			}
 		}
 
+		auto& itr = entity.find(templateName + "_template");
 		for (auto s : m_engine.GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
@@ -195,12 +197,12 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 
 		templateEntity[tmpl_name] = (*components);
 
-		templateEntity.at(tmpl_name).at("id") = -1;
+		templateEntity.at(tmpl_name).at(eobj_struct.id_obj_name) = -1;
 		for (auto& itr : templateEntity.at(tmpl_name))
 		{
-			if (itr.count("_ownerID"))
+			if (itr.count(cobj_struct.ownerID_obj_name))
 			{
-				itr.at("_ownerID") = -1;
+				itr.at(cobj_struct.ownerID_obj_name) = -1;
 			}
 		}
 
@@ -228,7 +230,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	{
 		s->OnEntityRemoved(m_entities.at(entity_id));
 	}
-	
+
 	//SE_TODO: Should this be event based?
 	m_engine.GetCurrentRenderer()->OnEntityRemoved(m_entities.at(entity_id));
 
@@ -276,7 +278,7 @@ SEint EntityManager::_loadSceneEntities()
 	SEint largestID = 0;
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
 	{
-		SEint id = itr.value().at("id");
+		SEint id = itr.value().at(eobj_struct.id_obj_name);
 		m_entities.emplace(id, Entity(itr.key(), id));
 		m_entities_names_map.emplace(itr.key(), id);
 		if (id > largestID)
@@ -319,7 +321,7 @@ SEint EntityManager::_findFreeEntityID()
 	std::vector<SEint> tmp;
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); ++itr)
 	{
-		tmp.emplace_back(static_cast<SEint>(itr.value().at("id")));
+		tmp.emplace_back(static_cast<SEint>(itr.value().at(eobj_struct.id_obj_name)));
 	}
 	//Sort vector
 	std::sort(tmp.begin(), tmp.end(), [&tmp](SEint a, SEint b) {return a < b; });

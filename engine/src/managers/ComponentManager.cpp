@@ -76,7 +76,7 @@ void ComponentManager::AddNewComponentToEntity(Entity& entity, COMPONENT_TYPE co
 {
 	//Check that entity doesn't already have component
 	if (_checkForComponent(entity, component_type))
-	{ 
+	{
 		DebugMessageInfo(ComponentMgr_id) << "Entity [" + entity.name + "] already has that component in AddNewComponentToEntity()!";
 		return;
 	}
@@ -115,7 +115,7 @@ void ComponentManager::RemoveComponentFromEntity(Entity& entity, COMPONENT_TYPE 
 		return;
 	}
 	//Check that entity has that component
-	if(!_checkForComponent(entity, component_type))
+	if (!_checkForComponent(entity, component_type))
 	{
 		DebugMessageInfo(ComponentMgr_id) << "Entity [" + entity.name + "] doesn't have that component in RemoveComponentFromEntity()!";
 		return;
@@ -152,7 +152,7 @@ void ComponentManager::ModifyComponentFromEntity()
 {
 	//Find component json object
 	auto json = m_curr_scene->GetData();
-	auto& entities_obj = json->find(sf_struct.prim_obj_name); 
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 	if (entities_obj == json->end())
 	{
 		MessageWarning(ComponentMgr_id) << "Failed to find [entities] json object in ModifyComponentFromEntity()";
@@ -199,8 +199,10 @@ SEint ComponentManager::GetCurrentComponentIndex()
 void ComponentManager::SetCurrentEntity(Entity* e)
 {
 	m_curr_entity = e;
-	//When current entity is set, make m_curr_component point to entity's CTransform!
-	SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e->id);
+	if (m_curr_entity)
+		SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e->id);
+	else
+		SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
 }
 
 

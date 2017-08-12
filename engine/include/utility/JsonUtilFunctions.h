@@ -3,6 +3,7 @@
 
 //STL includes:
 #include <fstream>
+#include <initializer_list>
 
 //External includes:
 #include <nlohmann_json/json.hpp>

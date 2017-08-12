@@ -52,6 +52,13 @@ public:
 
 	void OnEntityRemoved(Entity& entity) override final;
 
+	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
+
+	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
+
+	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
+
+
 	void SetTextureResourceNames(const std::vector<std::string>& tex_names) { m_tex_res_names = { tex_names }; }
 
 	const std::vector<std::string>& GetTextureResourceNames() { return m_tex_res_names; }
@@ -63,12 +70,10 @@ public:
 	///2.param: CTexture component to which the texture is binded
 	void AssignTexture(const std::string& texture_name, CTexture& tex_comp);
 
+	void AssingAnimation(const std::string& animation_name, CAnimation& anim_comp);
 
-	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
+	SEbool CreateAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames);
 
-	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
-
-	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
 private:
 	std::vector<CTexture> m_cTextures;
@@ -77,14 +82,9 @@ private:
 	std::vector<CAnimation> m_cAnimations;
 	std::queue<SEint> m_free_cAnimation_indices;
 
-	///Const string naming the default texture
-	const std::string m_def_tex_name;
-
-	///Container holding all texture resources' names for use in gui.
-	std::vector<std::string> m_tex_res_names;
-
-	///Resource manager ptr for image loading
-	ResourceManager* m_res_mgr;
+	const std::string m_def_tex_name;				///Const string naming the default texture
+	std::vector<std::string> m_tex_res_names;		///Container holding all texture resources' names for use in gui.
+	ResourceManager* m_res_mgr;						///Resource manager ptr for image loading
 
 	struct _texture_data
 	{
@@ -98,6 +98,10 @@ private:
 	///Unordered map holding texture ids. Key is std::string as name of the texture with suffix (e.g. tiles.png),
 	///value is struct containing handle to texture, boolean telling if texture has alpha channel and parent image's width and heigth
 	std::unordered_map<std::string, _texture_data> m_texture_map;
+
+	///Unordered map holding animations. Key is std::string as name of the animation without suffix .json (e.g. "player_running_south"),
+	///value is Animation.
+	std::unordered_map<std::string, Animation> m_animation_map;
 
 	///Create texture from pixel data.
 	///1.param: Name of the texture with correct suffix (e.g. player.png).

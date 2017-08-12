@@ -63,6 +63,11 @@ struct scene_names_file_structure
 }//namespace priv	
 }//namespace se
 
+struct entity_obj_structure
+{
+	const std::string id_obj_name{ "_id" };
+};
+
 struct component_obj_structure
 {
 	const std::string type_obj_name{ "_type" };

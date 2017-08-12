@@ -91,6 +91,8 @@ private:
 	file_and_folder_data ffd;						///See file_folder_json_data.h
 	scene_file_structure sf_struct;					///See file_folder_json_data.h
 	scene_names_file_structure snaf_struct;			///See file_folder_json_data.h
+	entity_obj_structure eobj_struct;				///See file_folder_json_data.h
+	component_obj_structure cobj_struct;			///See file_folder_json_data.h
 
 	std::unordered_map<SEint, Entity> m_entities;							///Container holding entities and their ids as keys
 	std::unordered_map<std::string, SEint> m_entities_names_map;			///Container binding entity name to it's id

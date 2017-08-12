@@ -31,7 +31,7 @@ public:
 	std::string name;
 	
 	///Identifier
-	SEuint id;
+	SEint id;
 
 	///Container holding entity's components as map:
 	///Key: COMPONENT_TYPE

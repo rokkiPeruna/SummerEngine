@@ -316,6 +316,7 @@ bool Engine::_gameLoop()
 
 		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
 		m_gameRender->Update(deltaTime);
+		//m_editorRender->Update(deltaTime);
 		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 

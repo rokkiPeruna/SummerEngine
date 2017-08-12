@@ -248,7 +248,7 @@ void EditorRender::OnRendableComponentChanged(const Entity& entity)
 		auto& temp = m_batch_value_map.at(Vec3u(shape->indices.size(), tex_handle, shape->points.size()))->entity_ids;
 		for (SEint i = 0; i < temp.size(); ++i)
 		{
-			if (entity.id == static_cast<SEuint>(temp.at(i)))
+			if (entity.id == temp.at(i))
 			{
 				temp.erase(temp.begin() + i);
 				break;
