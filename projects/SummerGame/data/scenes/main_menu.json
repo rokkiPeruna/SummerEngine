@@ -5,9 +5,9 @@
             "animation": {
                 "_ownerID": 0,
                 "_type": 5,
-              "anin_names": [
-                "player_running_left"
-              ]
+                "anin_names": [
+                    "player_running_left"
+                ]
             },
             "collidable": {
                 "_ownerID": 0,
@@ -46,11 +46,11 @@
             "texture": {
                 "_ownerID": 0,
                 "_type": 3,
-                "h": 0,
+                "h": 33,
                 "tex_name": "test_sprite_sheet.png",
-                "w": 0,
-                "x": 0,
-                "y": 0
+                "w": 33,
+                "x": 45,
+                "y": 37
             },
             "transformable": {
                 "_ownerID": 0,

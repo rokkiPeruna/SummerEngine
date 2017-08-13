@@ -60,10 +60,6 @@ public:
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
 
-	void SetTextureResourceNames(const std::vector<std::string>& tex_names) { m_tex_res_names = { tex_names }; }
-
-	const std::vector<std::string>& GetTextureResourceNames() { return m_tex_res_names; }
-
 	///Returns SEuint for texture handle to be assigned to component.
 	///If texture is already loaded to GPU memory, returns that handle,
 	///if not, calls _createTexture() and returns handle to newly created texture
@@ -84,9 +80,8 @@ private:
 	std::queue<SEint> m_free_cAnimation_indices;
 
 	const std::string m_def_tex_name;				///Const string naming the default texture
-	std::vector<std::string> m_tex_res_names;		///Container holding all texture resources' names for use in gui.
 	ResourceManager* m_res_mgr;						///Resource manager ptr for image loading
-	std::string m_path_to_user_files;					///Relative file path to user files.
+	std::string m_path_to_user_files;				///Relative file path to user files.
 
 	struct _texture_data
 	{

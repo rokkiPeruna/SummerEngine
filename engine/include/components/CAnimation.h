@@ -21,9 +21,7 @@ public:
 		, current_animation_index(-1)
 		, animation_names{}
 		, animations{}
-	{
-
-	}
+	{}
 
 	SEint my_cTexture_index;		//Run-time-only value, initialized to -1. Index of the CTexture component in AnimationSystem's CTexture container
 	SEint current_animation_index;	//Run-time-only value, initialized to -1.

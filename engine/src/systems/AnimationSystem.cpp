@@ -20,14 +20,11 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 	, m_cAnimations{}
 	, m_free_cAnimation_indices{}
 	, m_def_tex_name("default_texture.png")
-	, m_tex_res_names{}
 	, m_res_mgr(nullptr)
 	, m_path_to_user_files{ "faulty_path" }
 	, m_texture_map{}
 	, m_animation_map{}
 {
-
-
 	//Allocate space for m_texture_map so that we possibly avoid rehashing of keys //SE_TODO: This value should be calculated somehow from the amount of possible textures!
 	m_texture_map.reserve(100);
 
@@ -44,9 +41,6 @@ void AnimationSystem::Initialize()
 
 	//Load default texture to be used as default when new CTexture components are added
 	m_texture_map.emplace(m_def_tex_name, _createTexture(m_def_tex_name));
-
-	//Fetch all texture names for editor use
-	m_tex_res_names = { m_res_mgr->GetTextureNames() };
 
 	m_path_to_user_files = m_engine.GetRelFilePathToUserFiles();
 }
@@ -184,6 +178,10 @@ Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 	if (type == COMPONENT_TYPE::TEXTURE)
 	{
 		return &m_cTextures.at(index_in_container);
+	}
+	else if (type == COMPONENT_TYPE::ANIMATION)
+	{
+		return &m_cAnimations.at(index_in_container);
 	}
 	else
 		return nullptr;

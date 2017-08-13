@@ -16,6 +16,8 @@ CTextureEditor::CTextureEditor(priv::Engine& engine_ref)
 
 	m_animation_sys = &m_engine.GetAnimationSystem();
 	assert(m_animation_sys);
+	m_res_mgr = &m_engine.GetResourceManager();
+	assert(m_res_mgr);
 }
 
 void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)
@@ -27,30 +29,30 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 			Entity* tmpEntity = m_engine.GetEntityMgr().GetCurrentEntity();
 			priv::Render* tmpRender = m_engine.GetCurrentRenderer();
 
-			if (m_animation_sys->GetTextureResourceNames().empty())
+			if (m_res_mgr->GetTextureNames().empty())
 			{
 				MessageInfo(AnimationSys_id) << "No available texture resources in ModifyComponent!";
 				return;
 			}
 
 			//Get available textures
-			for (auto t_n : m_animation_sys->GetTextureResourceNames())
+			for (auto t_n : m_res_mgr->GetTextureNames())
 			{
 				if (ImGui::Button(t_n.c_str()))
 				{
 					tmpRender->OnRendableComponentChanged(*tmpEntity);
-				
+
 					m_animation_sys->AssignTexture(t_n, *GetTextureComponent(index_in_container));
 					component_obj.value().at("tex_name") = t_n;
-					
+
 					tmpRender->OnEntityAdded(*tmpEntity);
 				}
 			}
 		}
-		else if (ImGui::CollapsingHeader("Change pos and loc"))
+		else if (ImGui::TreeNode("UV coordinates"))
 		{
 			auto tex = GetTextureComponent(index_in_container);
-			
+
 			ImGui::SliderInt("X", &tex->x, 0, tex->parent_img_w - tex->width);
 			ImGui::SliderInt("Y", &tex->y, 0, tex->parent_img_h - tex->heigth);
 
@@ -61,23 +63,36 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 			component_obj.value().at("y") = tex->y;
 			component_obj.value().at("w") = tex->width;
 			component_obj.value().at("h") = tex->heigth;
-		}
-		else if (ImGui::CollapsingHeader("Image"))
-		{
-			ImGui::BeginChild("Imagedata", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
-			auto tex = GetTextureComponent(index_in_container);
 
-			ImGui::GetWindowDrawList()->AddImage(
-				(void*)static_cast<SEuint64>(tex->handle),
-				Vec2f(ImGui::GetItemRectMax().x, ImGui::GetItemRectMax().y),
-				Vec2f(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y)
-			);
-			ImGui::Image(
-				&tex->handle,
-				ImVec2(static_cast<SEfloat>(tex->parent_img_w), static_cast<SEfloat>(tex->parent_img_h))
-			);
+			if (ImGui::TreeNode("Image"))
+			{
+				ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
+				ImGui::GetWindowDrawList()->AddImage(
+					(void*)static_cast<SEuint64>(tex->handle),
+					Vec2f(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y),
+					Vec2f(ImGui::GetItemRectMax().x, ImGui::GetItemRectMax().y)
+				);
+				ImGui::Image(
+					&tex->handle,
+					ImVec2(static_cast<SEfloat>(tex->parent_img_w), static_cast<SEfloat>(tex->parent_img_h))
+				);
+				if (ImGui::IsItemHovered())
+				{
+					SEint uv_x = static_cast<SEint>(ImGui::GetMousePos().x - tex_screen_pos.x);
+					SEint uv_y = static_cast<SEint>(ImGui::GetMousePos().y - tex_screen_pos.y);
 
-			ImGui::EndChild();
+					ImGui::BeginTooltip();
+					ImGui::Text("Mouse pos: (%.2f, %.2f)", uv_x, uv_y);
+					ImGui::EndTooltip();
+					if (ImGui::IsMouseDragging() || ImGui::IsMouseClicked(0))
+					{
+						tex->x = uv_x;
+						tex->y = uv_y;
+					}
+				}
+				ImGui::TreePop();
+			}
+			ImGui::TreePop();
 		}
 	}
 }

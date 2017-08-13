@@ -111,14 +111,14 @@ void EditorRender::Update(SEfloat)
 				Vec2f third(static_cast<SEfloat>((tex->x + width)) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
 				Vec2f fourth(static_cast<SEfloat>(tex->x) / tex->parent_img_w, static_cast<SEfloat>(tex->y) / tex->parent_img_h);
 
-				tex_coords[0] = fourth.x;
-				tex_coords[1] = fourth.y;
-				tex_coords[2] = third.x;
-				tex_coords[3] = third.y;
-				tex_coords[4] = sec.x;
-				tex_coords[5] = sec.y;
-				tex_coords[6] = first.x;
-				tex_coords[7] = first.y;
+				tex_coords[0] = first.x;
+				tex_coords[1] = first.y;
+				tex_coords[2] = sec.x;
+				tex_coords[3] = sec.y;
+				tex_coords[4] = third.x;
+				tex_coords[5] = third.y;
+				tex_coords[6] = fourth.x;
+				tex_coords[7] = fourth.y;
 			}
 			else
 			{

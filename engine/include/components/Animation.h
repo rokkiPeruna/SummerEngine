@@ -46,28 +46,6 @@ public:
 	SEint current_frame_index;
 };
 
-//Animation's (de)serializing method. They MUST be inline functions!!!
-//void inline to_json(nlohmann::json& j, const se::priv::Animation& animation)
-//{
-//	j = nlohmann::json
-//	{
-//		//Common component data
-//		{ "_type", static_cast<SEint>(comp.type) },
-//		{ "_ownerID", comp.ownerID },
-//		//Component specific data
-//
-//	};
-//}
-//
-//void inline from_json(const nlohmann::json& j, se::priv::Animation& animation)
-//{
-//	//Common component data
-//	comp.type = static_cast<COMPONENT_TYPE>(j.at("_type").get<SEint>());
-//	comp.ownerID = j.at("_ownerID").get<SEint>();
-//	//Component specific data
-//
-//}
-
 }//namespace priv
 }//namespace se
 

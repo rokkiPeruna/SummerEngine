@@ -17,6 +17,8 @@ ResourceManager::ResourceManager(Engine& engine_ref)
 	, m_imageResContainer{}
 	, m_texture_names{}
 	, m_image_fold_name("textures/")
+	, m_animation_names{}
+	, m_animation_fold_name("animations/")
 	, m_shaderProgramContainer{}
 {
 
@@ -30,11 +32,21 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 
 	//Get all loadable textures' file names
 	std::string path_to_textures = m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name;
-
 	//This uses std::experimental::filesystem. //SE_TODO: Get solution that doesn't need C++17 features :D
 	for (auto& f : std::experimental::filesystem::directory_iterator(path_to_textures))
 	{
 		m_texture_names.emplace_back(f.path().filename().generic_string());
+	}
+
+	//Get all animation file names
+	std::string path_to_animations = m_rel_path_to_user_files + m_res_fold_name + m_animation_fold_name;
+	//This uses std::experimental::filesystem. //SE_TODO: Get solution that doesn't need C++17 features :D
+	for (auto& a : std::experimental::filesystem::directory_iterator(path_to_animations))
+	{
+		std::string tmp = a.path().filename().generic_string();
+		auto index = tmp.find_last_of('.');
+		tmp.erase((tmp.begin() + index), tmp.end());	//Get rid of suffix, we are only interested in animation names, not format.
+		m_animation_names.emplace_back(tmp);
 	}
 }
 
@@ -95,9 +107,7 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 	SEint w, h, bpp = 0;
 	std::string filepath(m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name + name);
 
-	//Images seem to be upside down when loaded, hence this:
-	SEbool complement_flip_value = (flip_vertically) ? false : true;
-	stbi_set_flip_vertically_on_load(complement_flip_value);
+	stbi_set_flip_vertically_on_load(flip_vertically);
 
 	SEuchar* tmp = stbi_load(
 		filepath.c_str(),

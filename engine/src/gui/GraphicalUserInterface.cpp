@@ -16,6 +16,7 @@
 #include <gui/CDynamicEditor.h>
 #include <gui/CShapeEditor.h>
 #include <gui/CTextureEditor.h>
+#include <gui/CAnimationEditor.h>
 #include <gui/CTransformableEditor.h>
 
 namespace se
@@ -60,6 +61,7 @@ void GraphicalUserInterface::Initialize()
 	m_gui_container.emplace_back(std::make_unique<gui::CDynamicEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CShapeEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CTextureEditor>(m_engine));
+	m_gui_container.emplace_back(std::make_unique<gui::CAnimationEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CTransformableEditor>(m_engine));
 
 

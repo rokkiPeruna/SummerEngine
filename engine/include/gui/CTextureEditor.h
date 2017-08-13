@@ -4,6 +4,7 @@
 //SE includes:
 #include <gui/CompEditorGui.h>
 #include <systems/AnimationSystem.h>
+#include <managers/ResourceManager.h>
 
 namespace se
 {
@@ -21,6 +22,9 @@ public:
 
 private:
 	priv::AnimationSystem* m_animation_sys;
+	priv::ResourceManager* m_res_mgr;
+
+	std::vector<std::string> m_tex_res_names;		///Container holding all texture resources'.
 };
 
 }//namespace gui
