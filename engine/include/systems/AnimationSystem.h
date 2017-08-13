@@ -10,6 +10,7 @@
 #include <components/CAnimation.h>
 #include <managers/ResourceManager.h>
 #include <renderers/Render.h>
+#include <utility/JsonUtilFunctions.h>
 
 namespace se
 {
@@ -72,7 +73,7 @@ public:
 
 	void AssingAnimation(const std::string& animation_name, CAnimation& anim_comp);
 
-	SEbool CreateAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames);
+	SEbool AddAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames);
 
 
 private:
@@ -85,6 +86,7 @@ private:
 	const std::string m_def_tex_name;				///Const string naming the default texture
 	std::vector<std::string> m_tex_res_names;		///Container holding all texture resources' names for use in gui.
 	ResourceManager* m_res_mgr;						///Resource manager ptr for image loading
+	std::string m_path_to_user_files;					///Relative file path to user files.
 
 	struct _texture_data
 	{

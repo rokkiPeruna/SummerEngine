@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <queue>
 
+///External includes:
+#include <nlohmann_json/json.hpp>
+
 //SE includes:
 #include <managers/Entity.h>
 #include <core/Engine.h>

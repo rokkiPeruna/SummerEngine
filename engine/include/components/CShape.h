@@ -11,16 +11,11 @@
 
 namespace se
 {
-
-
 ///Brief : CShape is basically always a circle but number of points determines how many points it has.
 ///with small amount of points we can have all basic shapes.
-
 class CShape : public Component
 {
-
 public:
-
 	CShape(SEushort num_points = 4)
 		: Component(COMPONENT_TYPE::SHAPE)
 		, my_Transform(-1)
@@ -60,15 +55,10 @@ public:
 		}
 	};
 
-	///Track in which transform this shape belongs to
-	SEint my_Transform;
 
-	///Actual points in 3d coordinates
-	std::vector<Vec3f> points;
-	
-	///Indices determine which points form which triangle
-	std::vector<SEushort> indices;
-
+	SEint my_Transform;				///Track in which CTransform this shape is bind to
+	std::vector<Vec3f> points;		///Actual points in 3d coordinates
+	std::vector<SEushort> indices;	///Run-time-only. Indices determine which points form which triangle
 };
 
 void inline to_json(nlohmann::json& j, const se::CShape& comp)
@@ -78,12 +68,12 @@ void inline to_json(nlohmann::json& j, const se::CShape& comp)
 		//Common component data
 		{ "_type", static_cast<SEint>(comp.type) },
 		{ "_ownerID", comp.ownerID },
-		//Component specific data
 	};
 
+	//Component specific data
 	j.push_back({ "points",{} });
 	auto& itr = j.find("points");
-	for (int i = 0; i < comp.points.size(); ++i)
+	for (SEint i = 0; i < comp.points.size(); ++i)
 	{
 		(*itr).push_back(comp.points.at(i).x);
 		(*itr).push_back(comp.points.at(i).y);
@@ -97,11 +87,10 @@ void inline from_json(const nlohmann::json& j, se::CShape& comp)
 	comp.type = static_cast<COMPONENT_TYPE>(j.at("_type").get<SEint>());
 	comp.ownerID = j.at("_ownerID").get<SEint>();
 
-	//Common spesific data
-
+	//Spesific data
 	comp.points.clear();
 	std::vector<SEfloat> temp = j["points"];
-	for (int i = 0; i < temp.size(); i += 3)
+	for (SEint i = 0; i < temp.size(); i += 3)
 	{
 		comp.points.emplace_back(Vec3f(temp.at(i), temp.at(i + 1), temp.at(i + 2)));
 	}

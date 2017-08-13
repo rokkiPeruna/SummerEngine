@@ -1,6 +1,6 @@
 MESSAGE TYPE: ERROR
 EditorLoop failed from std::exception,
-exception message: key '_id' not found
+exception message: type must be array, but is null
 ---
 MESSAGE TYPE: INFO
 Compiling test.frag

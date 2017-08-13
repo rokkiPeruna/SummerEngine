@@ -4,8 +4,9 @@ namespace se
 {
 namespace priv
 {
-Animation::Animation(std::vector<AnimationFrame>& animation_frames)
-	: frames{animation_frames}
+Animation::Animation(const std::string& animation_name, std::vector<AnimationFrame>& animation_frames)
+	: name(animation_name)
+	, frames{animation_frames}
 	, current_frame_index(0)
 {
 	std::sort(frames.begin(), frames.end(), [&](const AnimationFrame& a, const AnimationFrame& b) {

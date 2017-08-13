@@ -3,6 +3,7 @@
 
 ///STL includes:
 #include <vector>
+#include <map>
 
 ///SE includes:
 #include <components/Component.h>
@@ -18,25 +19,17 @@ public:
 		: Component(COMPONENT_TYPE::ANIMATION)
 		, my_cTexture_index(-1)
 		, current_animation_index(-1)
+		, animation_names{}
+		, animations{}
 	{
-		//TEST (coordinates for test_sprite_sheet.png)
-		priv::AnimationFrame f1( 0, 0, 31, 36, 0.16f, 0 );
 
-		priv::AnimationFrame f2( 46, 0, 78 - 46, 37 - 0, 0.16f,	1 );
-
-		priv::AnimationFrame f3( 92, 0, 124 - 92, 37 - 0, 0.16f, 2 );
-
-		priv::Animation anim1( std::vector<priv::AnimationFrame>{f1, f3, f2 } );
-
-		animations.emplace_back(anim1);
-		current_animation_index = 0;
-		//TEST ENDS
 	}
 
 	SEint my_cTexture_index;		//Run-time-only value, initialized to -1. Index of the CTexture component in AnimationSystem's CTexture container
 	SEint current_animation_index;	//Run-time-only value, initialized to -1.
 
-	std::vector<priv::Animation> animations;
+	std::map<std::string, SEint> animation_names;	//Has animation name as key and animation's index in animations -container as value.
+	std::vector<priv::Animation> animations;		//Run-time-only variable, initialized to empty vector.
 };
 
 //Component's serializing methods. They MUST be inline functions!!!
@@ -46,10 +39,15 @@ void inline to_json(nlohmann::json& j, const se::CAnimation& comp)
 	{
 		//Common component data
 		{ "_type", static_cast<SEint>(comp.type) },
-		{ "_ownerID", comp.ownerID },
-		//Component specific data
-
+		{ "_ownerID", comp.ownerID }
 	};
+	//Component specific data
+	j.push_back({ "anin_names", {} });
+	auto& itr = j.find("anin_names");
+	for (SEint i = 0; i < comp.animations.size(); ++i)
+	{
+		(*itr).push_back(comp.animations.at(i).name);
+	}
 }
 
 void inline from_json(const nlohmann::json& j, se::CAnimation& comp)
@@ -58,7 +56,18 @@ void inline from_json(const nlohmann::json& j, se::CAnimation& comp)
 	comp.type = static_cast<COMPONENT_TYPE>(j.at("_type").get<SEint>());
 	comp.ownerID = j.at("_ownerID").get<SEint>();
 	//Component specific data
+	comp.animations.clear();
+	comp.animation_names.clear();
 
+	//Check for possibly empty array
+	if (j.at("anin_names").size())
+	{
+		std::vector<std::string> tmp = j["anin_names"];
+		for (SEint i = 0; i < tmp.size(); ++i)
+		{
+			comp.animation_names.emplace(tmp.at(i), -1);
+		}
+	}
 }
 
 }//namespace se

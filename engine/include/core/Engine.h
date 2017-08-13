@@ -111,8 +111,9 @@ public:
 	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
 
+	///Returns relative file path to user files
+	const std::string& GetRelFilePathToUserFiles() const { return m_path_to_user_files; }
 	
-
 	///Get graphical user interface object
 	const gui::GraphicalUserInterface& GetEngineGuiObjects() { return *m_gui; }
 

@@ -22,6 +22,7 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 	, m_def_tex_name("default_texture.png")
 	, m_tex_res_names{}
 	, m_res_mgr(nullptr)
+	, m_path_to_user_files{ "faulty_path" }
 	, m_texture_map{}
 	, m_animation_map{}
 {
@@ -43,6 +44,11 @@ void AnimationSystem::Initialize()
 
 	//Load default texture to be used as default when new CTexture components are added
 	m_texture_map.emplace(m_def_tex_name, _createTexture(m_def_tex_name));
+
+	//Fetch all texture names for editor use
+	m_tex_res_names = { m_res_mgr->GetTextureNames() };
+
+	m_path_to_user_files = m_engine.GetRelFilePathToUserFiles();
 }
 
 void AnimationSystem::Uninitialize()
@@ -76,6 +82,8 @@ void AnimationSystem::ClearComponentContainers()
 {
 	m_cTextures.clear();
 	m_free_cTexture_indices = {};
+	m_cAnimations.clear();
+	m_free_cAnimation_indices = {};
 }
 
 void AnimationSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
@@ -83,8 +91,13 @@ void AnimationSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 	SEbool has_CAnimation = false;
 	if (entity.components.count(COMPONENT_TYPE::ANIMATION)) //Creation of CAnimation must be before CTexture
 	{
-		_onEntityAdded_helper(entity, COMPONENT_TYPE::ANIMATION, entity_obj, m_cAnimations, m_free_cAnimation_indices);
+		SEint index = _onEntityAdded_helper(entity, COMPONENT_TYPE::ANIMATION, entity_obj, m_cAnimations, m_free_cAnimation_indices);
 		has_CAnimation = true;
+		auto& comp = m_cAnimations.at(index);
+		for (auto& a : comp.animation_names)
+		{
+			AssingAnimation(a.first, comp);
+		}
 	}
 	if (entity.components.count(COMPONENT_TYPE::TEXTURE))
 	{
@@ -194,12 +207,48 @@ void AnimationSystem::AssignTexture(const std::string& texture_name, CTexture& t
 
 void AnimationSystem::AssingAnimation(const std::string& animation_name, CAnimation& anim_comp)
 {
-
+	///Check if we have that animation
+	if (m_animation_map.count(animation_name))
+	{
+		anim_comp.animations.emplace_back(m_animation_map.at(animation_name));
+		anim_comp.animation_names.at(animation_name) = static_cast<SEint>(anim_comp.animations.size() - 1);
+		anim_comp.current_animation_index = 0;
+	}
+	else
+	{
+		nlohmann::json anim_obj;
+		//Try read animation from json. We use try-catch block here since this function most likely will be mostly called in initializations and editor
+		try
+		{
+			util::ReadFileToJson(anim_obj, m_path_to_user_files + "resources/animations/" + animation_name + ".json", AnimationSys_id);
+		}
+		catch (const se_exception&)
+		{
+			MessageError(AnimationSys_id) << "No animation [" + animation_name + "] found in AssingAnimation()";
+			return;
+		}
+		std::vector<AnimationFrame> tmp_frames;
+		for (auto itr = anim_obj.begin(); itr != anim_obj.end(); ++itr)
+		{
+			tmp_frames.emplace_back(AnimationFrame(
+				static_cast<SEint>(itr.value().at("x")),
+				static_cast<SEint>(itr.value().at("y")),
+				static_cast<SEint>(itr.value().at("width")),
+				static_cast<SEint>(itr.value().at("heigth")),
+				static_cast<SEfloat>(itr.value().at("duration")),
+				static_cast<SEint>(itr.value().at("ord_num"))
+			));
+		}
+		m_animation_map.emplace(animation_name, Animation(animation_name, tmp_frames));
+		anim_comp.animations.emplace_back(m_animation_map.at(animation_name));
+		anim_comp.animation_names.at(animation_name) = static_cast<SEint>(anim_comp.animations.size() - 1);
+		anim_comp.current_animation_index = 0;
+	}
 }
 
-SEbool AnimationSystem::CreateAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames)
+SEbool AnimationSystem::AddAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames)
 {
-	//frames.
+	m_animation_map.emplace(anim_name, Animation(anim_name, frames));
 
 	return false;
 }

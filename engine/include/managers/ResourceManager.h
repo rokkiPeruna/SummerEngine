@@ -64,16 +64,14 @@ public:
 
 	ShaderResource* GetShaderProgram(std::string name);
 
+	const std::vector<std::string>& GetTextureNames() const { return m_texture_names; }
+
 private:
-	///String naming the path to project's user files
-	std::string m_rel_path_to_user_files;
-
-	///Const string naming the folder containing resources
-	const std::string m_res_fold_name;
-
+	std::string m_rel_path_to_user_files;					///String naming the path to project's user files	
+	const std::string m_res_fold_name;						///Const string naming the folder containing resources
 	std::vector<TextResource> m_textResourcesContainer;
-
 	std::vector<ImageResource> m_imageResContainer;
+	std::vector<std::string> m_texture_names;
 	const std::string m_image_fold_name;
 
 	///Stores shader ID's as 'shader name' & 'shader resource' pair

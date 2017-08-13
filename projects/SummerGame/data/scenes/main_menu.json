@@ -1,9 +1,13 @@
 {
     "entities": {
         "menu_screen": {
+            "_id": 0,
             "animation": {
                 "_ownerID": 0,
-                "_type": 5
+                "_type": 5,
+              "anin_names": [
+                "player_running_left"
+              ]
             },
             "collidable": {
                 "_ownerID": 0,
@@ -21,7 +25,6 @@
                 "max": 0.282000005245209,
                 "min": -0.282000005245209
             },
-            "_id": 0,
             "shape": {
                 "_ownerID": 0,
                 "_type": 4,
