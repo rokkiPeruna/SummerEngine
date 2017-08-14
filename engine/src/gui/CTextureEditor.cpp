@@ -82,7 +82,7 @@ void CTextureEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_contain
 					SEint uv_y = static_cast<SEint>(ImGui::GetMousePos().y - tex_screen_pos.y);
 
 					ImGui::BeginTooltip();
-					ImGui::Text("Mouse pos: (%.2f, %.2f)", uv_x, uv_y);
+					ImGui::Text("UV coords: (%.2f, %.2f)", uv_x, uv_y);
 					ImGui::EndTooltip();
 					if (ImGui::IsMouseDragging() || ImGui::IsMouseClicked(0))
 					{

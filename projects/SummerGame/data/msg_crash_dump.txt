@@ -1,6 +1,6 @@
 MESSAGE TYPE: ERROR
 EditorLoop failed from std::exception,
-exception message: type must be array, but is null
+exception message: invalid map<K, T> key
 ---
 MESSAGE TYPE: INFO
 Compiling test.frag

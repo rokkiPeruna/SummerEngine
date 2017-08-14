@@ -12,6 +12,28 @@ include_directories(${PROJECT_SOURCE_DIR}/libs)
 #Add library directories
 link_directories(${PROJECT_SOURCE_DIR}/libs)
 
+
+
+#And include it's game logic and script folders!
+include_directories(${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic)
+include_directories(${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts)
+
+#file(
+#	GLOB 
+#	USER_GAMELOGIC_DATA 
+#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/*.h
+#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/*.cpp
+#	)
+#file(
+#	GLOB 
+#	USER_SCRIPT_DATA 
+#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/*.h
+#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/*.cpp
+#	)
+#
+#source_group("userdata" FILES ${USER_GAMELOGIC_DATA})
+#source_group("userdata" FILES ${USER_SCRIPT_DATA})
+
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
@@ -24,6 +46,7 @@ set(COMPONENTS_FILES
 	include/components/CAnimation.h
 	include/components/Animation.h
 	src/components/Animation.cpp
+	include/components/CGameLogic.h
     )
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -85,6 +108,12 @@ set(CORE_FILES
     )
 source_group("core" FILES ${CORE_FILES})
 
+#-----------------------------------------------------------------
+#Game logic classes
+set(GAME_LOGIC_CLASSES
+	include/gamelogic/GameLogic.h
+	)
+source_group("gamelogic" FILES ${GAME_LOGIC_CLASSES})
 #-----------------------------------------------------------------
 #Renderers
 set(RENDERERS_FILES	
@@ -201,6 +230,7 @@ add_executable(engine
 	${SYSTEMS_FILES}
 	${MANAGERS_FILES}
 	${CORE_FILES}
+	${GAME_LOGIC_CLASSES}
 	${RENDERERS_FILES}
 	${IDS_FILES}
 	${UTILITY_FILES}
@@ -208,10 +238,13 @@ add_executable(engine
 	${IMGUI_FILES}
 	${STB_FILES}
 	${MAIN_CPP}
+	#${USER_GAMELOGIC_DATA}
+	#${USER_SCRIPT_DATA}
 	)
 
 
-target_link_libraries(engine PUBLIC 
+target_link_libraries(engine PUBLIC
+					user_data
 					box2d 
 					SDL2-static 
 					SDL2main 

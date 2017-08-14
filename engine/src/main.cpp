@@ -6,6 +6,11 @@
 #include <memory>
 #include <core/Engine.h>
 
+
+
+//For CMake
+#define SE_CMAKE_CURRENT_PROJECT_NAME "@SummerGame@"
+
 int main(int argc, char *argv[])
 {
 	//Print enviroment arguments to console
