@@ -37,19 +37,11 @@ void CollisionSystem::Update(SEfloat)
 	if (m_cCollidables.empty())
 		return;
 
-	//Check TransformSystem's messages to determine if some CCollidable components need their model matric reinitialized
-	std::vector<SEint> recalc_indices = {};
-	auto* entities = &m_engine.GetEntityMgr().GetEntities();
-	for (auto m : TransformSystem::Messages)
-	{
-		if (m.msg_type == MESSAGETYPE::TRANSFORM_CHANGED)
-		{
-			auto& e = entities->at(m.data.first);
-			if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
-				m_cCollidables.at(entities->at(m.data.first).components.at(COMPONENT_TYPE::COLLIDABLE)).modelMat = TransformSystem::TransformableComponents.at(m.data.first).modelMatrix;
-		}
-	}
+	//Check messages!!-
 
+
+	auto* entities = &m_engine.GetEntityMgr().GetEntities();
+	
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{
 		//Check if ownerless

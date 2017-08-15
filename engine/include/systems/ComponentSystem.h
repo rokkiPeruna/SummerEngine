@@ -12,6 +12,7 @@
 //SE includes:
 #include <managers/Entity.h>
 #include <core/Engine.h>
+#include <managers/EventHandler.h>
 #include <core/Messages.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
@@ -22,38 +23,6 @@ namespace se
 {
 namespace priv
 {
-enum class MESSAGETYPE : SEint
-{
-	TRANSFORM_CHANGED,
-	POSITION_CHANGED
-};
-
-using MessageData = std::pair<SEint, void*>;
-struct SysMessage
-{
-	MESSAGETYPE msg_type;
-	MessageData data;
-
-	SysMessage(MESSAGETYPE _msg_type, MessageData _data) :msg_type(_msg_type), data(_data) {}
-	SysMessage(SysMessage& other)
-	{
-		msg_type = other.msg_type;
-		data.first = other.data.first;
-		data.second = other.data.second;
-		other.data.second = nullptr;
-	}
-	~SysMessage() 
-	{
-		auto tmp = data.second;
-		data.second = nullptr;
-		delete tmp;
-	}
-};
-
-
-///Every system has pointer to Engine -class
-class Engine;
-
 ///Brief: ComponentSystem -class works as a abstract interface class for other
 ///systems that are responsible for updating components. 
 ///NOTE!!: Every system should friend method that enables getting component of given type. See MovementSystem.h and .cpp for details.
@@ -107,6 +76,9 @@ public:
 protected:
 	///Reference to Engine
 	Engine& m_engine;
+
+	///Event handler
+	EventHandler<>* m_event_handler;
 
 	///Static pointer to engine
 	static Engine* m_engine_ptr;

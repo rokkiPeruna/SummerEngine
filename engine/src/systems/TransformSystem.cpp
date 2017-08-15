@@ -16,8 +16,6 @@ namespace priv
 {
 std::vector<CTransformable> TransformSystem::TransformableComponents = {};
 
-std::vector<SysMessage> TransformSystem::Messages = {};
-
 TransformSystem::TransformSystem(Engine& engine_ref)
 	: ComponentSystem(engine_ref)
 	, m_cShapes{}
@@ -41,16 +39,8 @@ void TransformSystem::Uninitialize()
 
 void TransformSystem::Update(SEfloat)
 {
-	//Check messages from movement system to see if model matrix needs to be recalculated
-	for (auto& m : MovementSystem::Messages)
-	{
-		if (m.msg_type == MESSAGETYPE::POSITION_CHANGED)
-		{
-			TransformableComponents.at(m.data.first).position += *static_cast<Vec3f*>(m.data.second);
-			Messages.emplace_back(SysMessage(MESSAGETYPE::TRANSFORM_CHANGED, MessageData(m.data.first, nullptr)));
-		}
-	}
-
+	//Check events!!
+	
 
 
 	//This is stupid way to do this, but recalculate all model matrices

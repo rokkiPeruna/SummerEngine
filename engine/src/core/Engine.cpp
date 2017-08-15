@@ -252,10 +252,6 @@ void Engine::_updateSystems(SEfloat deltaTime)
 	m_transformSystem->Update(deltaTime);
 
 	m_collisionSystem->Update(deltaTime);
-
-	//Flush messages
-	m_movementSystem->Messages.clear();
-	m_transformSystem->Messages.clear();
 }
 
 bool Engine::_gameLoop()
@@ -446,9 +442,9 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				break;
 			case KeyboardEvent::F11:
 				m_inEditorLoop = true;
+				break;
 			case KeyboardEvent::F12:
-				//Switch if main window in editor is visible
-				se::gui::elem_visibility::show_main_window = (se::gui::elem_visibility::show_main_window) ? false : true;
+				util::SwitchBoolean(se::gui::elem_visibility::show_main_window);
 				break;
 			default:
 				break;

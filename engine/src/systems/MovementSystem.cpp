@@ -12,9 +12,6 @@ CDynamic* GetDynamicComponent(SEint index)
 
 namespace priv
 {
-
-std::vector<SysMessage> MovementSystem::Messages = {};
-
 MovementSystem::MovementSystem(Engine& engine_ref)
 	: ComponentSystem(engine_ref)
 	, m_cDynamics{}
@@ -42,19 +39,7 @@ void MovementSystem::Update(SEfloat deltaTime)
 	{
 		c.velocity += c.acceleration * deltaTime;
 
-		Messages.emplace_back(SysMessage(MESSAGETYPE::POSITION_CHANGED, MessageData(c.ownerID ,new Vec3f(c.velocity * deltaTime)))); //Vec3f represents the increment to the position
-
-		//transforms.at(c.ownerID).position += c.velocity * deltaTime;
-	}
-	Keyboard kb;
-	
-	if (kb.GetState(KeyboardState::Up))
-	{
-		auto e = m_engine.GetEntityMgr().CreateEntityFromTemplate("bulletNoColl");
-		auto& tr = TransformSystem::TransformableComponents.at(e->components.at(COMPONENT_TYPE::TRANSFORMABLE));
-		tr.position = Vec3f(0.0f, 1.0f, 0.0f);
-		auto dyn = GetDynamicComponent(e->components.at(COMPONENT_TYPE::DYNAMIC));
-		dyn->acceleration = Vec3f(0.0f, 0.3f, 0.0f);
+		//Send events!
 	}
 }
 

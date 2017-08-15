@@ -47,7 +47,7 @@ public:
 	virtual void Update() = 0;
 
 protected:
-	///Pointer to engine
+	///Reference to engine
 	Engine& m_engine;
 };
 

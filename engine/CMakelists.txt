@@ -13,26 +13,10 @@ include_directories(${PROJECT_SOURCE_DIR}/libs)
 link_directories(${PROJECT_SOURCE_DIR}/libs)
 
 
-
-#And include it's game logic and script folders!
+#Include project specific data
 include_directories(${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic)
 include_directories(${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts)
 
-#file(
-#	GLOB 
-#	USER_GAMELOGIC_DATA 
-#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/*.h
-#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/*.cpp
-#	)
-#file(
-#	GLOB 
-#	USER_SCRIPT_DATA 
-#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/*.h
-#	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/*.cpp
-#	)
-#
-#source_group("userdata" FILES ${USER_GAMELOGIC_DATA})
-#source_group("userdata" FILES ${USER_SCRIPT_DATA})
 
 #-----------------------------------------------------------------
 #Components
@@ -54,8 +38,6 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
-	include/systems/CompSystemEventHandler.h
-	src/systems/CompSystemEventHandler.cpp
 	include/systems/DummySystemCPP.txt
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
@@ -91,6 +73,12 @@ set(MANAGERS_FILES
 	src/managers/Keyboard.cpp
 	include/managers/Mouse.h
 	src/managers/Mouse.cpp
+	include/managers/EventManager.h
+	src/managers/EventManager.cpp
+	include/managers/EventHandler.h
+	src/managers/EventHandler.cpp
+	include/managers/SE_Event.h
+	src/managers/SE_Event.cpp
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
