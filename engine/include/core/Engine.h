@@ -1,3 +1,4 @@
+
 #ifndef SE_ENGINE_H
 #define SE_ENGINE_H
 #define STB_IMAGE_IMPLEMENTATION	//This is needed for stb_image.h to reveal function implementations
@@ -49,6 +50,7 @@ class MovementSystem;
 class TransformSystem;
 class CollisionSystem;
 class AnimationSystem;
+class GameLogicSystem;
 
 ///MANAGERS
 class IOManager;
@@ -87,6 +89,7 @@ public:
 	CollisionSystem& GetCollisionSystem() { return *m_collisionSystem; }
 	TransformSystem& GetTransformSystem() { return *m_transformSystem; }
 	AnimationSystem& GetAnimationSystem() { return *m_animationSystem; }
+	GameLogicSystem& GetGameLogicSystem() { return *m_gameLogicSystem; }
 	//
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
@@ -178,6 +181,7 @@ private:
 	std::unique_ptr<TransformSystem> m_transformSystem;
 	std::unique_ptr<CollisionSystem> m_collisionSystem;
 	std::unique_ptr<AnimationSystem> m_animationSystem;
+	std::unique_ptr<GameLogicSystem> m_gameLogicSystem;
 	///
 	std::vector<ComponentSystem*> m_systemContainer;
 

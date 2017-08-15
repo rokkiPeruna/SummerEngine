@@ -16,6 +16,7 @@
 #include <systems/TransformSystem.h>
 #include <systems/CollisionSystem.h>
 #include <systems/AnimationSystem.h>
+#include <systems/GameLogicSystem.h>
 
 ///Manager includes:
 #include <managers/IOManager.h>
@@ -61,7 +62,7 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_movementSystem(std::make_unique<MovementSystem>(*this))
 	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
 	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
-
+	, m_gameLogicSystem(std::make_unique<GameLogicSystem>(*this))
 	/*MANAGERS*/
 	, m_entityMgr(std::make_unique<EntityManager>(*this))
 	, m_sceneMgr(std::make_unique<SceneManager>(*this))
@@ -253,6 +254,7 @@ void Engine::_updateSystems(SEfloat deltaTime)
 
 	m_collisionSystem->Update(deltaTime);
 
+	m_gameLogicSystem->Update(deltaTime);
 	//Flush messages
 	m_movementSystem->Messages.clear();
 	m_transformSystem->Messages.clear();
@@ -353,6 +355,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 
 			//Messenger should be last to update before render
 			m_messenger->PrintMessages(_messageLogType_console);
+
+			m_gameLogicSystem->Update(deltaTime);
 
 			// Rendering
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);

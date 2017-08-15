@@ -65,6 +65,8 @@ set(SYSTEMS_FILES
     src/systems/CollisionSystem.cpp
 	include/systems/AnimationSystem.h
     src/systems/AnimationSystem.cpp
+    include/systems/GameLogicSystem.h
+    src/systems/GameLogicSystem.cpp
     )
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------

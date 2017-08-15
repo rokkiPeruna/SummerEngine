@@ -29,7 +29,7 @@ const SEuint64 AnimationSys_id =				oOo << 10;
 const SEuint64 IOMgr_id			=				oOo << 11; 
 const SEuint64 gui_ComponentEditor =			oOo << 12; 
 const SEuint64 gui_Manager =					oOo << 13; //Remember to add id to map below!!!
-const SEuint64 dummy_id_mgrsys_14 =				oOo << 14; //Remember to add id to map below!!!
+const SEuint64 GameLogicSys_id =				oOo << 14; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_15 =				oOo << 15; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_16 =				oOo << 16; //Remember to add id to map below!!!
 const SEuint64 dummy_id_mgrsys_17 =				oOo << 17; //Remember to add id to map below!!!
@@ -101,7 +101,8 @@ static const std::map<SEuint64, std::string> sys_mgr_id_to_name
 	{ AnimationSys_id, "animation_sys" },
 	{ IOMgr_id, "IOmgr_sys" },
 	{ gui_ComponentEditor, "gui_ComponentEditor_subclass" },
-	{ gui_Manager, "gui_Manager" }
+	{ gui_Manager, "gui_Manager" },
+	{ GameLogicSys_id, "GameLogic_sys"}
 };
 
 }//namespace priv
