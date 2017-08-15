@@ -78,7 +78,7 @@ private:
 	const std::string m_image_fold_name;					///Name of the folder holding images
 	std::vector<std::string> m_animation_names;				///Holds all animation names that can be found from (current project)->data/resources/animations
 	const std::string m_animation_fold_name;				///Name of the folder holding animations
-
+	
 	std::map<std::string, ShaderResource> m_shaderProgramContainer;		///Stores shader ID's as 'shader name' & 'shader resource' pair
 
 	

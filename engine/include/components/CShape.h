@@ -81,6 +81,7 @@ void inline to_json(nlohmann::json& j, const se::CShape& comp)
 	}
 }
 
+
 void inline from_json(const nlohmann::json& j, se::CShape& comp)
 {
 	//Common component data

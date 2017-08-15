@@ -2,17 +2,13 @@
 
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
 
-file(
-	GLOB 
-	USER_GAMELOGIC_DATA 
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/*.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/*.cpp
+set(USER_GAMELOGIC_DATA 
+	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/PlayerLogic.h
+	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/PlayerLogic.cpp
 	)
-file(
-	GLOB 
-	USER_SCRIPT_DATA 
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/*.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/*.cpp
+set(USER_SCRIPT_DATA 
+	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/ScriptDeclarations.h
+	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/ShootProjectile.cpp
 	)
 
 source_group("userdata" FILES ${USER_GAMELOGIC_DATA})

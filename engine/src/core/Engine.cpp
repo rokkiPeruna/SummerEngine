@@ -16,6 +16,7 @@
 #include <systems/TransformSystem.h>
 #include <systems/CollisionSystem.h>
 #include <systems/AnimationSystem.h>
+#include <systems/GameLogicSystem.h>
 
 ///Manager includes:
 #include <managers/IOManager.h>
@@ -61,7 +62,7 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_movementSystem(std::make_unique<MovementSystem>(*this))
 	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
 	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
-
+	, m_gameLogicSystem(std::make_unique<GameLogicSystem>(*this))
 	/*MANAGERS*/
 	, m_entityMgr(std::make_unique<EntityManager>(*this))
 	, m_sceneMgr(std::make_unique<SceneManager>(*this))
@@ -252,6 +253,11 @@ void Engine::_updateSystems(SEfloat deltaTime)
 	m_transformSystem->Update(deltaTime);
 
 	m_collisionSystem->Update(deltaTime);
+
+	m_gameLogicSystem->Update(deltaTime);
+	//Flush messages
+	m_movementSystem->Messages.clear();
+	m_transformSystem->Messages.clear();
 }
 
 bool Engine::_gameLoop()
@@ -350,6 +356,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			//Messenger should be last to update before render
 			m_messenger->PrintMessages(_messageLogType_console);
 
+			m_gameLogicSystem->Update(deltaTime);
+
 			// Rendering
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -442,9 +450,9 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				break;
 			case KeyboardEvent::F11:
 				m_inEditorLoop = true;
-				break;
 			case KeyboardEvent::F12:
-				util::SwitchBoolean(se::gui::elem_visibility::show_main_window);
+				//Switch if main window in editor is visible
+				se::gui::elem_visibility::show_main_window = (se::gui::elem_visibility::show_main_window) ? false : true;
 				break;
 			default:
 				break;
