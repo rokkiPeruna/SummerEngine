@@ -31,12 +31,12 @@ public:
 
 	void Update() override final;
 
-	//void RegisterEventHandler(EventHandler* event_handler);
+	void RegisterEventHandler(EventHandler* event_handler);
 
 
 private:
 
-	std::vector<_internalEventHandlerBase*> m_event_handlers;
+	std::vector<EventHandler*> m_event_handlers;
 
 };
 

@@ -9,43 +9,30 @@
 
 namespace se
 {
-class _internalEventHandlerBase
+class EventHandler
 {
 public:
-	_internalEventHandlerBase(){}
-
-	virtual void Update() = 0;
-};
-template<typename EventType>
-class EventHandler : public _internalEventHandlerBase
-{
-	using fptr = void (*)(SEfloat);
-public:
-	EventHandler() : m_events{}
+	EventHandler() 
+		: m_event_types{}
+		, m_events{}
+		 
 	{}
 
 	void Update(){}
 
-	//void RegisterEvent(SE_Event*)
-
-	//SEint PollEvents(SE_Event& se_event)
-	//{
-	//	se_event = m_events.back();
-	//}
-	void IterateEvents()
+	void RegisterEvent(SE_EVENT_TYPE type)
 	{
-		while (!m_events.empty)
-		{
-			auto& e = m_events.front();
-
-			auto* func = e.second;
-			
-			m_events.pop();
-		}
+		m_event_types.emplace_back(type);
 	}
 
+	SEint PollEvents(SE_Event& se_event)
+	{
+		se_event = m_events.back();
+		m_events.pop();
+	}
 private:
-	std::queue<std::pair<SE_Event*, fptr>> m_events;
+	std::vector<SE_EVENT_TYPE> m_event_types;
+	std::queue<SE_Event> m_events;
 };
 
 }//namespace se

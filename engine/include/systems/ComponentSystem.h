@@ -12,7 +12,7 @@
 //SE includes:
 #include <managers/Entity.h>
 #include <core/Engine.h>
-#include <managers/EventHandler.h>
+#include <managers/EventManager.h>
 #include <core/Messages.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
@@ -74,11 +74,8 @@ public:
 
 
 protected:
-	///Reference to Engine
-	Engine& m_engine;
-
-	///Event handler
-	EventHandler<>* m_event_handler;
+	Engine& m_engine;				///Reference to Engine
+	EventHandler* m_event_handler;  ///Pointer to EventHandler. If used, must be initialized with EventManager's RegisterEventHandler() -function
 
 	///Static pointer to engine
 	static Engine* m_engine_ptr;

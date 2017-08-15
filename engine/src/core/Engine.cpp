@@ -26,6 +26,7 @@
 #include <managers/EntityManager.h>
 #include <managers/ComponentManager.h>
 #include <managers/ResourceManager.h>
+#include <managers/EventManager.h>
 
 ///Utility includes:
 #include <utility/JsonUtilFunctions.h>
@@ -69,6 +70,7 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_resourceMgr(std::make_unique<ResourceManager>(*this))
 	, m_compMgr(std::make_unique<ComponentManager>(*this))
 	, m_ioMgr(std::make_unique<IOManager>(*this))
+	, m_eventMgr(std::make_unique<EventManager>(*this))
 
 	/*GUI*/
 	, m_gui(std::make_unique<gui::GraphicalUserInterface>(*this))
@@ -207,6 +209,8 @@ void Engine::_initManagers()
 
 	//Resource Manager | default path to shaders.. todo: change so that it can be read fomr the engine_config.json or delete that part from json
 	m_resourceMgr->Initialize("../../engine/shaders/", m_path_to_user_files);
+
+	m_eventMgr->Initialize();
 }
 
 void Engine::_initRenderers()
@@ -242,6 +246,8 @@ void Engine::_updateMgrs()
 {
 	m_sceneMgr->Update();
 	m_entityMgr->Update();
+
+	m_eventMgr->Update();
 }
 
 void Engine::_updateSystems(SEfloat deltaTime)
@@ -255,9 +261,7 @@ void Engine::_updateSystems(SEfloat deltaTime)
 	m_collisionSystem->Update(deltaTime);
 
 	m_gameLogicSystem->Update(deltaTime);
-	//Flush messages
-	m_movementSystem->Messages.clear();
-	m_transformSystem->Messages.clear();
+
 }
 
 bool Engine::_gameLoop()

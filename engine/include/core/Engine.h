@@ -58,6 +58,7 @@ class SceneManager;
 class EntityManager;
 class ComponentManager;
 class ResourceManager;
+class EventManager; 
 
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
@@ -99,6 +100,7 @@ public:
 	ComponentManager& GetCompMgr() { return *m_compMgr; }
 	ResourceManager& GetResourceManager() { return *m_resourceMgr; }
 	IOManager& GetIOManager() { return *m_ioMgr; }
+	EventManager& GetEventManager() { return *m_eventMgr; }
 
 
 	Window& GetWindow() { return *m_window; }
@@ -191,6 +193,7 @@ private:
 	std::unique_ptr<ResourceManager> m_resourceMgr;
 	std::unique_ptr<ComponentManager> m_compMgr;
 	std::unique_ptr<IOManager> m_ioMgr;
+	std::unique_ptr<EventManager> m_eventMgr;
 
 	//Camera
 	std::unique_ptr<Camera> m_camera;
