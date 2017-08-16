@@ -42,8 +42,7 @@ void CGameLogicEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_conta
 					if (ImGui::Button(allLogicNames.at(i).c_str()))
 					{
 						exsisting->logic_class_names.emplace_back(allLogicNames.at(i));
-						//void GameLogicSystem::AssingGameLogic(std::string logic_name, CGameLogic& component)
-						EngineGui::m_engine.GetGameLogicSystem().AssingGameLogic(exsisting->logic_class_names.at(i), *exsisting);
+						EngineGui::m_engine.GetGameLogicSystem().AssingGameLogic(exsisting->logic_class_names.back(), *exsisting);
 					}
 				}
 			}

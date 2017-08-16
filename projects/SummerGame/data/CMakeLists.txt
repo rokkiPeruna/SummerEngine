@@ -3,12 +3,15 @@
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
 
 set(USER_GAMELOGIC_DATA 
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/PlayerLogic.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/PlayerLogic.cpp
-	)
+        resources/gamelogic/AddLogicToEngine.h
+        resources/gamelogic/PlayerLogic.h
+        resources/gamelogic/PlayerLogic.cpp
+	    resources/gamelogic/EnemyLogic.h
+        resources/gamelogic/EnemyLogic.cpp
+    )
 set(USER_SCRIPT_DATA 
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/ScriptDeclarations.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/ShootProjectile.cpp
+	resources/scripts/ScriptDeclarations.h
+	resources/scripts/ShootProjectile.cpp
 	)
 
 source_group("userdata" FILES ${USER_GAMELOGIC_DATA})
