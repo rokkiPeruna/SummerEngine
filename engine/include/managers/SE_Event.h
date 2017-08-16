@@ -86,20 +86,20 @@ const SEuint64 EntityPositionChanged			= SEuint64_value_1 << 1;
 ///Brief: Base for all SE engine's events.
 ///type: Defines which type the event is. If deriving event doesn't change this, type is se_event_type_Default
 ///data: union which holds event's primary data. If deriving event doesn't change this, value is 0
-///add_data: union which holds event's additional data. If deriving event doesn't change this, value is 0
+///additional_data: union which holds event's additional data. If deriving event doesn't change this, value is 0
 struct SE_Event
 {	
 	SEushort group = EventGroup::Engine1;		///Group in which the event belongs
 	SEuint64 type = EventType::Default;			///Type of the event.
 	event_data data{ 0 };										///This can contain up to 64 bytes worth of data. Types described above
-	additional_event_data add_data{ 0 };						///This can contain up to 8 bytes worth of data. Types described above
+	additional_event_data additional_data{ 0 };					///This can contain up to 8 bytes worth of data. Types described above
 };
 //
 //
 
 ///Event sent when model matrix is changed. 
 ///data is new model matrix (Mat4f)
-///add_data is transform component's id (SEint)
+///additional_data is transform component's id (SEint)
 struct SE_Event_ModelMatrixChanged : public SE_Event
 {
 	explicit SE_Event_ModelMatrixChanged(SEint transf_id, Mat4f new_mod_mat)
@@ -107,13 +107,13 @@ struct SE_Event_ModelMatrixChanged : public SE_Event
 		group = EventGroup::Engine1;
 		type = EventType::ModelMatrixChanged;
 		data.mat4f = new_mod_mat;
-		add_data.seint = transf_id;
+		additional_data.seint = transf_id;
 	}
 };
 
 ///Event sent when entity's position needs to be changed for example by velocity
 ///data is position increment
-///add_data is entity's id
+///additional_data is entity's id
 struct SE_Event_EntityPositionChanged : public SE_Event
 {
 	explicit SE_Event_EntityPositionChanged(SEint entity_id, Vec3f position_increment)
@@ -121,7 +121,7 @@ struct SE_Event_EntityPositionChanged : public SE_Event
 		group = EventGroup::Engine1;
 		type = EventType::EntityPositionChanged;
 		data.vec3f = position_increment;
-		add_data.seint = entity_id;
+		additional_data.seint = entity_id;
 	}
 };
 

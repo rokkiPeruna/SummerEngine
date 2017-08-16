@@ -34,7 +34,7 @@ void TransformSystem::Initialize()
 	em.RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
 	///Give message types that we want this handler to handle
-	m_event_handler->RegisterEvent(EventGroup::Engine1, EventType::EntityPositionChanged);
+	m_event_handler->RegisterEvent(SE_Event_EntityPositionChanged(-1, Vec3f(1.0f)));
 
 }
 
@@ -43,27 +43,27 @@ void TransformSystem::Uninitialize()
 
 }
 
-void TransformSystem::Update(SEfloat)
+void TransformSystem::Update(SEfloat deltaTime)
 {
 	//Check events!!
 	SE_Event se_event;
 	while (m_event_handler->PollEvents(se_event))
 	{
+		SEbool recalc_mod_mat = false;
+		SEint e_id = -1;
 		switch (se_event.type)
 		{
 		case EventType::EntityPositionChanged:
 		{
-			std::cout << "Komma här" << std::endl;
+			TransformableComponents.at(se_event.additional_data.seint).position += se_event.data.vec3f;
+			recalc_mod_mat = true;
+			e_id = se_event.additional_data.seint;
+			break;
 		}
 		default:
 			break;
 		}
-	}
-
-
-	//This is stupid way to do this, but recalculate all model matrices
-	for (auto& tr : TransformableComponents)
-	{
+		auto& tr = TransformableComponents.at(e_id);
 		tr.modelMatrix = glm::translate(Mat4f(1.0f), tr.position) * glm::rotate(Mat4f(1.0f), glm::radians(tr.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), tr.scale);
 	}
 }

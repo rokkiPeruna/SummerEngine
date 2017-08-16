@@ -18,27 +18,33 @@ public:
 
 	void Update(){}
 
-	///EventHandler handles only events that registered
-	void RegisterEvent(SEushort group, SEuint64 type);
+	///EventHandler gets only events that are registered to it.
+	///Parameter is a SE_Event as object constructed in place,
+	///such as
+	///--
+	///SE_Event_EntityPositionChanged(-1, Vec3f(1.0f))
+	///--
+	///This constructed object is not used for anything else that registering.
+	void RegisterEvent(SE_Event&& event_as_type);
 
-	///Send event
+	///Send event. This event can be of any type of SE_Event
 	void SendEvent(SE_Event&& se_event);
 
-	///Go through events
+	///Go through events that handler has registered
 	SEint PollEvents(SE_Event& se_event);
 
 
 	///For engine's internal use
-	std::vector<SE_Event>& __get_sent_events() { return m_sent_events; }
+	std::vector<SE_Event>& __sent_events() { return m_sent_events; }
 
 	///For engine's internal use
-	std::queue<SE_Event>& __get_pending_events() { return m_pending_events; }
+	std::queue<SE_Event>& __pending_events() { return m_pending_events; }
 
 	///For engine's internal use
-	SEushort __get_group_mask() { return m_group_mask; }
+	SEushort __group_mask() { return m_group_mask; }
 	
 	///For engine's internal use
-	SEuint64 __get_event_mask() { return m_event_mask; }
+	SEuint64 __event_mask() { return m_event_mask; }
 
 private:
 	SEushort m_group_mask;

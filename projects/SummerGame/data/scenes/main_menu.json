@@ -1,5 +1,64 @@
 {
     "entities": {
+        "enemy_1": {
+            "_id": 1,
+            "animation": {
+                "_ownerID": 1,
+                "_type": 5,
+                "anin_names": null
+            },
+            "dynamic": {
+                "_ownerID": 1,
+                "_type": 1,
+                "acc_x": 0.0,
+                "acc_y": 0.0,
+                "acc_z": 0.0,
+                "velo_x": 0.0,
+                "velo_y": 1.0,
+                "velo_z": 0.0
+            },
+            "shape": {
+                "_ownerID": 1,
+                "_type": 4,
+                "points": [
+                    -0.5,
+                    -0.5,
+                    0.0,
+                    0.5,
+                    -0.500000059604645,
+                    0.0,
+                    0.50000011920929,
+                    0.5,
+                    0.0,
+                    -0.5,
+                    0.500000178813934,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 1,
+                "_type": 3,
+                "h": 0,
+                "tex_name": "test_texture.png",
+                "w": 0,
+                "x": 0,
+                "y": 0
+            },
+            "transformable": {
+                "_ownerID": 1,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
         "menu_screen": {
             "_id": 0,
             "animation": {
@@ -24,6 +83,16 @@
                 ],
                 "max": 0.282000005245209,
                 "min": -0.282000005245209
+            },
+            "dynamic": {
+                "_ownerID": 0,
+                "_type": 1,
+                "acc_x": 0.0,
+                "acc_y": 0.0,
+                "acc_z": 0.0,
+                "velo_x": 0.0500000007450581,
+                "velo_y": 0.0,
+                "velo_z": 0.0
             },
             "shape": {
                 "_ownerID": 0,
