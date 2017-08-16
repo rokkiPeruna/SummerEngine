@@ -124,6 +124,7 @@ void GameLogicSystem::AssingGameLogic(std::string logic_name, CGameLogic& compon
 		if (g->GetName() == logic_name)
 		{
 			component.logics.emplace_back(g);
+			component.logics.back()->ownerID(component.ownerID);
 			return;
 		}
 	}

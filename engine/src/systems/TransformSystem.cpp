@@ -7,10 +7,17 @@
 
 namespace se
 {
+
+
 CShape* GetShapeComponent(SEint index)
 {
 	return &priv::TransformSystem::m_engine_ptr->GetTransformSystem().m_cShapes.at(index);
 }
+
+CTransformable* GetTransformComponent(SEint index)
+{
+	return &priv::TransformSystem::TransformableComponents.at(index);
+}	
 
 namespace priv
 {

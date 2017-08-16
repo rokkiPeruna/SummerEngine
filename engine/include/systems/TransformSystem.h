@@ -15,6 +15,7 @@ namespace se
 {
 ///Getter for CShape components
 CShape* GetShapeComponent(SEint index);
+CTransformable* GetTransformComponent(SEint index);
 
 namespace priv
 {
@@ -30,6 +31,8 @@ class TransformSystem : public ComponentSystem
 	friend class RenderSystem;
 	//Friend getter method for CMovables components
 	friend CShape* se::GetShapeComponent(SEint index);
+	friend CTransformable* GetTransformComponent(SEint index);
+
 public:
 
 	///Default constructor.
@@ -66,18 +69,17 @@ public:
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
-
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
 
 	const std::vector<CShape>& GetCShapesContainer() { return m_cShapes; }
 
-	std::vector<CShape> m_cShapes;
 
 private:
 
 	///Every shape in program is stored in this container
 
+	std::vector<CShape> m_cShapes;
 	std::queue<SEint> m_free_cShape_indices;
 };
 

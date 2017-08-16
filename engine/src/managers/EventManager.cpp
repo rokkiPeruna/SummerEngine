@@ -30,7 +30,7 @@ void EventManager::Update()
 
 void EventManager::RegisterEventHandler(EventHandler* event_handler)
 {
-	m_event_handlers.emplace_back(new ); -- olet tässä, hanskaa uusien event_handlerin rekisteröinti
+	//m_event_handlers.emplace_back(new ); -- olet tässä, hanskaa uusien event_handlerin rekisteröinti
 }
 
 
