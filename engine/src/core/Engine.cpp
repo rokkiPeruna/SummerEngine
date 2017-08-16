@@ -58,12 +58,6 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_current_renderer(nullptr)
 	, m_camera(std::make_unique<Camera>())
 
-	/*SYSTEMS*/
-	, m_transformSystem(std::make_unique<TransformSystem>(*this))
-	, m_movementSystem(std::make_unique<MovementSystem>(*this))
-	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
-	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
-	, m_gameLogicSystem(std::make_unique<GameLogicSystem>(*this))
 	/*MANAGERS*/
 	, m_entityMgr(std::make_unique<EntityManager>(*this))
 	, m_sceneMgr(std::make_unique<SceneManager>(*this))
@@ -71,6 +65,13 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_compMgr(std::make_unique<ComponentManager>(*this))
 	, m_ioMgr(std::make_unique<IOManager>(*this))
 	, m_eventMgr(std::make_unique<EventManager>(*this))
+
+	/*SYSTEMS*/
+	, m_transformSystem(std::make_unique<TransformSystem>(*this))
+	, m_movementSystem(std::make_unique<MovementSystem>(*this))
+	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
+	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
+	, m_gameLogicSystem(std::make_unique<GameLogicSystem>(*this))
 
 	/*GUI*/
 	, m_gui(std::make_unique<gui::GraphicalUserInterface>(*this))

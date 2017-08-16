@@ -29,6 +29,9 @@ typedef char16_t				SEchar16;
 typedef char32_t				SEchar32;
 typedef wchar_t					SEwchar;
 
+typedef	int8_t					SEint8;
+constexpr SEint8				SEint8_value_1 = 0x1;
+
 typedef int						SEint;
 constexpr SEint					SEint_max = std::numeric_limits<SEint>::max();
 constexpr SEint					SEint_min = std::numeric_limits<SEint>::min();
@@ -40,6 +43,7 @@ constexpr SEshort				SEshort_min = std::numeric_limits<SEshort>::min();
 typedef unsigned short			SEushort;
 constexpr SEushort				SEushort_max = std::numeric_limits<SEushort>::max();
 constexpr SEushort				SEushort_min = std::numeric_limits<SEushort>::min();
+constexpr SEushort				SEushort_value_1 = 0x01;
 
 typedef long int				SElint;
 constexpr SElint				SElint_max = std::numeric_limits<SElint>::max();
@@ -72,6 +76,7 @@ constexpr SEint64				SEint64_min = std::numeric_limits<SEint64>::min();
 typedef unsigned long long		SEuint64;
 constexpr SEuint64				SEuint64_max = std::numeric_limits<SEuint64>::max();
 constexpr SEuint64				SEuint64_min = std::numeric_limits<SEuint64>::min();
+constexpr SEuint64				SEuint64_value_1 = 0x00000001;
 
 typedef float					SEfloat;
 constexpr SEfloat				SEfloat_max = std::numeric_limits<SEfloat>::max();

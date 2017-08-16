@@ -24,7 +24,7 @@ MovementSystem::MovementSystem(Engine& engine_ref)
 
 void MovementSystem::Initialize()
 {
-
+	
 }
 
 void MovementSystem::Uninitialize()
@@ -40,6 +40,7 @@ void MovementSystem::Update(SEfloat deltaTime)
 		c.velocity += c.acceleration * deltaTime;
 
 		//Send events!
+		m_event_handler->SendEvent(SE_Event_EntityPositionChanged(c.ownerID, c.velocity));
 	}
 }
 

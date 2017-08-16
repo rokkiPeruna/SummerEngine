@@ -2,6 +2,8 @@
 #define SE_EVENTHANDLER_H
 
 ///STL includes:
+#include <vector>
+#include <list>
 #include <queue>
 
 ///SE includes:
@@ -12,27 +14,40 @@ namespace se
 class EventHandler
 {
 public:
-	EventHandler() 
-		: m_event_types{}
-		, m_events{}
-		 
-	{}
+	EventHandler();
 
 	void Update(){}
 
-	void RegisterEvent(SE_EVENT_TYPE type)
-	{
-		m_event_types.emplace_back(type);
-	}
+	///EventHandler handles only events that registered
+	void RegisterEvent(SEushort group, SEuint64 type);
 
-	SEint PollEvents(SE_Event& se_event)
-	{
-		se_event = m_events.back();
-		m_events.pop();
-	}
+	///Send event
+	void SendEvent(SE_Event&& se_event);
+
+	///Go through events
+	SEint PollEvents(SE_Event& se_event);
+
+
+	///For engine's internal use
+	std::vector<SE_Event>& __get_sent_events() { return m_sent_events; }
+
+	///For engine's internal use
+	std::queue<SE_Event>& __get_pending_events() { return m_pending_events; }
+
+	///For engine's internal use
+	SEushort __get_group_mask() { return m_group_mask; }
+	
+	///For engine's internal use
+	SEuint64 __get_event_mask() { return m_event_mask; }
+
 private:
-	std::vector<SE_EVENT_TYPE> m_event_types;
-	std::queue<SE_Event> m_events;
+	SEushort m_group_mask;
+	SEuint64 m_event_mask;
+
+	std::list<std::pair<SEushort, SEuint64>> m_event_types;
+	std::vector<SE_Event> m_sent_events;
+	std::queue<SE_Event> m_pending_events;
+
 };
 
 }//namespace se

@@ -29,6 +29,12 @@ TransformSystem::TransformSystem(Engine& engine_ref)
 
 void TransformSystem::Initialize()
 {
+	///Register event handler
+	auto& em = m_engine.GetEventManager();
+	em.RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+	///Give message types that we want this handler to handle
+	m_event_handler->RegisterEvent(EventGroup::Engine1, EventType::EntityPositionChanged);
 
 }
 
@@ -40,7 +46,19 @@ void TransformSystem::Uninitialize()
 void TransformSystem::Update(SEfloat)
 {
 	//Check events!!
-	
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::EntityPositionChanged:
+		{
+			std::cout << "Komma här" << std::endl;
+		}
+		default:
+			break;
+		}
+	}
 
 
 	//This is stupid way to do this, but recalculate all model matrices

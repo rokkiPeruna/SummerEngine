@@ -3,6 +3,7 @@
 
 ///STL includes:
 #include <vector>
+#include <memory>
 
 //SE includes:
 #include <managers/Manager.h>
@@ -31,13 +32,14 @@ public:
 
 	void Update() override final;
 
-	void RegisterEventHandler(EventHandler* event_handler);
+	///Registers EventHandler to EventManager and initializes given pointer
+	void RegisterEventHandler(EventHandler*& event_handler);
 
 
 private:
+	std::vector<std::unique_ptr<EventHandler>> m_event_handlers;
 
-	std::vector<EventHandler*> m_event_handlers;
-
+	std::vector<SE_Event> m_all_events;
 };
 
 }//namespace priv

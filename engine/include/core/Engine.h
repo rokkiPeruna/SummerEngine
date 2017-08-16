@@ -178,6 +178,14 @@ private:
 	///Current renderer
 	Render* m_current_renderer;
 
+	///Managers (Must be before systems!!!)
+	std::unique_ptr<EntityManager> m_entityMgr;
+	std::unique_ptr<SceneManager> m_sceneMgr;
+	std::unique_ptr<ResourceManager> m_resourceMgr;
+	std::unique_ptr<ComponentManager> m_compMgr;
+	std::unique_ptr<IOManager> m_ioMgr;
+	std::unique_ptr<EventManager> m_eventMgr;
+
 	///Systems and system ptrs container
 	std::unique_ptr<MovementSystem> m_movementSystem;
 	std::unique_ptr<TransformSystem> m_transformSystem;
@@ -187,13 +195,6 @@ private:
 	///
 	std::vector<ComponentSystem*> m_systemContainer;
 
-	///Managers
-	std::unique_ptr<EntityManager> m_entityMgr;
-	std::unique_ptr<SceneManager> m_sceneMgr;
-	std::unique_ptr<ResourceManager> m_resourceMgr;
-	std::unique_ptr<ComponentManager> m_compMgr;
-	std::unique_ptr<IOManager> m_ioMgr;
-	std::unique_ptr<EventManager> m_eventMgr;
 
 	//Camera
 	std::unique_ptr<Camera> m_camera;
