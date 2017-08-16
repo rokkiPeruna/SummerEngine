@@ -18,7 +18,7 @@
 #include <gui/CTextureEditor.h>
 #include <gui/CAnimationEditor.h>
 #include <gui/CTransformableEditor.h>
-
+#include <gui/CGameLogicEditor.h>
 namespace se
 {
 namespace gui
@@ -63,7 +63,7 @@ void GraphicalUserInterface::Initialize()
 	m_gui_container.emplace_back(std::make_unique<gui::CTextureEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CAnimationEditor>(m_engine));
 	m_gui_container.emplace_back(std::make_unique<gui::CTransformableEditor>(m_engine));
-
+	m_gui_container.emplace_back(std::make_unique<gui::CGameLogicEditor>(m_engine));
 
 	//Sort elements according to their priority
 	std::sort(m_gui_container.begin(), m_gui_container.end(), [&](const std::unique_ptr<EngineGui>& a, const std::unique_ptr<EngineGui>& b) {

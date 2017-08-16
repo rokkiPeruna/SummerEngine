@@ -12,6 +12,9 @@
 
 namespace se
 {
+
+CGameLogic* GetGameLogicComponent(SEint index);
+
 namespace priv
 {
 
@@ -20,8 +23,10 @@ class Engine;
 class GameLogicSystem : public ComponentSystem
 {
 
+	friend CGameLogic* se::GetGameLogicComponent(SEint index);
+
 public:
-	
+
 	GameLogicSystem(Engine& engine_ref);
 	~GameLogicSystem();
 	GameLogicSystem(const GameLogicSystem&) = delete;
@@ -36,7 +41,7 @@ public:
 	void Update(SEfloat deltaTime) override final;
 
 	void ClearComponentContainers() override final;
-	
+
 	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
 	void OnEntityRemoved(Entity& entity) override final;
@@ -51,10 +56,13 @@ public:
 
 private:
 
+	//All possible logic components
 	std::vector<std::string> m_game_logic_names;
 
-
+	//All logic components 
 	std::vector<CGameLogic> m_cGameLogic;
+	
+	//Free indices
 	std::queue<SEint> m_free_cGameLogic_indices;
 };
 

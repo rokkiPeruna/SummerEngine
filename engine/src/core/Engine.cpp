@@ -240,6 +240,9 @@ void Engine::_initSystems()
 
 	m_animationSystem->Initialize();
 	m_systemContainer.emplace_back(m_animationSystem.get());
+
+	m_gameLogicSystem->Initialize();
+	m_systemContainer.emplace_back(m_gameLogicSystem.get());
 }
 
 void Engine::_updateMgrs()
@@ -359,8 +362,6 @@ void Engine::_editorLoop(SEbool& exitProgram)
 
 			//Messenger should be last to update before render
 			m_messenger->PrintMessages(_messageLogType_console);
-
-			m_gameLogicSystem->Update(deltaTime);
 
 			// Rendering
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);

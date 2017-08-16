@@ -1,9 +1,14 @@
 #include <systems/GameLogicSystem.h>
-
 #include <AddLogicToEngine.h>
 
 namespace se
 {
+
+CGameLogic* GetGameLogicComponent(SEint index)
+{
+	return &priv::GameLogicSystem::m_engine_ptr->GetGameLogicSystem().m_cGameLogic.at(index);
+}
+
 namespace priv
 {
 GameLogicSystem::GameLogicSystem(Engine& engine_ref)
@@ -16,7 +21,7 @@ GameLogicSystem::GameLogicSystem(Engine& engine_ref)
 }
 
 GameLogicSystem::~GameLogicSystem()
-{	
+{
 	for (auto i : GameLogicInstances)
 	{
 		auto tmp = i;
@@ -42,7 +47,10 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 {
 	for (auto& comp : m_cGameLogic)
 	{
-		comp.logics.at(comp.current_gamel_index)->Update(deltaTime);
+		if (comp.logics.size() != 0)
+		{
+			comp.logics.at(0)->Update(deltaTime); //insert "active" on 0
+		}
 	}
 }
 
@@ -76,7 +84,8 @@ SEint GameLogicSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::GAMELOGIC)
 	{
-		return _createComponent_helper<CGameLogic>(entity, component_type, entity_obj, m_cGameLogic, m_free_cGameLogic_indices);
+		SEint index = _createComponent_helper<CGameLogic>(entity, component_type, entity_obj, m_cGameLogic, m_free_cGameLogic_indices);
+		return index;
 	}
 	else
 	{

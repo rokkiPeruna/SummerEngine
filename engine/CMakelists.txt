@@ -177,7 +177,10 @@ set(ENGINE_GUI_COMPONENT_MODIFIERS
 	include/gui/CTextureEditor.h
 	src/gui/CTextureEditor.cpp
 	include/gui/CAnimationEditor.h
-	src/gui/CAnimationEditor.cpp	
+	src/gui/CAnimationEditor.cpp
+	include/gui/CGameLogicEditor.h
+	src/gui/CGameLogicEditor.cpp
+	
 	)
 set(ENGINE_GUI_FILES
 	${ENGINE_GUI_MANAGER_FILES}
