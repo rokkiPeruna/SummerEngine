@@ -14,6 +14,9 @@ namespace gui
 {
 class CGameLogicEditor : public CompEditorGui
 {
+//mit‰ miell‰ on.. monta ClogicComponent -> voi sis‰lt‰‰ monta logiikka palikka
+//vain 1 palikka voi olla kerrallaan aktiivinne? 
+
 public:
 	///Default constructor
 	///1.param pointer to Engine -class

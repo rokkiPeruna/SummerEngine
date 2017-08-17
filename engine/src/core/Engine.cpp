@@ -280,6 +280,7 @@ bool Engine::_gameLoop()
 	SEfloat second = 0.0f;
 	SEint frame_counter = 0;
 	std::string fps = "";
+	m_gameLogicSystem->InitializeGameLogics();
 
 	while (gameloop)
 	{

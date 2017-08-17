@@ -7,6 +7,24 @@ namespace se
 CGameLogic* GetGameLogicComponent(SEint index)
 {
 	return &priv::GameLogicSystem::m_engine_ptr->GetGameLogicSystem().m_cGameLogic.at(index);
+
+}
+
+void SetActive(SEint index, std::string name)
+{
+	auto tmp = GetGameLogicComponent(index);
+
+	//	for (auto i : tmp->logics)
+	for (int i = 0; i < tmp->logics.size(); ++i)
+	{
+		if (tmp->logics.at(i)->GetName() == name)
+		{
+			std::swap(tmp->logics.at(0), tmp->logics.at(i));
+			return;
+		}
+	}
+	//Message error
+	return;
 }
 
 namespace priv
@@ -18,6 +36,7 @@ GameLogicSystem::GameLogicSystem(Engine& engine_ref)
 	, m_free_cGameLogic_indices{}
 {
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::GAMELOGIC, this);
+	
 }
 
 GameLogicSystem::~GameLogicSystem()
@@ -49,7 +68,7 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 	{
 		if (comp.logics.size() != 0)
 		{
-			comp.logics.at(0)->Update(deltaTime); //insert "active" on 0
+			comp.logics.at(0)->Update(deltaTime); //Active set to 0
 		}
 	}
 }
@@ -129,6 +148,17 @@ void GameLogicSystem::AssingGameLogic(std::string logic_name, CGameLogic& compon
 		}
 	}
 	MessageWarning(GameLogicSys_id) << "No GameLogic with name [" + logic_name + "] found\n in AssingGameLogic()";
+}
+
+void GameLogicSystem::InitializeGameLogics()
+{
+	for (auto i : m_cGameLogic)
+	{
+		for (auto j : i.logics)
+		{
+			j->Init();
+		}
+	}
 }
 
 }//namespace priv

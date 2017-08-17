@@ -15,15 +15,13 @@ public:
 
 	void Init() override final
 	{
+		std::cout << "Initialize Enemy" << std::endl;
 
 	}
 
 	void Update(float deltaTime) override final
 	{
-		se::GetShapeComponent(m_ownerid);
-
-		se::priv::TransformSystem::TransformableComponents.at(m_ownerid).position.x -= 0.5f *deltaTime;
-		std::cout << "Do something Enemy" << std::endl;
+		se::GetTransformComponent(m_ownerid)->position.x -= 0.5f * deltaTime;
 	}
 };
 #endif
