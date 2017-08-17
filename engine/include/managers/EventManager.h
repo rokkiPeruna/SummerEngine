@@ -1,5 +1,5 @@
-#ifndef SE_EVENTMANAGER_H
-#define SE_EVENTMANAGER_H
+#ifndef SUMMERENGINE_EVENTMANAGER_H
+#define SUMMERENGINE_EVENTMANAGER_H
 
 ///STL includes:
 #include <vector>
@@ -7,7 +7,7 @@
 
 //SE includes:
 #include <managers/Manager.h>
-#include <managers/EventHandler.h>
+#include <events/EventHandler.h>
 
 namespace se
 {

@@ -54,7 +54,7 @@ void AnimationSystem::Update(SEfloat deltaTime)
 {
 	for (auto& c_anim : m_cAnimations)
 	{
-		if (c_anim.ownerID == -1)
+		if (c_anim.ownerID == -1 || !c_anim.animations.size())
 			continue;
 		assert(c_anim.my_cTexture_index != -1);
 

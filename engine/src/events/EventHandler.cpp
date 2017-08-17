@@ -1,4 +1,4 @@
-#include <managers/EventHandler.h>
+#include <events/EventHandler.h>
 #include <managers/EventManager.h>
 
 namespace se

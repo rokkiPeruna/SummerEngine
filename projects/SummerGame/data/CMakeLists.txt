@@ -1,23 +1,37 @@
 #root/projects/CURRENT_PROJECT/data
 
 include_directories(${PROJECT_SOURCE_DIR}/engine/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/STB)
+include_directories(${PROJECT_SOURCE_DIR}/external)
+include_directories(${PROJECT_SOURCE_DIR}/external/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/external/OpenGL)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/resources)
 
 set(USER_GAMELOGIC_DATA 
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/AddLogicToEngine.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/PlayerLogic.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic/PlayerLogic.cpp
+	resources/gamelogic/AddLogicToEngine.h
+	resources/gamelogic/PlayerLogic.h
+	resources/gamelogic/PlayerLogic.cpp
 	)
 set(USER_SCRIPT_DATA 
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/ScriptDeclarations.h
-	${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts/ShootProjectile.cpp
+	resources/scripts/ScriptDeclarations.h
+	resources/scripts/ShootProjectile.cpp
+	)
+set(USER_EVENTS_DATA
+	resources/userevents/UserEvents1.h
+	resources/userevents/UserEvents2.h
+	resources/userevents/UserEvents3.h
+	resources/userevents/UserEvents4.h
 	)
 
-source_group("userdata" FILES ${USER_GAMELOGIC_DATA})
-source_group("userdata" FILES ${USER_SCRIPT_DATA})
+source_group("gamelogic" FILES ${USER_GAMELOGIC_DATA})
+source_group("scripts" FILES ${USER_SCRIPT_DATA})
+source_group("events" FILES ${USER_EVENTS_DATA})
 
 add_library(user_data
 	${USER_GAMELOGIC_DATA}
 	${USER_SCRIPT_DATA}
+	${USER_EVENTS_DATA}
 	)
 	
 set_property(TARGET user_data PROPERTY FOLDER "user_data")

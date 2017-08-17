@@ -7,7 +7,7 @@
 #include <queue>
 
 ///SE includes:
-#include <managers/SE_Event.h>
+#include <events/Events.h>
 
 namespace se
 {

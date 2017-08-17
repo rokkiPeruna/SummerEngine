@@ -33,9 +33,10 @@ void TransformSystem::Initialize()
 	auto& em = m_engine.GetEventManager();
 	em.RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
-	///Give message types that we want this handler to handle
+	///Give message types that we want this handler to store
 	m_event_handler->RegisterEvent(SE_Event_EntityPositionChanged(-1, Vec3f(1.0f)));
-
+	m_event_handler->RegisterEvent(SE_Event_EntityScaleChanged(-1, Vec3f(1.0f)));
+	m_event_handler->RegisterEvent(SE_Event_EntityRotationChanged(-1, Vec3f(0.0f)));
 }
 
 void TransformSystem::Uninitialize()
@@ -58,13 +59,29 @@ void TransformSystem::Update(SEfloat deltaTime)
 			TransformableComponents.at(se_event.additional_data.seint).position += se_event.data.vec3f;
 			recalc_mod_mat = true;
 			e_id = se_event.additional_data.seint;
-			break;
 		}
+		case EventType::EntityScaleChanged:
+		{
+			TransformableComponents.at(se_event.additional_data.seint).scale = se_event.data.vec3f;
+			recalc_mod_mat = true;
+			e_id = se_event.additional_data.seint;
+		}
+		case EventType::EntityRotationChanged:
+		{
+			TransformableComponents.at(se_event.additional_data.seint).rotation = se_event.data.vec3f.z;
+			recalc_mod_mat = true;
+			e_id = se_event.additional_data.seint;
+		}
+
 		default:
 			break;
 		}
-		auto& tr = TransformableComponents.at(e_id);
-		tr.modelMatrix = glm::translate(Mat4f(1.0f), tr.position) * glm::rotate(Mat4f(1.0f), glm::radians(tr.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), tr.scale);
+
+		if (recalc_mod_mat)
+		{
+			auto& tr = TransformableComponents.at(e_id);
+			tr.modelMatrix = glm::translate(Mat4f(1.0f), tr.position) * glm::rotate(Mat4f(1.0f), glm::radians(tr.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), tr.scale);
+		}
 	}
 }
 
@@ -139,8 +156,8 @@ SEint TransformSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 		SEint tmp = _createComponent_helper(entity, component_type, entity_obj, m_cShapes, m_free_cShape_indices);
 		m_engine.GetCurrentRenderer()->OnEntityAdded(entity);
 		m_cShapes.at(tmp).my_Transform = entity.id;
-		
-		
+
+
 		return entity.id;
 	}
 

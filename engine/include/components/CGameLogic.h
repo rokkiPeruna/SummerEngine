@@ -7,7 +7,7 @@
 
 ///SE includes:
 #include <components/Component.h>
-#include <gamelogic/GameLogic.h>
+#include <core/GameLogic.h>
 
 
 namespace se

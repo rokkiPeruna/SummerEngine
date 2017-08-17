@@ -77,10 +77,6 @@ set(MANAGERS_FILES
 	src/managers/Mouse.cpp
 	include/managers/EventManager.h
 	src/managers/EventManager.cpp
-	include/managers/EventHandler.h
-	src/managers/EventHandler.cpp
-	include/managers/SE_Event.h
-	src/managers/SE_Event.cpp
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
@@ -95,15 +91,23 @@ set(CORE_FILES
 	src/core/Messenger.cpp
 	include/core/SE_exceptions.h
 	include/core/file_folder_json_data.h
+	include/core/GameLogic.h
     )
 source_group("core" FILES ${CORE_FILES})
-
 #-----------------------------------------------------------------
-#Game logic classes
-set(GAME_LOGIC_CLASSES
-	include/gamelogic/GameLogic.h
+#Engine event files
+set(ENGINE_EVENTS
+	include/events/EngineEvents1.h
+	include/events/EngineEvents2.h
+	include/events/EngineEvents3.h
+	include/events/EngineEvents4.h
+	include/events/EventHandler.h
+	src/events/EventHandler.cpp
+	include/events/SE_Event.h
+	src/events/SE_Event.cpp
+	include/events/Events.h
 	)
-source_group("gamelogic" FILES ${GAME_LOGIC_CLASSES})
+source_group("events" FILES ${ENGINE_EVENTS})
 #-----------------------------------------------------------------
 #Renderers
 set(RENDERERS_FILES	
@@ -221,6 +225,7 @@ add_executable(engine
 	${MANAGERS_FILES}
 	${CORE_FILES}
 	${GAME_LOGIC_CLASSES}
+	${ENGINE_EVENTS}
 	${RENDERERS_FILES}
 	${IDS_FILES}
 	${UTILITY_FILES}
@@ -234,13 +239,13 @@ add_executable(engine
 
 
 target_link_libraries(engine PUBLIC
-					user_data
 					box2d 
 					SDL2-static 
 					SDL2main 
 					glew32 
 					glew32s 	
 					OpenGL32
+					user_data
 				)
 # Remember to add 'OALWrapper' to target_link_libraries
 
