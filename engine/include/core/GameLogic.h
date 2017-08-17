@@ -7,6 +7,7 @@
 ///SE includes:
 #include <core/Engine.h>
 #include <components/Component.h>
+#include <events/Events.h>
 
 #include <systems/AnimationSystem.h>
 #include <systems/CollisionSystem.h>
@@ -23,10 +24,10 @@ class GameLogic
 public:
 	GameLogic(std::string name) 
 		: active(false)
-		, m_ownerid(-1)
+		, m_entityID(-1)
 		, m_name(name)
 	{
-
+		
 	}
 	virtual ~GameLogic() = default;
 	//SE_TODO: Do copy and move
@@ -40,13 +41,14 @@ public:
 
 	std::string GetName() const { return m_name; }
 
-	void ownerID(SEint id) { m_ownerid = id; }
-	SEint ownerID() { return m_ownerid; }
+	void entityID(SEint id) { m_entityID = id; }
+	SEint entityID() { return m_entityID; }
 
 protected:
 
-	SEint m_ownerid;
+	SEint m_entityID;
 	const std::string m_name;
+	
 };
 }
 #endif

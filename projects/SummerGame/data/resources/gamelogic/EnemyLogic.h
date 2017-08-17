@@ -2,26 +2,24 @@
 #define SUMMERGAME_ENEMYLOGIC_H
 
 #include <core/GameLogic.h>
+#include <iostream>
+
 
 class EnemyLogic : public se::GameLogic
 {
 public:
 
-	EnemyLogic()
-		: GameLogic("EnemyLogic")
-	{
+	EnemyLogic();
 
-	}
 
-	void Init() override final
-	{
-		std::cout << "Initialize Enemy" << std::endl;
+	void Init() override final;
+	
+	void Update(float deltaTime) override final;
 
-	}
+private:
 
-	void Update(float deltaTime) override final
-	{
-		se::GetTransformComponent(m_ownerid)->position.x -= 0.5f * deltaTime;
-	}
+	se::EventHandler* enemyHandler;
+
+
 };
 #endif

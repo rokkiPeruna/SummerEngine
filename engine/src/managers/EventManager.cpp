@@ -27,11 +27,11 @@ void EventManager::Update()
 	///Get all events to a single container
 	for (auto& handler : m_event_handlers)
 	{
-		m_all_events = std::move(handler->__sent_events());
+		m_all_events.insert(m_all_events.end(), handler->__sent_events().begin(), handler->__sent_events().end());
 		handler->__sent_events().clear();
 	}
 
-	std::cout << "Event count: " << m_all_events.size() << std::endl;
+	//std::cout << "Event count: " << m_all_events.size() << std::endl;
 
 	///Distribute events				//SE_TODO: This is not very efficient
 	for (auto& se_event : m_all_events)
