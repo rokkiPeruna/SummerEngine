@@ -35,6 +35,10 @@ EntityManager::EntityManager(Engine& engine_ref)
 
 void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)
 {
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
+
 	m_rel_path_to_user_files = relativePathToEntitiesJson;
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + ffd.scene_folder_name;
 	m_compMgr = compMgr;
@@ -51,7 +55,22 @@ void EntityManager::Uninitialize()
 
 void EntityManager::Update()
 {
+	//Check events
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::SceneChanged:
+		{
+			InitWithNewScene(static_cast<Scene*>(se_event.data.void_ptr));
+			break;
+		}
 
+		default:
+			break;
+		}
+	}
 }
 
 void EntityManager::InitWithNewScene(Scene* scene)

@@ -50,7 +50,7 @@ private:
 	SEushort m_group_mask;
 	SEuint64 m_event_mask;
 
-	std::list<std::pair<SEushort, SEuint64>> m_event_types;
+	std::list<se_event_type> m_event_types;
 	std::vector<SE_Event> m_sent_events;
 	std::queue<SE_Event> m_pending_events;
 

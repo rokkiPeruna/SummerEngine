@@ -15,9 +15,9 @@ EventHandler::EventHandler()
 
 void EventHandler::RegisterEvent(SE_Event&& event_as_type)
 {
-	m_group_mask |= event_as_type.group;
-	m_event_mask |= event_as_type.type;
-	m_event_types.emplace_back(std::pair<SEushort, SEuint64>{ event_as_type.group, event_as_type.type });
+	m_group_mask |= event_as_type.type.first;
+	m_event_mask |= event_as_type.type.second;
+	m_event_types.emplace_back(std::pair<SEushort, SEuint64>{ event_as_type.type.first, event_as_type.type.second });
 }
 
 void EventHandler::SendEvent(SE_Event&& se_event)

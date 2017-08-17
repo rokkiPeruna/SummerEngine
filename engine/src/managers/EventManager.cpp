@@ -9,7 +9,7 @@ EventManager::EventManager(Engine& engine_ref)
 	, m_event_handlers{}
 	, m_all_events{}
 {
-
+	m_all_events.reserve(1000);
 }
 
 void EventManager::Initialize()
@@ -27,19 +27,20 @@ void EventManager::Update()
 	///Get all events to a single container
 	for (auto& handler : m_event_handlers)
 	{
-		m_all_events = std::move(handler->__sent_events());
-		handler->__sent_events().clear();
+		if (handler->__sent_events().size())
+		{
+			m_all_events.insert(m_all_events.end(), handler->__sent_events().begin(), handler->__sent_events().end());
+			handler->__sent_events().clear();
+		}
 	}
-
-	std::cout << "Event count: " << m_all_events.size() << std::endl;
 
 	///Distribute events				//SE_TODO: This is not very efficient
 	for (auto& se_event : m_all_events)
 	{
 		for (auto& handler : m_event_handlers)
 		{
-			if ((se_event.group & handler->__group_mask()) == se_event.group &&
-				(se_event.type & handler->__event_mask()) == se_event.type)
+			if ((se_event.type.first & handler->__group_mask()) == se_event.type.first &&
+				(se_event.type.second & handler->__event_mask()) == se_event.type.second)
 			{
 				handler->__pending_events().emplace(se_event);
 			}

@@ -1,6 +1,6 @@
 
-#ifndef SE_ENGINE_H
-#define SE_ENGINE_H
+#ifndef SUMMER_ENGINE_ENGINE_H
+#define SUMMER_ENGINE_ENGINE_H
 #define STB_IMAGE_IMPLEMENTATION	//This is needed for stb_image.h to reveal function implementations
 
 //STL includes:

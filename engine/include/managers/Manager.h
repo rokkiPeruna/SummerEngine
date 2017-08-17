@@ -12,6 +12,8 @@
 #include <core/Messages.h>
 #include <core/file_folder_json_data.h>
 #include <core/SE_exceptions.h>
+#include <events/EventHandler.h>
+#include <events/Events.h>
 
 namespace se
 {
@@ -32,7 +34,7 @@ class Manager
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Manager(Engine& engine_ref) : m_engine(engine_ref) {}
+	Manager(Engine& engine_ref) : m_engine(engine_ref), m_event_handler(nullptr) {}
 	//
 	virtual ~Manager() = default;
 	Manager(const Manager&) = delete;
@@ -49,6 +51,9 @@ public:
 protected:
 	///Reference to engine
 	Engine& m_engine;
+
+	///Event handler. Remember to register if used
+	EventHandler* m_event_handler;
 };
 
 }//namespace priv

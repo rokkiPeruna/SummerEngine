@@ -250,6 +250,7 @@ void Engine::_updateMgrs()
 {
 	m_sceneMgr->Update();
 	m_entityMgr->Update();
+	m_compMgr->Update();
 
 	m_eventMgr->Update();
 }
@@ -360,6 +361,7 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
 
 			ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+
 			_updateMgrs();
 
 			//Messenger should be last to update before render

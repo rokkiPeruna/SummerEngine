@@ -8,7 +8,6 @@
 #include <core/Engine.h>
 
 
-
 //For CMake
 //#define SUMMER_ENGINE_CMAKE_CURRENT_PROJECT_NAME "@SummerGame@"
 

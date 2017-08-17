@@ -16,6 +16,9 @@ union event_data //Size is sizeof(Mat4f) which with default precision is 64 byte
 	SEint32 seint32;
 	SEuint64 seuint64;
 	//
+	SEfloat sefloat;
+	SEdouble sedouble;
+	//
 	char char_arr[32];
 	//
 	void* void_ptr;
@@ -45,29 +48,34 @@ union additional_event_data//Size is sizeof(SEuint64) and/or sizeof(void*). Shou
 	SEint32 seint32;
 	SEuint64 seuint64;
 	//
+	SEfloat sefloat;
+	SEdouble sedouble;
+	//
 	char char_arr[8];
 	//
 	void* void_ptr;
 };
 
 
+
 ///Brief: Base for all SE engine's events.
 ///type: Defines which type the event is. If deriving event doesn't change this, type is se_event_type_Default
 ///data: union which holds event's primary data. If deriving event doesn't change this, value is 0
 ///additional_data: union which holds event's additional data. If deriving event doesn't change this, value is 0
+using se_event_type = std::pair<SEushort, SEuint64>;
 struct SE_Event
-{	
-	SEushort group = 0;											///Group in which the event belongs. This should be event group value defined in corresponding header.
-	SEuint64 type = 0;											///Type of the event. One bit from SEuint 64. Use bit values from below to avoid mix ups!
+{
+	se_event_type type{ 0,0 };									///Event's type. First value should be event group value defined in corresponding header. 
+																///Second value is type of the event in it's group. Use bit values from below to avoid mix ups!
 	event_data data{ 0 };										///This can contain up to 64 bytes worth of data. Types described above
 	additional_event_data additional_data{ 0 };					///This can contain up to 8 bytes worth of data. Types described above
 };
 
 
 ///Helper values for keeping track of event group's free bits
-const SEuint64 zero_bit_0 =	SEuint64_value_1 >> 1;
-const SEuint64 free_bit_1 =	SEuint64_value_1;
-const SEuint64 free_bit_2 =	SEuint64_value_1 << 1;
+const SEuint64 zero_bit_0 = SEuint64_value_1 >> 1;
+const SEuint64 free_bit_1 = SEuint64_value_1;
+const SEuint64 free_bit_2 = SEuint64_value_1 << 1;
 const SEuint64 free_bit_3 = SEuint64_value_1 << 2;
 const SEuint64 free_bit_4 = SEuint64_value_1 << 3;
 const SEuint64 free_bit_5 = SEuint64_value_1 << 4;

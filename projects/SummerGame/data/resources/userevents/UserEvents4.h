@@ -15,5 +15,18 @@ const SEushort User4 = SEushort_max >> 3;
 
 /*Events start*/
 
+//Dummy event
+/*namespace EventType { const se_event_type --event_name-- = { event group ,next free bit}; }
+struct SE_Event_--event_name-- : public SE_Event
+{
+explicit SE_Event_--event_name--( --possible parameters-- )
+{
+type = EventType::--event_name--;
+data. --what-- = param;
+additional_data. --what-- = param;
+}
+};*/
+
+
 }//namespace se
 #endif

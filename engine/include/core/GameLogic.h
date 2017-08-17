@@ -1,5 +1,5 @@
-#ifndef SE_GAMELOGIC_H
-#define SE_GAMELOGIC_H
+#ifndef SUMMER_ENGINE_GAMELOGIC_H
+#define SUMMER_ENGINE_GAMELOGIC_H
 
 ///STL includes:
 #include <string>

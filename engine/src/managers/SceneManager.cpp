@@ -24,6 +24,12 @@ SceneManager::SceneManager(Engine& engine_ref)
 
 void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr, ComponentManager* compMgr_ptr)
 {
+	///Register event handler
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	///Register desired events
+	assert(m_event_handler);
+	//m_event_handler->RegisterEvent()
+
 	///Relative path to scenes.json file
 	m_rel_path_to_json_scenes = filepathToUserFiles + ffd.scene_folder_name;
 
@@ -162,7 +168,9 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 		s->ClearComponentContainers();
 	}
 
-	m_entity_mgr->InitWithNewScene(&m_currentScene);
+	m_event_handler->SendEvent(SE_Event_SceneChanged(&m_currentScene));
+
+	//m_entity_mgr->InitWithNewScene(&m_currentScene);
 	return true;
 }
 
