@@ -1,7 +1,7 @@
 ///Brief: Messages header and .cpp contain all that user needs
 ///for sending messages to log and console //TODO: Be more precise
-#ifndef SE_MESSAGES_H
-#define SE_MESSAGES_H
+#ifndef SUMMER_ENGINE_MESSAGES_H
+#define SUMMER_ENGINE_MESSAGES_H
 
 //STL includes:
 #include <string>

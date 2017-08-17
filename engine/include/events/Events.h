@@ -1,5 +1,5 @@
-#ifndef SE_EVENTS_H
-#define SE_EVENTS_H
+#ifndef SUMMER_ENGINE_EVENTS_H
+#define SUMMER_ENGINE_EVENTS_H
 
 ///This header just wraps all event groups together
 #include <events/EngineEvents1.h>

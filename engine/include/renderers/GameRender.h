@@ -1,5 +1,5 @@
-#ifndef SE_GAME_RENDER_H
-#define SE_GAME_RENDER_H
+#ifndef SUMMER_ENGINE_GAME_RENDER_H
+#define SUMMER_ENGINE_GAME_RENDER_H
 
 //Include standard library
 #include <vector>

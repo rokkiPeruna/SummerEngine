@@ -1,5 +1,5 @@
-#ifndef SE_GAME_LOGIC_SYSTEM_H
-#define SE_GAME_LOGIC_SYSTEM_H
+#ifndef SUMMER_ENGINE_GAME_LOGIC_SYSTEM_H
+#define SUMMER_ENGINE_GAME_LOGIC_SYSTEM_H
 
 //include standard library
 #include <unordered_map>

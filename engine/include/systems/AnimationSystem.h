@@ -1,5 +1,5 @@
-#ifndef SE_ANIMATION_SYSTEM_H
-#define SE_ANIMATION_SYSTEM_H
+#ifndef SUMMER_ENGINE_ANIMATION_SYSTEM_H
+#define SUMMER_ENGINE_ANIMATION_SYSTEM_H
 
 //STL includes:
 #include <unordered_map>

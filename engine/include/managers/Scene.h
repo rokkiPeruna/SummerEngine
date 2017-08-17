@@ -1,5 +1,5 @@
-#ifndef SE_SCENE_H
-#define SE_SCENE_H
+#ifndef SUMMER_ENGINE_SCENE_H
+#define SUMMER_ENGINE_SCENE_H
 
 ///STL includes:
 #include <string>

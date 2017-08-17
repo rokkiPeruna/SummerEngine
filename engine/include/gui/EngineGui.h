@@ -1,5 +1,5 @@
-#ifndef SE_ENGINEGUI_H
-#define SE_ENGINEGUI_H
+#ifndef SUMMER_ENGINE_ENGINEGUI_H
+#define SUMMER_ENGINE_ENGINEGUI_H
 
 //STL includes:
 #include <cassert>

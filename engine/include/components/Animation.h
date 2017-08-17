@@ -1,5 +1,5 @@
-#ifndef SE_ANIMATION_H
-#define SE_ANIMATION_H
+#ifndef SUMMER_ENGINE_ANIMATION_H
+#define SUMMER_ENGINE_ANIMATION_H
 
 ///STL includes:
 #include <vector>

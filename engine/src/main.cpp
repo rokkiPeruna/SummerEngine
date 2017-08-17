@@ -10,7 +10,7 @@
 
 
 //For CMake
-//#define SE_CMAKE_CURRENT_PROJECT_NAME "@SummerGame@"
+//#define SUMMER_ENGINE_CMAKE_CURRENT_PROJECT_NAME "@SummerGame@"
 
 int main(int argc, char *argv[])
 {

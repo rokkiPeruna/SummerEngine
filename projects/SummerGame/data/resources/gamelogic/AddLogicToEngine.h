@@ -1,5 +1,5 @@
-#ifndef SE_ADDLOGICTOENGINE_H
-#define SE_ADDLOGICTOENGINE_H
+#ifndef SUMMER_ENGINE_ADDLOGICTOENGINE_H
+#define SUMMER_ENGINE_ADDLOGICTOENGINE_H
 
 ///Include all new game logic classes here
 ///and add them to GameLogicInstances -struct.

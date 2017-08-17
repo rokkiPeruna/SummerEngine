@@ -1,6 +1,6 @@
 ///Brief: EditorFunctions.h contains helper functions to be used in editor
-#ifndef SE_EDITORFUNCTIONS_H
-#define SE_EDITORFUNCTIONS_H
+#ifndef SUMMER_ENGINE_EDITORFUNCTIONS_H
+#define SUMMER_ENGINE_EDITORFUNCTIONS_H
 
 //STL includes:
 #include <vector>

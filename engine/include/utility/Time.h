@@ -1,5 +1,5 @@
-#ifndef SE_TIME_H
-#define SE_TIME_H
+#ifndef SUMMER_ENGINE_TIME_H
+#define SUMMER_ENGINE_TIME_H
 
 
 //SE includes:

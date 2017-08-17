@@ -1,5 +1,5 @@
-#ifndef SE_EVENTHANDLER_H
-#define SE_EVENTHANDLER_H
+#ifndef SUMMER_ENGINE_EVENTHANDLER_H
+#define SUMMER_ENGINE_EVENTHANDLER_H
 
 ///STL includes:
 #include <vector>

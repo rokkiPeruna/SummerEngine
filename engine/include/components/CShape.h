@@ -1,5 +1,5 @@
-#ifndef SE_CSHAPE_H
-#define SE_CSHAPE_H
+#ifndef SUMMER_ENGINE_CSHAPE_H
+#define SUMMER_ENGINE_CSHAPE_H
 
 //Include standard library
 

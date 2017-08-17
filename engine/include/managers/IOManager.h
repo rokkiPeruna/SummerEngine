@@ -1,5 +1,5 @@
-#ifndef SE_IO_MANAGER_H
-#define SE_IO_MANAGER_H
+#ifndef SUMMER_ENGINE_IO_MANAGER_H
+#define SUMMER_ENGINE_IO_MANAGER_H
 
 //SE includes:
 #include <managers/Manager.h>

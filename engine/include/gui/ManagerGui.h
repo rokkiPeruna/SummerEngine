@@ -1,5 +1,5 @@
-#ifndef SE_MANAGERGUI_H
-#define SE_MANAGERGUI_H
+#ifndef SUMMER_ENGINE_MANAGERGUI_H
+#define SUMMER_ENGINE_MANAGERGUI_H
 
 
 //SE includes:

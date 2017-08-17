@@ -1,5 +1,5 @@
-#ifndef SE_MESSENGER_H
-#define SE_MESSENGER_H
+#ifndef SUMMER_ENGINE_MESSENGER_H
+#define SUMMER_ENGINE_MESSENGER_H
 
 //STL includes:
 #include <vector>

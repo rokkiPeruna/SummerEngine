@@ -1,5 +1,5 @@
-#ifndef SE_SCENEMANAGER_H
-#define SE_SCENEMANAGER_H
+#ifndef SUMMER_ENGINE_SCENEMANAGER_H
+#define SUMMER_ENGINE_SCENEMANAGER_H
 
 ///STL includes:
 #include <vector>

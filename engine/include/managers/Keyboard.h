@@ -1,5 +1,5 @@
-#ifndef SE_KEYBOARD_H
-#define SE_KEYBOARD_H
+#ifndef SUMMER_ENGINE_KEYBOARD_H
+#define SUMMER_ENGINE_KEYBOARD_H
 
 //SE includes:
 #include <utility/Typedefs.h>

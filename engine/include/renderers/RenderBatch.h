@@ -1,5 +1,5 @@
-#ifndef SE_RENDER_BATCH_SE
-#define SE_RENDER_BATCH_SE
+#ifndef SUMMER_ENGINE_RENDER_BATCH_SE
+#define SUMMER_ENGINE_RENDER_BATCH_SE
 
 //include standard library
 #include <vector>

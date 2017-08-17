@@ -1,7 +1,7 @@
 ///Brief: gui_values.h contains values that are used by graphical user interface.
 
-#ifndef SE_GUI_VALUES_H
-#define SE_GUI_VALUES_H
+#ifndef SUMMER_ENGINE_GUI_VALUES_H
+#define SUMMER_ENGINE_GUI_VALUES_H
 
 
 

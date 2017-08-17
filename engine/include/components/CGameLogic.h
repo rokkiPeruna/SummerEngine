@@ -1,5 +1,5 @@
-#ifndef SE_CGAMELOGIC_H
-#define SE_CGAMELOGIC_H
+#ifndef SUMMER_ENGINE_CGAMELOGIC_H
+#define SUMMER_ENGINE_CGAMELOGIC_H
 
 ///STL includes:
 #include <vector>

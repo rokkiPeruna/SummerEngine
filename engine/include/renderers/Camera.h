@@ -1,5 +1,5 @@
-#ifndef SE_CAMERA_H
-#define SE_CAMERA_H
+#ifndef SUMMER_ENGINE_CAMERA_H
+#define SUMMER_ENGINE_CAMERA_H
 
 
 //SE includes:

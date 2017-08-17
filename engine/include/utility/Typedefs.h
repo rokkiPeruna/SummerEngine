@@ -1,5 +1,5 @@
-#ifndef SE_TYPEDEFS_H
-#define SE_TYPEDEFS_H
+#ifndef SUMMER_ENGINE_TYPEDEFS_H
+#define SUMMER_ENGINE_TYPEDEFS_H
 
 //STL includes:
 #include <cstdint>

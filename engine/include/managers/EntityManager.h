@@ -1,5 +1,5 @@
-#ifndef SE_ENTITYMANAGER_H
-#define SE_ENTITYMANAGER_H
+#ifndef SUMMER_ENGINE_ENTITYMANAGER_H
+#define SUMMER_ENGINE_ENTITYMANAGER_H
 
 //STL includes:
 #include <string>

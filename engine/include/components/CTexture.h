@@ -1,5 +1,5 @@
-#ifndef SE_CTEXTURE_H
-#define SE_CTEXTURE_H
+#ifndef SUMMER_ENGINE_CTEXTURE_H
+#define SUMMER_ENGINE_CTEXTURE_H
 
 //SE includes:
 #include <components/Component.h>

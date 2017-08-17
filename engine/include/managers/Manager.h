@@ -1,5 +1,5 @@
-#ifndef SE_MANAGER_H
-#define SE_MANAGER_H
+#ifndef SUMMER_ENGINE_MANAGER_H
+#define SUMMER_ENGINE_MANAGER_H
 
 ///STL includes:
 #include <memory>

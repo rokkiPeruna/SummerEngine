@@ -1,5 +1,5 @@
-#ifndef SE_MOUSE_H
-#define SE_MOUSE_H
+#ifndef SUMMER_ENGINE_MOUSE_H
+#define SUMMER_ENGINE_MOUSE_H
 
 //SE includes:
 #include <utility/Typedefs.h>

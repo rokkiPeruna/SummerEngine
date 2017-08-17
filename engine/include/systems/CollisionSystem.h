@@ -1,5 +1,5 @@
-#ifndef SE_COLLISION_SYSTEM_H
-#define SE_COLLISION_SYSTEM_H
+#ifndef SUMMER_ENGINE_COLLISION_SYSTEM_H
+#define SUMMER_ENGINE_COLLISION_SYSTEM_H
 
 //SE includes:
 #include <systems/ComponentSystem.h>

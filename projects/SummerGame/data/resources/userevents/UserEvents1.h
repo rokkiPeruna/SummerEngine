@@ -1,5 +1,5 @@
-#ifndef SE_USEREVENTS1_H
-#define SE_USEREVENTS1_H
+#ifndef SUMMER_ENGINE_USEREVENTS1_H
+#define SUMMER_ENGINE_USEREVENTS1_H
 
 ///SE includes:
 #include <events/SE_Event.h>

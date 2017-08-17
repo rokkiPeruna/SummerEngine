@@ -1,5 +1,5 @@
-#ifndef SE_ENTITY_H
-#define SE_ENTITY_H
+#ifndef SUMMER_ENGINE_ENTITY_H
+#define SUMMER_ENGINE_ENTITY_H
 
 //STL includes:
 #include <string>

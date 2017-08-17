@@ -1,5 +1,5 @@
-#ifndef SE_RESOURCE_H
-#define SE_RESOURCE_H
+#ifndef SUMMER_ENGINE_RESOURCE_H
+#define SUMMER_ENGINE_RESOURCE_H
 
 //STL includes:
 #include <string>

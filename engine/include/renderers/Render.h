@@ -1,6 +1,6 @@
 
-#ifndef SE_RENDER_H
-#define SE_RENDER_H
+#ifndef SUMMER_ENGINE_RENDER_H
+#define SUMMER_ENGINE_RENDER_H
 
 //External includes:
 #include <glm/gtc/matrix_transform.hpp>

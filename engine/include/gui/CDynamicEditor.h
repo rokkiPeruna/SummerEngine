@@ -1,5 +1,5 @@
-#ifndef SE_GUI_CDYNAMIC_EDITOR_H
-#define SE_GUI_CDYNAMIC_EDITOR_H
+#ifndef SUMMER_ENGINE_GUI_CDYNAMIC_EDITOR_H
+#define SUMMER_ENGINE_GUI_CDYNAMIC_EDITOR_H
 
 //SE includes:
 #include <gui/CompEditorGui.h>
