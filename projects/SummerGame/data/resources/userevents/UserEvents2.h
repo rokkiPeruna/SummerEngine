@@ -9,13 +9,10 @@ namespace se
 ///Value for event group
 namespace EventGroup
 {
-///Use this value to this group's events' group -variable
-const SEushort User2 = SEushort_max >> 1;
-}
 
 /*Events start*/
 //Dummy event
-/*namespace EventType { const se_event_type --event_name-- = { event group ,next free bit}; }
+/*namespace EventType { constexpr se_event_type --event_name-- = { event group | next free bit}; }
 struct SE_Event_--event_name-- : public SE_Event
 {
 explicit SE_Event_--event_name--( --possible parameters-- )

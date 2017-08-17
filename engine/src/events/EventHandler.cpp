@@ -4,9 +4,7 @@
 namespace se
 {
 EventHandler::EventHandler()
-	: m_group_mask{ 0 }
-	, m_event_mask{ 0 }
-	, m_event_types{}
+	: m_event_types{}
 	, m_sent_events{}
 	, m_pending_events{}
 {
@@ -15,9 +13,7 @@ EventHandler::EventHandler()
 
 void EventHandler::RegisterEvent(SE_Event&& event_as_type)
 {
-	m_group_mask |= event_as_type.type.first;
-	m_event_mask |= event_as_type.type.second;
-	m_event_types.emplace_back(std::pair<SEushort, SEuint64>{ event_as_type.type.first, event_as_type.type.second });
+	m_event_types.emplace(event_as_type.type);
 }
 
 void EventHandler::SendEvent(SE_Event&& se_event)

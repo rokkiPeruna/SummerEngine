@@ -28,6 +28,10 @@ ComponentManager::ComponentManager(Engine& engine_ref)
 
 void ComponentManager::Initialize(std::string relativeFilePathToUserFiles)
 {
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
+
 	m_rel_path_to_json_scenes = relativeFilePathToUserFiles + ffd.scene_folder_name;
 }
 
@@ -38,15 +42,32 @@ void ComponentManager::Uninitialize()
 
 void ComponentManager::Update()
 {
+	//Check events
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::SceneChanged:
+		{
+			InitWithNewScene(static_cast<Scene*>(se_event.data.void_ptr));
+			break;
+		}
 
+		default:
+			break;
+		}
+	}
 }
 
-void ComponentManager::InitWithNewScene(std::unordered_map<SEint, Entity>& entities, Scene* scene)
+void ComponentManager::InitWithNewScene(Scene* scene)
 {
 	assert(scene);
 	m_curr_scene = scene;
 	auto scene_obj = m_curr_scene->GetData();
 	auto entities_obj = scene_obj->find(sf_struct.prim_obj_name);
+
+	auto& entities = m_engine.GetEntityMgr().GetEntities();
 
 	//Loop all entities and COMPONENT_TYPEs to their map
 	for (auto& e : entities)

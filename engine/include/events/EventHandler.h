@@ -3,7 +3,7 @@
 
 ///STL includes:
 #include <vector>
-#include <list>
+#include <unordered_set>
 #include <queue>
 
 ///SE includes:
@@ -41,19 +41,12 @@ public:
 	std::queue<SE_Event>& __pending_events() { return m_pending_events; }
 
 	///For engine's internal use
-	SEushort __group_mask() { return m_group_mask; }
-	
-	///For engine's internal use
-	SEuint64 __event_mask() { return m_event_mask; }
+	std::unordered_set<se_event_type>& __event_types() { return m_event_types; }
 
 private:
-	SEushort m_group_mask;
-	SEuint64 m_event_mask;
-
-	std::list<se_event_type> m_event_types;
+	std::unordered_set<se_event_type> m_event_types;
 	std::vector<SE_Event> m_sent_events;
 	std::queue<SE_Event> m_pending_events;
-
 };
 
 }//namespace se

@@ -89,7 +89,7 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_curr_free_entity_id = _findFreeEntityID();
 
 	//Inform ComponentManager of scene change
-	m_compMgr->InitWithNewScene(m_entities, scene);
+	//m_compMgr->InitWithNewScene(m_entities, scene);
 }
 
 

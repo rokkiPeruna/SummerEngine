@@ -34,18 +34,16 @@ void EventManager::Update()
 		}
 	}
 
-	///Distribute events				//SE_TODO: This is not very efficient
+	///Distribute events				//SE_TODO: This is not very efficient?? Does easy multithreading make up for it??
 	for (auto& se_event : m_all_events)
 	{
 		for (auto& handler : m_event_handlers)
 		{
-			if ((se_event.type.first & handler->__group_mask()) == se_event.type.first &&
-				(se_event.type.second & handler->__event_mask()) == se_event.type.second)
-			{
+			if (handler->__event_types().count(se_event.type))
 				handler->__pending_events().emplace(se_event);
-			}
 		}
 	}
+	m_all_events.clear();
 }
 
 void EventManager::RegisterEventHandler(EventHandler*& event_handler)

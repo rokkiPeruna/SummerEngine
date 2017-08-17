@@ -41,12 +41,7 @@ GameLogicSystem::GameLogicSystem(Engine& engine_ref)
 
 GameLogicSystem::~GameLogicSystem()
 {
-	for (auto i : GameLogicInstances)
-	{
-		auto tmp = i;
-		i = nullptr;
-		delete tmp;
-	}
+	
 }
 
 void GameLogicSystem::Initialize()

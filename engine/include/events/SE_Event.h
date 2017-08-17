@@ -62,82 +62,86 @@ union additional_event_data//Size is sizeof(SEuint64) and/or sizeof(void*). Shou
 ///type: Defines which type the event is. If deriving event doesn't change this, type is se_event_type_Default
 ///data: union which holds event's primary data. If deriving event doesn't change this, value is 0
 ///additional_data: union which holds event's additional data. If deriving event doesn't change this, value is 0
-using se_event_type = std::pair<SEushort, SEuint64>;
+using se_event_type = SEuint64;
 struct SE_Event
 {
-	se_event_type type{ 0,0 };									///Event's type. First value should be event group value defined in corresponding header. 
-																///Second value is type of the event in it's group. Use bit values from below to avoid mix ups!
+	se_event_type type{ 0 };									///Event's type and group as SEuint64. 32 most significant bits are for types, 32 least significant bits are for groups. See below
 	event_data data{ 0 };										///This can contain up to 64 bytes worth of data. Types described above
 	additional_event_data additional_data{ 0 };					///This can contain up to 8 bytes worth of data. Types described above
 };
 
 
-///Helper values for keeping track of event group's free bits
-const SEuint64 zero_bit_0 = SEuint64_value_1 >> 1;
-const SEuint64 free_bit_1 = SEuint64_value_1;
-const SEuint64 free_bit_2 = SEuint64_value_1 << 1;
-const SEuint64 free_bit_3 = SEuint64_value_1 << 2;
-const SEuint64 free_bit_4 = SEuint64_value_1 << 3;
-const SEuint64 free_bit_5 = SEuint64_value_1 << 4;
-const SEuint64 free_bit_6 = SEuint64_value_1 << 5;
-const SEuint64 free_bit_7 = SEuint64_value_1 << 6;
-const SEuint64 free_bit_8 = SEuint64_value_1 << 7;
-const SEuint64 free_bit_9 = SEuint64_value_1 << 8;
-const SEuint64 free_bit_10 = SEuint64_value_1 << 9;
-const SEuint64 free_bit_11 = SEuint64_value_1 << 10;
-const SEuint64 free_bit_12 = SEuint64_value_1 << 11;
-const SEuint64 free_bit_13 = SEuint64_value_1 << 12;
-const SEuint64 free_bit_14 = SEuint64_value_1 << 13;
-const SEuint64 free_bit_15 = SEuint64_value_1 << 14;
-const SEuint64 free_bit_16 = SEuint64_value_1 << 15;
-const SEuint64 free_bit_17 = SEuint64_value_1 << 16;
-const SEuint64 free_bit_18 = SEuint64_value_1 << 17;
-const SEuint64 free_bit_19 = SEuint64_value_1 << 18;
-const SEuint64 free_bit_20 = SEuint64_value_1 << 19;
-const SEuint64 free_bit_21 = SEuint64_value_1 << 20;
-const SEuint64 free_bit_22 = SEuint64_value_1 << 21;
-const SEuint64 free_bit_23 = SEuint64_value_1 << 22;
-const SEuint64 free_bit_24 = SEuint64_value_1 << 23;
-const SEuint64 free_bit_25 = SEuint64_value_1 << 24;
-const SEuint64 free_bit_26 = SEuint64_value_1 << 25;
-const SEuint64 free_bit_27 = SEuint64_value_1 << 26;
-const SEuint64 free_bit_28 = SEuint64_value_1 << 27;
-const SEuint64 free_bit_29 = SEuint64_value_1 << 28;
-const SEuint64 free_bit_30 = SEuint64_value_1 << 29;
-const SEuint64 free_bit_31 = SEuint64_value_1 << 30;
-const SEuint64 free_bit_32 = SEuint64_value_1 << 31;
-const SEuint64 free_bit_33 = SEuint64_value_1 << 32;
-const SEuint64 free_bit_34 = SEuint64_value_1 << 33;
-const SEuint64 free_bit_35 = SEuint64_value_1 << 34;
-const SEuint64 free_bit_36 = SEuint64_value_1 << 35;
-const SEuint64 free_bit_37 = SEuint64_value_1 << 36;
-const SEuint64 free_bit_38 = SEuint64_value_1 << 37;
-const SEuint64 free_bit_39 = SEuint64_value_1 << 38;
-const SEuint64 free_bit_40 = SEuint64_value_1 << 39;
-const SEuint64 free_bit_41 = SEuint64_value_1 << 40;
-const SEuint64 free_bit_42 = SEuint64_value_1 << 41;
-const SEuint64 free_bit_43 = SEuint64_value_1 << 42;
-const SEuint64 free_bit_44 = SEuint64_value_1 << 43;
-const SEuint64 free_bit_45 = SEuint64_value_1 << 44;
-const SEuint64 free_bit_46 = SEuint64_value_1 << 45;
-const SEuint64 free_bit_47 = SEuint64_value_1 << 46;
-const SEuint64 free_bit_48 = SEuint64_value_1 << 47;
-const SEuint64 free_bit_49 = SEuint64_value_1 << 48;
-const SEuint64 free_bit_50 = SEuint64_value_1 << 49;
-const SEuint64 free_bit_51 = SEuint64_value_1 << 50;
-const SEuint64 free_bit_52 = SEuint64_value_1 << 51;
-const SEuint64 free_bit_53 = SEuint64_value_1 << 52;
-const SEuint64 free_bit_54 = SEuint64_value_1 << 53;
-const SEuint64 free_bit_55 = SEuint64_value_1 << 54;
-const SEuint64 free_bit_56 = SEuint64_value_1 << 55;
-const SEuint64 free_bit_57 = SEuint64_value_1 << 56;
-const SEuint64 free_bit_58 = SEuint64_value_1 << 57;
-const SEuint64 free_bit_59 = SEuint64_value_1 << 58;
-const SEuint64 free_bit_60 = SEuint64_value_1 << 59;
-const SEuint64 free_bit_61 = SEuint64_value_1 << 60;
-const SEuint64 free_bit_62 = SEuint64_value_1 << 61;
-const SEuint64 free_bit_63 = SEuint64_value_1 << 62;
-const SEuint64 free_bit_64 = SEuint64_value_1 << 63;
+namespace event_bits
+{
+///These bits are used one per event group, giving us total of 32 event groups
+constexpr SEuint64 group_EngineEvents1 = SEuint64_value_1;			///Reserved for EngineEvents1
+constexpr SEuint64 group_EngineEvents2 = SEuint64_value_1 << 1;		///Reserved for EngineEvents2
+constexpr SEuint64 group_EngineEvents3 = SEuint64_value_1 << 2;		///Reserved for EngineEvents3
+constexpr SEuint64 group_EngineEvents4 = SEuint64_value_1 << 3;		///Reserved for EngineEvents4
+constexpr SEuint64 group_bit_5 = SEuint64_value_1 << 4;		///NOT YET IN USE
+constexpr SEuint64 group_bit_6 = SEuint64_value_1 << 5;		///NOT YET IN USE
+constexpr SEuint64 group_bit_7 = SEuint64_value_1 << 6;		///NOT YET IN USE
+constexpr SEuint64 group_bit_8 = SEuint64_value_1 << 7;		///NOT YET IN USE
+constexpr SEuint64 group_bit_9 = SEuint64_value_1 << 8;		///NOT YET IN USE
+constexpr SEuint64 group_bit_10 = SEuint64_value_1 << 9;	///NOT YET IN USE
+constexpr SEuint64 group_bit_11 = SEuint64_value_1 << 10;	///NOT YET IN USE
+constexpr SEuint64 group_bit_12 = SEuint64_value_1 << 11;	///NOT YET IN USE
+constexpr SEuint64 group_bit_13 = SEuint64_value_1 << 12;	///NOT YET IN USE
+constexpr SEuint64 group_bit_14 = SEuint64_value_1 << 13;	///NOT YET IN USE
+constexpr SEuint64 group_bit_15 = SEuint64_value_1 << 14;	///NOT YET IN USE
+constexpr SEuint64 group_bit_16 = SEuint64_value_1 << 15;	///NOT YET IN USE
+constexpr SEuint64 group_bit_17 = SEuint64_value_1 << 16;	///NOT YET IN USE
+constexpr SEuint64 group_bit_18 = SEuint64_value_1 << 17;	///NOT YET IN USE
+constexpr SEuint64 group_bit_19 = SEuint64_value_1 << 18;	///NOT YET IN USE
+constexpr SEuint64 group_bit_20 = SEuint64_value_1 << 19;	///NOT YET IN USE
+constexpr SEuint64 group_bit_21 = SEuint64_value_1 << 20;	///NOT YET IN USE
+constexpr SEuint64 group_bit_22 = SEuint64_value_1 << 21;	///NOT YET IN USE
+constexpr SEuint64 group_bit_23 = SEuint64_value_1 << 22;	///NOT YET IN USE
+constexpr SEuint64 group_bit_24 = SEuint64_value_1 << 23;	///NOT YET IN USE
+constexpr SEuint64 group_bit_25 = SEuint64_value_1 << 24;	///NOT YET IN USE
+constexpr SEuint64 group_bit_26 = SEuint64_value_1 << 25;	///NOT YET IN USE
+constexpr SEuint64 group_bit_27 = SEuint64_value_1 << 26;	///NOT YET IN USE
+constexpr SEuint64 group_bit_28 = SEuint64_value_1 << 27;	///NOT YET IN USE
+constexpr SEuint64 group_userEvents1 = SEuint64_value_1 << 28;	///Reserved for UserEvents1
+constexpr SEuint64 group_userEvents2 = SEuint64_value_1 << 29;	///Reserved for UserEvents2
+constexpr SEuint64 group_userEvents3 = SEuint64_value_1 << 30;	///Reserved for UserEvents3
+constexpr SEuint64 group_userEvents4 = SEuint64_value_1 << 31;	///Reserved for UserEvents4
+
+
+///These type bits can each be used once in every event group, thus giving us 32*32 (1024) possible different events.
+constexpr SEuint64 type_bit_1 = SEuint64_value_1 << (0 + 32);
+constexpr SEuint64 type_bit_2 = SEuint64_value_1 << (1 + 32);
+constexpr SEuint64 type_bit_3 = SEuint64_value_1 << (2 + 32);
+constexpr SEuint64 type_bit_4 = SEuint64_value_1 << (3 + 32);
+constexpr SEuint64 type_bit_5 = SEuint64_value_1 << (4 + 32);
+constexpr SEuint64 type_bit_6 = SEuint64_value_1 << (5 + 32);
+constexpr SEuint64 type_bit_7 = SEuint64_value_1 << (6 + 32);
+constexpr SEuint64 type_bit_8 = SEuint64_value_1 << (7 + 32);
+constexpr SEuint64 type_bit_9 = SEuint64_value_1 << (8 + 32);
+constexpr SEuint64 type_bit_10 = SEuint64_value_1 << (9 + 32);
+constexpr SEuint64 type_bit_11 = SEuint64_value_1 << (10 + 32);
+constexpr SEuint64 type_bit_12 = SEuint64_value_1 << (11 + 32);
+constexpr SEuint64 type_bit_13 = SEuint64_value_1 << (12 + 32);
+constexpr SEuint64 type_bit_14 = SEuint64_value_1 << (13 + 32);
+constexpr SEuint64 type_bit_15 = SEuint64_value_1 << (14 + 32);
+constexpr SEuint64 type_bit_16 = SEuint64_value_1 << (15 + 32);
+constexpr SEuint64 type_bit_17 = SEuint64_value_1 << (16 + 32);
+constexpr SEuint64 type_bit_18 = SEuint64_value_1 << (17 + 32);
+constexpr SEuint64 type_bit_19 = SEuint64_value_1 << (18 + 32);
+constexpr SEuint64 type_bit_20 = SEuint64_value_1 << (19 + 32);
+constexpr SEuint64 type_bit_21 = SEuint64_value_1 << (20 + 32);
+constexpr SEuint64 type_bit_22 = SEuint64_value_1 << (21 + 32);
+constexpr SEuint64 type_bit_23 = SEuint64_value_1 << (22 + 32);
+constexpr SEuint64 type_bit_24 = SEuint64_value_1 << (23 + 32);
+constexpr SEuint64 type_bit_25 = SEuint64_value_1 << (24 + 32);
+constexpr SEuint64 type_bit_26 = SEuint64_value_1 << (25 + 32);
+constexpr SEuint64 type_bit_27 = SEuint64_value_1 << (26 + 32);
+constexpr SEuint64 type_bit_28 = SEuint64_value_1 << (27 + 32);
+constexpr SEuint64 type_bit_29 = SEuint64_value_1 << (28 + 32);
+constexpr SEuint64 type_bit_30 = SEuint64_value_1 << (29 + 32);
+constexpr SEuint64 type_bit_31 = SEuint64_value_1 << (30 + 32);
+constexpr SEuint64 type_bit_32 = SEuint64_value_1 << (31 + 32);
+}//namespace event_bits
 
 }//namespace se
 #endif
