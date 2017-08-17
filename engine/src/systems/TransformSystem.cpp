@@ -59,18 +59,21 @@ void TransformSystem::Update(SEfloat deltaTime)
 			TransformableComponents.at(se_event.additional_data.seint).position += se_event.data.vec3f;
 			recalc_mod_mat = true;
 			e_id = se_event.additional_data.seint;
+			break;
 		}
 		case EventType::EntityScaleChanged:
 		{
 			TransformableComponents.at(se_event.additional_data.seint).scale = se_event.data.vec3f;
 			recalc_mod_mat = true;
 			e_id = se_event.additional_data.seint;
+			break;
 		}
 		case EventType::EntityRotationChanged:
 		{
 			TransformableComponents.at(se_event.additional_data.seint).rotation = se_event.data.vec3f.z;
 			recalc_mod_mat = true;
 			e_id = se_event.additional_data.seint;
+			break;
 		}
 
 		default:
