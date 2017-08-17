@@ -67,7 +67,7 @@ struct SE_Event_EntityRotationChanged : public SE_Event
 	explicit SE_Event_EntityRotationChanged(SEint entity_id, Vec3f rotation_increment)
 	{
 		group = EventGroup::Engine1;
-		type = EventType::EntityScaleChanged;
+		type = EventType::EntityRotationChanged;
 		data.vec3f = rotation_increment;
 		additional_data.seint = entity_id;
 	}

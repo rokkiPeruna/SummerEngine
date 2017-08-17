@@ -38,8 +38,8 @@ void EventManager::Update()
 	{
 		for (auto& handler : m_event_handlers)
 		{
-			if ((se_event.group & handler->__group_mask()) == handler->__group_mask() &&
-				(se_event.type & handler->__event_mask()) == handler->__event_mask())
+			if ((se_event.group & handler->__group_mask()) == se_event.group &&
+				(se_event.type & handler->__event_mask()) == se_event.type)
 			{
 				handler->__pending_events().emplace(se_event);
 			}

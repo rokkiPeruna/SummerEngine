@@ -104,7 +104,6 @@ set(ENGINE_EVENTS
 	include/events/EventHandler.h
 	src/events/EventHandler.cpp
 	include/events/SE_Event.h
-	src/events/SE_Event.cpp
 	include/events/Events.h
 	)
 source_group("events" FILES ${ENGINE_EVENTS})
