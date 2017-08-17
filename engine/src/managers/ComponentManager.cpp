@@ -53,6 +53,13 @@ void ComponentManager::Update()
 			InitWithNewScene(static_cast<Scene*>(se_event.data.void_ptr));
 			break;
 		}
+		case EventType::EntityCreatedOnEditor:
+		{
+			auto e = &m_engine.GetEntityMgr().GetEntities().at(se_event.data.seint);
+			SetCurrentEntity(e);
+			AddNewComponentToEntity(*e, COMPONENT_TYPE::TRANSFORMABLE);
+			SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e->id);
+		}
 
 		default:
 			break;

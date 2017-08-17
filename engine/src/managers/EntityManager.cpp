@@ -9,7 +9,6 @@ namespace priv
 {
 EntityManager::EntityManager(Engine& engine_ref)
 	: Manager(engine_ref)
-	, m_compMgr(nullptr)
 	, m_currentScene(nullptr)
 	, m_currentEntity(nullptr)
 	, m_rel_path_to_json_scenes("")
@@ -33,7 +32,7 @@ EntityManager::EntityManager(Engine& engine_ref)
 
 }
 
-void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)
+void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 {
 	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
@@ -41,7 +40,6 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson, Component
 
 	m_rel_path_to_user_files = relativePathToEntitiesJson;
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + ffd.scene_folder_name;
-	m_compMgr = compMgr;
 	m_entities.clear();
 	m_entities_names_map.clear();
 	while (!m_free_entity_ids.empty())
@@ -107,6 +105,9 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	m_entities_names_map.emplace(name, m_curr_free_entity_id);
 
 	m_currentEntity = &m_entities.at(m_curr_free_entity_id);
+
+	m_event_handler->SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
+
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::TRANSFORMABLE);
 	m_compMgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_currentEntity->id);

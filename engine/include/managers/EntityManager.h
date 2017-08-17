@@ -43,7 +43,7 @@ public:
 	void operator=(EntityManager&&) = delete;
 
 	///Init method, called by Engine at start up
-	void Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr);
+	void Initialize(std::string relativePathToEntitiesJson);
 
 	///Uninit method, called by Engine at quit
 	void Uninitialize() override final;
@@ -81,7 +81,7 @@ public:
 	void SetCurrentEntity(Entity* e);
 
 private:
-	ComponentManager* m_compMgr;					///Pointer to ComponentManager
+	//ComponentManager* m_compMgr;					///Pointer to ComponentManager
 	Scene* m_currentScene;							///Current scene
 	Entity* m_currentEntity;						///Current entity
 	std::string m_rel_path_to_json_scenes;			///Relative path to scenes.json

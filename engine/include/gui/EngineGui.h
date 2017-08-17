@@ -11,6 +11,9 @@
 
 //SE includes:
 #include <core/Engine.h>
+#include <managers/EventManager.h>
+#include <events/EventHandler.h>
+#include <events/Events.h>
 #include <systems/TransformSystem.h> //For setting camera position when new entity is created or entity is choosed
 #include <gui/GraphicalUserInterface.h>
 #include <renderers/DebugRender.h>
@@ -49,6 +52,9 @@ public:
 protected:
 	///Reference to engine
 	priv::Engine& m_engine;
+
+	///Event handler pointer. Remember to register if used!
+	EventHandler* m_event_handler;
 
 	///Update priority
 	SEuint m_update_priority;

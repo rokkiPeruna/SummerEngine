@@ -6,6 +6,7 @@ namespace gui
 {
 EngineGui::EngineGui(priv::Engine& engine_ref, SEuint update_priority)
 	: m_engine(engine_ref)
+	, m_event_handler(nullptr)
 	, m_update_priority(update_priority)
 {
 

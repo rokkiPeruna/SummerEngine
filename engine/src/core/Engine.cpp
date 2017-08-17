@@ -203,7 +203,7 @@ void Engine::_initManagers()
 	m_sceneMgr->Initialize(m_path_to_user_files, m_entityMgr.get(), m_compMgr.get());
 
 	//EntityManager
-	m_entityMgr->Initialize(m_path_to_user_files, m_compMgr.get());
+	m_entityMgr->Initialize(m_path_to_user_files);
 
 	//ComponentManager
 	m_compMgr->Initialize(m_path_to_user_files);
