@@ -12,6 +12,8 @@ set(USER_GAMELOGIC_DATA
 	resources/gamelogic/AddLogicToEngine.h
 	resources/gamelogic/PlayerLogic.h
 	resources/gamelogic/PlayerLogic.cpp
+	resources/gamelogic/EnemyLogic.h
+	resources/gamelogic/EnemyLogic.cpp
 	)
 set(USER_SCRIPT_DATA 
 	resources/scripts/ScriptDeclarations.h

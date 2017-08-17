@@ -1,9 +1,32 @@
 #include <systems/GameLogicSystem.h>
-
 #include <AddLogicToEngine.h>
 
 namespace se
 {
+
+CGameLogic* GetGameLogicComponent(SEint index)
+{
+	return &priv::GameLogicSystem::m_engine_ptr->GetGameLogicSystem().m_cGameLogic.at(index);
+
+}
+
+void SetActive(SEint index, std::string name)
+{
+	auto tmp = GetGameLogicComponent(index);
+
+	//	for (auto i : tmp->logics)
+	for (int i = 0; i < tmp->logics.size(); ++i)
+	{
+		if (tmp->logics.at(i)->GetName() == name)
+		{
+			std::swap(tmp->logics.at(0), tmp->logics.at(i));
+			return;
+		}
+	}
+	//Message error
+	return;
+}
+
 namespace priv
 {
 GameLogicSystem::GameLogicSystem(Engine& engine_ref)
@@ -13,10 +36,11 @@ GameLogicSystem::GameLogicSystem(Engine& engine_ref)
 	, m_free_cGameLogic_indices{}
 {
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::GAMELOGIC, this);
+	
 }
 
 GameLogicSystem::~GameLogicSystem()
-{	
+{
 	for (auto i : GameLogicInstances)
 	{
 		auto tmp = i;
@@ -42,7 +66,10 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 {
 	for (auto& comp : m_cGameLogic)
 	{
-		comp.logics.at(comp.current_gamel_index)->Update(deltaTime);
+		if (comp.logics.size() != 0)
+		{
+			comp.logics.at(0)->Update(deltaTime); //Active set to 0
+		}
 	}
 }
 
@@ -76,7 +103,8 @@ SEint GameLogicSystem::CreateComponent(Entity& entity, COMPONENT_TYPE component_
 {
 	if (component_type == COMPONENT_TYPE::GAMELOGIC)
 	{
-		return _createComponent_helper<CGameLogic>(entity, component_type, entity_obj, m_cGameLogic, m_free_cGameLogic_indices);
+		SEint index = _createComponent_helper<CGameLogic>(entity, component_type, entity_obj, m_cGameLogic, m_free_cGameLogic_indices);
+		return index;
 	}
 	else
 	{
@@ -115,10 +143,22 @@ void GameLogicSystem::AssingGameLogic(std::string logic_name, CGameLogic& compon
 		if (g->GetName() == logic_name)
 		{
 			component.logics.emplace_back(g);
+			component.logics.back()->ownerID(component.ownerID);
 			return;
 		}
 	}
 	MessageWarning(GameLogicSys_id) << "No GameLogic with name [" + logic_name + "] found\n in AssingGameLogic()";
+}
+
+void GameLogicSystem::InitializeGameLogics()
+{
+	for (auto i : m_cGameLogic)
+	{
+		for (auto j : i.logics)
+		{
+			j->Init();
+		}
+	}
 }
 
 }//namespace priv

@@ -1,48 +1,45 @@
 #ifndef SUMMERGAME_PLAYERLOGIC_H
 #define SUMMERGAME_PLAYERLOGIC_H
 
-///SE includes:
 #include <core/GameLogic.h>
-#include <events/Events.h>
-#include <managers/Keyboard.h>
+
 
 class PlayerLogic : public se::GameLogic
 {
 public:
 
+	
 	PlayerLogic()
 		: GameLogic("PlayerLogic")
-		, kb{}
-	{
-
-	}
-
-	void Init() override final
+		, timer(0)
 	{
 		
 	}
 
-	void Update(float deltaTime) override final
+	float timer;
+	
+	void Init() override final
 	{
-		if (kb.GetState(se::KeyboardState::Left))
-		{
-			
-		}
-		if (kb.GetState(se::KeyboardState::Rigth))
-		{
-
-		}
-		if (kb.GetState(se::KeyboardState::Up))
-		{
-
-		}
-		if (kb.GetState(se::KeyboardState::Down))
-		{
-
-		}
+		std::cout << "Initialize Player" << std::endl;
+		se::SetActive(m_ownerid, m_name);
 	}
 
-private:
-	se::Keyboard kb;
+	void Update(float deltaTime) override final
+	{
+		se::GetTransformComponent(m_ownerid)->position.x += 0.5f * deltaTime;
+		std::cout << timer << std::endl;
+				
+		if (timer > 10)
+		{
+			se::SetActive(m_ownerid, "EnemyLogic");
+		}
+		
+		timer += 0.1;
+
+
+
+
+
+	}
 };
 #endif
