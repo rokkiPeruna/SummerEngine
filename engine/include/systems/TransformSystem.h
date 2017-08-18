@@ -1,5 +1,5 @@
-#ifndef SE_TRANSFORM_SYSTEM_H
-#define SE_TRANSFORM_SYSTEM_H
+#ifndef SUMMER_ENGINE_TRANSFORM_SYSTEM_H
+#define SUMMER_ENGINE_TRANSFORM_SYSTEM_H
 
 //Include standard library
 
@@ -15,6 +15,7 @@ namespace se
 {
 ///Getter for CShape components
 CShape* GetShapeComponent(SEint index);
+CTransformable* GetTransformComponent(SEint index);
 
 namespace priv
 {
@@ -30,16 +31,19 @@ class TransformSystem : public ComponentSystem
 	friend class RenderSystem;
 	//Friend getter method for CMovables components
 	friend CShape* se::GetShapeComponent(SEint index);
+	friend CTransformable* GetTransformComponent(SEint index);
+
 public:
 
 	///Default constructor.
 	///1.param: reference to Engine -class
 	TransformSystem(Engine& engine_ref);
-	///Destructor
-	~TransformSystem();
-	///Delete copy constructor and assingment operator
+	//
+	~TransformSystem() = default;
 	TransformSystem(const TransformSystem&) = delete;
 	void operator=(const TransformSystem&) = delete;
+	TransformSystem(TransformSystem&&) = delete;
+	void operator=(TransformSystem&&) = delete;
 
 	///Initialize this system
 	void Initialize() override final;
@@ -53,31 +57,29 @@ public:
 	void ClearComponentContainers() override final;
 
 	///OnEntityAdded checks if entity has components that need to be builded to this system
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
 	///Creates component to entity and add it to container and jsonobject
-	SEint CreateComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) override final;
-	
+	SEint CreateComponent(Entity& entity, COMPONENT_TYPE, Dataformat_itr& entity_obj) override final;
+
 	///Removes component from entity and container and json object
-	void RemoveComponent(Entity&, COMPONENT_TYPE, Dataformat_itr&) override final;
+	void RemoveComponent(Entity& entity, COMPONENT_TYPE, Dataformat_itr& entity_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
-	static std::vector<SysMessage> Messages;
-	
 	///Every entity has CTransformable component and they are frequently needed in other system, so TransformSystem reveals the static container as public
 	static std::vector<CTransformable> TransformableComponents;
 
+	const std::vector<CShape>& GetCShapesContainer() { return m_cShapes; }
 
 
-	std::vector<CShape> m_cShapes;
-	
 private:
 
 	///Every shape in program is stored in this container
 
+	std::vector<CShape> m_cShapes;
 	std::queue<SEint> m_free_cShape_indices;
 };
 

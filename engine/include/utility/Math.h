@@ -1,5 +1,5 @@
-#ifndef SE_MATH_H
-#define SE_MATH_H
+#ifndef SUMMER_ENGINE_MATH_H
+#define SUMMER_ENGINE_MATH_H
 
 //External includes:
 #include <glm/glm.hpp>
