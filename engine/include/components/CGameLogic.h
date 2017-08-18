@@ -7,11 +7,10 @@
 
 ///SE includes:
 #include <components/Component.h>
-#include <core/GameLogic.h>
-
 
 namespace se
 {
+class GameLogic;
 ///Brief: CGameLogic component has container which holds function pointers/lambdas/other
 ///that define entity behaviour in context of the game logic.
 class CGameLogic : public Component

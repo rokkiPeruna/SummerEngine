@@ -6,20 +6,24 @@
 
 namespace se
 {
+///Value for event group
+namespace EventGroup
+{
+const SEushort Engine4 = SEushort_value_1 << 2;
+}
 /*Events start*/
 
-//Dummy event
-/*namespace EventType { constexpr se_event_type --event_name-- = { event group | next free bit}; }
-struct SE_Event_--event_name-- : public SE_Event
+namespace EventType { const SEuint64 GameLogicActivated = free_bit_1; }
+struct SE_Event_GameLogicActivated : public SE_Event
 {
-explicit SE_Event_--event_name--( --possible parameters-- )
-{
-type = EventType::--event_name--;
-data. --what-- = param;
-additional_data. --what-- = param;
-}
-};*/
-
+	explicit SE_Event_GameLogicActivated(char logicName[32], SEint entity_id)
+	{
+		group = EventGroup::Engine4;
+		type = EventType::GameLogicActivated;
+		std::memcpy(data.char_arr, logicName, sizeof(char) * 32);
+		additional_data.seint = entity_id;
+	}
+};
 
 }//namespace se
 #endif

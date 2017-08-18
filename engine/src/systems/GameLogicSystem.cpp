@@ -10,22 +10,12 @@ CGameLogic* GetGameLogicComponent(SEint index)
 
 }
 
-void SetActive(SEint index, std::string name)
+void RegisterEventHandle(EventHandler*& eventHandler)
 {
-	auto tmp = GetGameLogicComponent(index);
-
-	//	for (auto i : tmp->logics)
-	for (int i = 0; i < tmp->logics.size(); ++i)
-	{
-		if (tmp->logics.at(i)->GetName() == name)
-		{
-			std::swap(tmp->logics.at(0), tmp->logics.at(i));
-			return;
-		}
-	}
-	//Message error
-	return;
+	priv::GameLogicSystem::m_engine_ptr->GetEventManager().RegisterEventHandler(eventHandler);
+	assert(eventHandler);
 }
+
 
 namespace priv
 {
@@ -36,7 +26,8 @@ GameLogicSystem::GameLogicSystem(Engine& engine_ref)
 	, m_free_cGameLogic_indices{}
 {
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::GAMELOGIC, this);
-	
+
+
 }
 
 GameLogicSystem::~GameLogicSystem()
@@ -46,6 +37,11 @@ GameLogicSystem::~GameLogicSystem()
 
 void GameLogicSystem::Initialize()
 {
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+
+	m_event_handler->RegisterEvent(SE_Event_GameLogicActivated("", -1));
+
 	for (auto g : GameLogicInstances)
 	{
 		m_game_logic_names.emplace_back(g->GetName());
@@ -59,6 +55,36 @@ void GameLogicSystem::Uninitialize()
 
 void GameLogicSystem::Update(SEfloat deltaTime)
 {
+	SE_Event se_event;
+
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::GameLogicActivated:
+		{		
+		//	auto index = m_engine.GetEntityMgr().GetEntities().at(se_event.additional_data.seint).components.at(COMPONENT_TYPE::GAMELOGIC);
+		//	m_cGameLogic.at(index);
+			auto spesificComponent = std::find_if(m_cGameLogic.begin(), m_cGameLogic.end(), _findByValue(se_event.additional_data.seint));
+
+			if (spesificComponent != m_cGameLogic.end())
+			{
+				for (int i = 0; i < spesificComponent->logics.size(); ++i)
+				{
+					if (spesificComponent->logics.at(i)->GetName() == se_event.data.char_arr)
+					{
+						std::swap(spesificComponent->logics.at(0), spesificComponent->logics.at(i));
+						break;
+					}
+				}
+			}
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
 	for (auto& comp : m_cGameLogic)
 	{
 		if (comp.logics.size() != 0)
@@ -138,7 +164,7 @@ void GameLogicSystem::AssingGameLogic(std::string logic_name, CGameLogic& compon
 		if (g->GetName() == logic_name)
 		{
 			component.logics.emplace_back(g);
-			component.logics.back()->ownerID(component.ownerID);
+			component.logics.back()->entityID(component.ownerID);
 			return;
 		}
 	}

@@ -9,23 +9,26 @@
 //include se
 #include <systems/ComponentSystem.h>
 #include <components/CGameLogic.h>
+#include <events/Events.h>
+
 
 namespace se
 {
 
+class GameLogic;
+
 CGameLogic* GetGameLogicComponent(SEint index);
-void SetActive(SEint index, std::string name);
+void RegisterEventHandle(EventHandler*& eventHandler);
 
 namespace priv
 {
 
-class Engine;
 
 class GameLogicSystem : public ComponentSystem
 {
 
 	friend CGameLogic* se::GetGameLogicComponent(SEint index);
-	friend void se::SetActive(SEint index, std::string name);
+	friend void se::RegisterEventHandle(EventHandler*& eventHandler);
 
 public:
 
@@ -87,6 +90,21 @@ private:
 	
 	//Free indices
 	std::queue<SEint> m_free_cGameLogic_indices;
+
+
+	struct _findByValue
+	{
+		SEint id;
+		char* name;
+
+		_findByValue(SEint id) : id(id) {}
+		_findByValue(char* name) : name(name) {}
+		bool operator() (const CGameLogic& CgameLogic) const
+		{
+			return CgameLogic.ownerID == id;
+		}
+	};
+
 };
 
 }//! namespace priv

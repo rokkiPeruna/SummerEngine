@@ -4,6 +4,7 @@
 ///Include all new game logic classes here
 ///and add them to GameLogicInstances -struct.
 ///Remember to also initialize with name and possible other values
+
 #include "PlayerLogic.h"
 #include "EnemyLogic.h"
 
