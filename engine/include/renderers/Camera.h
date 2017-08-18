@@ -3,10 +3,13 @@
 
 
 //SE includes:
+#include <core/Engine.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
+#include <events/EventHandler.h>
+#include <events/Events.h>
 
 namespace se
 {
@@ -19,6 +22,9 @@ public:
 	///Update camera position
 	void Update(const SEfloat deltaTime);
 
+	///Init camere
+	void Init();
+
 	///Get view matrix
 	Mat4f GetCameraView();
 
@@ -27,6 +33,9 @@ public:
 	void SetTarget(Vec3f target);
 
 private:
+	///EventHandler ptr. Remember to register if used
+	EventHandler* m_event_handler;
+
 	///Where is the camera
 	Vec3f m_cameraPosition;
 	

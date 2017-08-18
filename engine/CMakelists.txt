@@ -97,10 +97,12 @@ source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------
 #Engine event files
 set(ENGINE_EVENTS
+	include/events/ToBeSortedEvents.h
 	include/events/EngineEvents1.h
 	include/events/EngineEvents2.h
 	include/events/EngineEvents3.h
 	include/events/EngineEvents4.h
+	include/events/EditorEvents1.h
 	include/events/EventHandler.h
 	src/events/EventHandler.cpp
 	include/events/SE_Event.h

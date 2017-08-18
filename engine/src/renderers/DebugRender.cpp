@@ -196,7 +196,7 @@ void DebugRender::_createGrid(const Scene& current_scene, SEfloat grid_z_offset)
 	SEfloat width{};
 	SEfloat heigth{};
 	SEfloat offset = -0.5f; //We want our integer positions to be in the center of each grid square, so gird draw must start at -0.5f!
-	if (SCENE_TYPE::LEVEL == current_scene.GetType())
+	if (SCENE_TYPE::PROPER == current_scene.GetType())
 	{
 		width =  static_cast<SEfloat>(current_scene.GetWidth());
 		heigth = static_cast<SEfloat>(current_scene.GetHeigth());

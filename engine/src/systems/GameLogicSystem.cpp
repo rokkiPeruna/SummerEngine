@@ -6,13 +6,13 @@ namespace se
 
 CGameLogic* GetGameLogicComponent(SEint index)
 {
-	return &priv::GameLogicSystem::m_engine_ptr->GetGameLogicSystem().m_cGameLogic.at(index);
+	return &priv::Engine::Ptr->GetGameLogicSystem().m_cGameLogic.at(index);
 
 }
 
 void RegisterEventHandle(EventHandler*& eventHandler)
 {
-	priv::GameLogicSystem::m_engine_ptr->GetEventManager().RegisterEventHandler(eventHandler);
+	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(eventHandler);
 	assert(eventHandler);
 }
 

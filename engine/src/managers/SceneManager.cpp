@@ -20,13 +20,15 @@ SceneManager::SceneManager(Engine& engine_ref)
 
 }
 
-void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityManager* entityMgr_ptr, ComponentManager* compMgr_ptr)
+void SceneManager::Initialize(const std::string& filepathToUserFiles)
 {
 	///Register event handler
 	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 	///Register desired events
 	assert(m_event_handler);
-	//m_event_handler->RegisterEvent()
+	m_event_handler->RegisterEvent(SE_Event_SceneCreatedOnEditor("", 0, 0));
+	m_event_handler->RegisterEvent(SE_Cmd_LoadScene(""));
+	m_event_handler->RegisterEvent(SE_Cmd_SaveScene());
 
 	///Relative path to scenes.json file
 	m_rel_path_to_json_scenes = filepathToUserFiles + ffd.scene_folder_name;
@@ -42,6 +44,31 @@ void SceneManager::Uninitialize()
 
 void SceneManager::Update()
 {
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::SceneCreatedOnEditor:
+		{
+			AddScene(se_event.data.char_arr, SCENE_TYPE::PROPER, se_event.additional_data.seint_arr2[0], se_event.additional_data.seint_arr2[1]);
+			break;
+		}
+		case EventType::LoadScene:
+		{
+			LoadScene(se_event.data.char_arr);
+			Vec3f camPos = (!m_currentScene.GetWidth() || !m_currentScene.GetHeigth()) ? Vec3f(m_currentScene.GetWidth() / 2.0f, m_currentScene.GetHeigth() / 2.0f, 50.f) : Vec3f(0.0f, 0.0f, 40.f);
+			m_event_handler->SendEvent(SE_Cmd_ChangeCameraPos(camPos));
+		}
+		case EventType::SaveScene:
+		{
+			SaveProgress();
+		}
+		default:
+			break;
+		}
+	}
+
 
 }
 

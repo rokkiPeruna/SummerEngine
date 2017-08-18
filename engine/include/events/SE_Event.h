@@ -5,6 +5,7 @@
 #include <ids/SystemAndManagerIDList.h>
 #include <utility/Math.h>
 #include <utility/Typedefs.h>
+#include <ids/ComponentTypeList.h>
 
 namespace se
 {
@@ -15,6 +16,8 @@ union event_data //Size is sizeof(Mat4f) which with default precision is 64 byte
 	SEuint seuint;
 	SEint32 seint32;
 	SEuint64 seuint64;
+	//
+	COMPONENT_TYPE comp_type;
 	//
 	SEfloat sefloat;
 	SEdouble sedouble;
@@ -44,9 +47,13 @@ union additional_event_data//Size is sizeof(SEuint64) and/or sizeof(void*). Shou
 {
 	SEchar sechar;
 	SEint seint;
+	SEint seint_arr2[2];
 	SEuint seuint;
 	SEint32 seint32;
+	SEint32 seint32_arr2[2];
 	SEuint64 seuint64;
+	//
+	COMPONENT_TYPE comp_type;
 	//
 	SEfloat sefloat;
 	SEdouble sedouble;
@@ -89,8 +96,8 @@ constexpr SEuint64 group_bit_12 = SEuint64_value_1 << 11;	///NOT YET IN USE
 constexpr SEuint64 group_bit_13 = SEuint64_value_1 << 12;	///NOT YET IN USE
 constexpr SEuint64 group_bit_14 = SEuint64_value_1 << 13;	///NOT YET IN USE
 constexpr SEuint64 group_bit_15 = SEuint64_value_1 << 14;	///NOT YET IN USE
-constexpr SEuint64 group_bit_16 = SEuint64_value_1 << 15;	///NOT YET IN USE
-constexpr SEuint64 group_bit_17 = SEuint64_value_1 << 16;	///NOT YET IN USE
+constexpr SEuint64 group_EditorEvents1 = SEuint64_value_1 << 15;	///Reserved for EditorEvents1
+constexpr SEuint64 group_EditorEvents2 = SEuint64_value_1 << 16;	///Reserved for EditorEvents2
 constexpr SEuint64 group_bit_18 = SEuint64_value_1 << 17;	///NOT YET IN USE
 constexpr SEuint64 group_bit_19 = SEuint64_value_1 << 18;	///NOT YET IN USE
 constexpr SEuint64 group_bit_20 = SEuint64_value_1 << 19;	///NOT YET IN USE
@@ -101,7 +108,7 @@ constexpr SEuint64 group_bit_24 = SEuint64_value_1 << 23;	///NOT YET IN USE
 constexpr SEuint64 group_bit_25 = SEuint64_value_1 << 24;	///NOT YET IN USE
 constexpr SEuint64 group_bit_26 = SEuint64_value_1 << 25;	///NOT YET IN USE
 constexpr SEuint64 group_bit_27 = SEuint64_value_1 << 26;	///NOT YET IN USE
-constexpr SEuint64 group_bit_28 = SEuint64_value_1 << 27;	///NOT YET IN USE
+constexpr SEuint64 group_ToBeSorted = SEuint64_value_1 << 27;	///Reserved for ToBeSortedEvents
 constexpr SEuint64 group_userEvents1 = SEuint64_value_1 << 28;	///Reserved for UserEvents1
 constexpr SEuint64 group_userEvents2 = SEuint64_value_1 << 29;	///Reserved for UserEvents2
 constexpr SEuint64 group_userEvents3 = SEuint64_value_1 << 30;	///Reserved for UserEvents3

@@ -13,6 +13,7 @@
 #include <managers/Entity.h>
 #include <core/Engine.h>
 #include <managers/EventManager.h>
+#include <events/Events.h>
 #include <core/Messages.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
@@ -72,13 +73,9 @@ public:
 	///GetPlainComponentPtr returns plain Component* to be used in editor function. Can't be used for alternating data in game logic
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
 
-
 protected:
 	Engine& m_engine;				///Reference to Engine
 	EventHandler* m_event_handler;  ///Pointer to EventHandler. If used, must be initialized with EventManager's RegisterEventHandler() -function
-
-	///Static pointer to engine
-	static Engine* m_engine_ptr;
 
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
 	//Returns index off the newly created component if more measures need to be done in system's OnEntityAdded

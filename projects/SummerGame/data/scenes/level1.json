@@ -1,6 +1,7 @@
 {
     "entities": {
         "enemy": {
+            "_id": 1,
             "collidable": {
                 "_ownerID": 1,
                 "_type": 2,
@@ -27,7 +28,6 @@
                 "velo_y": 0.0,
                 "velo_z": 0.0
             },
-            "_id": 1,
             "shape": {
                 "_ownerID": 1,
                 "_type": 4,
@@ -71,6 +71,7 @@
             }
         },
         "player": {
+            "_id": 0,
             "collidable": {
                 "_ownerID": 0,
                 "_type": 2,
@@ -97,7 +98,6 @@
                 "velo_y": 0.0,
                 "velo_z": 0.0
             },
-            "_id": 0,
             "shape": {
                 "_ownerID": 0,
                 "_type": 4,

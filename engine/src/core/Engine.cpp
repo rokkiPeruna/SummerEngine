@@ -39,6 +39,7 @@ namespace se
 namespace priv
 {
 std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {};
+Engine* Engine::Ptr = { nullptr };
 
 Engine::Engine(const std::string& curr_proj_name)
 	: m_eng_conf_file_name("engine_config.json")
@@ -87,6 +88,8 @@ Engine::~Engine()
 
 void Engine::Initialize()
 {
+	Ptr = this;
+
 	//Set to start at editor loop //SE_TODO: Create switch(macro, etc.) to decide loop mode
 	m_inEditorLoop = true;
 
@@ -107,6 +110,8 @@ void Engine::Initialize()
 	m_window->Initialize();
 	//
 	m_messenger->Initialize();
+	//
+	m_camera->Init();
 	//
 	_initManagers();
 	//
@@ -200,7 +205,7 @@ void Engine::_initAndApplyEngineSettings()
 void Engine::_initManagers()
 {
 	//SceneMgr
-	m_sceneMgr->Initialize(m_path_to_user_files, m_entityMgr.get(), m_compMgr.get());
+	m_sceneMgr->Initialize(m_path_to_user_files);
 
 	//EntityManager
 	m_entityMgr->Initialize(m_path_to_user_files);

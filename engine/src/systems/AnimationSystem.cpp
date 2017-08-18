@@ -4,11 +4,11 @@ namespace se
 {
 CTexture* GetTextureComponent(SEint index)
 {
-	return &priv::AnimationSystem::m_engine_ptr->GetAnimationSystem().m_cTextures.at(index);
+	return &priv::Engine::Ptr->GetAnimationSystem().m_cTextures.at(index);
 }
 CAnimation* GetAnimationComponent(SEint index)
 {
-	return &priv::AnimationSystem::m_engine_ptr->GetAnimationSystem().m_cAnimations.at(index);
+	return &priv::Engine::Ptr->GetAnimationSystem().m_cAnimations.at(index);
 }
 
 namespace priv

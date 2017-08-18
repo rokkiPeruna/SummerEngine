@@ -122,6 +122,9 @@ public:
 	///Get graphical user interface object
 	const gui::GraphicalUserInterface& GetEngineGuiObjects() { return *m_gui; }
 
+	///Pointer to Engine
+	static Engine* Ptr;
+
 private:
 	const std::string m_eng_conf_file_name;					///Const string naming the json file containing Engine configurations 
 	const std::string m_current_project_name;				///Current active project. Name must match the one in 'projects/' folder

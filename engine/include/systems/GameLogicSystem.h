@@ -9,7 +9,6 @@
 //include se
 #include <systems/ComponentSystem.h>
 #include <components/CGameLogic.h>
-#include <events/Events.h>
 
 
 namespace se

@@ -6,6 +6,8 @@
 
 namespace se
 {
+//Forward declarations:
+class Entity;
 
 /*Events start*/
 
@@ -65,6 +67,34 @@ struct SE_Event_EntityRotationChanged : public SE_Event
 	}
 };
 
+
+///Event sent when entity's one component needs to be removed
+///data is void_ptr to entity
+///additional_data is component type as comp_type
+namespace EventType { constexpr se_event_type RemoveCompFromEntity{ event_bits::group_EngineEvents1 | event_bits::type_bit_5 }; }
+struct SE_Cmd_RemoveCompFromEntity : public SE_Event
+{
+	explicit SE_Cmd_RemoveCompFromEntity(Entity* entity, COMPONENT_TYPE component_type)
+	{
+		type = EventType::RemoveCompFromEntity;
+		data.void_ptr = entity; //Remember to cast to Entity*
+		additional_data.comp_type = component_type;
+	}
+};
+
+///Event sent when component needs to be added to entity
+///data is void_ptr to entity
+///additional_data is component type as comp_type
+namespace EventType { constexpr se_event_type AddCompToEntity{ event_bits::group_EngineEvents1 | event_bits::type_bit_6 }; }
+struct SE_Cmd_AddCompToEntity : public SE_Event
+{
+	explicit SE_Cmd_AddCompToEntity(Entity* entity, COMPONENT_TYPE component_type)
+	{
+		type = EventType::AddCompToEntity;
+		data.void_ptr = entity; //Remember to cast to Entity*
+		additional_data.comp_type = component_type;
+	}
+};
 
 //Dummy event
 /*namespace EventType { constexpr se_event_type --event_name-- = { event group | next free bit}; }

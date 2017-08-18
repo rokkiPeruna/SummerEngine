@@ -7,14 +7,18 @@
 
 //SE includes:
 #include <managers/Manager.h>
+#include <systems/ComponentSystem.h>
 #include <events/EventHandler.h>
 
 namespace se
 {
+void RegisterEventHandler(EventHandler* handler);
+
 namespace priv
 {
 class EventManager : Manager
 {
+	friend void se::RegisterEventHandler(EventHandler* handler);
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class

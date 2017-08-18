@@ -7,4 +7,8 @@
 #include <events/EngineEvents3.h>
 #include <events/EngineEvents4.h>
 
+#include <events/EditorEvents1.h>
+
+#include <events/ToBeSortedEvents.h>
+
 #endif

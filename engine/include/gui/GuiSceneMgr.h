@@ -29,12 +29,6 @@ public:
 private:
 	///SceneManager pointer
 	priv::SceneManager* m_sceneMgr;
-
-	void _handlePopups();
-
-	SEbool m_gui_sceneAdded;
-	SEbool m_gui_addSceneNameConflict;
-	SEbool m_gui_sceneAlreadyLoaded;
 };
 
 }//namespace gui

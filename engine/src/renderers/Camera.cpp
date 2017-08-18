@@ -1,11 +1,13 @@
 #include <renderers/Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <managers/EventManager.h>
 
 namespace se
 {
 
 Camera::Camera()
-	: m_cameraPosition(0.0f, 0.0f, 2.0f)
+	: m_event_handler(nullptr)
+	, m_cameraPosition(0.0f, 0.0f, 2.0f)
 	, m_cameraTarget(0.0f)
 	, m_cameraDirection(0.0f)
 	, m_view(0.0f)
@@ -22,12 +24,24 @@ Camera::Camera()
 	m_cameraUp = glm::cross(m_cameraDirection, m_cameraRight);
 
 	m_view = glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp);
-
 }
 
 void Camera::Update(const SEfloat deltaTime)
 {
-
+	//Check events!
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::ChangeCameraPos:
+		{
+			m_cameraPosition = se_event.data.vec3f;
+		}
+		default:
+			break;
+		}
+	}
 
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::A))
 	{
@@ -59,6 +73,12 @@ void Camera::Update(const SEfloat deltaTime)
 	}
 
 	m_view = glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp);
+}
+
+void Camera::Init()
+{
+	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Cmd_ChangeCameraPos(Vec3f(1.0f)));
 }
 
 Mat4f Camera::GetCameraView()

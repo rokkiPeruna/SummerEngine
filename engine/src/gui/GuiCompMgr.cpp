@@ -51,8 +51,6 @@ void GuiCompMgr::Update()
 		}
 	}
 
-
-
 	auto curr_e = m_entity_mgr->GetCurrentEntity();
 	if (curr_e)
 		ImGui::Text(curr_e->name.c_str());
@@ -75,7 +73,8 @@ void GuiCompMgr::Update()
 
 			if (ImGui::Button(component.second.c_str()))
 			{
-				m_comp_mgr->AddNewComponentToEntity(*curr_e, component.first);
+				m_event_handler->SendEvent(SE_Cmd_AddCompToEntity(curr_e, component.first));
+				break;
 			}
 		}
 	}
@@ -88,7 +87,7 @@ void GuiCompMgr::Update()
 				continue;
 			if (ImGui::Button(priv::CompTypeAsString.at(component.first).c_str()))
 			{
-				m_comp_mgr->RemoveComponentFromEntity(*curr_e, component.first);
+				m_event_handler->SendEvent(SE_Cmd_RemoveCompFromEntity(curr_e, component.first));
 				break;
 			}
 		}

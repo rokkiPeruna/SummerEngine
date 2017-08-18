@@ -7,7 +7,7 @@ namespace se
 CDynamic* GetDynamicComponent(SEint index)
 {
 
-	return &priv::MovementSystem::m_engine_ptr->GetMovementSystem().m_cDynamics.at(index);
+	return &priv::Engine::Ptr->GetMovementSystem().m_cDynamics.at(index);
 }
 
 namespace priv

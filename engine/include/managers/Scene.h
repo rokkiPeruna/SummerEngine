@@ -18,9 +18,7 @@ namespace priv
 enum class SCENE_TYPE : SEint
 {
 	FAULTY = -1,
-	MENU = 1,
-	LEVEL,
-	CREDITS
+	PROPER
 };
 
 ///Brief: Scene -class represents one scene in game, e.g. main menu, levels, credits etc.

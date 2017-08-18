@@ -36,7 +36,7 @@ public:
 	void operator=(SceneManager&&) = delete;
 
 	///Init SceneManager
-	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr, ComponentManager* compMgr_ptr);
+	void Initialize(const std::string& filepath_to_json_scenes);
 
 	///Uninit
 	void Uninitialize() override final;

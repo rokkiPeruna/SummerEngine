@@ -7,7 +7,7 @@ namespace se
 CCollidable* GetCollidableComponent(SEint index)
 {
 
-	return &priv::CollisionSystem::m_engine_ptr->GetCollisionSystem().m_cCollidables.at(index);
+	return &priv::Engine::Ptr->GetCollisionSystem().m_cCollidables.at(index);
 }
 
 namespace priv

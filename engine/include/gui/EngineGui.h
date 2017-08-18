@@ -62,7 +62,7 @@ protected:
 	//void createPopUpWindow()
 
 	//Center camera to given entity
-	void _setCamPosToEntity(SEuint entity_id, SEfloat z_pos = 10.0f);
+	Vec3f _getEntityPos(SEuint entity_id);
 };
 
 }//namespace gui

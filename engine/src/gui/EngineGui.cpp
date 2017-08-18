@@ -9,13 +9,13 @@ EngineGui::EngineGui(priv::Engine& engine_ref, SEuint update_priority)
 	, m_event_handler(nullptr)
 	, m_update_priority(update_priority)
 {
-
+	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(m_event_handler);
 }
 
-void EngineGui::_setCamPosToEntity(SEuint entity_id, SEfloat z_pos)
+Vec3f EngineGui::_getEntityPos(SEuint entity_id)
 {
-	auto& epos = priv::TransformSystem::TransformableComponents.at(entity_id).position;
-	m_engine.GetCamera()->SetPosition(Vec3f(epos.x, epos.y, z_pos));
+	return priv::TransformSystem::TransformableComponents.at(entity_id).position;
+
 }
 
 }//namespace gui

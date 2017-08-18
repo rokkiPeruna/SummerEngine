@@ -30,6 +30,9 @@ void ComponentManager::Initialize(std::string relativeFilePathToUserFiles)
 	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
 	m_event_handler->RegisterEvent(SE_Event_EntityCreatedOnEditor(-1));
 	m_event_handler->RegisterEvent(SE_Event_EntityDeletedOnEditor(nullptr, -1));
+	m_event_handler->RegisterEvent(SE_Cmd_SetEntityAsCurrent(nullptr));
+	m_event_handler->RegisterEvent(SE_Cmd_AddCompToEntity(nullptr, COMPONENT_TYPE::FAULTY_TYPE));
+	m_event_handler->RegisterEvent(SE_Cmd_RemoveCompFromEntity(nullptr, COMPONENT_TYPE::FAULTY_TYPE));
 
 	m_rel_path_to_json_scenes = relativeFilePathToUserFiles + ffd.scene_folder_name;
 }
@@ -66,7 +69,30 @@ void ComponentManager::Update()
 			if (e == nullptr)
 			{
 				SetCurrentEntity(nullptr);
-			}		
+			}
+		}
+		case EventType::SetEntityAsCurrent:
+		{
+			m_curr_entity = static_cast<Entity*>(se_event.data.void_ptr);
+			if (m_curr_entity)
+				SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_curr_entity->id);
+			else
+				SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
+			break;
+		}
+		case EventType::AddCompToEntity:
+		{
+			Entity* e = static_cast<Entity*>(se_event.data.void_ptr);
+			if (e)
+				AddNewComponentToEntity(*e, se_event.additional_data.comp_type);
+			break;
+		}
+		case EventType::RemoveCompFromEntity:
+		{
+			Entity* e = static_cast<Entity*>(se_event.data.void_ptr);
+			if (e)
+				RemoveComponentFromEntity(*e, se_event.additional_data.comp_type);
+			break;
 		}
 
 		default:

@@ -2,6 +2,11 @@
 
 namespace se
 {
+void se::RegisterEventHandler(EventHandler* handler)
+{
+	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(handler);
+}
+
 namespace priv
 {
 EventManager::EventManager(Engine& engine_ref)

@@ -21,6 +21,7 @@ GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_pt
 	///Event handler
 	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
+
 }
 
 void GuiEntityMgr::Update()
@@ -52,19 +53,8 @@ void GuiEntityMgr::Update()
 		{
 			if (ImGui::Button("Create!"))
 			{
-				m_event_handler->SendEvent(SE_Event_CreateBasicEntity(entityname));
-
-				//m_entity_mgr->CreateEntityOnEditor(entityname);
-				//
-				//SEint entityid = m_entity_mgr->GetEntityNameToID().at(entityname);
-				//m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
-				//m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
-				//m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, entityid);
-				////Inform GuiCompMgr that json object pointing to current component has been invalidated		
+				m_event_handler->SendEvent(SE_Event_CreateBasicEntity(entityname));	
 				m_gui_comp_mgr->InvalidateComponentObj();
-
-				//_setCamPosToEntity(entityid);
-
 				memset(&entityname[0], 0, sizeof(entityname));
 			}
 		}
@@ -77,7 +67,7 @@ void GuiEntityMgr::Update()
 			//ImGui::Bullet();
 			if (ImGui::SmallButton(e.first.c_str()))
 			{
-				m_entity_mgr->SaveEntityAsTemplate(&m_entity_mgr->GetEntities().at(e.second));
+				m_event_handler->SendEvent(SE_Cmd_SaveEntityAsTemplate(&m_entity_mgr->GetEntities().at(e.second)));
 			}
 		}
 	}
@@ -89,14 +79,11 @@ void GuiEntityMgr::Update()
 			//ImGui::Bullet();
 			if (ImGui::SmallButton(e.first.c_str()))
 			{
-				m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(e.second));
-				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(e.second));
-				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_entity_mgr->GetEntities().at(e.second).id);
 				//Inform GuiCompMgr that json object pointing to current component has been invalidated
 				m_gui_comp_mgr->InvalidateComponentObj();
 				elem_visibility::show_component_mgr_window = true;
 
-				_setCamPosToEntity(m_entity_mgr->GetCurrentEntity()->id);
+				m_event_handler->SendEvent(SE_Cmd_SetEntityAsCurrent(&m_entity_mgr->GetEntities().at(e.second)));
 			}
 		}
 	}
@@ -107,12 +94,13 @@ void GuiEntityMgr::Update()
 		{
 			if (ImGui::Button(e.first.c_str()))
 			{
-				m_entity_mgr->DeleteEntityOnEditor(e.first);
+				char ename[32];
+				memcpy(ename, e.first.c_str(), sizeof(ename));
+				m_event_handler->SendEvent(SE_Cmd_DeleteEntityByName(ename));
 				break;
 			}
 		}
 	}
-
 	ImGui::End();
 }
 

@@ -11,7 +11,7 @@ namespace se
 
 CShape* GetShapeComponent(SEint index)
 {
-	return &priv::TransformSystem::m_engine_ptr->GetTransformSystem().m_cShapes.at(index);
+	return &priv::Engine::Ptr->GetTransformSystem().m_cShapes.at(index);
 }
 
 CTransformable* GetTransformComponent(SEint index)

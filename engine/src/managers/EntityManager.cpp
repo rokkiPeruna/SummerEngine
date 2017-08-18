@@ -46,6 +46,9 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 	assert(m_event_handler);
 	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
 	m_event_handler->RegisterEvent(SE_Event_CreateBasicEntity(""));
+	m_event_handler->RegisterEvent(SE_Cmd_SaveEntityAsTemplate(nullptr));
+	m_event_handler->RegisterEvent(SE_Cmd_SetEntityAsCurrent(nullptr));
+	m_event_handler->RegisterEvent(SE_Cmd_DeleteEntityByName(""));
 }
 
 void EntityManager::Uninitialize()
@@ -71,6 +74,27 @@ void EntityManager::Update()
 			CreateEntityOnEditor(se_event.data.char_arr);
 			break;
 		}
+		case EventType::SaveEntityAsTemplate:
+		{
+			SaveEntityAsTemplate(static_cast<Entity*>(se_event.data.void_ptr));
+			break;
+		}
+		case EventType::SetEntityAsCurrent:
+		{
+			m_currentEntity = static_cast<Entity*>(se_event.data.void_ptr);
+			if(m_currentEntity)
+			{
+				auto new_cam_pos = TransformSystem::TransformableComponents.at(m_currentEntity->id).position;
+				new_cam_pos.z = 10.0f;
+				m_event_handler->SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
+			}
+			break;
+		}
+		case EventType::DeleteEntityByName:
+		{
+			DeleteEntityOnEditor(se_event.data.char_arr);
+			break;
+		}
 
 		default:
 			break;
@@ -82,19 +106,14 @@ void EntityManager::InitWithNewScene(Scene* scene)
 {
 	m_entities.clear();
 	m_entities_names_map.clear();
-
 	m_currentEntity = nullptr;
-
 	m_currentScene = scene;
-
 	SEint largest_id_found = _loadSceneEntities();
 	_res_space_CTransfComponents(largest_id_found);
-
 	//Find free ids
 	while (!m_free_entity_ids.empty())
 		m_free_entity_ids.pop();
 	m_curr_free_entity_id = _findFreeEntityID();
-
 }
 
 
@@ -116,6 +135,9 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 	m_curr_free_entity_id = _findFreeEntityID();
 
 	m_event_handler->SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
+	auto new_cam_pos{ TransformSystem::TransformableComponents.at(m_currentEntity->id).position };
+	new_cam_pos.z = 10.0f;
+	m_event_handler->SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
 }
 
 void EntityManager::CreateEntityOnEditor(Entity&, std::string)
@@ -195,6 +217,7 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 
 void EntityManager::SaveEntityAsTemplate(Entity* entity)
 {
+	assert(entity);
 	try
 	{
 		auto& file = m_rel_path_to_user_files + ffd.entity_tmpl_fold_name + entity->name + "_template" + ffd.scene_file_suffix;
