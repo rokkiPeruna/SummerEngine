@@ -16,8 +16,8 @@ public:
 
 	void Update(float deltaTime) override final;
 
-	float _timer;
 	se::EventHandler* playerHandler;
+	float _timer;
 
 };
 #endif

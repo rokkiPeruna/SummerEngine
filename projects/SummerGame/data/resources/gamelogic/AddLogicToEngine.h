@@ -12,6 +12,7 @@ namespace se
 {
 namespace priv
 {
+
 static std::vector<GameLogic*>GameLogicInstances ///Memory is freed in GameLogicSystem!
 {
 	new PlayerLogic,

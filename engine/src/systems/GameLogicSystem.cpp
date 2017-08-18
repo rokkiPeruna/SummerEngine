@@ -74,6 +74,8 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 					if (spesificComponent->logics.at(i)->GetName() == se_event.data.char_arr)
 					{
 						std::swap(spesificComponent->logics.at(0), spesificComponent->logics.at(i));
+						std::cout << "swapped logics  : " << spesificComponent->logics.at(0)->GetName() << " - " 
+							<< spesificComponent->logics.at(i)->GetName() << std::endl;
 						break;
 					}
 				}
