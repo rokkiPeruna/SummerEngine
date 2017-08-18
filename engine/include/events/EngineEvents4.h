@@ -20,7 +20,7 @@ struct SE_Event_GameLogicActivated : public SE_Event
 	{
 		group = EventGroup::Engine4;
 		type = EventType::GameLogicActivated;
-		data.char_arr[32] = logicName[32];
+		std::memcpy(data.char_arr, logicName, sizeof(char) * 32);
 		additional_data.seint = entity_id;
 	}
 };

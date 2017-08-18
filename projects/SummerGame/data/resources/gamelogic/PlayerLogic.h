@@ -7,27 +7,17 @@
 class PlayerLogic : public se::GameLogic
 {
 public:
-
-	
-	PlayerLogic()
-		: GameLogic("PlayerLogic")
-		, timer(0)
-	{
 		
-	}
-
+	PlayerLogic();
+	
 	float timer;
 	
-	void Init() override final
-	{
-		std::cout << "Initialize Player" << std::endl;
-	}
+	void Init() override final;
 
-	void Update(float deltaTime) override final
-	{
-		se::GetTransformComponent(m_entityID)->position.x += 0.5f * deltaTime;
-		std::cout << timer << std::endl;
+	void Update(float deltaTime) override final;
 
-	}
+	float _timer;
+	se::EventHandler* playerHandler;
+
 };
 #endif

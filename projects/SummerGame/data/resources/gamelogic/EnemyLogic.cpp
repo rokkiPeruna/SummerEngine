@@ -2,6 +2,7 @@
 
 EnemyLogic::EnemyLogic()
 	: GameLogic("EnemyLogic")
+	, _timer(0)
 {
 	
 }
@@ -9,13 +10,19 @@ EnemyLogic::EnemyLogic()
 void EnemyLogic::Init()
 {
 	se::RegisterEventHandle(enemyHandler);
-	
-
-	std::cout << "Hello from enemy cpp " << std::endl;
 }
 
 void EnemyLogic::Update(float deltaTime)
 {
-	char nimi[32]{ "EnemyLogic" };
-	enemyHandler->SendEvent(se::SE_Event_GameLogicActivated(nimi, m_entityID));
+	
+	se::GetTransformComponent(m_entityID)->position.x -= 0.5f * deltaTime;
+
+	if(_timer > 10)
+	{
+		enemyHandler->SendEvent(se::SE_Event_GameLogicActivated("PlayerLogic", m_entityID));
+		_timer = 0;
+	}
+
+	_timer += deltaTime;
+
 }

@@ -1,6 +1,6 @@
 #ifndef SUMMERGAME_ENEMYLOGIC_H
 #define SUMMERGAME_ENEMYLOGIC_H
-
+//
 #include <core/GameLogic.h>
 #include <iostream>
 
@@ -11,7 +11,6 @@ public:
 
 	EnemyLogic();
 
-
 	void Init() override final;
 	
 	void Update(float deltaTime) override final;
@@ -19,7 +18,7 @@ public:
 private:
 
 	se::EventHandler* enemyHandler;
-
+	float _timer;
 
 };
 #endif

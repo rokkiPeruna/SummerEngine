@@ -67,15 +67,28 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 		switch (se_event.type)
 		{
 		case EventType::GameLogicActivated:
-		{
-			
+		{		
+		//	auto index = m_engine.GetEntityMgr().GetEntities().at(se_event.additional_data.seint).components.at(COMPONENT_TYPE::GAMELOGIC);
+		//	m_cGameLogic.at(index);
+			auto spesificComponent = std::find_if(m_cGameLogic.begin(), m_cGameLogic.end(), _findByValue(se_event.additional_data.seint));
+
+			if (spesificComponent != m_cGameLogic.end())
+			{
+				for (int i = 0; i < spesificComponent->logics.size(); ++i)
+				{
+					if (spesificComponent->logics.at(i)->GetName() == se_event.data.char_arr)
+					{
+						std::swap(spesificComponent->logics.at(0), spesificComponent->logics.at(i));
+						break;
+					}
+				}
+			}
 			break;
 		}
 		default:
 			break;
 		}
 	}
-
 
 	for (auto& comp : m_cGameLogic)
 	{
