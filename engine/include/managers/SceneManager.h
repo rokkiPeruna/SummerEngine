@@ -1,5 +1,5 @@
-#ifndef SE_SCENEMANAGER_H
-#define SE_SCENEMANAGER_H
+#ifndef SUMMER_ENGINE_SCENEMANAGER_H
+#define SUMMER_ENGINE_SCENEMANAGER_H
 
 ///STL includes:
 #include <vector>
@@ -28,11 +28,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	SceneManager(Engine& engine_ref);
-	///Destructor
-	~SceneManager();
-	///No copies allowed
+	//
+	~SceneManager() = default;
 	SceneManager(const SceneManager&) = delete;
 	void operator=(const SceneManager&) = delete;
+	SceneManager(SceneManager&&) = delete;
+	void operator=(SceneManager&&) = delete;
 
 	///Init SceneManager
 	void Initialize(const std::string& filepath_to_json_scenes, EntityManager* ecm_ptr, ComponentManager* compMgr_ptr);
@@ -62,7 +63,7 @@ public:
 	///Delete scene from json file
 	void DeleteScene(std::string scenename);
 
-	///Save progress. Calls EntityManager's SaveProgress
+	///Save progress.
 	void SaveProgress();
 
 	///Returns pointer to current scene
@@ -72,44 +73,17 @@ public:
 	const std::vector<std::string>& GetSceneNames();
 
 private:
-	///Pointer to EntityManager
-	EntityManager* m_entity_mgr;
+	EntityManager* m_entity_mgr;						///Pointer to EntityManager
+	ComponentManager* m_comp_mgr;						///Pointer to ComponentManager
+	nlohmann::json m_sceneJsonObject;					///Json object for holding current scene. This gets send to EntityManager and ComponentManager inside current scene
+	nlohmann::json m_sceneNamesJsonObject;				///Json object for holding scene names object
+	std::string m_rel_path_to_json_scenes;				///Relative file path to folder containing scenes as json files
+	Scene m_currentScene;								///Current scene
+	std::vector<std::string> m_sceneNames;				///Scene name container
 
-	///Pointer to ComponentManager
-	ComponentManager* m_comp_mgr;
-
-	///Json object for holding current scene. This gets send to EntityManager and ComponentManager inside current scene
-	nlohmann::json m_sceneJsonObject;
-
-	///Json object for holding scene names object
-	nlohmann::json m_sceneNamesJsonObject;
-
-	///Relative file path to folder containing scenes as json files
-	std::string m_rel_path_to_json_scenes;
-
-	///Name of the subfolder where scenes exist
-	const std::string m_scenes_subfolder_name;
-
-	///Const string naming the suffix for scene files
-	const std::string m_scene_file_suffix;
-
-	///Const string naming the json file containing all scene names
-	const std::string m_scene_name_list_file;
-
-	///Const string naming the json object that holds scene names in array
-	const std::string m_scene_names_json_obj;
-
-	///Const string naming the json object that holds scene's info (type, size, etc.)
-	const std::string m_scene_struct_info_obj_name;
-
-	///Const string naming the json object that holds scene's data
-	const std::string m_scene_struct_main_obj_name;
-
-	///Current scene
-	Scene m_currentScene;
-
-	///Scene name container
-	std::vector<std::string> m_sceneNames;
+	file_and_folder_data ffd;							///See file_folder_json_data.h
+	scene_file_structure sf_struct;						///See file_folder_json_data.h
+	scene_names_file_structure snaf_struct;				///See file_folder_json_data.h
 
 	///Loads scene names from scenes.json so that user can see
 	/// and pick from names in SceneManager GUI. Also load scene ids to avoid id conflicts

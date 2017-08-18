@@ -1,8 +1,8 @@
 ///Brief: SE_exceptions.h contains SE engine's own exceptions to be used in parts
 ///of engine where try-throw-catch exception handling's overhead is not meaningful,
 ///etc. initializations, start-up checks, loading..
-#ifndef SE_SE_EXCEPTIONS_H
-#define SE_SE_EXCEPTIONS_H
+#ifndef SUMMER_ENGINE_SE_EXCEPTIONS_H
+#define SUMMER_ENGINE_SE_EXCEPTIONS_H
 
 //STL includes:
 #include <string>

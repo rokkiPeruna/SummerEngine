@@ -1,5 +1,5 @@
-#ifndef SE_GUISCENEMANAGER_H
-#define SE_GUISCENEMANAGER_H
+#ifndef SUMMER_ENGINE_GUISCENEMANAGER_H
+#define SUMMER_ENGINE_GUISCENEMANAGER_H
 
 
 //SE includes:
@@ -16,12 +16,13 @@ class GuiSceneMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	GuiSceneMgr(priv::Engine& engine_ref);
-	///Destructor
-	~GuiSceneMgr();
-	///No copies allowed
+	GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority);
+	//
+	~GuiSceneMgr() = default;
 	GuiSceneMgr(const GuiSceneMgr&) = delete;
 	void operator=(const GuiSceneMgr&) = delete;
+	GuiSceneMgr(GuiSceneMgr&&) = delete;
+	void operator=(GuiSceneMgr&&) = delete;
 
 	void Update() override final;
 

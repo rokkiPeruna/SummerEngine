@@ -1,9 +1,10 @@
-#ifndef SE_GUI_CTEXTURE_EDITOR_H
-#define SE_GUI_CTEXTURE_EDITOR_H
+#ifndef SUMMER_ENGINE_GUI_CTEXTURE_EDITOR_H
+#define SUMMER_ENGINE_GUI_CTEXTURE_EDITOR_H
 
 //SE includes:
 #include <gui/CompEditorGui.h>
 #include <systems/AnimationSystem.h>
+#include <managers/ResourceManager.h>
 
 namespace se
 {
@@ -21,6 +22,9 @@ public:
 
 private:
 	priv::AnimationSystem* m_animation_sys;
+	priv::ResourceManager* m_res_mgr;
+
+	std::vector<std::string> m_tex_res_names;		///Container holding all texture resources'.
 };
 
 }//namespace gui

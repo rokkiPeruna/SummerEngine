@@ -1,5 +1,5 @@
-#ifndef SE_ENTITY_H
-#define SE_ENTITY_H
+#ifndef SUMMER_ENGINE_ENTITY_H
+#define SUMMER_ENGINE_ENTITY_H
 
 //STL includes:
 #include <string>
@@ -25,11 +25,13 @@ public:
 	///Assign operator deleted
 	Entity& operator=(const Entity&) = delete;
 
+	//SE_TODO: Add move operations!
+
 	///Const name
 	std::string name;
 	
 	///Identifier
-	SEuint id;
+	SEint id;
 
 	///Container holding entity's components as map:
 	///Key: COMPONENT_TYPE

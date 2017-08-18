@@ -1,5 +1,5 @@
-#ifndef SE_IO_MANAGER_H
-#define SE_IO_MANAGER_H
+#ifndef SUMMER_ENGINE_IO_MANAGER_H
+#define SUMMER_ENGINE_IO_MANAGER_H
 
 //SE includes:
 #include <managers/Manager.h>
@@ -17,11 +17,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	IOManager(Engine& engine_ref);
-	///Destructor
-	~IOManager();
-	///Deleted copy constructor and assign operator
+	//
+	~IOManager() = default;
 	IOManager(const IOManager&) = delete;
 	void operator=(const IOManager&) = delete;
+	IOManager(IOManager&&) = delete;
+	void operator=(IOManager&&) = delete;
 
 	void Initialize() override final;
 

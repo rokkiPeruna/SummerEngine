@@ -1,5 +1,6 @@
-#ifndef SE_ENGINE_H
-#define SE_ENGINE_H
+
+#ifndef SUMMER_ENGINE_ENGINE_H
+#define SUMMER_ENGINE_ENGINE_H
 #define STB_IMAGE_IMPLEMENTATION	//This is needed for stb_image.h to reveal function implementations
 
 //STL includes:
@@ -29,12 +30,9 @@ namespace se
 ///CORE
 class Camera;
 
-namespace gui
-{
 ///Forward declarations for classes in namespace se::gui
-class EngineGui;
-class CompEditorGui;
-}
+namespace gui { class GraphicalUserInterface; }
+
 namespace priv
 {
 ///Forward declarations for classes in namespace se::priv
@@ -44,6 +42,7 @@ class Messenger;
 class Render;
 class EditorRender;
 class GameRender;
+class DebugRender;
 
 ///SYSTEMS
 class ComponentSystem;
@@ -51,6 +50,7 @@ class MovementSystem;
 class TransformSystem;
 class CollisionSystem;
 class AnimationSystem;
+class GameLogicSystem;
 
 ///MANAGERS
 class IOManager;
@@ -58,6 +58,7 @@ class SceneManager;
 class EntityManager;
 class ComponentManager;
 class ResourceManager;
+class EventManager; 
 
 ///Brief: Engine contains all managers and systems and is resposible for
 ///updating them.
@@ -67,13 +68,12 @@ public:
 	///Default engine constructor
 	///1.param: string naming the current project
 	Engine(const std::string& curr_proj_name);
-	///Default Engine destructor
+	//
+	//~Engine() = default;
 	~Engine();
-	///Deleted copy constructor and copy assignment operator
 	Engine(const Engine&) = delete;
 	void operator=(const Engine&) = delete;
-	///Deleted move constructror and move assignment
-	Engine(const Engine&&) = delete;
+	Engine(Engine&&) = delete;
 	void operator=(const Engine&&) = delete;
 
 	// Initialize engine 
@@ -90,6 +90,7 @@ public:
 	CollisionSystem& GetCollisionSystem() { return *m_collisionSystem; }
 	TransformSystem& GetTransformSystem() { return *m_transformSystem; }
 	AnimationSystem& GetAnimationSystem() { return *m_animationSystem; }
+	GameLogicSystem& GetGameLogicSystem() { return *m_gameLogicSystem; }
 	//
 	std::vector<ComponentSystem*>& GetSystemsContainer() { return m_systemContainer; }
 
@@ -99,14 +100,15 @@ public:
 	ComponentManager& GetCompMgr() { return *m_compMgr; }
 	ResourceManager& GetResourceManager() { return *m_resourceMgr; }
 	IOManager& GetIOManager() { return *m_ioMgr; }
+	EventManager& GetEventManager() { return *m_eventMgr; }
 
+
+	Window& GetWindow() { return *m_window; }
 
 	Render* GetCurrentRenderer() { return m_current_renderer; }
-
-
 	EditorRender& GetEditorRender() { return *m_editorRender; }
 	GameRender& GetGameRender() { return *m_gameRender; }
-
+	DebugRender& GetDebugRender() { return *m_debugRender; }
 
 	Camera* GetCamera() { return m_camera.get(); }
 
@@ -114,11 +116,11 @@ public:
 	///Key is enum COMPONENT_TYPE, value is pointer to ComponentSystem responsible of updating and handling components of that type.
 	static std::map<COMPONENT_TYPE, ComponentSystem*> ComponentTypeToSystemPtr;
 
-	///Static map for binding component type to correct gui editor
-	static std::map<COMPONENT_TYPE, gui::CompEditorGui*> ComponentTypeToGuiEditor;
-
-	///Get EngineGui objects
-	const std::vector<std::unique_ptr<se::gui::EngineGui>>& GetEngineGuiObjects() { return m_engine_gui_container; }
+	///Returns relative file path to user files
+	const std::string& GetRelFilePathToUserFiles() const { return m_path_to_user_files; }
+	
+	///Get graphical user interface object
+	const gui::GraphicalUserInterface& GetEngineGuiObjects() { return *m_gui; }
 
 private:
 	const std::string m_eng_conf_file_name;					///Const string naming the json file containing Engine configurations 
@@ -139,6 +141,9 @@ private:
 	///Init managers
 	void _initManagers();
 
+	///Init renderers
+	void _initRenderers();
+
 	///Init systems and add pointer to them in m_systemContainer
 	void _initSystems();
 
@@ -147,9 +152,6 @@ private:
 
 	///Update systems
 	void _updateSystems(SEfloat deltaTime);
-
-	///GUI
-	void _updateGUI();
 
 	//Game loop and editor loop
 	SEbool _gameLoop();
@@ -171,31 +173,35 @@ private:
 	std::unique_ptr<Window> m_window;
 	std::unique_ptr<EditorRender> m_editorRender;
 	std::unique_ptr<GameRender> m_gameRender;
+	std::unique_ptr<DebugRender> m_debugRender;
 
 	///Current renderer
 	Render* m_current_renderer;
+
+	///Managers (Must be before systems!!!)
+	std::unique_ptr<EntityManager> m_entityMgr;
+	std::unique_ptr<SceneManager> m_sceneMgr;
+	std::unique_ptr<ResourceManager> m_resourceMgr;
+	std::unique_ptr<ComponentManager> m_compMgr;
+	std::unique_ptr<IOManager> m_ioMgr;
+	std::unique_ptr<EventManager> m_eventMgr;
 
 	///Systems and system ptrs container
 	std::unique_ptr<MovementSystem> m_movementSystem;
 	std::unique_ptr<TransformSystem> m_transformSystem;
 	std::unique_ptr<CollisionSystem> m_collisionSystem;
 	std::unique_ptr<AnimationSystem> m_animationSystem;
+	std::unique_ptr<GameLogicSystem> m_gameLogicSystem;
 	///
 	std::vector<ComponentSystem*> m_systemContainer;
 
-	///Managers
-	std::unique_ptr<EntityManager> m_entityMgr;
-	std::unique_ptr<SceneManager> m_sceneMgr;
-	std::unique_ptr<ResourceManager> m_resourceMgr;
-	std::unique_ptr<ComponentManager> m_compMgr;
-	std::unique_ptr<IOManager> m_ioMgr;
 
 	//Camera
 	std::unique_ptr<Camera> m_camera;
 
-	///GUI //SE_TODO: Let macro define is gui is active
-	std::vector<std::unique_ptr<se::gui::EngineGui>> m_engine_gui_container;
-	void _initGui();
+	///GUI
+	std::unique_ptr<gui::GraphicalUserInterface> m_gui;
+
 };
 }//namespace priv
 }//namespace se

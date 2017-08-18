@@ -1,5 +1,5 @@
-#ifndef SE_MANAGERGUI_H
-#define SE_MANAGERGUI_H
+#ifndef SUMMER_ENGINE_MANAGERGUI_H
+#define SUMMER_ENGINE_MANAGERGUI_H
 
 
 //SE includes:
@@ -17,12 +17,13 @@ class ManagerGui : public EngineGui
 public: 
 	///Default constructor.
 	///1.param: reference to Engine -class
-	ManagerGui(priv::Engine& engine_ref);
-	///Destructor
-	virtual ~ManagerGui();
-	///No copies allowed
+	ManagerGui(priv::Engine& engine_ref, SEuint update_priority);
+	//
+	virtual ~ManagerGui() = default;
 	ManagerGui(const ManagerGui&) = delete;
 	void operator=(const ManagerGui&) = delete;
+	ManagerGui(const ManagerGui&&) = delete;
+	void operator=(const ManagerGui&&) = delete;
 
 	virtual void Update() = 0;
 

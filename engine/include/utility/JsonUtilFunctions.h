@@ -1,8 +1,9 @@
-#ifndef SE_JSON_UTIL_FUNCTIONS_H
-#define SE_JSON_UTIL_FUNCTIONS_H
+#ifndef SUMMER_ENGINE_JSON_UTIL_FUNCTIONS_H
+#define SUMMER_ENGINE_JSON_UTIL_FUNCTIONS_H
 
 //STL includes:
 #include <fstream>
+#include <initializer_list>
 
 //External includes:
 #include <nlohmann_json/json.hpp>

@@ -9,38 +9,37 @@ namespace priv
 {
 EntityManager::EntityManager(Engine& engine_ref)
 	: Manager(engine_ref)
-	, m_compMgr(nullptr)
-	, m_clock()
-	, m_start_time()
-	, m_end_time()
 	, m_currentScene(nullptr)
 	, m_currentEntity(nullptr)
 	, m_rel_path_to_json_scenes("")
 	, m_rel_path_to_user_files("")
-	, m_scenes_subfolder_name("scenes/")
-	, m_ent_templ_fold_name("entity_templates/")
-	, m_scene_file_suffix(".json")
-	, m_main_json_obj("entities") //Must match m_scene_struct_main_obj_name in SceneManager
+	, m_templ_number(0)
+	, ffd()
+	, sf_struct()
+	, snaf_struct()
+	, eobj_struct()
+	, cobj_struct()
 	, m_entities{}
 	, m_entities_names_map{}
 	, m_entity_templs_map{}
-	, m_templ_number(0)
+	, m_clock()
+	, m_start_time()
+	, m_end_time()
 	, m_posb_gap_in_free_entity_ids(true)
 	, m_curr_free_entity_id(-1)
 	, m_free_entity_ids{}
 {
-}
-
-EntityManager::~EntityManager()
-{
 
 }
 
-void EntityManager::Initialize(std::string relativePathToEntitiesJson, ComponentManager* compMgr)
+void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 {
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
+
 	m_rel_path_to_user_files = relativePathToEntitiesJson;
-	m_rel_path_to_json_scenes = relativePathToEntitiesJson + m_scenes_subfolder_name;
-	m_compMgr = compMgr;
+	m_rel_path_to_json_scenes = relativePathToEntitiesJson + ffd.scene_folder_name;
 	m_entities.clear();
 	m_entities_names_map.clear();
 	while (!m_free_entity_ids.empty())
@@ -54,7 +53,22 @@ void EntityManager::Uninitialize()
 
 void EntityManager::Update()
 {
+	//Check events
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::SceneChanged:
+		{
+			InitWithNewScene(static_cast<Scene*>(se_event.data.void_ptr));
+			break;
+		}
 
+		default:
+			break;
+		}
+	}
 }
 
 void EntityManager::InitWithNewScene(Scene* scene)
@@ -73,7 +87,7 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_curr_free_entity_id = _findFreeEntityID();
 
 	//Inform ComponentManager of scene change
-	m_compMgr->InitWithNewScene(m_entities, scene);
+	//m_compMgr->InitWithNewScene(m_entities, scene);
 }
 
 
@@ -81,16 +95,19 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 {
 	//Get json object holding entities
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 
 	entities_obj.value().push_back({ name,
-		nlohmann::json({{"id", m_curr_free_entity_id }}),
+		nlohmann::json({{eobj_struct.id_obj_name, m_curr_free_entity_id }}),
 	});
 
 	m_entities.emplace(m_curr_free_entity_id, Entity(name, m_curr_free_entity_id));
 	m_entities_names_map.emplace(name, m_curr_free_entity_id);
 
 	m_currentEntity = &m_entities.at(m_curr_free_entity_id);
+
+	m_event_handler->SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
+
 	m_compMgr->SetCurrentEntity(m_currentEntity);
 	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::TRANSFORMABLE);
 	m_compMgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_currentEntity->id);
@@ -117,9 +134,9 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		auto& itr = m_entity_templs_map.at(templateName + "_template").find(templateName + "_template");
 		for (auto c : (*itr))
 		{
-			if (c.count("_type"))
+			if (c.count(cobj_struct.type_obj_name))
 			{
-				SEint type_as_int = c.at("_type");
+				SEint type_as_int = c.at(cobj_struct.type_obj_name);
 				entity.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
 			}
 		}
@@ -143,9 +160,8 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 	{
 		//Open file for reading and loop all components
 		nlohmann::json entity;
-		util::ReadFileToJson(entity, m_rel_path_to_user_files + m_ent_templ_fold_name + templateName + "_template" + m_scene_file_suffix, EntityMgr_id);
+		util::ReadFileToJson(entity, m_rel_path_to_user_files + ffd.entity_tmpl_fold_name + templateName + "_template" + ffd.scene_file_suffix, EntityMgr_id);
 
-		auto& itr = entity.find(templateName + "_template");
 
 		//Store json object
 		m_entity_templs_map.emplace(templateName + "_template", entity);
@@ -160,11 +176,12 @@ Entity* EntityManager::CreateEntityFromTemplate(std::string templateName)
 		{
 			if (j.key() != "id")
 			{
-				SEint type_as_int = j.value().at("_type");
+				SEint type_as_int = j.value().at(cobj_struct.type_obj_name);
 				e.components.emplace(static_cast<COMPONENT_TYPE>(type_as_int), -1);
 			}
 		}
 
+		auto& itr = entity.find(templateName + "_template");
 		for (auto s : m_engine.GetSystemsContainer())
 		{
 			s->OnEntityAdded(m_entities.at(freeid), itr);
@@ -177,7 +194,7 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 {
 	try
 	{
-		auto& file = m_rel_path_to_user_files + m_ent_templ_fold_name + entity->name + "_template" + m_scene_file_suffix;
+		auto& file = m_rel_path_to_user_files + ffd.entity_tmpl_fold_name + entity->name + "_template" + ffd.scene_file_suffix;
 		auto& tmpl_name = entity->name + "_template";
 
 		//Write base json object manually
@@ -192,7 +209,7 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 
 		//Find json object from which the template is made
 		auto json = m_currentScene->GetData();
-		auto& entities_obj = json->find(m_main_json_obj);
+		auto& entities_obj = json->find(sf_struct.prim_obj_name);
 		auto components = entities_obj.value().find(entity->name);
 
 		nlohmann::json templateEntity;
@@ -200,12 +217,12 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 
 		templateEntity[tmpl_name] = (*components);
 
-		templateEntity.at(tmpl_name).at("id") = -1;
+		templateEntity.at(tmpl_name).at(eobj_struct.id_obj_name) = -1;
 		for (auto& itr : templateEntity.at(tmpl_name))
 		{
-			if (itr.count("_ownerID"))
+			if (itr.count(cobj_struct.ownerID_obj_name))
 			{
-				itr.at("_ownerID") = -1;
+				itr.at(cobj_struct.ownerID_obj_name) = -1;
 			}
 		}
 
@@ -223,7 +240,7 @@ void EntityManager::SaveEntityAsTemplate(Entity* entity)
 void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 {
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 
 	entities_obj.value().erase(entity_name);
 
@@ -233,6 +250,9 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	{
 		s->OnEntityRemoved(m_entities.at(entity_id));
 	}
+
+	//SE_TODO: Should this be event based?
+	m_engine.GetCurrentRenderer()->OnEntityRemoved(m_entities.at(entity_id));
 
 	m_free_entity_ids.push(m_entities.at(entity_id).id);
 
@@ -269,16 +289,16 @@ void EntityManager::SetCurrentEntity(Entity* e)
 SEint EntityManager::_loadSceneEntities()
 {
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 	if (entities_obj == json->end())
 	{
-		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _loadSceneEntities()\nscene's entities not loaded!";
+		MessageError(EntityMgr_id) << "Could not open json object [" + sf_struct.prim_obj_name + "] in _loadSceneEntities()\nscene's entities not loaded!";
 		return -1;
 	}
 	SEint largestID = 0;
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); itr++)
 	{
-		SEint id = itr.value().at("id");
+		SEint id = itr.value().at(eobj_struct.id_obj_name);
 		m_entities.emplace(id, Entity(itr.key(), id));
 		m_entities_names_map.emplace(itr.key(), id);
 		if (id > largestID)
@@ -290,7 +310,11 @@ SEint EntityManager::_loadSceneEntities()
 void EntityManager::_res_space_CTransfComponents(SEint largest_id)
 {
 	SEint safetyFactor = 2;
-	TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
+	if (largest_id)
+		TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
+	else
+		TransformSystem::TransformableComponents.resize(100 * safetyFactor);
+
 }
 
 SEint EntityManager::_findFreeEntityID()
@@ -305,10 +329,10 @@ SEint EntityManager::_findFreeEntityID()
 
 	//Else we have to loop through all entities, and push possible gap values to stack
 	auto json = m_currentScene->GetData();
-	auto& entities_obj = json->find(m_main_json_obj);
+	auto& entities_obj = json->find(sf_struct.prim_obj_name);
 	if (entities_obj == json->end())
 	{
-		MessageError(EntityMgr_id) << "Could not open json object [" + m_main_json_obj + "] in _findFreeEntityID()\nscene's entities not loaded!";
+		MessageError(EntityMgr_id) << "Could not open json object [" + sf_struct.prim_obj_name + "] in _findFreeEntityID()\nscene's entities not loaded!";
 		return 0;
 	}
 
@@ -317,7 +341,7 @@ SEint EntityManager::_findFreeEntityID()
 	std::vector<SEint> tmp;
 	for (auto& itr = entities_obj.value().begin(); itr != entities_obj.value().end(); ++itr)
 	{
-		tmp.emplace_back(static_cast<SEint>(itr.value().at("id")));
+		tmp.emplace_back(static_cast<SEint>(itr.value().at(eobj_struct.id_obj_name)));
 	}
 	//Sort vector
 	std::sort(tmp.begin(), tmp.end(), [&tmp](SEint a, SEint b) {return a < b; });

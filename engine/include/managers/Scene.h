@@ -1,5 +1,5 @@
-#ifndef SE_SCENE_H
-#define SE_SCENE_H
+#ifndef SUMMER_ENGINE_SCENE_H
+#define SUMMER_ENGINE_SCENE_H
 
 ///STL includes:
 #include <string>
@@ -38,17 +38,19 @@ public:
 	///Deleted assign operator
 	void operator=(const Scene&);
 
+	//SE_TODO: Add move operations
+
 	///Load resources to current scene
 
 	///Load entities
 
 
 	///Getters for variables
-	std::string GetName();
+	std::string GetName() const;
 	nlohmann::json* GetData();
-	SCENE_TYPE GetType();
-	SEuint GetWidth();
-	SEuint GetHeigth();
+	SCENE_TYPE GetType() const;
+	SEuint GetWidth() const;
+	SEuint GetHeigth() const;
 
 	void SetData(nlohmann::json* j);
 

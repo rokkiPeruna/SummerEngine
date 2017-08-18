@@ -12,9 +12,6 @@ CDynamic* GetDynamicComponent(SEint index)
 
 namespace priv
 {
-
-std::vector<SysMessage> MovementSystem::Messages = {};
-
 MovementSystem::MovementSystem(Engine& engine_ref)
 	: ComponentSystem(engine_ref)
 	, m_cDynamics{}
@@ -25,14 +22,10 @@ MovementSystem::MovementSystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::DYNAMIC, this);
 }
 
-MovementSystem::~MovementSystem()
-{
-
-}
-
 void MovementSystem::Initialize()
 {
-
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
 }
 
 void MovementSystem::Uninitialize()
@@ -40,26 +33,22 @@ void MovementSystem::Uninitialize()
 
 }
 
+static SEfloat demo_time = 0;
 void MovementSystem::Update(SEfloat deltaTime)
 {
+	demo_time += deltaTime;
 	//auto& transforms = TransformSystem::TransformableComponents;
 	for (auto& c : m_cDynamics)
 	{
 		c.velocity += c.acceleration * deltaTime;
+		//Send events!
+		m_event_handler->SendEvent(SE_Event_EntityPositionChanged(c.ownerID, c.velocity * deltaTime));
 
-		Messages.emplace_back(SysMessage(MESSAGETYPE::POSITION_CHANGED, MessageData(c.ownerID ,new Vec3f(c.velocity * deltaTime)))); //Vec3f represents the increment to the position
 
-		//transforms.at(c.ownerID).position += c.velocity * deltaTime;
-	}
-	Keyboard kb;
-	
-	if (kb.GetState(KeyboardState::Up))
-	{
-		auto e = m_engine.GetEntityMgr().CreateEntityFromTemplate("bulletNoColl");
-		auto& tr = TransformSystem::TransformableComponents.at(e->components.at(COMPONENT_TYPE::TRANSFORMABLE));
-		tr.position = Vec3f(0.0f, 1.0f, 0.0f);
-		auto dyn = GetDynamicComponent(e->components.at(COMPONENT_TYPE::DYNAMIC));
-		dyn->acceleration = Vec3f(0.0f, 0.3f, 0.0f);
+		//For demo
+		Vec3f new_scale(1.0f * std::sin(demo_time));
+		m_event_handler->SendEvent(SE_Event_EntityScaleChanged(c.ownerID, new_scale));
+
 	}
 }
 
@@ -69,19 +58,19 @@ void MovementSystem::ClearComponentContainers()
 	m_free_cDynamics_indices = {};
 }
 
-void MovementSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
+void MovementSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 {
-	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
+	if (entity.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		_onEntityAdded_helper(e, COMPONENT_TYPE::DYNAMIC, entity_obj, m_cDynamics, m_free_cDynamics_indices);
+		_onEntityAdded_helper(entity, COMPONENT_TYPE::DYNAMIC, entity_obj, m_cDynamics, m_free_cDynamics_indices);
 	}
 }
 
-void MovementSystem::OnEntityRemoved(Entity& e)
+void MovementSystem::OnEntityRemoved(Entity& entity)
 {
-	if (e.components.count(COMPONENT_TYPE::DYNAMIC))
+	if (entity.components.count(COMPONENT_TYPE::DYNAMIC))
 	{
-		m_free_cDynamics_indices.push(e.components.at(COMPONENT_TYPE::DYNAMIC));
+		m_free_cDynamics_indices.push(entity.components.at(COMPONENT_TYPE::DYNAMIC));
 	}
 }
 

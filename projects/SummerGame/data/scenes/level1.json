@@ -1,8 +1,8 @@
 {
     "entities": {
-        "bugikoviela": {
+        "enemy": {
             "collidable": {
-                "_ownerID": 2,
+                "_ownerID": 1,
                 "_type": 2,
                 "col_pol": [
                     -0.400000005960464,
@@ -18,54 +18,61 @@
                 "min": -0.5
             },
             "dynamic": {
-                "_ownerID": 2,
+                "_ownerID": 1,
                 "_type": 1,
-                "acc_x": 39.4160003662109,
+                "acc_x": 0.0,
                 "acc_y": 0.0,
-                "acc_z": 1.46000003814697,
+                "acc_z": 0.0,
                 "velo_x": 0.0,
                 "velo_y": 0.0,
-                "velo_z": 86.1310043334961
+                "velo_z": 0.0
             },
-            "id": 2,
+            "_id": 1,
             "shape": {
-                "_ownerID": 2,
+                "_ownerID": 1,
                 "_type": 4,
                 "points": [
+                    -0.25,
+                    -0.25,
                     0.0,
-                    0.5,
-                    0.0,
-                    -0.433012694120407,
+                    0.25,
                     -0.250000029802322,
                     0.0,
-                    0.433012753725052,
-                    -0.249999955296516,
+                    0.250000059604645,
+                    0.25,
+                    0.0,
+                    -0.25,
+                    0.250000089406967,
                     0.0
                 ]
             },
             "texture": {
-                "_ownerID": 2,
+                "_ownerID": 1,
                 "_type": 3,
-                "tex_name": "test_texture.png"
+                "h": 134,
+                "tex_name": "terrain.png",
+                "w": 80,
+                "x": 7,
+                "y": 299
             },
             "transformable": {
-                "_ownerID": 2,
+                "_ownerID": 1,
                 "_type": 0,
                 "orig_x": 0.0,
                 "orig_y": 0.0,
                 "orig_z": 0.0,
-                "pos_x": -0.0833333358168602,
-                "pos_y": -3.25,
+                "pos_x": -2.20000004768372,
+                "pos_y": 1.77499997615814,
                 "pos_z": 0.0,
-                "rot": 0.0,
-                "scal_x": 1.0,
-                "scal_y": 1.0,
+                "rot": 45.0,
+                "scal_x": 4.0,
+                "scal_y": 4.0,
                 "scal_z": 1.0
             }
         },
-        "bullet": {
+        "player": {
             "collidable": {
-                "_ownerID": 10,
+                "_ownerID": 0,
                 "_type": 2,
                 "col_pol": [
                     -0.400000005960464,
@@ -81,128 +88,51 @@
                 "min": -0.5
             },
             "dynamic": {
-                "_ownerID": 10,
-                "_type": 1,
-                "acc_x": 0.0,
-                "acc_y": 1.46000003814697,
-                "acc_z": 0.0,
-                "velo_x": 0.0,
-                "velo_y": 0.0,
-                "velo_z": 0.0
-            },
-            "id": 10,
-            "shape": {
-                "_ownerID": 10,
-                "_type": 4,
-                "points": [
-                    0.0,
-                    0.5,
-                    0.0,
-                    -0.433012694120407,
-                    -0.250000029802322,
-                    0.0,
-                    0.433012753725052,
-                    -0.249999955296516,
-                    0.0
-                ]
-            },
-            "texture": {
-                "_ownerID": 10,
-                "_type": 3,
-                "tex_name": "test_texture.png"
-            },
-            "transformable": {
-                "_ownerID": 10,
-                "_type": 0,
-                "orig_x": 0.0,
-                "orig_y": 0.0,
-                "orig_z": 0.0,
-                "pos_x": -1.26666665077209,
-                "pos_y": 3.35000014305115,
-                "pos_z": 0.0,
-                "rot": 0.0,
-                "scal_x": 1.0,
-                "scal_y": 1.0,
-                "scal_z": 1.0
-            }
-        },
-        "fixed": {
-            "dynamic": {
-                "_ownerID": 3,
+                "_ownerID": 0,
                 "_type": 1,
                 "acc_x": 0.0,
                 "acc_y": 0.0,
                 "acc_z": 0.0,
                 "velo_x": 0.0,
-                "velo_y": 0.25,
+                "velo_y": 0.0,
                 "velo_z": 0.0
             },
-            "id": 3,
+            "_id": 0,
             "shape": {
-                "_ownerID": 3,
+                "_ownerID": 0,
                 "_type": 4,
                 "points": [
+                    -0.25,
+                    -0.25,
                     0.0,
-                    0.5,
-                    0.0,
-                    -0.433012694120407,
+                    0.25,
                     -0.250000029802322,
                     0.0,
-                    0.433012753725052,
-                    -0.249999955296516,
+                    0.250000059604645,
+                    0.25,
+                    0.0,
+                    -0.25,
+                    0.250000089406967,
                     0.0
                 ]
             },
             "texture": {
-                "_ownerID": 3,
+                "_ownerID": 0,
                 "_type": 3,
-                "tex_name": "default_texture.png"
+                "h": 164,
+                "tex_name": "terrain.png",
+                "w": 168,
+                "x": 675,
+                "y": 709
             },
             "transformable": {
-                "_ownerID": 3,
+                "_ownerID": 0,
                 "_type": 0,
                 "orig_x": 0.0,
                 "orig_y": 0.0,
                 "orig_z": 0.0,
-                "pos_x": 1.76666665077209,
-                "pos_y": 1.875,
-                "pos_z": 0.0,
-                "rot": 0.0,
-                "scal_x": 1.0,
-                "scal_y": 1.0,
-                "scal_z": 1.0
-            }
-        },
-        "teemu": {
-            "id": 4,
-            "shape": {
-                "_ownerID": 4,
-                "_type": 4,
-                "points": [
-                    0.0,
-                    0.5,
-                    0.0,
-                    -0.433012694120407,
-                    -0.250000029802322,
-                    0.0,
-                    0.433012753725052,
-                    -0.249999955296516,
-                    0.0
-                ]
-            },
-            "texture": {
-                "_ownerID": 4,
-                "_type": 3,
-                "tex_name": "testTexture.jpg"
-            },
-            "transformable": {
-                "_ownerID": 4,
-                "_type": 0,
-                "orig_x": 0.0,
-                "orig_y": 0.0,
-                "orig_z": 0.0,
-                "pos_x": -1.63333320617676,
-                "pos_y": -1.39999997615814,
+                "pos_x": 1.44999992847443,
+                "pos_y": 3.05000019073486,
                 "pos_z": 0.0,
                 "rot": 0.0,
                 "scal_x": 1.0,
@@ -212,9 +142,9 @@
         }
     },
     "scene_info": {
-        "heigth": 62,
+        "heigth": 55,
         "name": "level1",
         "type": 2,
-        "width": 62
+        "width": 53
     }
 }

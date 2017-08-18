@@ -9,14 +9,11 @@ Keyboard::Keyboard()
 	assert(m_key_state_struct);
 }
 
-Keyboard::~Keyboard()
-{
-
-}
-
 SEbool Keyboard::GetState(SEint key)
 {
-	return static_cast<SEbool>(m_key_state_struct[key]);
+	if (m_key_state_struct[key])
+		return true;
+	return false;
 }
 
 }//namespace se

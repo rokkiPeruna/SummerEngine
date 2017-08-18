@@ -1,5 +1,5 @@
-#ifndef SE_COLLISION_SYSTEM_H
-#define SE_COLLISION_SYSTEM_H
+#ifndef SUMMER_ENGINE_COLLISION_SYSTEM_H
+#define SUMMER_ENGINE_COLLISION_SYSTEM_H
 
 //SE includes:
 #include <systems/ComponentSystem.h>
@@ -22,11 +22,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	CollisionSystem(Engine& engine_ref);
-	///Destructor
-	~CollisionSystem();
-	///Deleted copy constructor and assign operator
+	//
+	~CollisionSystem() = default;
 	CollisionSystem(const CollisionSystem&) = delete;
 	void operator=(const CollisionSystem&) = delete;
+	CollisionSystem(CollisionSystem&&) = delete;
+	void operator=(CollisionSystem&&) = delete;
 
 	void Initialize() override final;
 
@@ -36,15 +37,17 @@ public:
 
 	void ClearComponentContainers() override final;
 
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
 
 	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
 
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
+
+	const std::vector<CCollidable>& GetCCollidableContainer() { return m_cCollidables; }
 
 private:
 	std::vector<CCollidable> m_cCollidables;

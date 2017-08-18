@@ -12,6 +12,12 @@ include_directories(${PROJECT_SOURCE_DIR}/libs)
 #Add library directories
 link_directories(${PROJECT_SOURCE_DIR}/libs)
 
+
+#Include project specific data
+include_directories(${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/gamelogic)
+include_directories(${PROJECT_SOURCE_DIR}/projects/${SE_CURRENT_PROJECT_NAME}/data/resources/scripts)
+
+
 #-----------------------------------------------------------------
 #Components
 set(COMPONENTS_FILES
@@ -21,6 +27,10 @@ set(COMPONENTS_FILES
     include/components/CShape.h
     include/components/CTransformable.h
 	include/components/CTexture.h
+	include/components/CAnimation.h
+	include/components/Animation.h
+	src/components/Animation.cpp
+	include/components/CGameLogic.h
     )
 source_group("components" FILES ${COMPONENTS_FILES})
 #-----------------------------------------------------------------
@@ -28,8 +38,6 @@ source_group("components" FILES ${COMPONENTS_FILES})
 set(SYSTEMS_FILES
 	include/systems/ComponentSystem.h
 	src/systems/ComponentSystem.cpp
-	include/systems/CompSystemEventHandler.h
-	src/systems/CompSystemEventHandler.cpp
 	include/systems/DummySystemCPP.txt
 	include/systems/MovementSystem.h
 	src/systems/MovementSystem.cpp
@@ -39,6 +47,8 @@ set(SYSTEMS_FILES
     src/systems/CollisionSystem.cpp
 	include/systems/AnimationSystem.h
     src/systems/AnimationSystem.cpp
+    include/systems/GameLogicSystem.h
+    src/systems/GameLogicSystem.cpp
     )
 source_group("systems" FILES ${SYSTEMS_FILES})
 #-----------------------------------------------------------------
@@ -65,6 +75,8 @@ set(MANAGERS_FILES
 	src/managers/Keyboard.cpp
 	include/managers/Mouse.h
 	src/managers/Mouse.cpp
+	include/managers/EventManager.h
+	src/managers/EventManager.cpp
 	)
 source_group("managers" FILES ${MANAGERS_FILES})
 #-----------------------------------------------------------------
@@ -74,24 +86,44 @@ set(CORE_FILES
 	src/core/Engine.cpp
 	include/core/Window.h
 	src/core/Window.cpp	
-	include/core/imgui_impl_sdl_gl3.h
-	src/core/imgui_impl_sdl_gl3.cpp
 	include/core/Messages.h
 	include/core/Messenger.h
 	src/core/Messenger.cpp
-	include/core/gui_values.h
 	include/core/SE_exceptions.h
-    include/core/Camera.h
-    src/core/Camera.cpp
-    include/core/Render.h
-    src/core/Render.cpp
-    include/core/EditorRender.h
-    src/core/EditorRender.cpp
-    include/core/GameRender.h
-    src/core/GameRender.cpp
+	include/core/file_folder_json_data.h
+	include/core/GameLogic.h
     )
 source_group("core" FILES ${CORE_FILES})
-
+#-----------------------------------------------------------------
+#Engine event files
+set(ENGINE_EVENTS
+	include/events/EngineEvents1.h
+	include/events/EngineEvents2.h
+	include/events/EngineEvents3.h
+	include/events/EngineEvents4.h
+	include/events/EventHandler.h
+	src/events/EventHandler.cpp
+	include/events/SE_Event.h
+	include/events/Events.h
+	)
+source_group("events" FILES ${ENGINE_EVENTS})
+#-----------------------------------------------------------------
+#Renderers
+set(RENDERERS_FILES	
+    include/renderers/Render.h
+    src/renderers/Render.cpp
+    include/renderers/EditorRender.h
+    src/renderers/EditorRender.cpp
+    include/renderers/GameRender.h
+    src/renderers/GameRender.cpp
+	include/renderers/DebugRender.h
+	src/renderers/DebugRender.cpp
+	include/renderers/Camera.h
+    src/renderers/Camera.cpp
+    include/renderers/RenderBatch.h
+    src/renderers/RenderBatch.cpp
+	)
+source_group("renderers" FILES ${RENDERERS_FILES})
 #-----------------------------------------------------------------
 #IDs
 set(IDS_FILES
@@ -117,6 +149,12 @@ source_group("utility" FILES ${UTILITY_FILES})
 #-----------------------------------------------------------------
 #Engine Gui
 set(ENGINE_GUI_MANAGER_FILES
+	include/gui/GraphicalUserInterface.h
+	include/gui/imgui_impl_sdl_gl3.h
+	src/gui/imgui_impl_sdl_gl3.cpp
+	include/gui/gui_values.h
+	src/gui/gui_values.cpp
+	src/gui/GraphicalUserInterface.cpp
 	include/gui/EngineGui.h
 	src/gui/EngineGui.cpp
 	include/gui/ManagerGui.h
@@ -140,7 +178,12 @@ set(ENGINE_GUI_COMPONENT_MODIFIERS
 	include/gui/CTransformableEditor.h
 	src/gui/CTransformableEditor.cpp	
 	include/gui/CTextureEditor.h
-	src/gui/CTextureEditor.cpp	
+	src/gui/CTextureEditor.cpp
+	include/gui/CAnimationEditor.h
+	src/gui/CAnimationEditor.cpp
+	include/gui/CGameLogicEditor.h
+	src/gui/CGameLogicEditor.cpp
+	
 	)
 set(ENGINE_GUI_FILES
 	${ENGINE_GUI_MANAGER_FILES}
@@ -172,6 +215,10 @@ set(MAIN_CPP
 	)
 source_group("" FILES ${MAIN_CPP})
 #-----------------------------------------------------------------
+
+#Using C++11
+set(CMAKE_CXX_STANDARD 11)
+
 #Project name
 add_executable(engine
 	src/main.cpp
@@ -179,22 +226,28 @@ add_executable(engine
 	${SYSTEMS_FILES}
 	${MANAGERS_FILES}
 	${CORE_FILES}
+	${GAME_LOGIC_CLASSES}
+	${ENGINE_EVENTS}
+	${RENDERERS_FILES}
 	${IDS_FILES}
 	${UTILITY_FILES}
 	${ENGINE_GUI_FILES}
 	${IMGUI_FILES}
 	${STB_FILES}
 	${MAIN_CPP}
+	#${USER_GAMELOGIC_DATA}
+	#${USER_SCRIPT_DATA}
 	)
 
 
-target_link_libraries(engine PUBLIC 
+target_link_libraries(engine PUBLIC
 					box2d 
 					SDL2-static 
 					SDL2main 
 					glew32 
 					glew32s 	
 					OpenGL32
+					user_data
 				)
 # Remember to add 'OALWrapper' to target_link_libraries
 

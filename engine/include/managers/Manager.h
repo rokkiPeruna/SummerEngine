@@ -1,5 +1,5 @@
-#ifndef SE_MANAGER_H
-#define SE_MANAGER_H
+#ifndef SUMMER_ENGINE_MANAGER_H
+#define SUMMER_ENGINE_MANAGER_H
 
 ///STL includes:
 #include <memory>
@@ -10,7 +10,10 @@
 //SE includes:
 #include <core/Engine.h>
 #include <core/Messages.h>
+#include <core/file_folder_json_data.h>
 #include <core/SE_exceptions.h>
+#include <events/EventHandler.h>
+#include <events/Events.h>
 
 namespace se
 {
@@ -31,10 +34,13 @@ class Manager
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Manager(Engine& engine_ref) : m_engine(engine_ref) {}
-
-	///Destructor
-	virtual ~Manager() {}
+	Manager(Engine& engine_ref) : m_engine(engine_ref), m_event_handler(nullptr) {}
+	//
+	virtual ~Manager() = default;
+	Manager(const Manager&) = delete;
+	void operator=(const Manager&) = delete;
+	Manager(Manager&&) = delete;
+	void operator=(Manager&&) = delete;
 
 	virtual void Initialize() { MessageInfo(Engine_id) << "Default Initialize() for Manager called"; }
 
@@ -43,8 +49,11 @@ public:
 	virtual void Update() = 0;
 
 protected:
-	///Pointer to engine
+	///Reference to engine
 	Engine& m_engine;
+
+	///Event handler. Remember to register if used
+	EventHandler* m_event_handler;
 };
 
 }//namespace priv

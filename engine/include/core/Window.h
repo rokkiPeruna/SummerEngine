@@ -1,5 +1,5 @@
-#ifndef SE_WINDOW_H
-#define SE_WINDOW_H
+#ifndef SUMMER_ENGINE_WINDOW_H
+#define SUMMER_ENGINE_WINDOW_H
 
 //include STL
 //TODO: Delete 'memory' after we get typedefs
@@ -45,16 +45,14 @@ struct WindowInitData
 class Window
 {
 public:
-
 	///Default constructor
 	Window();
 
-	///Default destructor
-	~Window();
-
-	///Delete copy constructor
+	~Window() = default;
 	Window(const Window&) = delete;
 	void operator=(const Window&) = delete;
+	Window(Window&&) = delete;
+	void operator=(Window&&) = delete;
 
 	///Initialize window 
 

@@ -1,5 +1,4 @@
 #include <managers/ResourceManager.h>
-#include <systems/AnimationSystem.h>
 #include <stb_image.h>
 
 //C++17 feature used to get all filenames in resources folder
@@ -16,13 +15,11 @@ ResourceManager::ResourceManager(Engine& engine_ref)
 	, m_res_fold_name("resources/")
 	, m_textResourcesContainer{}
 	, m_imageResContainer{}
+	, m_texture_names{}
 	, m_image_fold_name("textures/")
+	, m_animation_names{}
+	, m_animation_fold_name("animations/")
 	, m_shaderProgramContainer{}
-{
-
-}
-
-ResourceManager::~ResourceManager()
 {
 
 }
@@ -35,18 +32,22 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 
 	//Get all loadable textures' file names
 	std::string path_to_textures = m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name;
-
 	//This uses std::experimental::filesystem. //SE_TODO: Get solution that doesn't need C++17 features :D
-	std::vector<std::string> tex_names{};
 	for (auto& f : std::experimental::filesystem::directory_iterator(path_to_textures))
 	{
-		tex_names.emplace_back(f.path().filename().generic_string());
+		m_texture_names.emplace_back(f.path().filename().generic_string());
 	}
-	
-	m_engine.GetAnimationSystem().SetTextureResourceNames(tex_names); 
-	//SE_TODO: It is not ResourceManager's job to give AnimationSystem the texture names, it is AnimationSystem's job to fetch them!
-	//When this is refactored, remove AnimationSystem dependancy from top of this file!!!
 
+	//Get all animation file names
+	std::string path_to_animations = m_rel_path_to_user_files + m_res_fold_name + m_animation_fold_name;
+	//This uses std::experimental::filesystem. //SE_TODO: Get solution that doesn't need C++17 features :D
+	for (auto& a : std::experimental::filesystem::directory_iterator(path_to_animations))
+	{
+		std::string tmp = a.path().filename().generic_string();
+		auto index = tmp.find_last_of('.');
+		tmp.erase((tmp.begin() + index), tmp.end());	//Get rid of suffix, we are only interested in animation names, not format.
+		m_animation_names.emplace_back(tmp);
+	}
 }
 
 void ResourceManager::Uninitialize()
@@ -95,7 +96,7 @@ TextResource* ResourceManager::LoadTextResource(std::string filepath, std::strin
 		MessageError(ResourceMgr_id) << "Failed to open " + filepath + name + " in LoadTextResource()";
 		return nullptr;
 	}
-	
+
 }
 
 ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_vertically)
@@ -116,7 +117,7 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 		0     //This is compression level, keep in 0
 	);
 	m_imageResContainer.emplace_back(ImageResource(name));
-	
+
 	m_imageResContainer.back().SetData(w, h, bpp, tmp);
 
 	stbi_image_free(tmp);

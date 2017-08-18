@@ -1,5 +1,5 @@
-#ifndef SE_GUIENTITYMANAGER_H
-#define SE_GUIENTITYMANAGER_H
+#ifndef SUMMER_ENGINE_GUIENTITYMANAGER_H
+#define SUMMER_ENGINE_GUIENTITYMANAGER_H
 
 
 //SE includes:
@@ -19,12 +19,13 @@ class GuiEntityMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
-	GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* comp_mgr_ptr);
-	///Destructor
-	~GuiEntityMgr();
-	///No copies allowed
+	GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* comp_mgr_ptr, SEuint update_priority);
+	//
+	~GuiEntityMgr() = default;
 	GuiEntityMgr(const GuiEntityMgr&) = delete;
 	void operator=(const GuiEntityMgr&) = delete;
+	GuiEntityMgr(GuiEntityMgr&&) = delete;
+	void operator=(GuiEntityMgr&&) = delete;
 
 	void Update() override final;
 

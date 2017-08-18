@@ -1,5 +1,5 @@
-#ifndef SE_COMPONENT_H
-#define SE_COMPONENT_H
+#ifndef SUMMER_ENGINE_COMPONENT_H
+#define SUMMER_ENGINE_COMPONENT_H
 
 //External includes:
 #include <nlohmann_json/json.hpp>

@@ -1,5 +1,5 @@
-#ifndef SE_ANIMATION_SYSTEM_H
-#define SE_ANIMATION_SYSTEM_H
+#ifndef SUMMER_ENGINE_ANIMATION_SYSTEM_H
+#define SUMMER_ENGINE_ANIMATION_SYSTEM_H
 
 //STL includes:
 #include <unordered_map>
@@ -7,31 +7,39 @@
 //SE includes:
 #include <systems/ComponentSystem.h>
 #include <components/CTexture.h>
+#include <components/CAnimation.h>
 #include <managers/ResourceManager.h>
-#include <core/Render.h>
+#include <renderers/Render.h>
+#include <utility/JsonUtilFunctions.h>
 
 namespace se
 {
 ///Getter method for CTexture components
 CTexture* GetTextureComponent(SEint index);
 
+///Getter method for CTexture components
+CAnimation* GetAnimationComponent(SEint index);
+
 namespace priv
 {
 ///Brief: SE_TODO: Add description
 class AnimationSystem : public ComponentSystem
 {
-	//Friend getter method for CMovables components
+	//Friend getter method for CTexture components
 	friend CTexture* se::GetTextureComponent(SEint index);
+	//Friend getter method for CAnimation components
+	friend CAnimation* se::GetAnimationComponent(SEint index);
 
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	AnimationSystem(Engine& engine_ref);
-	///Destructor
-	~AnimationSystem();
-	///Deleted copy constructor and assign operator
+	//
+	~AnimationSystem() = default;
 	AnimationSystem(const AnimationSystem&) = delete;
 	void operator=(const AnimationSystem&) = delete;
+	AnimationSystem(AnimationSystem&&) = delete;
+	void operator=(AnimationSystem&&) = delete;
 
 	void Initialize() override final;
 
@@ -41,13 +49,16 @@ public:
 
 	void ClearComponentContainers() override final;
 
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
-	void SetTextureResourceNames(const std::vector<std::string>& tex_names) { m_tex_res_names = { tex_names }; }
+	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
 
-	const std::vector<std::string>& GetTextureResourceNames() { return m_tex_res_names; }
+	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
+
+	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
+
 
 	///Returns SEuint for texture handle to be assigned to component.
 	///If texture is already loaded to GPU memory, returns that handle,
@@ -56,36 +67,45 @@ public:
 	///2.param: CTexture component to which the texture is binded
 	void AssignTexture(const std::string& texture_name, CTexture& tex_comp);
 
+	void AssingAnimation(const std::string& animation_name, CAnimation& anim_comp);
 
-	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
+	SEbool AddAnimation(const std::string& anim_name, std::vector<AnimationFrame>& frames);
 
-	void RemoveComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
-
-	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) override final;
 
 private:
 	std::vector<CTexture> m_cTextures;
 	std::queue<SEint> m_free_cTexture_indices;
 
-	///Const string naming the default texture
-	const std::string m_def_tex_name;
+	std::vector<CAnimation> m_cAnimations;
+	std::queue<SEint> m_free_cAnimation_indices;
 
-	///Container holding all texture resources' names for use in gui.
-	std::vector<std::string> m_tex_res_names;
+	const std::string m_def_tex_name;				///Const string naming the default texture
+	ResourceManager* m_res_mgr;						///Resource manager ptr for image loading
+	std::string m_path_to_user_files;				///Relative file path to user files.
 
-	///Resource manager ptr for image loading
-	ResourceManager* m_res_mgr;
+	struct _texture_data
+	{
+		SEuint handle = SEuint_max;
+		SEbool alpha = false;
+		SEint parent_i_w = 0;
+		SEint parent_i_h = 0;
+		explicit _texture_data(SEuint _hndl, SEbool _alpha, SEint _im_w, SEint _im_h) :handle(_hndl), alpha(_alpha), parent_i_w(_im_w), parent_i_h(_im_h) {}
+	};
 
 	///Unordered map holding texture ids. Key is std::string as name of the texture with suffix (e.g. tiles.png),
-	///value is pair(SEuint, SEbool) containing handle to texture and boolean telling if texture has alpha channel.
-	std::unordered_map<std::string, std::pair<SEuint, SEbool>> m_texture_map;
+	///value is struct containing handle to texture, boolean telling if texture has alpha channel and parent image's width and heigth
+	std::unordered_map<std::string, _texture_data> m_texture_map;
+
+	///Unordered map holding animations. Key is std::string as name of the animation without suffix .json (e.g. "player_running_south"),
+	///value is Animation.
+	std::unordered_map<std::string, Animation> m_animation_map;
 
 	///Create texture from pixel data.
 	///1.param: Name of the texture with correct suffix (e.g. player.png).
 	///--
-	///Returns pair(SEuint, SEbool) containing handle (SEint) to that texture to be used by OpenGL and shaders and boolean defining if texture has alpha channel. 
-	std::pair<SEuint, SEbool> _createTexture(const std::string& texture_name);
-	
+	///Returns struct _texture_data. 
+	_texture_data& _createTexture(const std::string& texture_name);
+
 
 };
 

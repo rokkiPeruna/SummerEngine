@@ -1,5 +1,5 @@
-#ifndef SE_RESOURCEMANAGER_H
-#define SE_RESOURCEMANAGER_H
+#ifndef SUMMER_ENGINE_RESOURCEMANAGER_H
+#define SUMMER_ENGINE_RESOURCEMANAGER_H
 
 //STL includes:
 #include <string>
@@ -32,11 +32,12 @@ public:
 	///Default constructor
 	///1.param: reference to Engine -class
 	ResourceManager(Engine& engine_ref);
-	///Destructor
-	~ResourceManager();
-	///Deleted copy constructor and assign operator
+	//
+	~ResourceManager() = default;
 	ResourceManager(const ResourceManager&) = delete;
 	void operator=(const ResourceManager&) = delete;
+	ResourceManager(ResourceManager&&) = delete;
+	void operator=(ResourceManager&&) = delete;
 
 	///Initialize resource manager with paths to resources. Also fetches all resource file names for gui to use.
 	///1.param: path to shader files
@@ -63,20 +64,22 @@ public:
 
 	ShaderResource* GetShaderProgram(std::string name);
 
-private:
-	///String naming the path to project's user files
-	std::string m_rel_path_to_user_files;
+	const std::vector<std::string>& GetTextureNames() const { return m_texture_names; }
+	const std::vector<std::string>& GetAnimationNames() const { return m_animation_names; }
 
-	///Const string naming the folder containing resources
-	const std::string m_res_fold_name;
+private:
+	std::string m_rel_path_to_user_files;					///String naming the path to project's user files	
+	const std::string m_res_fold_name;						///Const string naming the folder containing resources
 
 	std::vector<TextResource> m_textResourcesContainer;
-
 	std::vector<ImageResource> m_imageResContainer;
-	const std::string m_image_fold_name;
 
-	///Stores shader ID's as 'shader name' & 'shader resource' pair
-	std::map<std::string, ShaderResource> m_shaderProgramContainer;
+	std::vector<std::string> m_texture_names;				///Holds all texture names that can be found from (current project)->data/resources/textures
+	const std::string m_image_fold_name;					///Name of the folder holding images
+	std::vector<std::string> m_animation_names;				///Holds all animation names that can be found from (current project)->data/resources/animations
+	const std::string m_animation_fold_name;				///Name of the folder holding animations
+	
+	std::map<std::string, ShaderResource> m_shaderProgramContainer;		///Stores shader ID's as 'shader name' & 'shader resource' pair
 
 	
 	void _initializeShaders(const std::string sourcePath);

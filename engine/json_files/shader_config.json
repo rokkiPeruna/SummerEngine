@@ -23,8 +23,17 @@
 				"1" : "vertexColor",
                 "2" : "vertexTexture"
 			}
-			
-
+		},
+		"debug_rend" :
+		{
+			"vertex_shader"		: "debug_rend.vert",
+			"fragment_shader"	: "debug_rend.frag",
+		
+			"attributes" :
+			{
+				"0" : "vertexPosition",
+				"1" : "vertexColor"
+			}
 		}
 	}
 }

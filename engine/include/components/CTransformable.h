@@ -1,5 +1,5 @@
-#ifndef SE_CTRANSFORMABLE_H
-#define SE_CTRANSFORMABLE_H
+#ifndef SUMMER_ENGINE_CTRANSFORMABLE_H
+#define SUMMER_ENGINE_CTRANSFORMABLE_H
 
 
 //SE includes:
@@ -12,6 +12,7 @@ namespace se
 class CTransformable : public Component
 {
 public:
+
 	///Constructor with default parameters Type : Triangle, Size : 1, Origin : 0, Rotation : 0, Scale : 1
 	CTransformable(Vec3f _pos = Vec3f(0.0f), Vec3f orig = Vec3f(0.0f), SEfloat rot = 0.0f, Vec3f _scale = Vec3f(1.0f))
 		: Component(COMPONENT_TYPE::TRANSFORMABLE)

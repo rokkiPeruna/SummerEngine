@@ -1,17 +1,14 @@
 #include <core/Engine.h>
 
-
-#include <imgui/imgui.h>
-
 ///Core includes:
 #include <core/SE_exceptions.h>
-#include <core/gui_values.h>
-#include <core/imgui_impl_sdl_gl3.h>
 #include <core/Window.h>
-#include <core/Camera.h>
-#include <core/EditorRender.h>
-#include <core/GameRender.h>
 
+///Renderer includes:
+#include <renderers/Camera.h>
+#include <renderers/EditorRender.h>
+#include <renderers/GameRender.h>
+#include <renderers/DebugRender.h>
 
 ///System includes:
 #include <systems/ComponentSystem.h>
@@ -19,7 +16,7 @@
 #include <systems/TransformSystem.h>
 #include <systems/CollisionSystem.h>
 #include <systems/AnimationSystem.h>
-
+#include <systems/GameLogicSystem.h>
 
 ///Manager includes:
 #include <managers/IOManager.h>
@@ -29,34 +26,19 @@
 #include <managers/EntityManager.h>
 #include <managers/ComponentManager.h>
 #include <managers/ResourceManager.h>
-
+#include <managers/EventManager.h>
 
 ///Utility includes:
 #include <utility/JsonUtilFunctions.h>
 
 ///Engine graphical user interface includes
-//SE_TODO: Move these and their creation logic to separate class!
-//SE_TODO: //SE_TODO: Let macro decide if these get included
-#include <gui/EngineGui.h>
-#include <gui/GuiCompMgr.h>
-#include <gui/GuiEntityMgr.h>
-#include <gui/GuiSceneMgr.h>
-#include <gui/ManagerGui.h>
-//COMPONENT EDITORS
-#include <gui/CompEditorGui.h>
-#include <gui/CCollidableEditor.h>
-#include <gui/CDynamicEditor.h>
-#include <gui/CShapeEditor.h>
-#include <gui/CTextureEditor.h>
-#include <gui/CTransformableEditor.h>
+#include <gui/GraphicalUserInterface.h>
 
 namespace se
 {
 namespace priv
 {
 std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {};
-
-std::map<COMPONENT_TYPE, gui::CompEditorGui*> Engine::ComponentTypeToGuiEditor = {};
 
 Engine::Engine(const std::string& curr_proj_name)
 	: m_eng_conf_file_name("engine_config.json")
@@ -72,14 +54,9 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_window(std::make_unique<Window>())
 	, m_editorRender(std::make_unique<EditorRender>(*this))
 	, m_gameRender(std::make_unique<GameRender>(*this))
+	, m_debugRender(std::make_unique<DebugRender>(*this))
 	, m_current_renderer(nullptr)
 	, m_camera(std::make_unique<Camera>())
-
-	/*SYSTEMS*/
-	, m_transformSystem(std::make_unique<TransformSystem>(*this))
-	, m_movementSystem(std::make_unique<MovementSystem>(*this))
-	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
-	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
 
 	/*MANAGERS*/
 	, m_entityMgr(std::make_unique<EntityManager>(*this))
@@ -87,8 +64,17 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_resourceMgr(std::make_unique<ResourceManager>(*this))
 	, m_compMgr(std::make_unique<ComponentManager>(*this))
 	, m_ioMgr(std::make_unique<IOManager>(*this))
-	/*GUI ELEMENTS*/
-	, m_engine_gui_container{} //Elements here are allocated from heap so they MUST be released in destructor
+	, m_eventMgr(std::make_unique<EventManager>(*this))
+
+	/*SYSTEMS*/
+	, m_transformSystem(std::make_unique<TransformSystem>(*this))
+	, m_movementSystem(std::make_unique<MovementSystem>(*this))
+	, m_animationSystem(std::make_unique<AnimationSystem>(*this))
+	, m_collisionSystem(std::make_unique<CollisionSystem>(*this))
+	, m_gameLogicSystem(std::make_unique<GameLogicSystem>(*this))
+
+	/*GUI*/
+	, m_gui(std::make_unique<gui::GraphicalUserInterface>(*this))
 {
 
 }
@@ -119,17 +105,18 @@ void Engine::Initialize()
 	}
 
 	m_window->Initialize();
-
+	//
 	m_messenger->Initialize();
-
-
+	//
 	_initManagers();
+	//
+	_initRenderers();
+	//
 	_initSystems();
-
+	//
+	m_gui->Initialize();
+	//
 	glewInit();
-
-	_initGui(); //Must be after manager and system init
-
 }
 
 void Engine::Uninitialize()
@@ -151,10 +138,6 @@ void Engine::EngineUpdate()
 			_editorLoop(exitProgram);
 		}
 	}
-
-	//Cleanup imgui
-	ImGui_ImplSdlGL3_Shutdown();
-
 }
 
 bool Engine::_initJConfigObject()
@@ -183,8 +166,6 @@ void Engine::_findPathToUserFiles()
 	{
 		m_path_to_user_files = "../../projects/" + m_current_project_name + "/" + m_json_data_files_fold_name + "/";
 	}
-
-
 }
 
 void Engine::_initAndApplyEngineSettings()
@@ -213,15 +194,7 @@ void Engine::_initAndApplyEngineSettings()
 			windata.sdl_settings_mask += SDL_WINDOW_FULLSCREEN;
 		if (stngs.find("window_borderless") != stngs.end() && stngs.at("window_borderless") != 0)
 			windata.sdl_settings_mask += SDL_WINDOW_BORDERLESS;
-
-		//Set window size to global values for GUI
-		//_gui_width = windata.width;
-		//_gui_heigth = windata.heigth;
 	}
-
-	//Initialize imgui IO. This file will hold users preference window positions and sizes. SE_TODO: Create switch for editor mode and deploy mode builds
-	ImGui::GetIO().IniFilename = "engine_gui_conf.ini";
-
 }
 
 void Engine::_initManagers()
@@ -230,7 +203,7 @@ void Engine::_initManagers()
 	m_sceneMgr->Initialize(m_path_to_user_files, m_entityMgr.get(), m_compMgr.get());
 
 	//EntityManager
-	m_entityMgr->Initialize(m_path_to_user_files, m_compMgr.get());
+	m_entityMgr->Initialize(m_path_to_user_files);
 
 	//ComponentManager
 	m_compMgr->Initialize(m_path_to_user_files);
@@ -238,15 +211,25 @@ void Engine::_initManagers()
 	//Resource Manager | default path to shaders.. todo: change so that it can be read fomr the engine_config.json or delete that part from json
 	m_resourceMgr->Initialize("../../engine/shaders/", m_path_to_user_files);
 
+	m_eventMgr->Initialize();
+}
 
-	//	m_renderMgr.Initialize();
+void Engine::_initRenderers()
+{
+	//Set perspective matrix
+	Render::SetPerspMatrix(
+		45.0f,	//Field of view as degrees
+		static_cast<SEfloat>(m_window->windowInitData.width) / static_cast<SEfloat>(m_window->windowInitData.heigth), //Screen ratio
+		0.1f, //Near clipping plane
+		100.0f //Far clipping plane
+	);
+	m_editorRender->Initialize();
+	m_gameRender->Initialize();
+	m_debugRender->Initialize();
 }
 
 void Engine::_initSystems()
 {
-	m_editorRender->Initialize();
-	m_gameRender->Initialize();
-
 	m_transformSystem->Initialize();
 	m_systemContainer.emplace_back(m_transformSystem.get());
 
@@ -258,70 +241,37 @@ void Engine::_initSystems()
 
 	m_animationSystem->Initialize();
 	m_systemContainer.emplace_back(m_animationSystem.get());
-}
 
-void Engine::_initGui()
-{
-	//Init imgui using implementation provided in examples
-	ImGui_ImplSdlGL3_Init(m_window->GetWindowHandle());
-
-	//SE_TODO: Let macro decide if these get build
-	//Emplace manager classes' guis
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiSceneMgr>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiCompMgr>(*this));		//Must be before GuiEntityMgr!!
-	auto gui_compMgr = m_engine_gui_container.back().get();
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::GuiEntityMgr>(*this, static_cast<se::gui::GuiCompMgr*>(gui_compMgr)));	//Must be after GuiCompMgr!!
-	
-	//Emplace component editors
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CCollidableEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CDynamicEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CShapeEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CTextureEditor>(*this));
-	m_engine_gui_container.emplace_back(std::make_unique<se::gui::CTransformableEditor>(*this));
+	m_gameLogicSystem->Initialize();
+	m_systemContainer.emplace_back(m_gameLogicSystem.get());
 }
 
 void Engine::_updateMgrs()
 {
 	m_sceneMgr->Update();
 	m_entityMgr->Update();
+	m_compMgr->Update();
+
+	m_eventMgr->Update();
 }
 
 void Engine::_updateSystems(SEfloat deltaTime)
 {
 	m_movementSystem->Update(deltaTime);
 
+	m_animationSystem->Update(deltaTime);
+
 	m_transformSystem->Update(deltaTime);
 
 	m_collisionSystem->Update(deltaTime);
 
-	//Flush messages
-	m_movementSystem->Messages.clear();
-	m_transformSystem->Messages.clear();
-}
+	m_gameLogicSystem->Update(deltaTime);
 
-void Engine::_updateGUI()
-{
-	//Engine window in editor
-	if (se::gui::_gui_show_main_window)
-	{
-		ImGui::SetNextWindowPos(ImVec2(se::gui::_gui_width / 2, se::gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("Engine");
-		ImGui::Text("SE Engine, %s");
-		ImGui::Separator();
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
-	}
-
-	//SE_TODO: Create better gui structure
-	for (auto& gui : m_engine_gui_container)
-	{
-		gui->Update();
-	}
 }
 
 bool Engine::_gameLoop()
 {
+	m_gameRender->Initialize();
 	ImVec4 clear_color = ImColor(114, 144, 154);
 	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiSetCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(200.f, 100.f), ImGuiSetCond_Always);
@@ -332,6 +282,7 @@ bool Engine::_gameLoop()
 	SEfloat second = 0.0f;
 	SEint frame_counter = 0;
 	std::string fps = "";
+	m_gameLogicSystem->InitializeGameLogics();
 
 	while (gameloop)
 	{
@@ -371,11 +322,12 @@ bool Engine::_gameLoop()
 		// Rendering
 
 
-		glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
+		glViewport(0, 0, se::gui::window_data::width, se::gui::window_data::heigth);
 		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
+		//m_gameRender->Update(deltaTime);
 		m_editorRender->Update(deltaTime);
 		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
@@ -409,20 +361,27 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			//New frame for imgui drawing //SE_TODO: Switch by macro, bool, etc.
 
 			ImGui_ImplSdlGL3_NewFrame(m_window->GetWindowHandle());
+
 			_updateMgrs();
 
 			//Messenger should be last to update before render
 			m_messenger->PrintMessages(_messageLogType_console);
 
 			// Rendering
-			glViewport(0, 0, se::gui::_gui_width, se::gui::_gui_heigth);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			_updateGUI(); //SE_TODO: Switch by macro, bool, etc.
+
+			glViewport(se::gui::window_data::width / 4, se::gui::window_data::heigth / 4, se::gui::window_data::width / 2, se::gui::window_data::heigth / 2);
+			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			//glClear(GL_COLOR_BUFFER_BIT);
+
+			m_gui->Update(); //SE_TODO: Switch by macro, bool, etc.
 			m_camera->Update(deltaTime);
+			m_debugRender->Update(deltaTime);
 			m_editorRender->Update(deltaTime);
 			ImGui::Render();
+
 			SDL_GL_SwapWindow(m_window->GetWindowHandle());
 		}
 	}
@@ -472,7 +431,7 @@ SEbool Engine::_handleEditorEvents(SEbool& editorloop)
 				break;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				se::gui::_gui_show_main_window = (se::gui::_gui_show_main_window) ? false : true;
+				se::gui::elem_visibility::show_main_window = (se::gui::elem_visibility::show_main_window) ? false : true;
 				break;
 
 			default:
@@ -502,7 +461,7 @@ SEbool Engine::_handleGameLoopEvents(SEbool& gameloop)
 				m_inEditorLoop = true;
 			case KeyboardEvent::F12:
 				//Switch if main window in editor is visible
-				se::gui::_gui_show_main_window = (se::gui::_gui_show_main_window) ? false : true;
+				se::gui::elem_visibility::show_main_window = (se::gui::elem_visibility::show_main_window) ? false : true;
 				break;
 			default:
 				break;

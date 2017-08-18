@@ -15,6 +15,12 @@ MESSAGE TYPE: INFO
 Compiling defaultShader.vert
 ---
 MESSAGE TYPE: INFO
+Compiling debug_rend.frag
+---
+MESSAGE TYPE: INFO
+Compiling debug_rend.vert
+---
+MESSAGE TYPE: INFO
 Applying window settings..
 ---
 

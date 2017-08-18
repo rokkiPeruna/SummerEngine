@@ -1,5 +1,5 @@
-#ifndef SE_MOVEMENTSYSTEM_H
-#define SE_MOVEMENTSYSTEM_H
+#ifndef SUMMER_ENGINE_MOVEMENTSYSTEM_H
+#define SUMMER_ENGINE_MOVEMENTSYSTEM_H
 
 
 //SE includes:
@@ -25,11 +25,12 @@ public:
 	///Default constructor.
 	///1.param: reference to Engine -class
 	MovementSystem(Engine& engine_ref);
-	///Destructor
-	~MovementSystem();
-	///Deleted copy constructor and assign operator
+	//
+	~MovementSystem() = default;
 	MovementSystem(const MovementSystem&) = delete;
 	void operator=(const MovementSystem&) = delete;
+	MovementSystem(MovementSystem&&) = delete;
+	void operator=(MovementSystem&&) = delete;
 
 	///Initialize system
 	void Initialize() override final;
@@ -44,9 +45,9 @@ public:
 	void ClearComponentContainers() override final;
 
 	///OnEntityAdded checks if entity has components that need to be builded to this system
-	void OnEntityAdded(Entity& e, Dataformat_itr& entity_obj) override final;
+	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;
 
-	void OnEntityRemoved(Entity& e) override final;
+	void OnEntityRemoved(Entity& entity) override final;
 
 	///Creates component to entity and add it to container and json object
 	SEint CreateComponent(Entity& entity, COMPONENT_TYPE component_type, Dataformat_itr& entity_obj) override final;
@@ -56,8 +57,6 @@ public:
 
 	///Returns plain Component* used in editor function.
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container);
-
-	static std::vector<SysMessage> Messages;
 
 private:
 	///Component containers(vectors) and free index containers(queues)

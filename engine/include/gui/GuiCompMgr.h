@@ -1,5 +1,5 @@
-#ifndef SE_GUICOMPONENTMANAGER_H
-#define SE_GUICOMPONENTMANAGER_H
+#ifndef SUMMER_ENGINE_GUICOMPONENTMANAGER_H
+#define SUMMER_ENGINE_GUICOMPONENTMANAGER_H
 
 
 //SE includes:
@@ -18,12 +18,13 @@ class GuiCompMgr : public ManagerGui
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
-	GuiCompMgr(priv::Engine& engine_ref);
-	///Destructor
-	~GuiCompMgr();
-	///No copies allowed
+	GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority);
+	//
+	~GuiCompMgr() = default;
 	GuiCompMgr(const GuiCompMgr&) = delete;
 	void operator=(const GuiCompMgr&) = delete;
+	GuiCompMgr(GuiCompMgr&&) = delete;
+	void operator=(GuiCompMgr&&) = delete;
 
 	void Update() override final;
 

@@ -1,5 +1,5 @@
-#ifndef SE_CCOLLIDABLE_H
-#define SE_CCOLLIDABLE_H
+#ifndef SUMMER_ENGINE_CCOLLIDABLE_H
+#define SUMMER_ENGINE_CCOLLIDABLE_H
 
 //SE includes:
 #include <components/Component.h>

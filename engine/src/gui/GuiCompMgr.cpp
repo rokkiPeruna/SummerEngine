@@ -7,8 +7,8 @@ namespace se
 {
 namespace gui
 {
-GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref)
-	: ManagerGui(engine_ref)
+GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority)
+	: ManagerGui(engine_ref, update_priority)
 	, m_scene_mgr(nullptr)
 	, m_entity_mgr(nullptr)
 	, m_comp_mgr(nullptr)
@@ -23,17 +23,12 @@ GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref)
 	assert(m_scene_mgr && m_entity_mgr && m_comp_mgr);
 }
 
-GuiCompMgr::~GuiCompMgr()
-{
-
-}
-
 void GuiCompMgr::Update()
 {
 
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(gui::_gui_width / 2, gui::_gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("Component Editor", &gui::_gui_show_component_mgr_window);
+	ImGui::SetNextWindowPos(ImVec2(gui::window_data::width / 2.0f, gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Component Editor", &gui::elem_visibility::show_component_mgr_window);
 
 	auto curr_e = m_entity_mgr->GetCurrentEntity();
 	if (curr_e)
@@ -95,7 +90,7 @@ void GuiCompMgr::Update()
 		}
 		if (curr_e && m_curr_component && m_curr_comp_index != -1)
 		{
-			priv::Engine::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_component_obj);
+			GraphicalUserInterface::ComponentTypeToGuiEditor.at(m_curr_component->type)->ModifyComponent(m_curr_component->type, m_curr_comp_index, m_component_obj);
 		}
 	}
 

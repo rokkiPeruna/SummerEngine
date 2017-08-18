@@ -22,11 +22,6 @@ CollisionSystem::CollisionSystem(Engine& engine_ref)
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::COLLIDABLE, this);
 }
 
-CollisionSystem::~CollisionSystem()
-{
-
-}
-
 void CollisionSystem::Initialize()
 {
 
@@ -42,19 +37,11 @@ void CollisionSystem::Update(SEfloat)
 	if (m_cCollidables.empty())
 		return;
 
-	//Check TransformSystem's messages to determine if some CCollidable components need their model matric reinitialized
-	std::vector<SEint> recalc_indices = {};
-	auto* entities = &m_engine.GetEntityMgr().GetEntities();
-	for (auto m : TransformSystem::Messages)
-	{
-		if (m.msg_type == MESSAGETYPE::TRANSFORM_CHANGED)
-		{
-			auto& e = entities->at(m.data.first);
-			if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
-				m_cCollidables.at(entities->at(m.data.first).components.at(COMPONENT_TYPE::COLLIDABLE)).modelMat = TransformSystem::TransformableComponents.at(m.data.first).modelMatrix;
-		}
-	}
+	//Check messages!!-
 
+
+	auto* entities = &m_engine.GetEntityMgr().GetEntities();
+	
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{
 		//Check if ownerless
@@ -86,21 +73,21 @@ void CollisionSystem::ClearComponentContainers()
 	m_free_cCollidables_indices = {};
 }
 
-void CollisionSystem::OnEntityAdded(Entity& e, Dataformat_itr& entity_obj)
+void CollisionSystem::OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj)
 {
-	if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
+	if (entity.components.count(COMPONENT_TYPE::COLLIDABLE))
 	{
-		SEint index = _onEntityAdded_helper(e, COMPONENT_TYPE::COLLIDABLE, entity_obj, m_cCollidables, m_free_cCollidables_indices);
+		SEint index = _onEntityAdded_helper(entity, COMPONENT_TYPE::COLLIDABLE, entity_obj, m_cCollidables, m_free_cCollidables_indices);
 		///Initialize CCollidable's run-time-only value
-		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(e.id).modelMatrix;
+		m_cCollidables.at(index).modelMat = TransformSystem::TransformableComponents.at(entity.id).modelMatrix;
 	}
 }
 
-void CollisionSystem::OnEntityRemoved(Entity& e)
+void CollisionSystem::OnEntityRemoved(Entity& entity)
 {
-	if (e.components.count(COMPONENT_TYPE::COLLIDABLE))
+	if (entity.components.count(COMPONENT_TYPE::COLLIDABLE))
 	{
-		m_free_cCollidables_indices.push(e.components.at(COMPONENT_TYPE::COLLIDABLE));
+		m_free_cCollidables_indices.push(entity.components.at(COMPONENT_TYPE::COLLIDABLE));
 	}
 }
 

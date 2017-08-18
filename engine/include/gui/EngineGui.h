@@ -1,5 +1,5 @@
-#ifndef SE_ENGINEGUI_H
-#define SE_ENGINEGUI_H
+#ifndef SUMMER_ENGINE_ENGINEGUI_H
+#define SUMMER_ENGINE_ENGINEGUI_H
 
 //STL includes:
 #include <cassert>
@@ -11,11 +11,17 @@
 
 //SE includes:
 #include <core/Engine.h>
+#include <managers/EventManager.h>
+#include <events/EventHandler.h>
+#include <events/Events.h>
+#include <systems/TransformSystem.h> //For setting camera position when new entity is created or entity is choosed
+#include <gui/GraphicalUserInterface.h>
+#include <renderers/DebugRender.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
 #include <ids/ComponentTypeList.h>
 #include <ids/SystemAndManagerIDList.h>
-#include <core/gui_values.h>
+#include <gui/gui_values.h>
 #include <core/SE_exceptions.h>
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
@@ -31,20 +37,32 @@ class EngineGui
 public:
 	///Default constructor.
 	///1.param: reference to Engine -class
-	EngineGui(priv::Engine& engine_ref);
-	///Destructor
-	virtual ~EngineGui();
-	///No copies allowed
+	EngineGui(priv::Engine& engine_ref, SEuint update_priority);
+
+	virtual ~EngineGui() = default;
 	EngineGui(const EngineGui&) = delete;
 	void operator=(const EngineGui&) = delete;
+	EngineGui(EngineGui&&) = delete;
+	void operator=(EngineGui&&) = delete;
 
 	virtual void Update() = 0;
+
+	SEuint GetUpdatePriotity() const { return m_update_priority; }
 
 protected:
 	///Reference to engine
 	priv::Engine& m_engine;
 
-	// void createPopUpWindow()
+	///Event handler pointer. Remember to register if used!
+	EventHandler* m_event_handler;
+
+	///Update priority
+	SEuint m_update_priority;
+
+	//void createPopUpWindow()
+
+	//Center camera to given entity
+	void _setCamPosToEntity(SEuint entity_id, SEfloat z_pos = 10.0f);
 };
 
 }//namespace gui

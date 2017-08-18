@@ -1,5 +1,5 @@
-#ifndef SE_CLOCK_H
-#define SE_CLOCK_H
+#ifndef SUMMER_ENGINE_CLOCK_H
+#define SUMMER_ENGINE_CLOCK_H
 
 ///EMT-Engine includes:
 #include <utility/Time.h>

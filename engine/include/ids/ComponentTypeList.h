@@ -1,5 +1,5 @@
-#ifndef SE_COMPONENT_TYPE_LIST_SE
-#define SE_COMPONENT_TYPE_LIST_SE
+#ifndef SUMMER_ENGINE_COMPONENT_TYPE_LIST_SE
+#define SUMMER_ENGINE_COMPONENT_TYPE_LIST_SE
 
 
 //STL includes:
@@ -22,7 +22,8 @@ enum class COMPONENT_TYPE : SEint
 	COLLIDABLE,
 	TEXTURE,
 	SHAPE,
-	RENDERABLE
+	ANIMATION,
+	GAMELOGIC
 };
 
 namespace priv
@@ -35,7 +36,9 @@ static const std::unordered_map<COMPONENT_TYPE, std::string> CompTypeAsString =
 	{ COMPONENT_TYPE::DYNAMIC, "dynamic" },
 	{ COMPONENT_TYPE::COLLIDABLE, "collidable" },
 	{ COMPONENT_TYPE::TEXTURE, "texture" },
-	{ COMPONENT_TYPE::SHAPE, "shape" }
+	{ COMPONENT_TYPE::SHAPE, "shape" },
+	{ COMPONENT_TYPE::ANIMATION, "animation" },
+	{ COMPONENT_TYPE::GAMELOGIC, "gamelogic" }
 };
 }//namespace priv
 }//namespace se

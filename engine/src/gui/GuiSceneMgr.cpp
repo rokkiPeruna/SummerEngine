@@ -5,8 +5,8 @@ namespace se
 {
 namespace gui
 {
-GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref)
-	: ManagerGui(engine_ref)
+GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority)
+	: ManagerGui(engine_ref, update_priority)
 	, m_sceneMgr(nullptr)
 	, m_gui_sceneAdded(false)
 	, m_gui_addSceneNameConflict(false)
@@ -16,20 +16,15 @@ GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref)
 	m_sceneMgr = &m_engine.GetSceneMgr();
 }
 
-GuiSceneMgr::~GuiSceneMgr()
-{
-
-}
-
 void GuiSceneMgr::Update()
 {
 	assert(m_sceneMgr);
 
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	ImGui::SetNextWindowPos(ImVec2(_gui_width / 2, _gui_heigth / 2), ImGuiSetCond_FirstUseEver);
-	ImGui::Begin("SceneManager", &_gui_show_scene_mgr_window);
+	ImGui::SetNextWindowPos(ImVec2(window_data::width / 2.0f, window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("SceneManager", &elem_visibility::show_scene_mgr_window);
 
-	if (ImGui::CollapsingHeader("Create scene"))
+	if (ImGui::TreeNode("Create scene"))
 	{
 		ImGui::Text("Scene name:");
 		static SEchar scenename[64];
@@ -63,8 +58,9 @@ void GuiSceneMgr::Update()
 				}
 			}
 		}
+		ImGui::TreePop();
 	}
-	if (ImGui::CollapsingHeader("Load scene"))
+	if (ImGui::TreeNode("Load scene"))
 	{
 		ImGui::Separator();
 		if (ImGui::TreeNode("Scene list"))
@@ -77,10 +73,12 @@ void GuiSceneMgr::Update()
 				{
 					if (!m_sceneMgr->LoadScene(sn))
 						m_gui_sceneAlreadyLoaded = true;
+					m_engine.GetCamera()->SetPosition(Vec3f(m_sceneMgr->GetCurrentScene()->GetWidth() / 2.0f, m_sceneMgr->GetCurrentScene()->GetHeigth() / 2.0f, 50.0f));
 				}
 			}
 			ImGui::TreePop();
 		}
+		ImGui::TreePop();
 	}
 	if (ImGui::Button("SAVE CURRENT PROGRESS"))
 	{

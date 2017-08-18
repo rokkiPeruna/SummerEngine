@@ -1,5 +1,5 @@
-#ifndef SE_COMPONENT_EDITOR_GUI_H
-#define SE_COMPONENT_EDITOR_GUI_H
+#ifndef SUMMER_ENGINE_COMPONENT_EDITOR_GUI_H
+#define SUMMER_ENGINE_COMPONENT_EDITOR_GUI_H
 
 //SE includes:
 #include <gui/EngineGui.h>
