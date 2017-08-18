@@ -73,8 +73,6 @@ public:
 	const std::vector<std::string>& GetSceneNames();
 
 private:
-	EntityManager* m_entity_mgr;						///Pointer to EntityManager
-	ComponentManager* m_comp_mgr;						///Pointer to ComponentManager
 	nlohmann::json m_sceneJsonObject;					///Json object for holding current scene. This gets send to EntityManager and ComponentManager inside current scene
 	nlohmann::json m_sceneNamesJsonObject;				///Json object for holding scene names object
 	std::string m_rel_path_to_json_scenes;				///Relative file path to folder containing scenes as json files

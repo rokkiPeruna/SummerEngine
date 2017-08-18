@@ -8,8 +8,6 @@ namespace priv
 {
 SceneManager::SceneManager(Engine& engine_ref)
 	: Manager(engine_ref)
-	, m_entity_mgr(nullptr)
-	, m_comp_mgr(nullptr)
 	, m_sceneJsonObject()
 	, m_sceneNamesJsonObject()
 	, m_rel_path_to_json_scenes("")
@@ -32,14 +30,6 @@ void SceneManager::Initialize(const std::string& filepathToUserFiles, EntityMana
 
 	///Relative path to scenes.json file
 	m_rel_path_to_json_scenes = filepathToUserFiles + ffd.scene_folder_name;
-
-	///EntityManager pointer
-	m_entity_mgr = entityMgr_ptr;
-
-	///ComponentManager pointer
-	m_comp_mgr = compMgr_ptr;
-
-	assert(m_entity_mgr && m_comp_mgr);
 
 	///Load scene names
 	_loadSceneNames();
@@ -169,8 +159,6 @@ SEbool SceneManager::LoadScene(std::string scenename, SEbool reinitialization)
 	}
 
 	m_event_handler->SendEvent(SE_Event_SceneChanged(&m_currentScene));
-
-	//m_entity_mgr->InitWithNewScene(&m_currentScene);
 	return true;
 }
 
@@ -179,9 +167,6 @@ void SceneManager::ReinitScene()
 	if (m_currentScene.GetType() != SCENE_TYPE::FAULTY)
 	{
 		LoadScene(m_currentScene.GetName(), true);
-		m_entity_mgr->SetCurrentEntity(nullptr);
-		m_comp_mgr->SetCurrentEntity(nullptr);
-		m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
 	}
 }
 

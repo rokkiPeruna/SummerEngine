@@ -12,9 +12,6 @@ namespace priv
 ComponentManager::ComponentManager(Engine& engine_ref)
 	: Manager(engine_ref)
 	, m_rel_path_to_json_scenes("")
-	, m_curr_scene_json_obj("")
-	, m_curr_entity_json_obj("")
-	, m_curr_component_json_obj_name("")
 	, ffd()
 	, sf_struct()
 	, c_obj_s()
@@ -31,6 +28,8 @@ void ComponentManager::Initialize(std::string relativeFilePathToUserFiles)
 	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
 	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
+	m_event_handler->RegisterEvent(SE_Event_EntityCreatedOnEditor(-1));
+	m_event_handler->RegisterEvent(SE_Event_EntityDeletedOnEditor(nullptr, -1));
 
 	m_rel_path_to_json_scenes = relativeFilePathToUserFiles + ffd.scene_folder_name;
 }
@@ -59,6 +58,15 @@ void ComponentManager::Update()
 			SetCurrentEntity(e);
 			AddNewComponentToEntity(*e, COMPONENT_TYPE::TRANSFORMABLE);
 			SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e->id);
+			break;
+		}
+		case EventType::EntityDeletedOnEditor:
+		{
+			Entity* e = static_cast<Entity*>(se_event.data.void_ptr);
+			if (e == nullptr)
+			{
+				SetCurrentEntity(nullptr);
+			}		
 		}
 
 		default:
@@ -69,6 +77,10 @@ void ComponentManager::Update()
 
 void ComponentManager::InitWithNewScene(Scene* scene)
 {
+	m_curr_entity = nullptr;
+	m_curr_component = nullptr;
+	m_curr_comp_index = -1;
+
 	assert(scene);
 	m_curr_scene = scene;
 	auto scene_obj = m_curr_scene->GetData();
@@ -227,10 +239,6 @@ SEint ComponentManager::GetCurrentComponentIndex()
 void ComponentManager::SetCurrentEntity(Entity* e)
 {
 	m_curr_entity = e;
-	if (m_curr_entity)
-		SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, e->id);
-	else
-		SetCurrentComponent(COMPONENT_TYPE::FAULTY_TYPE, -1);
 }
 
 

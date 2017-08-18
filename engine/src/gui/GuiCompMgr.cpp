@@ -21,14 +21,37 @@ GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority)
 	m_entity_mgr = &m_engine.GetEntityMgr();
 	m_comp_mgr = &m_engine.GetCompMgr();
 	assert(m_scene_mgr && m_entity_mgr && m_comp_mgr);
+
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
 }
 
 void GuiCompMgr::Update()
 {
-
 	ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
 	ImGui::SetNextWindowPos(ImVec2(gui::window_data::width / 2.0f, gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Component Editor", &gui::elem_visibility::show_component_mgr_window);
+	
+	
+	//Check events!
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::SceneChanged:
+		{
+			m_curr_component = nullptr;
+			m_curr_comp_index = -1;
+			ImGui::End();
+			return;
+		}
+		default:
+			break;
+		}
+	}
+
+
 
 	auto curr_e = m_entity_mgr->GetCurrentEntity();
 	if (curr_e)
@@ -126,7 +149,6 @@ void GuiCompMgr::_initWithNewComp()
 		MessageWarning(gui_Manager) << "Failed to find " + priv::CompTypeAsString.at(m_curr_component->type) + " json object in GuiCompMgr::_initWithNewComp()";
 		return;
 	}
-	//m_component_obj = &component_obj;
 	m_curr_comp_index = m_comp_mgr->GetCurrentComponentIndex();
 }
 

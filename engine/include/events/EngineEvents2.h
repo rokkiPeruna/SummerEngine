@@ -26,7 +26,8 @@ struct SE_Event_SceneChanged : public SE_Event
 
 ///Event sent when entity is created on editor.
 ///data is entity's id as SEint.
-///additional_data is 0
+///additional_data is entity's id as SEint.
+class Entity;
 namespace EventType { constexpr se_event_type EntityCreatedOnEditor = { event_bits::group_EngineEvents2 | event_bits::type_bit_2 }; }
 struct SE_Event_EntityCreatedOnEditor : public SE_Event
 {
@@ -39,15 +40,29 @@ struct SE_Event_EntityCreatedOnEditor : public SE_Event
 };
 
 ///Event sent when entity is deleted on editor.
-///data is entity's id as SEint.
+///data is void_ptr to current entity, nullptr if current entity was the one deleted
 ///additional_data is 0
 namespace EventType { constexpr se_event_type EntityDeletedOnEditor = { event_bits::group_EngineEvents2 | event_bits::type_bit_3 }; }
 struct SE_Event_EntityDeletedOnEditor : public SE_Event
 {
-	explicit SE_Event_EntityDeletedOnEditor(SEint entity_id)
+	explicit SE_Event_EntityDeletedOnEditor(Entity* current_entity, SEint entity_id)
 	{
 		type = EventType::EntityDeletedOnEditor;
-		data.seint = entity_id;
+		data.void_ptr = current_entity;		//Remember to cast to Entity*
+		additional_data.seint = entity_id;
+	}
+};
+
+///Event sent when basic entity with just transform component is needed. Mostly called from editors
+///data is char_arr as name of the entity
+///additional_data is 0
+namespace EventType { constexpr se_event_type CreateBasicEntity = { event_bits::group_EngineEvents2 | event_bits::type_bit_4 }; }
+struct SE_Event_CreateBasicEntity : public SE_Event
+{
+	explicit SE_Event_CreateBasicEntity(char entity_name[32])
+	{
+		type = EventType::CreateBasicEntity;
+		memcpy(data.char_arr, entity_name, sizeof(data.char_arr));
 		//No additional data needed
 	}
 };

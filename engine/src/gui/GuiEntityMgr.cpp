@@ -17,6 +17,10 @@ GuiEntityMgr::GuiEntityMgr(priv::Engine& engine_ref, GuiCompMgr* gui_comp_mgr_pt
 	m_entity_mgr = &m_engine.GetEntityMgr();
 	m_comp_mgr = &m_engine.GetCompMgr();
 	assert(m_entity_mgr && m_comp_mgr && m_gui_comp_mgr);
+
+	///Event handler
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
 }
 
 void GuiEntityMgr::Update()
@@ -42,22 +46,24 @@ void GuiEntityMgr::Update()
 	if (ImGui::CollapsingHeader("Create entity"))
 	{
 		ImGui::Separator();
-		static SEchar entityname[64];
-		ImGui::InputText("Name", entityname, 64, ImGuiInputTextFlags_CharsNoBlank);
+		static SEchar entityname[32];
+		ImGui::InputText("Name", entityname, 32, ImGuiInputTextFlags_CharsNoBlank);
 		if (std::strlen(entityname) != 0)
 		{
 			if (ImGui::Button("Create!"))
 			{
-				m_entity_mgr->CreateEntityOnEditor(entityname);
+				m_event_handler->SendEvent(SE_Event_CreateBasicEntity(entityname));
 
-				SEint entityid = m_entity_mgr->GetEntityNameToID().at(entityname);
-				m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
-				m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
-				m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, entityid);
-				//Inform GuiCompMgr that json object pointing to current component has been invalidated		
+				//m_entity_mgr->CreateEntityOnEditor(entityname);
+				//
+				//SEint entityid = m_entity_mgr->GetEntityNameToID().at(entityname);
+				//m_entity_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
+				//m_comp_mgr->SetCurrentEntity(&m_entity_mgr->GetEntities().at(entityid));
+				//m_comp_mgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, entityid);
+				////Inform GuiCompMgr that json object pointing to current component has been invalidated		
 				m_gui_comp_mgr->InvalidateComponentObj();
 
-				_setCamPosToEntity(entityid);
+				//_setCamPosToEntity(entityid);
 
 				memset(&entityname[0], 0, sizeof(entityname));
 			}

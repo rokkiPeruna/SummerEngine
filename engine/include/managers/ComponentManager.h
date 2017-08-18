@@ -65,9 +65,6 @@ public:
 
 private:
 	std::string m_rel_path_to_json_scenes;				///Relative path to scenes folder
-	std::string m_curr_scene_json_obj;					///String naming the json object pointing to current scene
-	std::string m_curr_entity_json_obj;					///String naming the json object pointing to current entity
-	std::string m_curr_component_json_obj_name;			///String naming the json object pointing to current component
 
 	file_and_folder_data ffd;							///See file_folder_json_data.h
 	scene_file_structure sf_struct;						///See file_folder_json_data.h

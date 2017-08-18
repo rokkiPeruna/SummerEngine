@@ -34,16 +34,18 @@ EntityManager::EntityManager(Engine& engine_ref)
 
 void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 {
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
-	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
-
 	m_rel_path_to_user_files = relativePathToEntitiesJson;
 	m_rel_path_to_json_scenes = relativePathToEntitiesJson + ffd.scene_folder_name;
 	m_entities.clear();
 	m_entities_names_map.clear();
 	while (!m_free_entity_ids.empty())
 		m_free_entity_ids.pop();
+
+	///Register event manager and events
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
+	m_event_handler->RegisterEvent(SE_Event_CreateBasicEntity(""));
 }
 
 void EntityManager::Uninitialize()
@@ -64,6 +66,11 @@ void EntityManager::Update()
 			InitWithNewScene(static_cast<Scene*>(se_event.data.void_ptr));
 			break;
 		}
+		case EventType::CreateBasicEntity:
+		{
+			CreateEntityOnEditor(se_event.data.char_arr);
+			break;
+		}
 
 		default:
 			break;
@@ -76,6 +83,8 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_entities.clear();
 	m_entities_names_map.clear();
 
+	m_currentEntity = nullptr;
+
 	m_currentScene = scene;
 
 	SEint largest_id_found = _loadSceneEntities();
@@ -86,8 +95,6 @@ void EntityManager::InitWithNewScene(Scene* scene)
 		m_free_entity_ids.pop();
 	m_curr_free_entity_id = _findFreeEntityID();
 
-	//Inform ComponentManager of scene change
-	//m_compMgr->InitWithNewScene(m_entities, scene);
 }
 
 
@@ -106,13 +113,9 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 
 	m_currentEntity = &m_entities.at(m_curr_free_entity_id);
 
-	m_event_handler->SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
-
-	m_compMgr->SetCurrentEntity(m_currentEntity);
-	m_compMgr->AddNewComponentToEntity(*m_currentEntity, COMPONENT_TYPE::TRANSFORMABLE);
-	m_compMgr->SetCurrentComponent(COMPONENT_TYPE::TRANSFORMABLE, m_currentEntity->id);
-
 	m_curr_free_entity_id = _findFreeEntityID();
+
+	m_event_handler->SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
 }
 
 void EntityManager::CreateEntityOnEditor(Entity&, std::string)
@@ -259,9 +262,9 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 	if (m_currentEntity == &m_entities.at(entity_id))
 	{
 		m_currentEntity = nullptr;
-		m_compMgr->SetCurrentEntity(nullptr);
 	}
 
+	m_event_handler->SendEvent(SE_Event_EntityDeletedOnEditor(m_currentEntity, entity_id));
 	m_entities.erase(entity_id);
 	m_entities_names_map.erase(entity_name);
 }
