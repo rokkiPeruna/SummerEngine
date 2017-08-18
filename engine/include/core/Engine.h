@@ -86,7 +86,7 @@ public:
 	void EngineUpdate();
 
 	///System getters
-	MovementSystem&  GetMovementSystem() { return *m_movementSystem; }
+	MovementSystem&  GetMovementSystem () { return *m_movementSystem;  }
 	CollisionSystem& GetCollisionSystem() { return *m_collisionSystem; }
 	TransformSystem& GetTransformSystem() { return *m_transformSystem; }
 	AnimationSystem& GetAnimationSystem() { return *m_animationSystem; }
