@@ -16,6 +16,7 @@ SceneManager::SceneManager(Engine& engine_ref)
 	, ffd()
 	, sf_struct()
 	, snaf_struct()
+	, tileo_struct()
 {
 
 }
@@ -120,7 +121,7 @@ SEbool SceneManager::AddScene(std::string scenename, SCENE_TYPE type, SEint widt
 	}
 	names_obj.value().push_back(scenename);
 
-	util::RewriteFileWithJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + snaf_struct.scenenamelist_obj_name, SceneMgr_id);
+	util::RewriteFileWithJson(m_sceneNamesJsonObject, m_rel_path_to_json_scenes + snaf_struct.scenenamelist_obj_name + ffd.scene_file_suffix, SceneMgr_id);
 
 	//Add name to runtime container
 	m_sceneNames.emplace_back(scenename);
@@ -278,6 +279,12 @@ void SceneManager::_createStructToNewScene(std::ofstream& file, std::string scen
 		"\t\"heigth\":" + h + "\n" <<
 		"},\n"
 		"\"" + sf_struct.prim_obj_name + "\":{\n" <<
+		"  },\n" <<
+		"\"" + sf_struct.tiles_obj_name + "\":{\n" <<
+		"\t\"" + tileo_struct.sheet_obj_name + "\" : null, \n" <<
+		"\t\"" + tileo_struct.tile_width_obj_name + "\" : 0, \n" <<
+		"\t\"" + tileo_struct.tile_heigth_obj_name + "\" : 0, \n" <<
+		"\t\"" + tileo_struct.tile_array_obj_name + "\" : null \n" <<			
 		"  }\n" <<
 		"}" << std::endl;
 }

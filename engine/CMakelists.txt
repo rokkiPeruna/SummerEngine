@@ -92,6 +92,8 @@ set(CORE_FILES
 	include/core/SE_exceptions.h
 	include/core/file_folder_json_data.h
 	include/core/GameLogic.h
+	include/core/MapEditor.h
+	src/core/MapEditor.cpp	
     )
 source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------
@@ -188,8 +190,8 @@ set(ENGINE_GUI_COMPONENT_MODIFIERS
 	
 	)
 set(ENGINE_GUI_MAP_EDITOR
-	include/gui/MapEditor.h
-	src/gui/MapEditor.cpp
+	include/gui/GuiMapEditor.h
+	src/gui/GuiMapEditor.cpp
 	)
 
 set(ENGINE_GUI_FILES

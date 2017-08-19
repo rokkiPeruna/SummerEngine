@@ -19,6 +19,7 @@ struct file_and_folder_data
 struct scene_file_structure
 {
 	const std::string prim_obj_name{ "entities" };
+	const std::string tiles_obj_name{ "tiles" };
 	const std::string info_obj_name{ "scene_info" };
 
 	/*
@@ -36,12 +37,43 @@ struct scene_file_structure
 				}
 			}
 		},
+		"tiles": {
+			"sheet_name" : "some_sheet.png",
+			"tiles" : {
+				
+			}
+		},
 		"scene_info": {
 		"heigth": 24,
 		"width": 24
 		"name": "level_1",
 		"type": 2,
 		}
+	}
+	*/
+};
+
+struct tiles_obj_structure
+{
+	const std::string sheet_obj_name{ "sheet_name" };
+	const std::string tile_width_obj_name{ "tile_width" };
+	const std::string tile_heigth_obj_name{ "tile_heigth" };
+	const std::string tile_array_obj_name{ "tilearr" };
+
+	/*
+	for example, tiles obj should look something like this:
+	"tiles" : {
+	"sheet_name" : "some_sheet",
+	"tile_width" : 32,
+	"tile_heigth : 32,
+	"tilearr" : [
+		5,
+		6,
+		0,		//Zero means empty tile
+		9,
+		11,
+		...
+		]
 	}
 	*/
 };

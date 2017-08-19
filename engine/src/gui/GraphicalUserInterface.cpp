@@ -20,7 +20,7 @@
 #include <gui/CTransformableEditor.h>
 #include <gui/CGameLogicEditor.h>
 //
-#include <gui/MapEditor.h>
+#include <gui/GuiMapEditor.h>
 
 namespace se
 {
@@ -75,7 +75,7 @@ void GraphicalUserInterface::Initialize()
 		return a->GetUpdatePriotity() < b->GetUpdatePriotity();
 	});
 
-	m_map_editor = std::make_unique<gui::MapEditor>(m_engine);
+	m_map_editor = std::make_unique<GuiMapEditor>(m_engine);
 }
 
 void GraphicalUserInterface::Update()

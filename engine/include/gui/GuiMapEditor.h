@@ -1,5 +1,5 @@
-#ifndef SUMMER_ENGINE_GUI_MAP_EDITOR_H
-#define SUMMER_ENGINE_GUI_MAP_EDITOR_H
+#ifndef SUMMER_ENGINE_MAP_EDITOR_H
+#define SUMMER_ENGINE_MAP_EDITOR_H
 
 //STL includes:
 #include <cassert>
@@ -11,7 +11,6 @@
 
 //SE includes:
 #include <core/Engine.h>
-#include <core/MapEditor.h>
 #include <managers/EventManager.h>
 #include <events/EventHandler.h>
 #include <events/Events.h>
@@ -53,7 +52,6 @@ private:
 	const std::string m_rel_filep_tilesheets;
 
 	std::vector<std::string> m_tilesheet_names;
-
 
 
 };

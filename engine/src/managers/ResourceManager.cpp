@@ -116,16 +116,19 @@ TextResource* ResourceManager::LoadTextResource(std::string filepath, std::strin
 
 }
 
-ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_vertically)
+ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_vertically, SEbool isTileSheet)
 {
 	if (imageResources.count(name))
 		return imageResources.at(name);
 
 	SEint w, h, bpp = 0;
-	std::string filepath(m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name + name);
-
+	std::string filepath{};
+	if (!isTileSheet)
+		filepath = m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name + name;
+	else
+		filepath = m_rel_path_to_user_files + m_res_fold_name + m_tilesheet_fold_name + name;
+	
 	stbi_set_flip_vertically_on_load(flip_vertically);
-
 	SEuchar* tmp = stbi_load(
 		filepath.c_str(),
 		&w,
@@ -144,13 +147,13 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 	return &m_imageResContainer.back();
 }
 
-TextureResource* ResourceManager::LoadTextureResource(std::string name, SEbool flip_vertically)
+TextureResource* ResourceManager::LoadTextureResource(std::string name, SEbool flip_vertically, SEbool isTileSheet)
 {
 	if (textureResources.count(name))
 		return textureResources.at(name);
 
 	//Create pixeldata
-	auto image = LoadImageResource(name, flip_vertically);
+	auto image = LoadImageResource(name, flip_vertically, isTileSheet);
 	assert(image);
 
 	SEint w{ image->GetData().width };
@@ -190,7 +193,7 @@ TextureResource* ResourceManager::LoadTextureResource(std::string name, SEbool f
 	);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	data.alpha = alpha;
-	
+
 	m_textureResContainer.emplace_back(TextureResource(name, data));
 
 	textureResources.emplace(name, &m_textureResContainer.back());
@@ -215,9 +218,11 @@ TileSheetResource* ResourceManager::LoadTileSheetResource(std::string name, SEbo
 		&bpp, //This will tell if we have GL_RGB or GL_RGBA
 		0     //This is compression level, keep in 0
 	);
+	auto t = LoadTextureResource(name, flip_vertically, true);
+
 	m_tilesheetResContainer.emplace_back(TileSheetResource(name));
 
-	m_tilesheetResContainer.back().SetData(w, h, 0, 0, bpp, tmp);
+	m_tilesheetResContainer.back().SetData(t->data.handle, w, h, 0, 0, bpp, tmp);
 
 	stbi_image_free(tmp);
 

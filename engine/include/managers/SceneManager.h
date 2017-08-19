@@ -82,6 +82,7 @@ private:
 	file_and_folder_data ffd;							///See file_folder_json_data.h
 	scene_file_structure sf_struct;						///See file_folder_json_data.h
 	scene_names_file_structure snaf_struct;				///See file_folder_json_data.h
+	tiles_obj_structure tileo_struct;					///See file_folder_json_data.h
 
 	///Loads scene names from scenes.json so that user can see
 	/// and pick from names in SceneManager GUI. Also load scene ids to avoid id conflicts

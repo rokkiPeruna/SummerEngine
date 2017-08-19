@@ -98,6 +98,7 @@ public:
 /*---------------TILESHEET--------------*/
 struct SETileSheetdata
 {
+	SEuint handle = SEuint_max;
 	SEint width = 0;
 	SEint heigth = 0;
 	SEint tile_width = 0;
@@ -105,8 +106,8 @@ struct SETileSheetdata
 	SEint bpp = 0;
 	SEint size = 0;
 	std::vector<unsigned char> pixelData = {};
-	SETileSheetdata(SEint _width = 0, SEint _heigth = 0, SEint tilewidth = 0, SEint tileheigth = 0, SEint _bpp = 0, std::vector<unsigned char> pdata = {})
-		: width(_width), heigth(_heigth), tile_width(tilewidth), tile_heigth(tileheigth), bpp(_bpp), size(0), pixelData(pdata)
+	SETileSheetdata(SEuint _handle = SEuint_max, SEint _width = 0, SEint _heigth = 0, SEint tilewidth = 0, SEint tileheigth = 0, SEint _bpp = 0, std::vector<unsigned char> pdata = {})
+		: handle(_handle), width(_width), heigth(_heigth), tile_width(tilewidth), tile_heigth(tileheigth), bpp(_bpp), size(0), pixelData(pdata)
 	{}
 
 };
@@ -116,8 +117,9 @@ public:
 	TileSheetResource(std::string name) :Resource(name) {}
 
 	SETileSheetdata& GetData() { return m_data; }
-	void SetData(SEint _width, SEint _heigth, SEint tilewidth, SEint tileheigth, SEint _bpp, SEuchar* data)
+	void SetData(SEuint _handle, SEint _width, SEint _heigth, SEint tilewidth, SEint tileheigth, SEint _bpp, SEuchar* data)
 	{
+		m_data.handle = _handle;
 		m_data.width = _width;
 		m_data.heigth = _heigth;
 		m_data.tile_width = tilewidth;

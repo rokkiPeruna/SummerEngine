@@ -24,7 +24,7 @@ namespace gui
 ///Forward declarations
 class EngineGui;
 class CompEditorGui;
-class MapEditor;
+class GuiMapEditor;
 
 ///Brief: GraphicalUserInterface -class handles gui initialization, updates, responses, etc.
 ///and owns all gui classes.
@@ -52,7 +52,7 @@ private:
 
 	std::vector<std::unique_ptr<EngineGui>> m_gui_container;
 
-	std::unique_ptr<MapEditor> m_map_editor;
+	std::unique_ptr<GuiMapEditor> m_map_editor;
 
 };
 

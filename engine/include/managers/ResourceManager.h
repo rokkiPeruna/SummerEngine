@@ -54,10 +54,10 @@ public:
 	TextResource* LoadTextResource(std::string filepath, std::string name);
 	
 	///Load image resource. Returns const pointer to ImageResource object
-	ImageResource* LoadImageResource(std::string name, SEbool flip_vertically = false);
+	ImageResource* LoadImageResource(std::string name, SEbool flip_vertically = false, SEbool isTileSheet = false);
 
 	///Load texture resource. Returns const pointer to TextureResource object
-	TextureResource* LoadTextureResource(std::string name, SEbool flip_vertically = false);
+	TextureResource* LoadTextureResource(std::string name, SEbool flip_vertically = false, SEbool isTileSheet = false);
 
 	///Load tile sheet resource. Returns const pointer to TileSheetResource object
 	TileSheetResource* LoadTileSheetResource(std::string name, SEbool flip_vertically = false);
