@@ -82,7 +82,7 @@ void EntityManager::Update()
 		case EventType::SetEntityAsCurrent:
 		{
 			m_currentEntity = static_cast<Entity*>(se_event.data.void_ptr);
-			if(m_currentEntity)
+			if (m_currentEntity)
 			{
 				auto new_cam_pos = TransformSystem::TransformableComponents.at(m_currentEntity->id).position;
 				new_cam_pos.z = 10.0f;
@@ -110,6 +110,9 @@ void EntityManager::InitWithNewScene(Scene* scene)
 	m_currentScene = scene;
 	SEint largest_id_found = _loadSceneEntities();
 	_res_space_CTransfComponents(largest_id_found);
+
+	std::cout << "largest_id " << largest_id_found << "TRsize " << TransformSystem::TransformableComponents.size() << std::endl;
+
 	//Find free ids
 	while (!m_free_entity_ids.empty())
 		m_free_entity_ids.pop();
@@ -336,11 +339,8 @@ SEint EntityManager::_loadSceneEntities()
 void EntityManager::_res_space_CTransfComponents(SEint largest_id)
 {
 	SEint safetyFactor = 2;
-	if (largest_id)
-		TransformSystem::TransformableComponents.resize(largest_id * safetyFactor);
-	else
-		TransformSystem::TransformableComponents.resize(100 * safetyFactor);
-
+	SEint rsz_val = (largest_id > 10) ? largest_id : 50;
+	TransformSystem::TransformableComponents.resize(rsz_val * safetyFactor);
 }
 
 SEint EntityManager::_findFreeEntityID()
