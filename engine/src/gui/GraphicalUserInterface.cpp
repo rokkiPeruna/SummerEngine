@@ -19,6 +19,9 @@
 #include <gui/CAnimationEditor.h>
 #include <gui/CTransformableEditor.h>
 #include <gui/CGameLogicEditor.h>
+//
+#include <gui/MapEditor.h>
+
 namespace se
 {
 namespace gui
@@ -27,6 +30,8 @@ std::map<COMPONENT_TYPE, gui::CompEditorGui*> GraphicalUserInterface::ComponentT
 
 GraphicalUserInterface::GraphicalUserInterface(priv::Engine& engine_ref)
 	: m_engine(engine_ref)
+	, m_gui_container{}
+	, m_map_editor{nullptr}
 {
 
 }
@@ -69,6 +74,8 @@ void GraphicalUserInterface::Initialize()
 	std::sort(m_gui_container.begin(), m_gui_container.end(), [&](const std::unique_ptr<EngineGui>& a, const std::unique_ptr<EngineGui>& b) {
 		return a->GetUpdatePriotity() < b->GetUpdatePriotity();
 	});
+
+	m_map_editor = std::make_unique<gui::MapEditor>(m_engine);
 }
 
 void GraphicalUserInterface::Update()
@@ -79,35 +86,43 @@ void GraphicalUserInterface::Update()
 	//ImGui::Begin("Engine");
 	//ImGui::Text("SE Engine, %s");
 
-	if (ImGui::BeginMainMenuBar())
+	if (elem_visibility::show_map_editor)
+		m_map_editor->Update();
+
+	else
 	{
-		if (ImGui::BeginMenu("Debug settings"))
+		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::BeginMenu("Draw settings"))
+			if (ImGui::BeginMenu("Debug settings"))
 			{
-				ImGui::Checkbox("Draw AABBs' lines", &gui::debug_draw_values::drawAABBs_lines);
-				ImGui::Checkbox("Draw AABBs' points", &gui::debug_draw_values::drawAABBs_points);
-				ImGui::Checkbox("Draw coll polys' lines", &gui::debug_draw_values::drawCollPolys_lines);
-				ImGui::Checkbox("Draw coll polys' points", &gui::debug_draw_values::drawCollPolys_points);
-				ImGui::Checkbox("Draw shapes' outline", &gui::debug_draw_values::drawShapes_lines);
-				ImGui::Checkbox("Draw shapes' vertices", &gui::debug_draw_values::drawShapes_points);
-				ImGui::Checkbox("Draw positions", &gui::debug_draw_values::drawPositions);;
-				ImGui::Checkbox("Draw grid", &gui::debug_draw_values::drawGrid);
+				if (ImGui::BeginMenu("Draw settings"))
+				{
+					ImGui::Checkbox("Draw AABBs' lines", &gui::debug_draw_values::drawAABBs_lines);
+					ImGui::Checkbox("Draw AABBs' points", &gui::debug_draw_values::drawAABBs_points);
+					ImGui::Checkbox("Draw coll polys' lines", &gui::debug_draw_values::drawCollPolys_lines);
+					ImGui::Checkbox("Draw coll polys' points", &gui::debug_draw_values::drawCollPolys_points);
+					ImGui::Checkbox("Draw shapes' outline", &gui::debug_draw_values::drawShapes_lines);
+					ImGui::Checkbox("Draw shapes' vertices", &gui::debug_draw_values::drawShapes_points);
+					ImGui::Checkbox("Draw positions", &gui::debug_draw_values::drawPositions);;
+					ImGui::Checkbox("Draw grid", &gui::debug_draw_values::drawGrid);
+					ImGui::EndMenu();
+				}
 				ImGui::EndMenu();
 			}
-			ImGui::EndMenu();
+			if (ImGui::Button("Map editor"))
+				util::SwitchBoolean(gui::elem_visibility::show_map_editor);
+
+
+			ImGui::EndMainMenuBar();
 		}
-		ImGui::Separator();
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::EndMainMenuBar();
-	}
-	//ImGui::End();
+		//ImGui::End();
 
 
-//SE_TODO: Create better gui structure
-	for (auto& gui : m_gui_container)
-	{
-		gui->Update();
+
+		for (auto& gui : m_gui_container)
+		{
+			gui->Update();
+		}
 	}
 }
 

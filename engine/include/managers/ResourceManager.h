@@ -56,16 +56,29 @@ public:
 	///Load image resource. Returns const pointer to ImageResource object
 	ImageResource* LoadImageResource(std::string name, SEbool flip_vertically = false);
 
-	///Map holding pointers to text resources. Resource name as key.
+	///Load texture resource. Returns const pointer to TextureResource object
+	TextureResource* LoadTextureResource(std::string name, SEbool flip_vertically = false);
+
+	///Load tile sheet resource. Returns const pointer to TileSheetResource object
+	TileSheetResource* LoadTileSheetResource(std::string name, SEbool flip_vertically = false);
+
+	///Map holding pointers to text resources. Resource name as key.   //SE_TODO: These containers hold pointer which will get invalid if vector reallocates. FIX
 	std::map<std::string, TextResource*> textResources;
 
 	///Map holding pointers to image resources. Resource name as key.
 	std::map<std::string, ImageResource*> imageResources;
 
+	///Map holding pointers to texture resources. Resource name as key.
+	std::map<std::string, TextureResource*> textureResources;
+
+	///Map holding pointers to tile sheet resources. Resource name as key.
+	std::map<std::string, TileSheetResource*> tileSheetResources;
+
 	ShaderResource* GetShaderProgram(std::string name);
 
 	const std::vector<std::string>& GetTextureNames() const { return m_texture_names; }
 	const std::vector<std::string>& GetAnimationNames() const { return m_animation_names; }
+	const std::vector<std::string>& GetTileSheetNames() const { return m_tilesheet_names; }
 
 private:
 	std::string m_rel_path_to_user_files;					///String naming the path to project's user files	
@@ -73,11 +86,15 @@ private:
 
 	std::vector<TextResource> m_textResourcesContainer;
 	std::vector<ImageResource> m_imageResContainer;
+	std::vector<TextureResource> m_textureResContainer;
+	std::vector<TileSheetResource> m_tilesheetResContainer;
 
 	std::vector<std::string> m_texture_names;				///Holds all texture names that can be found from (current project)->data/resources/textures
 	const std::string m_image_fold_name;					///Name of the folder holding images
 	std::vector<std::string> m_animation_names;				///Holds all animation names that can be found from (current project)->data/resources/animations
 	const std::string m_animation_fold_name;				///Name of the folder holding animations
+	std::vector<std::string> m_tilesheet_names;				///Holds all tilesheet names that can be found from (current project)->data/resources/tilesheets
+	const std::string m_tilesheet_fold_name;				///Name of the folder holding tilesheets
 	
 	std::map<std::string, ShaderResource> m_shaderProgramContainer;		///Stores shader ID's as 'shader name' & 'shader resource' pair
 

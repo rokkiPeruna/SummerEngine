@@ -1,5 +1,6 @@
 #include <managers/ResourceManager.h>
 #include <stb_image.h>
+#include <OpenGL/GLES3/glew.h>
 
 //C++17 feature used to get all filenames in resources folder
 #include <experimental/filesystem>
@@ -11,14 +12,21 @@ namespace priv
 
 ResourceManager::ResourceManager(Engine& engine_ref)
 	: Manager(engine_ref)
+	, textResources{}
+	, imageResources{}
+	, tileSheetResources{}
 	, m_rel_path_to_user_files("")
 	, m_res_fold_name("resources/")
 	, m_textResourcesContainer{}
 	, m_imageResContainer{}
+	, m_textureResContainer{}
+	, m_tilesheetResContainer{}
 	, m_texture_names{}
 	, m_image_fold_name("textures/")
 	, m_animation_names{}
 	, m_animation_fold_name("animations/")
+	, m_tilesheet_names{}
+	, m_tilesheet_fold_name("tilesheets/")
 	, m_shaderProgramContainer{}
 {
 
@@ -48,6 +56,15 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 		tmp.erase((tmp.begin() + index), tmp.end());	//Get rid of suffix, we are only interested in animation names, not format.
 		m_animation_names.emplace_back(tmp);
 	}
+
+	//Get all loadable tilesheets' file names
+	std::string path_to_tilesheets = m_rel_path_to_user_files + m_res_fold_name + m_tilesheet_fold_name;
+	//This uses std::experimental::filesystem. //SE_TODO: Get solution that doesn't need C++17 features :D
+	for (auto& f : std::experimental::filesystem::directory_iterator(path_to_tilesheets))
+	{
+		m_tilesheet_names.emplace_back(f.path().filename().generic_string());
+	}
+
 }
 
 void ResourceManager::Uninitialize()
@@ -120,9 +137,91 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 
 	m_imageResContainer.back().SetData(w, h, bpp, tmp);
 
+	imageResources.emplace(name, &m_imageResContainer.back());
+
 	stbi_image_free(tmp);
 
 	return &m_imageResContainer.back();
+}
+
+TextureResource* ResourceManager::LoadTextureResource(std::string name, SEbool flip_vertically)
+{
+	if (textureResources.count(name))
+		return textureResources.at(name);
+
+	//Create pixeldata
+	auto image = LoadImageResource(name, flip_vertically);
+	assert(image);
+
+	SEint w{ image->GetData().width };
+	SEint h{ image->GetData().heigth };
+	assert(w > 0 && h > 0);
+
+	SETexturedata data(SEuint_max, false, w, h);
+
+	glGenTextures(1, &data.handle);
+	glBindTexture(GL_TEXTURE_2D, data.handle);
+
+	//Check for bytes per pixel
+	assert(image->GetData().bpp == 3 || image->GetData().bpp == 4);
+	SEbool alpha = (image->GetData().bpp == 4) ? true : false;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	///With textures with alpha value, use GL_CLAMP_TO_EDGE to prevent borders on your texture
+	///see: https:///learnopengl.com/#!Advanced-OpenGL/Blending for more information
+	if (alpha)
+	{
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
+
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		alpha ? GL_RGBA : GL_RGB,
+		w,
+		h,
+		0,
+		alpha ? GL_RGBA : GL_RGB,
+		GL_UNSIGNED_BYTE,
+		image->GetData().pixelData.data()
+	);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	data.alpha = alpha;
+	
+	m_textureResContainer.emplace_back(TextureResource(name, data));
+
+	textureResources.emplace(name, &m_textureResContainer.back());
+
+	return &m_textureResContainer.back();
+}
+
+TileSheetResource* ResourceManager::LoadTileSheetResource(std::string name, SEbool flip_vertically)
+{
+	if (tileSheetResources.count(name))
+		return tileSheetResources.at(name);
+
+	SEint w, h, bpp = 0;
+	std::string filepath(m_rel_path_to_user_files + m_res_fold_name + m_tilesheet_fold_name + name);
+
+	stbi_set_flip_vertically_on_load(flip_vertically);
+
+	SEuchar* tmp = stbi_load(
+		filepath.c_str(),
+		&w,
+		&h,
+		&bpp, //This will tell if we have GL_RGB or GL_RGBA
+		0     //This is compression level, keep in 0
+	);
+	m_tilesheetResContainer.emplace_back(TileSheetResource(name));
+
+	m_tilesheetResContainer.back().SetData(w, h, 0, 0, bpp, tmp);
+
+	stbi_image_free(tmp);
+
+	return &m_tilesheetResContainer.back();
 }
 
 void ResourceManager::_initializeShaders(const std::string path)

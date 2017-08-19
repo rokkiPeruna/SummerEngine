@@ -11,6 +11,7 @@ SEint window_data::heigth = 0;
 
 ///Gui elements' visibility indicators
 SEbool elem_visibility::show_main_window = true;
+SEbool elem_visibility::show_map_editor = false;
 SEbool elem_visibility::show_scene_mgr_window = false;
 SEbool elem_visibility::show_console_window = false;
 SEbool elem_visibility::show_entity_comp_mgr_window = false;

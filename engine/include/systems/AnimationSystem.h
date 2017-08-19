@@ -83,18 +83,18 @@ private:
 	ResourceManager* m_res_mgr;						///Resource manager ptr for image loading
 	std::string m_path_to_user_files;				///Relative file path to user files.
 
-	struct _texture_data
-	{
-		SEuint handle = SEuint_max;
-		SEbool alpha = false;
-		SEint parent_i_w = 0;
-		SEint parent_i_h = 0;
-		explicit _texture_data(SEuint _hndl, SEbool _alpha, SEint _im_w, SEint _im_h) :handle(_hndl), alpha(_alpha), parent_i_w(_im_w), parent_i_h(_im_h) {}
-	};
+	//struct _texture_data
+	//{
+	//	SEuint handle = SEuint_max;
+	//	SEbool alpha = false;
+	//	SEint parent_i_w = 0;
+	//	SEint parent_i_h = 0;
+	//	explicit _texture_data(SEuint _hndl , SEbool _alpha, SEint _im_w, SEint _im_h) :handle(_hndl), alpha(_alpha), parent_i_w(_im_w), parent_i_h(_im_h) {}
+	//};
 
 	///Unordered map holding texture ids. Key is std::string as name of the texture with suffix (e.g. tiles.png),
 	///value is struct containing handle to texture, boolean telling if texture has alpha channel and parent image's width and heigth
-	std::unordered_map<std::string, _texture_data> m_texture_map;
+	std::unordered_map<std::string, SETexturedata> m_texture_map;
 
 	///Unordered map holding animations. Key is std::string as name of the animation without suffix .json (e.g. "player_running_south"),
 	///value is Animation.
@@ -103,8 +103,8 @@ private:
 	///Create texture from pixel data.
 	///1.param: Name of the texture with correct suffix (e.g. player.png).
 	///--
-	///Returns struct _texture_data. 
-	_texture_data& _createTexture(const std::string& texture_name);
+	///Returns struct SETexturedata. 
+	SETexturedata& _createTexture(const std::string& texture_name);
 
 
 };

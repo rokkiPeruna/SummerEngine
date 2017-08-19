@@ -189,7 +189,7 @@ Component* AnimationSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 
 void AnimationSystem::AssignTexture(const std::string& texture_name, CTexture& tex_comp)
 {
-	_texture_data* data = nullptr;
+	SETexturedata* data = nullptr;
 	//Check if we have texture loaded already
 	if (m_texture_map.count(texture_name))
 		data = &m_texture_map.at(texture_name);
@@ -251,51 +251,13 @@ SEbool AnimationSystem::AddAnimation(const std::string& anim_name, std::vector<A
 	return false;
 }
 
-AnimationSystem::_texture_data& AnimationSystem::_createTexture(const std::string& texture_name)
+SETexturedata& AnimationSystem::_createTexture(const std::string& texture_name)
 {
 	//Create pixeldata
-	auto image = m_res_mgr->LoadImageResource(texture_name);
+	auto image = m_res_mgr->LoadTextureResource(texture_name);
 	assert(image);
 
-	SEint w{ image->GetData().width };
-	SEint h{ image->GetData().heigth };
-	assert(w > 0 && h > 0);
-
-	_texture_data data(SEuint_max, false, w, h);
-
-	glGenTextures(1, &data.handle);
-	glBindTexture(GL_TEXTURE_2D, data.handle);
-
-	//Check for bytes per pixel
-	assert(image->GetData().bpp == 3 || image->GetData().bpp == 4);
-	SEbool alpha = (image->GetData().bpp == 4) ? true : false;
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	///With textures with alpha value, use GL_CLAMP_TO_EDGE to prevent borders on your texture
-	///see: https:///learnopengl.com/#!Advanced-OpenGL/Blending for more information
-	if (alpha)
-	{
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	}
-
-	glTexImage2D(
-		GL_TEXTURE_2D,
-		0,
-		alpha ? GL_RGBA : GL_RGB,
-		w,
-		h,
-		0,
-		alpha ? GL_RGBA : GL_RGB,
-		GL_UNSIGNED_BYTE,
-		image->GetData().pixelData.data()
-	);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	data.alpha = alpha;
-
-	m_texture_map.emplace(texture_name, data);
+	m_texture_map.emplace(texture_name, image->data);
 	return m_texture_map.at(texture_name);
 }
 

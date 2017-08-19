@@ -25,6 +25,8 @@ struct elem_visibility
 {
 	///Main window
 	static SEbool show_main_window;
+	///Map editor
+	static SEbool show_map_editor;
 	///Scene manager
 	static SEbool show_scene_mgr_window;
 	///Console
