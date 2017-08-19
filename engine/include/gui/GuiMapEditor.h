@@ -26,8 +26,13 @@
 #include <managers/Keyboard.h>
 #include <managers/Mouse.h>
 
+#include <managers/ResourceManager.h>
+#include <managers/Resource.h>
+
 namespace se
 {
+class TileSheetResource;
+
 namespace gui
 {
 ///Brief: ...
@@ -53,7 +58,7 @@ private:
 
 	std::vector<std::string> m_tilesheet_names;
 
-
+	TileSheetResource* m_current_tilesheet;
 };
 
 }//namespace gui
