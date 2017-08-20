@@ -48,8 +48,9 @@ public:
 
 	virtual void ClearRenderBatches() = 0;
 
-	static void SetPerspMatrix(Mat4f perspective_matrix);
-	static void SetPerspMatrix(SEfloat fov_as_deg, SEfloat ratio, SEfloat near_z, SEfloat far_z);
+	static void PerspectiveMatrix(Mat4f perspective_matrix);
+	static void PerspectiveMatrix(SEfloat fov_as_deg, SEfloat ratio, SEfloat near_z, SEfloat far_z);
+	static Mat4f PerspectiveMatrix();
 
 protected:
 	///Reference to Engine -class

@@ -92,8 +92,10 @@ set(CORE_FILES
 	include/core/SE_exceptions.h
 	include/core/file_folder_json_data.h
 	include/core/GameLogic.h
-	include/core/MapEditor.h
-	src/core/MapEditor.cpp	
+	include/core/MapCreator.h
+	src/core/MapCreator.cpp	
+	include/core/Tile.h
+	include/core/TileSheet.h
     )
 source_group("core" FILES ${CORE_FILES})
 #-----------------------------------------------------------------

@@ -3,6 +3,7 @@
 
 //SE includes:
 #include <utility/Typedefs.h>
+#include <utility/Math.h>
 #include <managers/IOLowLevelInputBinding.h>
 
 namespace se
@@ -23,6 +24,7 @@ public:
 	///Returns boolean defining if given mouse button is pressed
 	SEbool GetState(SEint button, SEint* pos_x = nullptr, SEint* pos_y = nullptr);
 
+	Vec2i GetPosition();
 	///
 	//SEbool ButtonPressedEvent();
 	

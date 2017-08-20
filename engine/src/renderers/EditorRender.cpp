@@ -3,6 +3,7 @@
 #include <systems/TransformSystem.h>
 
 #include <managers/EntityManager.h>
+#include <managers/SceneManager.h> //For tiles
 
 namespace se
 {
@@ -14,6 +15,9 @@ EditorRender::EditorRender(Engine& engine_ref)
 	, m_dyn_rend_batches{}
 	, m_batch_value_map{}
 	, CurrentShader(nullptr)
+	, m_tile_buffers{}
+	, m_tile_vao{ SEuint_max }
+	, m_tile_z_offset{ 0.1f }
 {
 	m_dyn_rend_batches.reserve(1000);
 }
@@ -42,6 +46,8 @@ void EditorRender::Initialize()
 	glBindAttribLocation(shader, static_cast<SEuint>(SHADER_ATTRIB_INDEX::POSITION), "vertexPosition");
 	glBindAttribLocation(shader, static_cast<SEuint>(SHADER_ATTRIB_INDEX::COLOR), "vertexColor");
 	glBindAttribLocation(shader, static_cast<SEuint>(SHADER_ATTRIB_INDEX::TEX_COORDS), "vertexTexture");
+
+	glGenVertexArrays(1, &m_tile_vao);
 }
 
 void EditorRender::Uninitialize()
@@ -84,6 +90,9 @@ void EditorRender::Update(SEfloat)
 		&view[0][0]
 	);
 
+	//Render tiles. Own shader for them, batching?? World is full of questions..
+	_renderTiles(textureLocation);
+
 	for (auto& b : m_dyn_rend_batches)
 	{
 		glBindVertexArray(b.vao);
@@ -99,7 +108,7 @@ void EditorRender::Update(SEfloat)
 		for (auto& e_id : b.entity_ids)
 		{
 			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UGLY WAY FOR TEX COORDS
-			SEfloat tex_coords[8];			 
+			SEfloat tex_coords[8];
 			if (entities.at(e_id).components.count(COMPONENT_TYPE::TEXTURE))
 			{
 				auto tex = GetTextureComponent(entities.at(e_id).components.at(COMPONENT_TYPE::TEXTURE));
@@ -262,5 +271,115 @@ void EditorRender::ClearRenderBatches()
 	m_dyn_rend_batches.clear();
 	m_batch_value_map.clear();
 }
+
+void EditorRender::_renderTiles(SEuint texture_location)
+{
+	auto scene = m_engine.GetSceneMgr().GetCurrentScene();
+	if (!scene || scene->GetTiles().empty())
+		return;
+
+	const auto& tiles = scene->GetTiles();
+
+	//Create rects and tex coords from tiles 
+	std::vector<Vec3f> rects{};
+	rects.reserve(tiles.size() * 4);
+	std::vector<Vec2f> tex_coords{};
+	tex_coords.reserve(tiles.size() * 4);
+
+	//Create vertices and tex coords
+	_createRectAndTexCoordsFromTile(tiles, rects, tex_coords);
+
+	//Create indices
+	std::vector<SEuint> indices{};
+	_createIndices(indices, tiles.size());
+
+
+	glBindVertexArray(m_tile_vao);
+
+	SEuint index_buf = _createBuffers(rects, tex_coords, indices);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tiles.at(0).tex_handle);
+	glUniform1i(texture_location, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buf);
+
+	glDrawElements(
+		GL_TRIANGLES,
+		indices.size(),
+		GL_UNSIGNED_INT,
+		0
+	);
+
+	glDeleteBuffers(3, m_tile_buffers);
+}
+
+void EditorRender::_createRectAndTexCoordsFromTile(const std::vector<Tile>& tiles, std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords)
+{
+	auto pixels_per_unit = m_engine.GetPixelsPerOneUnit();
+	SEfloat half_w = (tiles.at(0).w * 0.5f) / pixels_per_unit;
+	SEfloat half_h = (tiles.at(0).h * 0.5f) / pixels_per_unit;
+
+	for (const auto& tile : tiles)
+	{
+		//Vertices
+		vertices.emplace_back(Vec3f(tile.position.x - half_w, tile.position.y - half_h, m_tile_z_offset)); //First (left-down)
+		vertices.emplace_back(Vec3f(tile.position.x + half_w, tile.position.y - half_h, m_tile_z_offset)); //Second (rigth-down)
+		vertices.emplace_back(Vec3f(tile.position.x + half_w, tile.position.y + half_h, m_tile_z_offset)); //Third (rigth-up)
+		vertices.emplace_back(Vec3f(tile.position.x - half_w, tile.position.y + half_h, m_tile_z_offset)); //Fourth (left-up)
+
+		//Tex coords
+		const auto& tc = tile.norm_tex_coords;
+		tex_coords.emplace_back(Vec2f(tc.x, tc.y)); //First (left-down)
+		tex_coords.emplace_back(Vec2f(tc.z, tc.y)); //Second (rigth-down)
+		tex_coords.emplace_back(Vec2f(tc.z, tc.w)); //Third (rigth-up)
+		tex_coords.emplace_back(Vec2f(tc.x, tc.w)); //Fourth (left-up)
+	}
+}
+
+inline void EditorRender::_createIndices(std::vector<SEuint>& indices, SEuint num_of_tiles)
+{
+	SEint indice_adder = 0;
+	for (SEuint i = 0; i < num_of_tiles; ++i, indice_adder += 4)
+	{
+		indices.emplace_back(0 + indice_adder);
+		indices.emplace_back(1 + indice_adder);
+		indices.emplace_back(2 + indice_adder);
+		indices.emplace_back(0 + indice_adder);
+		indices.emplace_back(2 + indice_adder);
+		indices.emplace_back(3 + indice_adder);
+	}
+}
+
+inline SEuint EditorRender::_createBuffers(std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords, std::vector<SEuint>& indices)
+{
+	//Generate buffers
+	SEuint pos_buf = SEuint_max;
+	SEuint texcoord_buf = SEuint_max;
+	SEuint index_buf = SEuint_max;
+	glGenBuffers(3, m_tile_buffers);
+	pos_buf = m_tile_buffers[0];
+	texcoord_buf = m_tile_buffers[1];
+	index_buf = m_tile_buffers[2];
+
+	glBindBuffer(GL_ARRAY_BUFFER, pos_buf);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices.at(0)) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(static_cast<SEuint>(SHADER_ATTRIB_INDEX::POSITION));
+	glVertexAttribPointer(static_cast<SEuint>(SHADER_ATTRIB_INDEX::POSITION), 3, GL_FLOAT, GL_FALSE, 3 * sizeof(SEfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, texcoord_buf);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(tex_coords.at(0)) * tex_coords.size(), tex_coords.data(), GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(static_cast<SEuint>(SHADER_ATTRIB_INDEX::TEX_COORDS));
+	glVertexAttribPointer(static_cast<SEuint>(SHADER_ATTRIB_INDEX::TEX_COORDS), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(SEfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buf);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices.at(0)) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return index_buf;
+}
+
 }// !namespace priv
 }// !namespace se

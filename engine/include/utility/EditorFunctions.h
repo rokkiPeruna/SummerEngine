@@ -20,7 +20,7 @@ namespace util
 ///4.param: Camera position
 ///--
 ///Returns Vec2f containing normalized values ranging from -1.0 to 1.0 in both axis
-extern Vec2f ScreenCoordsToNormOpenGLCoords(SEint scr_x, SEint scr_y, Vec2i win_size, Vec3f cam_position);
+inline extern Vec2f ScreenCoordsToNormOpenGLCoords(SEint scr_x, SEint scr_y, Vec2i win_size, Vec3f cam_position);
 
 
 inline void SwitchBoolean(SEbool& bool_to_switch)

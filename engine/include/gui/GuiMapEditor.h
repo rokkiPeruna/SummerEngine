@@ -1,5 +1,5 @@
-#ifndef SUMMER_ENGINE_MAP_EDITOR_H
-#define SUMMER_ENGINE_MAP_EDITOR_H
+#ifndef SUMMER_ENGINE_GUIMAP_EDITOR_H
+#define SUMMER_ENGINE_GUIMAP_EDITOR_H
 
 //STL includes:
 #include <cassert>
@@ -14,20 +14,16 @@
 #include <managers/EventManager.h>
 #include <events/EventHandler.h>
 #include <events/Events.h>
-#include <systems/TransformSystem.h> //For setting camera position when new entity is created or entity is choosed
 #include <gui/GraphicalUserInterface.h>
-#include <renderers/DebugRender.h>
 #include <utility/Typedefs.h>
 #include <utility/Math.h>
-#include <ids/ComponentTypeList.h>
 #include <ids/SystemAndManagerIDList.h>
 #include <gui/gui_values.h>
-#include <core/SE_exceptions.h>
-#include <managers/Keyboard.h>
-#include <managers/Mouse.h>
 
+#include <core/MapCreator.h>
 #include <managers/ResourceManager.h>
 #include <managers/Resource.h>
+#include <core/Tile.h>
 
 namespace se
 {
@@ -35,6 +31,7 @@ class TileSheetResource;
 
 namespace gui
 {
+constexpr SEint internal_NUM_TILES = 32;
 ///Brief: ...
 class GuiMapEditor
 {
@@ -55,10 +52,41 @@ private:
 	priv::Engine& m_engine;
 
 	const std::string m_rel_filep_tilesheets;
-
 	std::vector<std::string> m_tilesheet_names;
-
+	std::string m_curr_tilesheet_name;
 	TileSheetResource* m_current_tilesheet;
+	priv::Tile m_tiles[internal_NUM_TILES];
+	SEint m_curr_tiles_ind;
+	priv::Tile m_current_tile;
+
+	Vec2u m_tile_number;
+	Vec2u m_tile_sz;
+	Vec2u m_sheet_sz;
+
+	Vec2f m_tex_screen_pos;
+
+	SEbool m_show_sheet_window;
+
+	/*FOR CHOOSING TILES*/
+	//Wrapper
+	void _handleTileChoosing();
+	//Edits tile properties
+	void _tilePropEdit();
+	//Edits sheet's properties
+	void _sheetPropEdit();
+	//Add tile to container
+	void _createAndAddTile(SEint tile_x_coord, SEint tile_y_coord);
+	//Calc tile's xy-position relative to sheet and tile size
+	Vec2i _calcTilesXYcoords();
+	//Draws image buttons for selecting current tile easily
+	void _drawImageButtons();
+	//Shows current selected tile
+	void _showCurrSelectedTile();
+
+	/*FOR ADDING TILE TO SCENE*/
+	//Wrapper
+	void _handleTileAddingToScene();
+
 };
 
 }//namespace gui

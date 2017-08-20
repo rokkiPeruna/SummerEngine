@@ -9,11 +9,13 @@
 
 ///SE includes:
 #include <utility/Typedefs.h>
+#include <core/Tile.h>
 
 namespace se
 {
 namespace priv
 {
+
 ///Brief: SceneType is a enum defining what type scene is
 enum class SCENE_TYPE : SEint
 {
@@ -49,6 +51,7 @@ public:
 	SCENE_TYPE GetType() const;
 	SEuint GetWidth() const;
 	SEuint GetHeigth() const;
+	std::vector<Tile>& GetTiles();
 
 	void SetData(nlohmann::json* j);
 
@@ -66,6 +69,7 @@ private:
 	SEuint m_width;
 	SEuint m_heigth;
 
+	std::vector<Tile> m_tiles;
 };
 
 }//namespace priv

@@ -43,6 +43,7 @@ class Render;
 class EditorRender;
 class GameRender;
 class DebugRender;
+class MapCreator;
 
 ///SYSTEMS
 class ComponentSystem;
@@ -109,6 +110,10 @@ public:
 	EditorRender& GetEditorRender() { return *m_editorRender; }
 	GameRender& GetGameRender() { return *m_gameRender; }
 	DebugRender& GetDebugRender() { return *m_debugRender; }
+
+	MapCreator& GetMapCreator() { return *m_mapCreator; }
+	void SetPixelsPerOneUnit(SEuint pixels_per_one_unit) { m_pixels_per_1unit = pixels_per_one_unit; }
+	SEuint GetPixelsPerOneUnit() { return m_pixels_per_1unit; }
 
 	Camera* GetCamera() { return m_camera.get(); }
 
@@ -180,6 +185,11 @@ private:
 
 	///Current renderer
 	Render* m_current_renderer;
+
+	///MapCreator
+	std::unique_ptr<MapCreator> m_mapCreator;
+	///Amount of pixels that is lenght of 1 on game world. Initialized to 32
+	SEuint m_pixels_per_1unit;
 
 	///Managers (Must be before systems!!!)
 	std::unique_ptr<EntityManager> m_entityMgr;

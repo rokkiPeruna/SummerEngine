@@ -5,6 +5,7 @@
 
 //Include SE
 #include <renderers/Render.h>
+#include <core/Tile.h>
 
 ///Brief : Editor render won't create any static objects and will draw lines even to shapes 
 /// which would not othewise be drawn. 
@@ -15,7 +16,7 @@ namespace se
 {
 
 namespace priv
-{ 
+{
 
 class EditorRender : public Render
 {
@@ -30,7 +31,7 @@ public:
 	void operator=(const EditorRender&) = delete;
 	EditorRender(EditorRender&&) = delete;
 	void operator=(EditorRender&&) = delete;
-	
+
 	void Initialize() override final;
 	void Uninitialize() override final;
 
@@ -41,7 +42,7 @@ public:
 	void OnEntityAdded(const Entity& entity) override final;
 
 	void OnEntityRemoved(const Entity& entity) override final;
-	
+
 	///Checks if the component is rendable in the first place. If it is makes sure that
 	///the batch is changed
 	void OnRendableComponentChanged(const Entity& entiy) override final;
@@ -59,7 +60,7 @@ private:
 	std::vector<DynamicRenderBatch> m_dyn_rend_batches;
 
 	using batch_values = Vec3u;
-	
+
 	struct cmpr_batch_values
 	{
 		bool operator()(const batch_values& a, const batch_values& b) const
@@ -74,6 +75,19 @@ private:
 	//testing
 	ShaderResource* CurrentShader;
 
+
+	/*TILE RENDERING*/
+	SEuint m_tile_buffers[3];
+	SEuint m_tile_vao;
+	SEfloat m_tile_z_offset;
+
+	void _renderTiles(SEuint texture_location);
+
+	inline void _createRectAndTexCoordsFromTile(const std::vector<Tile>& tiles, std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords);
+
+	inline void _createIndices(std::vector<SEuint>& indices, SEuint num_of_tiles);
+
+	inline SEuint _createBuffers(std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords, std::vector<SEuint>& indices);
 };
 
 

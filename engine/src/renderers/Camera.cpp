@@ -16,7 +16,7 @@ Camera::Camera()
 	, m_cameraFront(0.0f, 0.0f, -1.0f)
 	, m_keyboard()
 	, m_mouse()
-	, m_cam_speed(7.0f)
+	, m_cam_speed(12.0f)
 {
 	m_cameraDirection = glm::normalize(m_cameraPosition - m_cameraTarget);
 

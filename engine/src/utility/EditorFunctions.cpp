@@ -1,37 +1,48 @@
 #include <utility/EditorFunctions.h>
 #include <cassert>
+#include <core/Engine.h>
+#include <core/Window.h>
+#include <renderers/Camera.h>
+#include <renderers/Render.h>
+
 
 namespace se
 {
 namespace util
 {
 //SE_TODO: Entity offsets wrong amount
-Vec2f ScreenCoordsToNormOpenGLCoords(SEint scr_x, SEint scr_y, Vec2i win_size, Vec3f cam_position)
+inline Vec2f ScreenCoordsToNormOpenGLCoords(SEint scr_x, SEint scr_y, Vec2i win_size, Vec3f cam_position)
 {
 	assert(win_size.x > 0 && win_size.y > 0);
-	SEfloat x = static_cast<SEfloat>(scr_x);
-	SEfloat y = static_cast<SEfloat>(scr_y);
-	Vec2f wsize = win_size;
+	Vec2f screen_sz{ priv::Engine::Ptr->GetWindow().windowInitData.width, priv::Engine::Ptr->GetWindow().windowInitData.heigth };
+	Mat4f pv_inverse = glm::inverse(priv::Render::PerspectiveMatrix() * priv::Engine::Ptr->GetCamera()->GetCameraView());
 
-	SEfloat factor_x = 0.0f;
-	SEfloat factor_y = 0.0f;
-	if (cam_position.z >= 0)
-	{
-		factor_x = (x < (wsize.x / 2.0f)) ? -1.0f : 1.0f;
-		factor_y = (y < (wsize.y / 2.0f)) ? 1.0f : -1.0f; //Y flipped
-	}
-	else
-	{
-		factor_x = (x < (wsize.x / 2.0f)) ? -1.0f : 1.0f;
-		factor_y = (y < (wsize.y / 2.0f)) ? -1.0f : 1.0f;
-	}
-	cam_position.z = (cam_position.z == 0.0f) ? 0.1f : cam_position.z; //Avoid multiplying with zero
-	return Vec2f
-	(
-		std::abs(wsize.x / 2.0f - x) * factor_x / (wsize.x / 2.0f) * std::abs(cam_position.z),
-		std::abs(wsize.y / 2.0f - y) * factor_y / (wsize.y / 2.0f) * std::abs(cam_position.z)
-	);
 
+	auto cam = priv::Engine::Ptr->GetCamera();
+
+	SEfloat unit_x = (scr_x - (screen_sz.x / 2.0)) / screen_sz.x;
+	SEfloat unit_y = (scr_y - (screen_sz.y / 2.0)) / screen_sz.y;
+
+
+
+	//Mat4f pv_inverse = glm::inverse(priv::Render::PerspectiveMatrix() * glm::lookAt(Vec3f(scr_x, scr_y), m_cameraPosition + m_cameraFront, m_cameraUp);
+
+	Vec4f world_pos{ pv_inverse * Vec4f{
+		(scr_x / screen_sz.x) * 2.0f - 1.0f,
+		-((scr_y / screen_sz.y) * 2.0f - 1.0f),
+		-1.0f,
+		1.0f
+	} };
+
+	world_pos.w = 1.0f / world_pos.w;
+	world_pos.x *= world_pos.w;
+	world_pos.y *= world_pos.w;
+	world_pos.z *= world_pos.w;
+
+	//world_pos.x = (world_pos.x + 1.0f) * screen_sz.x / 2.0f;
+	//world_pos.y = (world_pos.y + 1.0f) * screen_sz.y / 2.0f;
+
+	return Vec2f(world_pos);
 }
 
 }//namespace util

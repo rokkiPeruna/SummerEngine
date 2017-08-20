@@ -30,6 +30,14 @@ public:
 
 	void SetPosition(Vec3f position);
 
+	Vec3f GetPosition() { return m_cameraPosition; }
+
+	Vec3f GetUp() { return m_cameraUp; }
+
+	Vec3f GetDirection() { return m_cameraDirection; }
+
+	Vec3f GetFront() { return m_cameraFront; }
+
 	void SetTarget(Vec3f target);
 
 private:

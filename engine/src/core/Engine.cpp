@@ -3,6 +3,7 @@
 ///Core includes:
 #include <core/SE_exceptions.h>
 #include <core/Window.h>
+#include <core/MapCreator.h>
 
 ///Renderer includes:
 #include <renderers/Camera.h>
@@ -57,6 +58,8 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_gameRender(std::make_unique<GameRender>(*this))
 	, m_debugRender(std::make_unique<DebugRender>(*this))
 	, m_current_renderer(nullptr)
+	, m_mapCreator(std::make_unique<MapCreator>(*this))
+	, m_pixels_per_1unit(32)
 	, m_camera(std::make_unique<Camera>())
 
 	/*MANAGERS*/
@@ -222,7 +225,7 @@ void Engine::_initManagers()
 void Engine::_initRenderers()
 {
 	//Set perspective matrix
-	Render::SetPerspMatrix(
+	Render::PerspectiveMatrix(
 		45.0f,	//Field of view as degrees
 		static_cast<SEfloat>(m_window->windowInitData.width) / static_cast<SEfloat>(m_window->windowInitData.heigth), //Screen ratio
 		0.1f, //Near clipping plane
@@ -377,7 +380,8 @@ void Engine::_editorLoop(SEbool& exitProgram)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-			glViewport(se::gui::window_data::width / 4, se::gui::window_data::heigth / 4, se::gui::window_data::width / 2, se::gui::window_data::heigth / 2);
+			//glViewport(se::gui::window_data::width / 4, se::gui::window_data::heigth / 4, se::gui::window_data::width / 2, se::gui::window_data::heigth / 2);
+			glViewport(0, 0, se::gui::window_data::width, se::gui::window_data::heigth);
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			//glClear(GL_COLOR_BUFFER_BIT);
 

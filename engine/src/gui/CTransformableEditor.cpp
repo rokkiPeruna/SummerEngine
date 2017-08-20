@@ -36,7 +36,7 @@ void CTransformableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_c
 
 		if (keyboard.GetState(KeyboardState::W) && mouse.GetState(MouseState::Left_Button, &mouse_pos_X, &mouse_pos_Y))
 		{
-			Vec2f norm_mouse_pos = util::ScreenCoordsToNormOpenGLCoords(mouse_pos_X, mouse_pos_Y, Vec2f(gui::window_data::width, gui::window_data::heigth), Vec3f(0.0f, 0.0f, 10.0f));
+			Vec2f norm_mouse_pos = util::ScreenCoordsToNormOpenGLCoords(mouse_pos_X, mouse_pos_Y, Vec2f(gui::window_data::width, gui::window_data::heigth), m_engine.GetCamera()->GetPosition());
 			comp.position.x = norm_mouse_pos.x;
 			comp.position.y = norm_mouse_pos.y;
 		}
