@@ -85,7 +85,7 @@ void EntityManager::Update()
 			if (m_currentEntity)
 			{
 				auto new_cam_pos = TransformSystem::TransformableComponents.at(m_currentEntity->id).position;
-				new_cam_pos.z = 10.0f;
+				new_cam_pos.z = 40.0f;
 				m_event_handler->SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
 			}
 			break;

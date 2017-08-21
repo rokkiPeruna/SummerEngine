@@ -181,11 +181,11 @@ void GuiMapEditor::_showCurrSelectedTile()
 /*FOR ADDING TILE TO SCENE*/
 void GuiMapEditor::_handleTileAddingToScene()
 {
-	if (ImGui::IsMouseClicked(0))
+	if (ImGui::IsMouseClicked(0) || ImGui::IsMouseDown(0))
 	{
 		priv::Tile t = m_current_tile;
 		Vec2f mousepos = ImGui::GetMousePos();
-		Vec2i norm_pos = util::ScreenCoordsToNormOpenGLCoords(mousepos.x, mousepos.y, Vec2i(gui::window_data::width, gui::window_data::heigth), m_engine.GetCamera()->GetPosition());
+		Vec2f norm_pos = util::ScreenCoordsToNormOpenGLCoords(mousepos.x, mousepos.y, Vec2i(gui::window_data::width, gui::window_data::heigth), m_engine.GetCamera()->GetPosition());
 		t.position = Vec2f(std::round(norm_pos.x), std::round(norm_pos.y));
 		m_engine.GetMapCreator().AddTileToMap(t);
 

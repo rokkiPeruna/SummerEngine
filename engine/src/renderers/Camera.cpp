@@ -46,7 +46,7 @@ void Camera::Update(const SEfloat deltaTime)
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::A))
 	{
 		m_cameraPosition.x -= m_cam_speed *deltaTime;
-		m_cameraTarget.x -= m_cam_speed * deltaTime;
+		m_cameraTarget.x = m_cam_speed * deltaTime;
 	}
 	if (m_mouse.GetState(MouseState::Middle_Button) && m_keyboard.GetState(KeyboardState::D))
 	{
@@ -73,6 +73,9 @@ void Camera::Update(const SEfloat deltaTime)
 	}
 
 	m_view = glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp);
+	//std::cout << m_cameraPosition.x << "  " << m_cameraPosition.y << "  " << m_cameraPosition.z << std::endl;
+	//m_view = glm::lookAt(m_cameraPosition, Vec3f(m_cameraPosition.x, m_cameraPosition.y, 0.0f), m_cameraUp);
+	//m_view = glm::lookAt(m_cameraPosition, m_cameraTarget, m_cameraUp);
 }
 
 void Camera::Init()

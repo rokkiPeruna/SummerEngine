@@ -81,7 +81,7 @@ private:
 	SEuint m_tile_vao;
 	SEfloat m_tile_z_offset;
 
-	void _renderTiles(SEuint texture_location);
+	void _renderTiles(SEuint texture_location, SEuint model_loc);
 
 	inline void _createRectAndTexCoordsFromTile(const std::vector<Tile>& tiles, std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords);
 

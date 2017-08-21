@@ -91,7 +91,7 @@ void EditorRender::Update(SEfloat)
 	);
 
 	//Render tiles. Own shader for them, batching?? World is full of questions..
-	_renderTiles(textureLocation);
+	_renderTiles(textureLocation, model_m_loc);
 
 	for (auto& b : m_dyn_rend_batches)
 	{
@@ -272,7 +272,7 @@ void EditorRender::ClearRenderBatches()
 	m_batch_value_map.clear();
 }
 
-void EditorRender::_renderTiles(SEuint texture_location)
+void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 {
 	auto scene = m_engine.GetSceneMgr().GetCurrentScene();
 	if (!scene || scene->GetTiles().empty())
@@ -297,6 +297,15 @@ void EditorRender::_renderTiles(SEuint texture_location)
 	glBindVertexArray(m_tile_vao);
 
 	SEuint index_buf = _createBuffers(rects, tex_coords, indices);
+
+	Mat4f model(1.0f);
+	glUniformMatrix4fv
+	(
+		model_loc,
+		1,
+		GL_FALSE,
+		&model[0][0]
+	);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tiles.at(0).tex_handle);
@@ -330,10 +339,10 @@ void EditorRender::_createRectAndTexCoordsFromTile(const std::vector<Tile>& tile
 
 		//Tex coords
 		const auto& tc = tile.norm_tex_coords;
-		tex_coords.emplace_back(Vec2f(tc.x, tc.y)); //First (left-down)
-		tex_coords.emplace_back(Vec2f(tc.z, tc.y)); //Second (rigth-down)
-		tex_coords.emplace_back(Vec2f(tc.z, tc.w)); //Third (rigth-up)
 		tex_coords.emplace_back(Vec2f(tc.x, tc.w)); //Fourth (left-up)
+		tex_coords.emplace_back(Vec2f(tc.z, tc.w)); //Third (rigth-up)
+		tex_coords.emplace_back(Vec2f(tc.z, tc.y)); //Second (rigth-down)
+		tex_coords.emplace_back(Vec2f(tc.x, tc.y)); //First (left-down)
 	}
 }
 

@@ -229,7 +229,7 @@ void Engine::_initRenderers()
 		45.0f,	//Field of view as degrees
 		static_cast<SEfloat>(m_window->windowInitData.width) / static_cast<SEfloat>(m_window->windowInitData.heigth), //Screen ratio
 		0.1f, //Near clipping plane
-		100.0f //Far clipping plane
+		1000.0f //Far clipping plane
 	);
 	m_editorRender->Initialize();
 	m_gameRender->Initialize();
