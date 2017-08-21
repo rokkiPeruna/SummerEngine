@@ -116,6 +116,8 @@ void Engine::Initialize()
 	//
 	m_camera->Init();
 	//
+	m_mapCreator->Init();
+	//
 	_initManagers();
 	//
 	_initRenderers();
@@ -259,6 +261,8 @@ void Engine::_updateMgrs()
 	m_sceneMgr->Update();
 	m_entityMgr->Update();
 	m_compMgr->Update();
+
+	m_mapCreator->Update();
 
 	m_eventMgr->Update();
 }

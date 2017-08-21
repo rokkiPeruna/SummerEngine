@@ -3,7 +3,7 @@
 #include <systems/TransformSystem.h>
 
 #include <managers/EntityManager.h>
-#include <managers/SceneManager.h> //For tiles
+#include <core/MapCreator.h> //For tiles
 
 namespace se
 {
@@ -274,11 +274,11 @@ void EditorRender::ClearRenderBatches()
 
 void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 {
-	auto scene = m_engine.GetSceneMgr().GetCurrentScene();
-	if (!scene || scene->GetTiles().empty())
+	const auto& map_creator = m_engine.GetMapCreator();
+	if (map_creator.GetTiles().empty())
 		return;
 
-	const auto& tiles = scene->GetTiles();
+	const auto& tiles = map_creator.GetTiles();
 
 	//Create rects and tex coords from tiles 
 	std::vector<Vec3f> rects{};

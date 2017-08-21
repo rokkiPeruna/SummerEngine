@@ -51,7 +51,6 @@ public:
 	SCENE_TYPE GetType() const;
 	SEuint GetWidth() const;
 	SEuint GetHeigth() const;
-	std::vector<Tile>& GetTiles();
 
 	void SetData(nlohmann::json* j);
 
@@ -68,8 +67,6 @@ private:
 	///Width and heigth
 	SEuint m_width;
 	SEuint m_heigth;
-
-	std::vector<Tile> m_tiles;
 };
 
 }//namespace priv

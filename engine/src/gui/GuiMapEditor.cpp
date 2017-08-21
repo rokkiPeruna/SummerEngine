@@ -9,6 +9,8 @@ namespace gui
 {
 GuiMapEditor::GuiMapEditor(priv::Engine& engine_ref)
 	: m_engine(engine_ref)
+	, m_map_creator{ engine_ref.GetMapCreator() }
+	, mouse{}
 	, m_rel_filep_tilesheets(engine_ref.GetRelFilePathToUserFiles() + "resources/tilesheets/")
 	, m_tilesheet_names{ engine_ref.GetResourceManager().GetTileSheetNames() }
 	, m_curr_tilesheet_name{}
@@ -21,6 +23,7 @@ GuiMapEditor::GuiMapEditor(priv::Engine& engine_ref)
 	, m_sheet_sz{ 0 }
 	, m_tex_screen_pos{ 0 }
 	, m_show_sheet_window{ false }
+	, m_brush_sz{ 1 }
 {
 
 }
@@ -96,6 +99,8 @@ void GuiMapEditor::_tilePropEdit()
 {
 	ImGui::SliderInt("Tile width", &m_current_tilesheet->GetData().tile_width, 1, 512);
 	ImGui::SliderInt("Tile heigth", &m_current_tilesheet->GetData().tile_heigth, 1, 512);
+	ImGui::SliderInt("Brush size", &m_brush_sz, 1, 5);
+
 	m_tile_sz = Vec2u{ m_current_tilesheet->GetData().tile_width, m_current_tilesheet->GetData().tile_heigth };
 }
 
@@ -181,19 +186,50 @@ void GuiMapEditor::_showCurrSelectedTile()
 /*FOR ADDING TILE TO SCENE*/
 void GuiMapEditor::_handleTileAddingToScene()
 {
-	if (ImGui::IsMouseClicked(0) || ImGui::IsMouseDown(0))
+	if (!ImGui::IsMouseClicked(0) && !ImGui::IsMouseDown(0))
+		return;
+
+	Vec2f mousepos = ImGui::GetMousePos();
+	Vec2f norm_pos = util::ScreenCoordsToNormOpenGLCoords(mousepos.x, mousepos.y, Vec2i(gui::window_data::width, gui::window_data::heigth), m_engine.GetCamera()->GetPosition());
+	Vec2f pos(std::round(norm_pos.x), std::round(norm_pos.y));
+
+	//Check for erasing
+	if (mouse.GetState(MouseState::Rigth_Button))
+	{
+		m_map_creator.RemoveTileFromMap(pos);
+		return;
+	}
+
+	auto data = _checkForTile(pos);
+	if (data.first && !data.second)
+		m_map_creator.RemoveTileFromMap(pos);
+	else if (data.second)
+		return;
+
+	if (m_brush_sz == 1)
 	{
 		priv::Tile t = m_current_tile;
-		Vec2f mousepos = ImGui::GetMousePos();
-		Vec2f norm_pos = util::ScreenCoordsToNormOpenGLCoords(mousepos.x, mousepos.y, Vec2i(gui::window_data::width, gui::window_data::heigth), m_engine.GetCamera()->GetPosition());
-		t.position = Vec2f(std::round(norm_pos.x), std::round(norm_pos.y));
-		m_engine.GetMapCreator().AddTileToMap(t);
+		t.position = pos;
+		m_map_creator.AddTileToMap(t);
 
-		std::string m = std::to_string(mousepos.x) + "  " + std::to_string(mousepos.y);
-		std::string p = std::to_string(t.x) + "  " + std::to_string(t.y);
-		MessageWarning(_nullSysMgr_id) << "Tile pos: " + p;
-		MessageWarning(_nullSysMgr_id) << "mouse pos: " + m;
+		static SEint tileAddedCount = 0;
+		std::cout << "Tile added = " << std::to_string(tileAddedCount++) << " void GuiMapEditor::_handleTileAddingToScene()  " << std::endl;
 	}
+
+	//Handle larger brush sizes
+
+}
+
+std::pair<SEbool, SEbool> GuiMapEditor::_checkForTile(Vec2f position)
+{
+	auto data = m_map_creator.CheckForTile(position);
+	if (data.first)
+	{
+		if (data.second.x == m_current_tile.x && data.second.y == m_current_tile.y)
+			return std::pair<SEbool, SEbool>{true, true};
+		return std::pair<SEbool, SEbool>{true, false};
+	}
+	return{ false, false };
 }
 
 }//namespace gui

@@ -24,6 +24,7 @@
 #include <managers/ResourceManager.h>
 #include <managers/Resource.h>
 #include <core/Tile.h>
+#include <managers/Mouse.h>
 
 namespace se
 {
@@ -51,6 +52,10 @@ public:
 private:
 	priv::Engine& m_engine;
 
+	priv::MapCreator& m_map_creator;
+
+	Mouse mouse;
+
 	const std::string m_rel_filep_tilesheets;
 	std::vector<std::string> m_tilesheet_names;
 	std::string m_curr_tilesheet_name;
@@ -66,6 +71,8 @@ private:
 	Vec2f m_tex_screen_pos;
 
 	SEbool m_show_sheet_window;
+
+	SEint m_brush_sz;
 
 	/*FOR CHOOSING TILES*/
 	//Wrapper
@@ -86,6 +93,9 @@ private:
 	/*FOR ADDING TILE TO SCENE*/
 	//Wrapper
 	void _handleTileAddingToScene();
+
+	//Check if there is tile already and if it is of same type 
+	std::pair<SEbool, SEbool> _checkForTile(Vec2f position);
 
 };
 
