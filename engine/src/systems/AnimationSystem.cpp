@@ -36,6 +36,8 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 
 void AnimationSystem::Initialize()
 {
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	m_event_handler->RegisterEvent(SE_Cmd_ChangeAnimation("", -1));
 
 	m_res_mgr = &m_engine.GetResourceManager();
 
@@ -52,6 +54,32 @@ void AnimationSystem::Uninitialize()
 
 void AnimationSystem::Update(SEfloat deltaTime)
 {
+	//Check events
+	SE_Event se_event;
+	while (m_event_handler->PollEvents(se_event))
+	{
+		switch (se_event.type)
+		{
+		case EventType::ChangeAnimation:
+		{
+			SEint entity_id = se_event.additional_data.seint;
+			auto itr = std::find_if(m_cAnimations.begin(), m_cAnimations.end(), [entity_id](const CAnimation& comp) {
+				if (comp.ownerID == entity_id)
+					return true;
+				return false;
+			});
+			if (itr != m_cAnimations.end())
+			{
+				(*itr).current_animation_index = (*itr).animation_names.at(se_event.data.char_arr);
+			}
+
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
 	for (auto& c_anim : m_cAnimations)
 	{
 		if (c_anim.ownerID == -1 || !c_anim.animations.size())
@@ -239,6 +267,7 @@ void AnimationSystem::AssingAnimation(const std::string& animation_name, CAnimat
 		}
 		m_animation_map.emplace(animation_name, Animation(animation_name, tmp_frames));
 		anim_comp.animations.emplace_back(m_animation_map.at(animation_name));
+		anim_comp.animation_names.emplace(animation_name, -1);
 		anim_comp.animation_names.at(animation_name) = static_cast<SEint>(anim_comp.animations.size() - 1);
 		anim_comp.current_animation_index = 0;
 	}

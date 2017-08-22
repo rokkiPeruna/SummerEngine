@@ -61,10 +61,10 @@ void inline from_json(const nlohmann::json& j, se::CGameLogic& comp)
 	//Spesific data
 	comp.first_act_logic_name = j.at("first_act_logic").get<std::string>();
 	comp.logic_class_names.clear();
-	std::vector<std::string> temp = j["logics"];
-	for (SEint i = 0; i < temp.size(); ++i)
+	std::vector<std::string> tmp = j.at("logics");
+	for (SEint i = 0; i < tmp.size(); ++i)
 	{
-		comp.logic_class_names.emplace_back(temp.at(i));
+		comp.logic_class_names.emplace_back(tmp.at(i));
 	}
 }
 

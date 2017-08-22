@@ -93,6 +93,8 @@ public:
 private:
 	Engine& m_engine;
 
+	SEint ppt;			//Pixels per tile
+
 	EventHandler* m_event_handler; //Remember to register!
 
 	Dataformat_itr m_tiles_obj;

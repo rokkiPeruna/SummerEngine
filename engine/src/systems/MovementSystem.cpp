@@ -33,21 +33,13 @@ void MovementSystem::Uninitialize()
 
 }
 
-static SEfloat demo_time = 0;
 void MovementSystem::Update(SEfloat deltaTime)
 {
-	demo_time += deltaTime;
-	//auto& transforms = TransformSystem::TransformableComponents;
 	for (auto& c : m_cDynamics)
 	{
 		c.velocity += c.acceleration * deltaTime;
 		//Send events!
 		m_event_handler->SendEvent(SE_Event_EntityPositionChanged(c.ownerID, c.velocity * deltaTime));
-
-
-		//For demo
-		Vec3f new_scale(1.0f * std::sin(demo_time));
-		m_event_handler->SendEvent(SE_Event_EntityScaleChanged(c.ownerID, new_scale));
 
 	}
 }

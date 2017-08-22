@@ -64,6 +64,8 @@ private:
 	SEint m_curr_tiles_ind;
 	priv::Tile m_current_tile;
 
+	SEuint ppu; //Pixels per unit
+
 	Vec2u m_tile_number;
 	Vec2u m_tile_sz;
 	Vec2u m_sheet_sz;
@@ -71,6 +73,7 @@ private:
 	Vec2f m_tex_screen_pos;
 
 	SEbool m_show_sheet_window;
+	SEbool m_reset_tile_images;
 
 	SEint m_brush_sz;
 	SEint m_curr_layer;

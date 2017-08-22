@@ -63,11 +63,6 @@ void GuiSceneMgr::Update()
 		}
 		ImGui::TreePop();
 	}
-	if (ImGui::Button("SAVE CURRENT PROGRESS"))
-	{
-		m_event_handler->SendEvent(SE_Cmd_SaveScene());
-	}
-
 	ImGui::End();
 }
 

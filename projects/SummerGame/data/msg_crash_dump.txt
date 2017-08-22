@@ -1,0 +1,30 @@
+MESSAGE TYPE: ERROR
+EditorLoop failed from std::exception,
+exception message: type must be array, but is null
+---
+MESSAGE TYPE: INFO
+Compiling test.frag
+---
+MESSAGE TYPE: INFO
+Compiling test.vert
+---
+MESSAGE TYPE: INFO
+Compiling defaultShader.frag
+---
+MESSAGE TYPE: INFO
+Compiling defaultShader.vert
+---
+MESSAGE TYPE: INFO
+Compiling debug_rend.frag
+---
+MESSAGE TYPE: INFO
+Compiling debug_rend.vert
+---
+MESSAGE TYPE: INFO
+Applying window settings..
+---
+
+
+
+/*------DEBUG STARTS------*/
+

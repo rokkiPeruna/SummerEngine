@@ -12,6 +12,8 @@
 #include <core/Engine.h>
 #include <ids/ComponentTypeList.h>
 #include <utility/EditorFunctions.h>
+#include <events/EventHandler.h>
+#include <events/Events.h>
 //
 #include <gui/gui_values.h>
 #include <gui/imgui_impl_sdl_gl3.h>
@@ -49,6 +51,8 @@ public:
 
 private:
 	priv::Engine& m_engine;
+
+	EventHandler* m_event_handler; //Remember to register
 
 	std::vector<std::unique_ptr<EngineGui>> m_gui_container;
 

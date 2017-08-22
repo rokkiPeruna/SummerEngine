@@ -30,8 +30,10 @@ std::map<COMPONENT_TYPE, gui::CompEditorGui*> GraphicalUserInterface::ComponentT
 
 GraphicalUserInterface::GraphicalUserInterface(priv::Engine& engine_ref)
 	: m_engine(engine_ref)
+	, m_event_handler{nullptr}
 	, m_gui_container{}
 	, m_map_editor{nullptr}
+	
 {
 
 }
@@ -44,6 +46,10 @@ GraphicalUserInterface::~GraphicalUserInterface()
 
 void GraphicalUserInterface::Initialize()
 {
+	//Event handler
+	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
+	assert(m_event_handler);
+
 	//Set gui values
 	window_data::width = m_engine.GetWindow().windowInitData.width;
 	window_data::heigth = m_engine.GetWindow().windowInitData.heigth;
@@ -81,11 +87,6 @@ void GraphicalUserInterface::Initialize()
 void GraphicalUserInterface::Update()
 {
 
-	//ImGui::SetNextWindowPos(ImVec2(se::gui::window_data::width / 2.0f, se::gui::window_data::heigth / 2.0f), ImGuiSetCond_FirstUseEver);
-	//ImGui::SetNextWindowSize(ImVec2(100.f, 100.f), ImGuiSetCond_FirstUseEver);
-	//ImGui::Begin("Engine");
-	//ImGui::Text("SE Engine, %s");
-
 	if (elem_visibility::show_map_editor)
 		m_map_editor->Update();
 
@@ -109,9 +110,12 @@ void GraphicalUserInterface::Update()
 				}
 				ImGui::EndMenu();
 			}
+
 			if (ImGui::Button("Map editor"))
 				util::SwitchBoolean(gui::elem_visibility::show_map_editor);
-
+			ImGui::SameLine();
+			if (ImGui::Button("Save progress"))
+				m_event_handler->SendEvent(SE_Cmd_SaveScene());
 
 			ImGui::EndMainMenuBar();
 		}

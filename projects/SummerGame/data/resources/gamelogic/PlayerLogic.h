@@ -2,6 +2,7 @@
 #define SUMMERGAME_PLAYERLOGIC_H
 
 #include <core/GameLogic.h>
+#include <managers/Keyboard.h>
 
 
 class PlayerLogic : public se::GameLogic
@@ -22,6 +23,7 @@ public:
 
 
 	se::EventHandler* playerHandler;
+	se::Keyboard keyboard;
 	float _timer;
 
 };

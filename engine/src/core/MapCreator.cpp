@@ -10,6 +10,7 @@ namespace priv
 {
 MapCreator::MapCreator(Engine& engine_ref)
 	: m_engine(engine_ref)
+	, ppt{ 0 }
 	, m_event_handler{ nullptr }
 	, m_tiles_obj{}
 	, m_current_tileconts{}
@@ -21,6 +22,8 @@ MapCreator::MapCreator(Engine& engine_ref)
 
 void MapCreator::Init()
 {
+	ppt = m_engine.GetPixelsPerOneUnit();
+
 	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
 
@@ -163,28 +166,24 @@ void MapCreator::AddMapToScene(const std::string& map_name)
 
 }
 
-std::pair<SEbool, const Tile&> MapCreator::CheckForTile(Vec2f tile_position, Vec2i tile_size) const
+std::pair<SEbool, const Tile&> MapCreator::CheckForTile(Vec2f tile_position, Vec2i tile_size_px) const
 {
-	assert(tile_size.x > 0 && tile_size.y > 0);
-	if (tile_size.x == 1 && tile_size.y == 1)
+	assert(tile_size_px.x > 0 && tile_size_px.y > 0);
+
+	for (const auto& tl : m_current_tileconts)
 	{
-		for (const auto& tl : m_current_tileconts)
-		{
-			auto itr = std::find_if(tl.tiles.begin(), tl.tiles.end(), [&tile_position](const Tile& a) {
-				if (Vec2i(a.position + 0.5f) == Vec2i(tile_position + 0.5f))
-					return true;
-				return false;
-			});
-			if (itr != tl.tiles.end())
-				return{ true, (*itr) };
-		}
-		return{ false, Tile() };
+		auto itr = std::find_if(tl.tiles.begin(), tl.tiles.end(), [&tile_position](const Tile& a) {
+
+
+			if (Vec2i(a.position + 0.5f) == Vec2i(tile_position + 0.5f))
+				return true;
+			return false;
+		});
+		if (itr != tl.tiles.end())
+			return{ true, (*itr) };
 	}
-	else
-	{
-		std::cout << "Large tile" << std::endl;
-		return{ false, Tile() };
-	}
+	return{ false, Tile() };
+
 }
 
 

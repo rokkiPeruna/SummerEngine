@@ -29,7 +29,10 @@ ResourceManager::ResourceManager(Engine& engine_ref)
 	, m_tilesheet_fold_name("tilesheets/")
 	, m_shaderProgramContainer{}
 {
-
+	m_textResourcesContainer.reserve(100);
+	m_imageResContainer.reserve(100);
+	m_textureResContainer.reserve(100);
+	m_tilesheetResContainer.reserve(100);
 }
 
 //Recived path is where the actual shader files are.
@@ -126,7 +129,7 @@ ImageResource* ResourceManager::LoadImageResource(std::string name, SEbool flip_
 		filepath = m_rel_path_to_user_files + m_res_fold_name + m_image_fold_name + name;
 	else
 		filepath = m_rel_path_to_user_files + m_res_fold_name + m_tilesheet_fold_name + name;
-	
+
 	stbi_set_flip_vertically_on_load(flip_vertically);
 	SEuchar* tmp = stbi_load(
 		filepath.c_str(),

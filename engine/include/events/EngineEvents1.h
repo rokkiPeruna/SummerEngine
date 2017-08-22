@@ -96,6 +96,20 @@ struct SE_Cmd_AddCompToEntity : public SE_Event
 	}
 };
 
+///Event sent when animation needs to be changed
+///data is char_arr for animation name
+///additional_data is entity's id
+namespace EventType { constexpr se_event_type ChangeAnimation{ event_bits::group_EngineEvents1 | event_bits::type_bit_7 }; }
+struct SE_Cmd_ChangeAnimation : public SE_Event
+{
+	explicit SE_Cmd_ChangeAnimation(const char animation_name[32], SEint entity_id)
+	{
+		type = EventType::ChangeAnimation;
+		memcpy(data.char_arr, animation_name, sizeof(data.char_arr));
+		additional_data.seint = entity_id;
+	}
+};
+
 //Dummy event
 /*namespace EventType { constexpr se_event_type --event_name-- = { event group | next free bit}; }
 struct SE_Event_--event_name-- : public SE_Event

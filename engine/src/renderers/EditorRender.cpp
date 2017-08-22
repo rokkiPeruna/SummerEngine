@@ -17,7 +17,7 @@ EditorRender::EditorRender(Engine& engine_ref)
 	, CurrentShader(nullptr)
 	, m_tile_buffers{}
 	, m_tile_vao{ SEuint_max }
-	, m_tile_z_offset{ 0.1f }
+	, m_tile_z_offset{ 0.0f }
 {
 	m_dyn_rend_batches.reserve(1000);
 }
@@ -276,10 +276,11 @@ void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 {
 	const auto& map_creator = m_engine.GetMapCreator();
 	auto& tile_conts = map_creator.GetCurrentTiles();
-	for (auto itr = tile_conts.begin(); itr != tile_conts.end(); ++itr)
+	for (auto itr = tile_conts.rbegin(); itr != tile_conts.rend(); ++itr)
 	{
 		if ((*itr).tiles.empty())
 			return;
+		m_tile_z_offset = (*itr).layer_ord_num * 0.05f - 0.3f;
 
 		const auto& tiles = (*itr).tiles;
 
@@ -309,9 +310,9 @@ void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 			GL_FALSE,
 			&model[0][0]
 		);
-
+		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tiles.at(0).tex_handle);
+		glBindTexture(GL_TEXTURE_2D, (*itr).tex_handle);
 		glUniform1i(texture_location, 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buf);
@@ -322,6 +323,7 @@ void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 			GL_UNSIGNED_INT,
 			0
 		);
+		glClear(GL_DEPTH_BUFFER);
 		glDeleteBuffers(3, m_tile_buffers);
 	}
 }
@@ -329,8 +331,10 @@ void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 void EditorRender::_createRectAndTexCoordsFromTile(const std::vector<Tile>& tiles, std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords)
 {
 	auto pixels_per_unit = m_engine.GetPixelsPerOneUnit();
-	SEfloat half_w = (tiles.at(0).w * 0.5f) / pixels_per_unit;
-	SEfloat half_h = (tiles.at(0).h * 0.5f) / pixels_per_unit;
+	SEfloat scale_x = pixels_per_unit / static_cast<SEfloat>(tiles.at(0).w);
+	SEfloat scale_y = pixels_per_unit / static_cast<SEfloat>(tiles.at(0).h);
+	SEfloat half_w = (tiles.at(0).w * 0.5f) / pixels_per_unit * scale_x;
+	SEfloat half_h = (tiles.at(0).h * 0.5f) / pixels_per_unit * scale_y;
 
 	for (const auto& tile : tiles)
 	{

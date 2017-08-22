@@ -18,11 +18,13 @@ GuiMapEditor::GuiMapEditor(priv::Engine& engine_ref)
 	, m_tiles{}
 	, m_curr_tiles_ind{ 0 }
 	, m_current_tile{}
+	, ppu{ m_engine.GetPixelsPerOneUnit() }
 	, m_tile_number{ 0 }
 	, m_tile_sz{ 0 }
 	, m_sheet_sz{ 0 }
 	, m_tex_screen_pos{ 0 }
 	, m_show_sheet_window{ false }
+	, m_reset_tile_images{ false }
 	, m_brush_sz{ 1 }
 	, m_curr_layer{ 0 }
 	, m_mouse_hovering_win{ false }
@@ -112,6 +114,8 @@ void GuiMapEditor::_tilePropEdit()
 		ImGui::SliderInt("Tile heigth", &m_current_tilesheet->GetData().tile_heigth, 1, 512);
 		ImGui::SliderInt("Brush size", &m_brush_sz, 1, 5);
 		ImGui::SliderInt("Current layer", &m_curr_layer, 0, 5);
+		if (ImGui::Button("Reset images"))
+			m_curr_tiles_ind = 0;
 		m_tile_sz = Vec2u{ m_current_tilesheet->GetData().tile_width, m_current_tilesheet->GetData().tile_heigth };
 	}
 }
@@ -163,7 +167,7 @@ void GuiMapEditor::_drawImageButtons()
 		ImGui::PushID(i);
 		if (ImGui::ImageButton(
 			(void*)static_cast<SEuint64>(m_tiles[i].tex_handle),
-			ImVec2(static_cast<SEfloat>(m_tiles[i].w), static_cast<SEfloat>(m_tiles[i].h)),
+			ImVec2(static_cast<SEfloat>(ppu), static_cast<SEfloat>(ppu)),
 			ImVec2(m_tiles[i].norm_tex_coords.x, m_tiles[i].norm_tex_coords.y),
 			ImVec2(m_tiles[i].norm_tex_coords.z, m_tiles[i].norm_tex_coords.w),
 			0
@@ -212,7 +216,7 @@ void GuiMapEditor::_handleTileAddingToScene()
 		return;
 	}
 
-	auto data = _checkForTile(pos, Vec2i(std::round(m_engine.GetPixelsPerOneUnit() / static_cast<SEfloat>(m_current_tile.w)), std::round(m_engine.GetPixelsPerOneUnit() / static_cast<SEfloat>(m_current_tile.h))));
+	auto data = _checkForTile(pos, Vec2i(m_current_tile.w, m_current_tile.h));
 	if (data.first && !data.second)
 		m_map_creator.RemoveTileFromMap(pos, m_curr_layer);
 	else if (data.second)
