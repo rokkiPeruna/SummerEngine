@@ -66,6 +66,7 @@ void TransformSystem::Update(SEfloat deltaTime)
 			TransformableComponents.at(se_event.additional_data.seint).position += se_event.data.vec3f;
 			recalc_mod_mat = true;
 			e_id = se_event.additional_data.seint;
+			std::cout << se_event.additional_data.seint << std::endl;
 			break;
 		}
 		case EventType::EntityScaleChanged:

@@ -15,8 +15,10 @@ void PlayerLogic::Init()
 
 void PlayerLogic::Update(float deltaTime)
 {
-	std::cout << "Player Logic has been updated " << std::endl;
-	se::GetTransformComponent(m_entityID)->position.x += 0.5f * deltaTime;
+	
+	
+	playerHandler->SendEvent(se::SE_Event_EntityPositionChanged(m_entityID, { 0.5 * deltaTime, 0.0f, 0.0f }));
+	
 	
 }
 

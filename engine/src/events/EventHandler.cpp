@@ -26,7 +26,7 @@ SEint EventHandler::PollEvents(SE_Event& se_event)
 	SEint sz = static_cast<SEint>(m_pending_events.size());
 	if (sz)
 	{
-		se_event = m_pending_events.back();
+		se_event = m_pending_events.front();
 		m_pending_events.pop();
 	}
 	return sz;

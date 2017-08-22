@@ -9,12 +9,17 @@ class PlayerLogic : public se::GameLogic
 public:
 		
 	PlayerLogic();
-	
-	float timer;
-	
+		
 	void Init() override final;
 
 	void Update(float deltaTime) override final;
+
+	GameLogic* Create() 
+	{ 
+		GameLogic* result =	new PlayerLogic; 
+		return result;
+	}
+
 
 	se::EventHandler* playerHandler;
 	float _timer;
