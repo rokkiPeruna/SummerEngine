@@ -40,7 +40,7 @@ void CollisionSystem::Update(SEfloat)
 	//Check messages!!-
 
 
-	auto* entities = &m_engine.GetEntityMgr().GetEntities();
+	//auto* entities = &m_engine.GetEntityMgr().GetEntities();
 	
 	for (auto& itr = m_cCollidables.begin(); itr != (m_cCollidables.end() - 1); ++itr)
 	{

@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iomanip>
 #include <exception>
+#include <thread>
 
 //External includes:
 #include <SDL2/include/SDL.h>

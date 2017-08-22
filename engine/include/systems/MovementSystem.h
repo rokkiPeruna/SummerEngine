@@ -58,6 +58,7 @@ public:
 	///Returns plain Component* used in editor function.
 	Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container);
 
+
 private:
 	///Component containers(vectors) and free index containers(queues)
 	std::vector<CDynamic> m_cDynamics;

@@ -269,15 +269,27 @@ void Engine::_updateMgrs()
 
 void Engine::_updateSystems(SEfloat deltaTime)
 {
-	m_movementSystem->Update(deltaTime);
+	//m_movementSystem->Update(deltaTime);
+	//
+	//m_animationSystem->Update(deltaTime);
+	//
+	//m_transformSystem->Update(deltaTime);
+	//
+	//m_collisionSystem->Update(deltaTime);
+	//
+	//m_gameLogicSystem->Update(deltaTime);
 
-	m_animationSystem->Update(deltaTime);
-
-	m_transformSystem->Update(deltaTime);
-
-	m_collisionSystem->Update(deltaTime);
-
-	m_gameLogicSystem->Update(deltaTime);
+	std::thread& movement_sys = m_movementSystem->update_thread(deltaTime);
+	std::thread& animation_sys = m_animationSystem->update_thread(deltaTime);
+	std::thread& transform_sys = m_transformSystem->update_thread(deltaTime);
+	std::thread& collision_sys = m_collisionSystem->update_thread(deltaTime);
+	std::thread& gameLogic_sys = m_gameLogicSystem->update_thread(deltaTime);
+	
+	movement_sys.join();
+	animation_sys.join();
+	transform_sys.join();
+	collision_sys.join();
+	gameLogic_sys.join();
 
 }
 

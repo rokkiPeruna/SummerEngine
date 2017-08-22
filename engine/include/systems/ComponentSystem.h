@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <queue>
+#include <thread>
 
 ///External includes:
 #include <nlohmann_json/json.hpp>
@@ -72,6 +73,10 @@ public:
 
 	///GetPlainComponentPtr returns plain Component* to be used in editor function. Can't be used for alternating data in game logic
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
+
+
+	std::thread& update_thread(SEfloat deltaTime) { return std::thread([this, deltaTime] {this->Update(deltaTime); }); } olet tässä
+
 
 protected:
 	Engine& m_engine;				///Reference to Engine
