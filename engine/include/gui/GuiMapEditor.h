@@ -73,6 +73,9 @@ private:
 	SEbool m_show_sheet_window;
 
 	SEint m_brush_sz;
+	SEint m_curr_layer;
+
+	SEbool m_mouse_hovering_win;
 
 	/*FOR CHOOSING TILES*/
 	//Wrapper
@@ -94,8 +97,8 @@ private:
 	//Wrapper
 	void _handleTileAddingToScene();
 
-	//Check if there is tile already and if it is of same type 
-	std::pair<SEbool, SEbool> _checkForTile(Vec2f position);
+	//Check if there is tile already and if it is of same type.
+	std::pair<SEbool, SEbool> _checkForTile(Vec2f position, Vec2i size);
 
 };
 

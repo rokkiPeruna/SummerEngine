@@ -281,10 +281,7 @@ void SceneManager::_createStructToNewScene(std::ofstream& file, std::string scen
 		"\"" + sf_struct.prim_obj_name + "\":{\n" <<
 		"  },\n" <<
 		"\"" + sf_struct.tiles_obj_name + "\":{\n" <<
-		"\t\"" + tileo_struct.sheet_obj_name + "\" : null, \n" <<
-		"\t\"" + tileo_struct.tile_width_obj_name + "\" : 0, \n" <<
-		"\t\"" + tileo_struct.tile_heigth_obj_name + "\" : 0, \n" <<
-		"\t\"" + tileo_struct.tile_array_obj_name + "\" : null \n" <<			
+		"\t\"" + tileo_struct.tile_containers_name + "\" : null \n" <<		
 		"  }\n" <<
 		"}" << std::endl;
 }

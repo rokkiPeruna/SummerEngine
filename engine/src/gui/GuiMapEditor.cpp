@@ -24,11 +24,11 @@ GuiMapEditor::GuiMapEditor(priv::Engine& engine_ref)
 	, m_tex_screen_pos{ 0 }
 	, m_show_sheet_window{ false }
 	, m_brush_sz{ 1 }
+	, m_curr_layer{ 0 }
+	, m_mouse_hovering_win{ false }
 {
 
 }
-
-
 
 void GuiMapEditor::Update()
 {
@@ -38,9 +38,10 @@ void GuiMapEditor::Update()
 		util::SwitchBoolean(elem_visibility::show_map_editor);
 
 	SEbool show = true;
-	ImGui::SetNextWindowSize(Vec2f(210.0f, 340.0f), ImGuiSetCond_Always);
+	ImGui::SetNextWindowSize(Vec2f(240.0f, 540.0f), ImGuiSetCond_Always);
 	ImGui::SetNextWindowPos(Vec2f(0.0f));
-	ImGui::Begin("Tilesheets", &show, Vec2f(70.0f, 40.0f));
+	ImGui::Begin("Tilesheets", &show);
+	m_mouse_hovering_win = ImGui::IsMouseHoveringWindow();
 	for (auto sn : m_tilesheet_names)
 	{
 		if (ImGui::Button(sn.c_str()))
@@ -50,6 +51,9 @@ void GuiMapEditor::Update()
 			m_curr_tilesheet_name = sn;
 		}
 	}
+	_tilePropEdit();
+	ImGui::Separator();
+
 	//Handle tile adding to map
 	if (!m_show_sheet_window && m_current_tile.tex_handle != SEuint_max && m_current_tilesheet)
 		_handleTileAddingToScene();
@@ -67,13 +71,17 @@ void GuiMapEditor::Update()
 /*FOR CHOOSING TILES*/
 void GuiMapEditor::_handleTileChoosing()
 {
-	_tilePropEdit();
 	_sheetPropEdit();
 
 	//Set window
-	ImGui::SetNextWindowSize(Vec2f(m_current_tilesheet->GetData().width, m_current_tilesheet->GetData().width), ImGuiSetCond_Appearing);
-	ImGui::SetNextWindowPos(Vec2f(gui::window_data::width / 2.0f - m_current_tilesheet->GetData().width / 2.0f, gui::window_data::heigth / 2.0f - m_current_tilesheet->GetData().heigth / 2.0f));
-	ImGui::Begin(m_curr_tilesheet_name.c_str(), &m_show_sheet_window);
+	Vec2f win_sz(
+		(m_current_tilesheet->GetData().width < window_data::width * 0.6f) ? m_current_tilesheet->GetData().width : window_data::width * 0.6f,
+		(m_current_tilesheet->GetData().heigth < window_data::heigth * 0.9f) ? m_current_tilesheet->GetData().heigth : window_data::heigth * 0.9f
+	);
+
+	ImGui::SetNextWindowSize(win_sz, ImGuiSetCond_Always);
+	ImGui::SetNextWindowPos(Vec2f(gui::window_data::width / 2.0f - win_sz.x / 2.0f, gui::window_data::heigth / 2.0f - win_sz.y / 2.0f));
+	ImGui::Begin(m_curr_tilesheet_name.c_str(), &m_show_sheet_window, ImGuiWindowFlags_HorizontalScrollbar);
 	//Cursor screen position
 	m_tex_screen_pos = ImGui::GetCursorScreenPos();
 
@@ -97,11 +105,15 @@ void GuiMapEditor::_handleTileChoosing()
 
 void GuiMapEditor::_tilePropEdit()
 {
-	ImGui::SliderInt("Tile width", &m_current_tilesheet->GetData().tile_width, 1, 512);
-	ImGui::SliderInt("Tile heigth", &m_current_tilesheet->GetData().tile_heigth, 1, 512);
-	ImGui::SliderInt("Brush size", &m_brush_sz, 1, 5);
+	if (m_current_tilesheet)
+	{
 
-	m_tile_sz = Vec2u{ m_current_tilesheet->GetData().tile_width, m_current_tilesheet->GetData().tile_heigth };
+		ImGui::SliderInt("Tile width", &m_current_tilesheet->GetData().tile_width, 1, 512);
+		ImGui::SliderInt("Tile heigth", &m_current_tilesheet->GetData().tile_heigth, 1, 512);
+		ImGui::SliderInt("Brush size", &m_brush_sz, 1, 5);
+		ImGui::SliderInt("Current layer", &m_curr_layer, 0, 5);
+		m_tile_sz = Vec2u{ m_current_tilesheet->GetData().tile_width, m_current_tilesheet->GetData().tile_heigth };
+	}
 }
 
 void GuiMapEditor::_sheetPropEdit()
@@ -145,8 +157,8 @@ Vec2i GuiMapEditor::_calcTilesXYcoords()
 
 void GuiMapEditor::_drawImageButtons()
 {
-	SEint same_line_counter = 0;
-	for (SEint i = 0; i < m_curr_tiles_ind; ++i, ++same_line_counter)
+	SEint same_line_counter = 1;
+	for (SEint i = 0; i < m_curr_tiles_ind; ++i, same_line_counter++)
 	{
 		ImGui::PushID(i);
 		if (ImGui::ImageButton(
@@ -161,7 +173,7 @@ void GuiMapEditor::_drawImageButtons()
 		}
 		ImGui::PopID();
 
-		if (same_line_counter == 4)
+		if (same_line_counter >= 5)
 			same_line_counter = 0;
 		else
 			ImGui::SameLine();
@@ -186,7 +198,7 @@ void GuiMapEditor::_showCurrSelectedTile()
 /*FOR ADDING TILE TO SCENE*/
 void GuiMapEditor::_handleTileAddingToScene()
 {
-	if (!ImGui::IsMouseClicked(0) && !ImGui::IsMouseDown(0))
+	if (!ImGui::IsMouseClicked(0) && !ImGui::IsMouseDown(0) || m_mouse_hovering_win)
 		return;
 
 	Vec2f mousepos = ImGui::GetMousePos();
@@ -196,13 +208,13 @@ void GuiMapEditor::_handleTileAddingToScene()
 	//Check for erasing
 	if (mouse.GetState(MouseState::Rigth_Button))
 	{
-		m_map_creator.RemoveTileFromMap(pos);
+		m_map_creator.RemoveTileFromMap(pos, m_curr_layer);
 		return;
 	}
 
-	auto data = _checkForTile(pos);
+	auto data = _checkForTile(pos, Vec2i(std::round(m_engine.GetPixelsPerOneUnit() / static_cast<SEfloat>(m_current_tile.w)), std::round(m_engine.GetPixelsPerOneUnit() / static_cast<SEfloat>(m_current_tile.h))));
 	if (data.first && !data.second)
-		m_map_creator.RemoveTileFromMap(pos);
+		m_map_creator.RemoveTileFromMap(pos, m_curr_layer);
 	else if (data.second)
 		return;
 
@@ -210,19 +222,16 @@ void GuiMapEditor::_handleTileAddingToScene()
 	{
 		priv::Tile t = m_current_tile;
 		t.position = pos;
-		m_map_creator.AddTileToMap(t);
-
-		static SEint tileAddedCount = 0;
-		std::cout << "Tile added = " << std::to_string(tileAddedCount++) << " void GuiMapEditor::_handleTileAddingToScene()  " << std::endl;
+		m_map_creator.AddTileToMap(t, m_curr_layer, m_current_tilesheet->name);
 	}
 
 	//Handle larger brush sizes
 
 }
 
-std::pair<SEbool, SEbool> GuiMapEditor::_checkForTile(Vec2f position)
+std::pair<SEbool, SEbool> GuiMapEditor::_checkForTile(Vec2f position, Vec2i size)
 {
-	auto data = m_map_creator.CheckForTile(position);
+	auto data = m_map_creator.CheckForTile(position, size);
 	if (data.first)
 	{
 		if (data.second.x == m_current_tile.x && data.second.y == m_current_tile.y)

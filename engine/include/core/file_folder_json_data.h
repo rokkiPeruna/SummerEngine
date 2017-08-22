@@ -55,24 +55,19 @@ struct scene_file_structure
 
 struct tiles_obj_structure
 {
+	const std::string tile_containers_name{ "tilecontainers" };
 	const std::string sheet_obj_name{ "sheet_name" };
-	const std::string tile_width_obj_name{ "tile_width" };
-	const std::string tile_heigth_obj_name{ "tile_heigth" };
 	const std::string tile_array_obj_name{ "tilearr" };
 
 	/*
 	for example, tiles obj should look something like this:
 	"tiles" : {
-	"sheet_name" : "some_sheet",
-	"tile_width" : 32,
-	"tile_heigth : 32,
-	"tilearr" : [
-		5,
-		6,
-		0,		//Zero means empty tile
-		9,
-		11,
-		...
+	"tilecontainers" : [
+		"sheet_name" : "some_sheet",
+		"layer" : 0,
+		"tilearr" : [
+			...
+			]
 		]
 	}
 	*/

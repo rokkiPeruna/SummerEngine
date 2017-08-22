@@ -64,7 +64,6 @@ void ResourceManager::Initialize(const std::string& sourcePath, const std::strin
 	{
 		m_tilesheet_names.emplace_back(f.path().filename().generic_string());
 	}
-
 }
 
 void ResourceManager::Uninitialize()

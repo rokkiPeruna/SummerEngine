@@ -275,52 +275,55 @@ void EditorRender::ClearRenderBatches()
 void EditorRender::_renderTiles(SEuint texture_location, SEuint model_loc)
 {
 	const auto& map_creator = m_engine.GetMapCreator();
-	if (map_creator.GetTiles().empty())
-		return;
+	auto& tile_conts = map_creator.GetCurrentTiles();
+	for (auto itr = tile_conts.begin(); itr != tile_conts.end(); ++itr)
+	{
+		if ((*itr).tiles.empty())
+			return;
 
-	const auto& tiles = map_creator.GetTiles();
+		const auto& tiles = (*itr).tiles;
 
-	//Create rects and tex coords from tiles 
-	std::vector<Vec3f> rects{};
-	rects.reserve(tiles.size() * 4);
-	std::vector<Vec2f> tex_coords{};
-	tex_coords.reserve(tiles.size() * 4);
+		//Create rects and tex coords from tiles 
+		std::vector<Vec3f> rects{};
+		rects.reserve(tiles.size() * 4);
+		std::vector<Vec2f> tex_coords{};
+		tex_coords.reserve(tiles.size() * 4);
 
-	//Create vertices and tex coords
-	_createRectAndTexCoordsFromTile(tiles, rects, tex_coords);
+		//Create vertices and tex coords
+		_createRectAndTexCoordsFromTile(tiles, rects, tex_coords);
 
-	//Create indices
-	std::vector<SEuint> indices{};
-	_createIndices(indices, tiles.size());
+		//Create indices
+		std::vector<SEuint> indices{};
+		_createIndices(indices, tiles.size());
 
 
-	glBindVertexArray(m_tile_vao);
+		glBindVertexArray(m_tile_vao);
 
-	SEuint index_buf = _createBuffers(rects, tex_coords, indices);
+		SEuint index_buf = _createBuffers(rects, tex_coords, indices);
 
-	Mat4f model(1.0f);
-	glUniformMatrix4fv
-	(
-		model_loc,
-		1,
-		GL_FALSE,
-		&model[0][0]
-	);
+		Mat4f model(1.0f);
+		glUniformMatrix4fv
+		(
+			model_loc,
+			1,
+			GL_FALSE,
+			&model[0][0]
+		);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tiles.at(0).tex_handle);
-	glUniform1i(texture_location, 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, tiles.at(0).tex_handle);
+		glUniform1i(texture_location, 0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buf);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buf);
 
-	glDrawElements(
-		GL_TRIANGLES,
-		indices.size(),
-		GL_UNSIGNED_INT,
-		0
-	);
-
-	glDeleteBuffers(3, m_tile_buffers);
+		glDrawElements(
+			GL_TRIANGLES,
+			indices.size(),
+			GL_UNSIGNED_INT,
+			0
+		);
+		glDeleteBuffers(3, m_tile_buffers);
+	}
 }
 
 void EditorRender::_createRectAndTexCoordsFromTile(const std::vector<Tile>& tiles, std::vector<Vec3f>& vertices, std::vector<Vec2f>& tex_coords)
