@@ -279,17 +279,37 @@ void Engine::_updateSystems(SEfloat deltaTime)
 	//
 	//m_gameLogicSystem->Update(deltaTime);
 
-	std::thread& movement_sys = m_movementSystem->update_thread(deltaTime);
-	std::thread& animation_sys = m_animationSystem->update_thread(deltaTime);
-	std::thread& transform_sys = m_transformSystem->update_thread(deltaTime);
-	std::thread& collision_sys = m_collisionSystem->update_thread(deltaTime);
-	std::thread& gameLogic_sys = m_gameLogicSystem->update_thread(deltaTime);
+	auto update1 = [this](SEfloat dt) {
+		this->GetMovementSystem().Update(dt);
+		this->GetAnimationSystem().Update(dt);
+	};
 	
-	movement_sys.join();
-	animation_sys.join();
-	transform_sys.join();
-	collision_sys.join();
-	gameLogic_sys.join();
+	auto update2 = [this](SEfloat dt) {
+		this->GetTransformSystem().Update(dt);
+		this->GetCollisionSystem().Update(dt);
+	};
+
+	auto update3 = [this](SEfloat dt) {
+		this->GetGameLogicSystem().Update(dt);
+	};
+	std::thread one(update1, deltaTime);
+	std::thread two(update2, deltaTime);
+	std::thread three(update3, deltaTime);
+
+	one.join();
+	two.join();
+	three.join();
+	//std::thread& movement_sys = m_movementSystem->update_thread(deltaTime);
+	//std::thread& animation_sys = m_animationSystem->update_thread(deltaTime);
+	//std::thread& transform_sys = m_transformSystem->update_thread(deltaTime);
+	//std::thread& collision_sys = m_collisionSystem->update_thread(deltaTime);
+	//std::thread& gameLogic_sys = m_gameLogicSystem->update_thread(deltaTime);
+	//
+	//movement_sys.join();
+	//animation_sys.join();
+	//transform_sys.join();
+	//collision_sys.join();
+	//gameLogic_sys.join();
 
 }
 

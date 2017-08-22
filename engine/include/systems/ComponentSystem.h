@@ -75,7 +75,7 @@ public:
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
 
 
-	std::thread& update_thread(SEfloat deltaTime) { return std::thread([this, deltaTime] {this->Update(deltaTime); }); } olet tässä
+	//std::thread& update_thread(SEfloat deltaTime) { return std::thread([this, deltaTime] {this->Update(deltaTime); }); }
 
 
 protected:
