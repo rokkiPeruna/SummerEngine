@@ -90,6 +90,8 @@ private:
 	//Free indices
 	std::queue<SEint> m_free_cGameLogic_indices;
 
+	
+
 
 	struct _findByValue
 	{

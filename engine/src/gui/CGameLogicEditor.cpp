@@ -12,10 +12,17 @@ CGameLogicEditor::CGameLogicEditor(priv::Engine& engine_ref)
 	, allLogicNames()
 {
 	GraphicalUserInterface::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::GAMELOGIC, this);
-	for (auto i : priv::GameLogicInstances)
+	
+	for (auto i : priv::LogicsFactory::GetInstance()->m_factoryMap)
 	{
-		allLogicNames.emplace_back(i->GetName());
+		allLogicNames.emplace_back(i.first);
 	}
+
+	
+//	for (auto i : priv::GameLogicInstances)
+//	{
+//		allLogicNames.emplace_back(i->GetName());
+//	}
 }
 
 

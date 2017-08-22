@@ -318,8 +318,7 @@ bool Engine::_gameLoop()
 		ImGui::Separator();
 		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
-
-
+		
 
 
 		_handleGameLoopEvents(gameloop);
@@ -339,8 +338,8 @@ bool Engine::_gameLoop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//m_gameRender->Update(deltaTime); SE_TODO: Switch to game render when it is implemented
-		//m_gameRender->Update(deltaTime);
-		m_editorRender->Update(deltaTime);
+		m_gameRender->Update(deltaTime);
+		//m_editorRender->Update(deltaTime);
 		ImGui::Render();
 		SDL_GL_SwapWindow(m_window->GetWindowHandle());
 

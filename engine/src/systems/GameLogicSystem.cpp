@@ -26,8 +26,6 @@ GameLogicSystem::GameLogicSystem(Engine& engine_ref)
 	, m_free_cGameLogic_indices{}
 {
 	Engine::ComponentTypeToSystemPtr.emplace(COMPONENT_TYPE::GAMELOGIC, this);
-
-
 }
 
 GameLogicSystem::~GameLogicSystem()
@@ -37,15 +35,23 @@ GameLogicSystem::~GameLogicSystem()
 
 void GameLogicSystem::Initialize()
 {
+	LogicsFactory::GetInstance();
+
+
 	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 	assert(m_event_handler);
 
 	m_event_handler->RegisterEvent(SE_Event_GameLogicActivated("", -1));
 
-	for (auto g : GameLogicInstances)
+	for (auto i : LogicsFactory::GetInstance()->m_factoryMap)
 	{
-		m_game_logic_names.emplace_back(g->GetName());
+		m_game_logic_names.emplace_back(i.first);
 	}
+
+	//for (auto g : GameLogicInstances)
+	//{
+	//	m_game_logic_names.emplace_back(g->GetName());
+	//}
 }
 
 void GameLogicSystem::Uninitialize()
@@ -74,6 +80,8 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 					if (spesificComponent->logics.at(i)->GetName() == se_event.data.char_arr)
 					{
 						std::swap(spesificComponent->logics.at(0), spesificComponent->logics.at(i));
+						std::cout << "swapped logics  : " << spesificComponent->logics.at(0)->GetName() << " - " 
+							<< spesificComponent->logics.at(i)->GetName() << std::endl;
 						break;
 					}
 				}
@@ -159,16 +167,29 @@ Component* GameLogicSystem::GetPlainComponentPtr(COMPONENT_TYPE type, SEint inde
 
 void GameLogicSystem::AssingGameLogic(std::string logic_name, CGameLogic& component)
 {
-	for (auto g : GameLogicInstances)
+
+	for (auto i : LogicsFactory::GetInstance()->m_factoryMap)
 	{
-		if (g->GetName() == logic_name)
+		if (i.first == logic_name)
 		{
-			component.logics.emplace_back(g);
+			component.logics.emplace_back(LogicsFactory::GetInstance()->CreateLogic(logic_name));
 			component.logics.back()->entityID(component.ownerID);
 			return;
 		}
+
 	}
 	MessageWarning(GameLogicSys_id) << "No GameLogic with name [" + logic_name + "] found\n in AssingGameLogic()";
+
+	//	for (auto g : GameLogicInstances)
+	//	{
+	//		if (g->GetName() == logic_name)
+	//		{
+	//			component.logics.emplace_back(LogicsFactory::GetInstance()->CreateLogic(logic_name));
+	//			component.logics.back()->entityID(component.ownerID);
+	//			return;
+	//		}
+	//	}
+	//	MessageWarning(GameLogicSys_id) << "No GameLogic with name [" + logic_name + "] found\n in AssingGameLogic()";
 }
 
 void GameLogicSystem::InitializeGameLogics()

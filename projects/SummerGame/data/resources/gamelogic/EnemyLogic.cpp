@@ -10,12 +10,14 @@ EnemyLogic::EnemyLogic()
 void EnemyLogic::Init()
 {
 	se::RegisterEventHandle(enemyHandler);
+	enemyHandler->SendEvent(se::SE_Event_GameLogicActivated("EnemyLogic", m_entityID));
 }
 
 void EnemyLogic::Update(float deltaTime)
 {
 	
 	se::GetTransformComponent(m_entityID)->position.x -= 0.5f * deltaTime;
+	se::GetTransformComponent(m_entityID)->rotation += deltaTime;
 
 	if(_timer > 10)
 	{

@@ -24,49 +24,55 @@ void CShapeEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container
 		SEint id = GetShapeComponent(index_in_container)->my_Transform;
 		SEint owner_id = GetShapeComponent(index_in_container)->ownerID;
 		CShape& comp = *GetShapeComponent(index_in_container);
-		
+		SEint num_indices = comp.points.size();
+
+
 		Entity* tmpEntity = m_engine.GetEntityMgr().GetCurrentEntity();
 		priv::Render* tmpRender = m_engine.GetCurrentRenderer();
-		
-		if (ImGui::Button("Triangle"))
+
+		if (ImGui::CollapsingHeader("Shapes"))
 		{
-			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(3);
-			comp.my_Transform = id;
-			comp.ownerID = owner_id;
-			tmpRender->OnEntityAdded(*tmpEntity);
-		}
-		if (ImGui::Button("Rectangle"))
-		{
-			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(4);
-			comp.my_Transform = id;
-			comp.ownerID = owner_id;
-			tmpRender->OnEntityAdded(*tmpEntity);
-		}
-		if (ImGui::Button("Circle"))
-		{
-			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(30);
-			comp.my_Transform = id;
-			comp.ownerID = owner_id;
-			tmpRender->OnEntityAdded(*tmpEntity);
-		}
-		if (ImGui::Button("Add indie"))
-		{
-			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(static_cast<SEushort>(comp.points.size()) + 1);
-			comp.my_Transform = id;
-			comp.ownerID = owner_id;
-			tmpRender->OnEntityAdded(*tmpEntity);
-		}
-		if (ImGui::Button("Remove indice") && comp.points.size() > 3)
-		{
-			tmpRender->OnRendableComponentChanged(*tmpEntity);
-			comp = CShape(static_cast<SEushort>(comp.points.size()) - 1);
-			comp.my_Transform = id;
-			comp.ownerID = owner_id;
-			tmpRender->OnEntityAdded(*tmpEntity);
+			
+
+			if (ImGui::Button("Triangle"))
+			{
+				tmpRender->OnRendableComponentChanged(*tmpEntity);
+				comp = CShape(3);
+				comp.my_Transform = id;
+				comp.ownerID = owner_id;
+				tmpRender->OnEntityAdded(*tmpEntity);
+			}
+			if (ImGui::Button("Rectangle"))
+			{
+				tmpRender->OnRendableComponentChanged(*tmpEntity);
+				comp = CShape(4);
+				comp.my_Transform = id;
+				comp.ownerID = owner_id;
+				tmpRender->OnEntityAdded(*tmpEntity);
+			}
+			if (ImGui::Button("Circle"))
+			{
+				tmpRender->OnRendableComponentChanged(*tmpEntity);
+				comp = CShape(30);
+				comp.my_Transform = id;
+				comp.ownerID = owner_id;
+				tmpRender->OnEntityAdded(*tmpEntity);
+			}
+			if (ImGui::InputInt("Add indie", &num_indices))
+			{
+				if (num_indices < 3)
+				{
+					return;
+				}
+				else
+				{
+				tmpRender->OnRendableComponentChanged(*tmpEntity);
+				comp = CShape(static_cast<SEushort>(num_indices));
+				comp.my_Transform = id;
+				comp.ownerID = owner_id;
+				tmpRender->OnEntityAdded(*tmpEntity);
+				}
+			}
 		}
 
 	}

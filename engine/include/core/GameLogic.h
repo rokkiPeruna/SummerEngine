@@ -39,10 +39,13 @@ public:
 
 	virtual void Update(SEfloat deltaTime) = 0;
 
+	virtual GameLogic* Create() = 0;
+
 	std::string GetName() const { return m_name; }
 
 	void entityID(SEint id) { m_entityID = id; }
 	SEint entityID() { return m_entityID; }
+
 
 protected:
 

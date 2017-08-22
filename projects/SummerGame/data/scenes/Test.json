@@ -1,0 +1,152 @@
+{
+    "entities": {
+        "1": {
+            "_id": 0,
+            "animation": {
+                "_ownerID": 0,
+                "_type": 5,
+                "anin_names": null
+            },
+            "collidable": {
+                "_ownerID": 0,
+                "_type": 2,
+                "col_pol": [
+                    -0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464,
+                    0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464
+                ],
+                "max": 0.5,
+                "min": -0.5
+            },
+            "gamelogic": {
+                "_ownerID": 0,
+                "_type": 6,
+                "first_act_logic": "",
+                "logics": null
+            },
+            "shape": {
+                "_ownerID": 0,
+                "_type": 4,
+                "points": [
+                    -0.5,
+                    -0.5,
+                    0.0,
+                    0.5,
+                    -0.500000059604645,
+                    0.0,
+                    0.50000011920929,
+                    0.5,
+                    0.0,
+                    -0.5,
+                    0.500000178813934,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 0,
+                "_type": 3,
+                "h": 0,
+                "tex_name": "default_texture.png",
+                "w": 0,
+                "x": 0,
+                "y": 0
+            },
+            "transformable": {
+                "_ownerID": 0,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        },
+        "2": {
+            "_id": 1,
+            "animation": {
+                "_ownerID": 1,
+                "_type": 5,
+                "anin_names": null
+            },
+            "collidable": {
+                "_ownerID": 1,
+                "_type": 2,
+                "col_pol": [
+                    -0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464,
+                    0.400000005960464,
+                    -0.400000005960464,
+                    0.400000005960464
+                ],
+                "max": 0.5,
+                "min": -0.5
+            },
+            "gamelogic": {
+                "_ownerID": 1,
+                "_type": 6,
+                "first_act_logic": "",
+                "logics": null
+            },
+            "shape": {
+                "_ownerID": 1,
+                "_type": 4,
+                "points": [
+                    -0.5,
+                    -0.5,
+                    0.0,
+                    0.5,
+                    -0.500000059604645,
+                    0.0,
+                    0.50000011920929,
+                    0.5,
+                    0.0,
+                    -0.5,
+                    0.500000178813934,
+                    0.0
+                ]
+            },
+            "texture": {
+                "_ownerID": 1,
+                "_type": 3,
+                "h": 0,
+                "tex_name": "default_texture.png",
+                "w": 0,
+                "x": 0,
+                "y": 0
+            },
+            "transformable": {
+                "_ownerID": 1,
+                "_type": 0,
+                "orig_x": 0.0,
+                "orig_y": 0.0,
+                "orig_z": 0.0,
+                "pos_x": 0.0,
+                "pos_y": 0.0,
+                "pos_z": 0.0,
+                "rot": 0.0,
+                "scal_x": 1.0,
+                "scal_y": 1.0,
+                "scal_z": 1.0
+            }
+        }
+    },
+    "scene_info": {
+        "heigth": 0,
+        "name": "test",
+        "type": 1,
+        "width": 0
+    }
+}

@@ -22,7 +22,9 @@ public:
 		, logic_class_names{}
 		, first_act_logic_name{ "" }
 		, current_gamel_index{ -1 }
-	{}
+	{
+		logics.reserve(10);
+	}
 
 	std::vector<GameLogic*> logics; //Run-time-only value. Initialized to empty vector.
 	std::vector<std::string> logic_class_names;

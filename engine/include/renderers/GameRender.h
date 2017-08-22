@@ -47,19 +47,11 @@ private:
 	std::vector<StaticRenderBatch> m_stat_rend_batches;
 	std::vector<DynamicRenderBatch> m_dyn_rend_batches;
 
-	using batch_values = Vec3u;
-
-	struct cmpr_batch_values
-	{
-		bool operator()(const batch_values& a, const batch_values& b) const
-		{
-			return a.x < b.x || a.y < b.y || a.z < b.z; //SE_TODO: Create better comparator
-		}
-	};
+	using batch_values = std::tuple<SEint, SEint, SEint>;
 
 	///Map that binds render batch values to it's pointer
-	std::map<batch_values, StaticRenderBatch*, cmpr_batch_values> m_batch_value_map_static;
-	std::map<batch_values, DynamicRenderBatch*, cmpr_batch_values> m_batch_values_map_dynamic;
+	std::map<batch_values, StaticRenderBatch*> m_batch_value_map_static;
+	std::map<batch_values, DynamicRenderBatch*> m_batch_values_map_dynamic;
 
 	//testing
 	ShaderResource* CurrentShader;
