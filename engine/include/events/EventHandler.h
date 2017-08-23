@@ -11,10 +11,23 @@
 
 namespace se
 {
+///Brief: EventHandler class allows user to send and recieve events containing their type, data and additional data.
+/// ..SE_TODO: Better description
+///Notice that direct heap allocations are prohibited, e.g. no EventHandler eh = new EventHandler() is possible!
 class EventHandler
 {
 public:
+	///Default constructor. Registers handler.
 	EventHandler();
+	///Destructor. Unregisters handler.
+	~EventHandler();
+	//
+	///No copying or moving
+	EventHandler(const EventHandler&) = delete;
+	void operator=(const EventHandler&) = delete;
+	EventHandler(EventHandler&&) = delete;
+	void operator=(EventHandler&&) = delete;
+
 
 	void Update(){}
 
@@ -47,6 +60,12 @@ private:
 	std::unordered_set<se_event_type> m_event_types;
 	std::vector<SE_Event> m_sent_events;
 	std::queue<SE_Event> m_pending_events;
+
+	//This prohibits direct heap allocation
+	void *operator new(size_t) = delete;
+	void operator delete(void*) = delete;
+	void *operator new[](size_t) = delete;
+	void operator delete[](void*) = delete;
 };
 
 }//namespace se

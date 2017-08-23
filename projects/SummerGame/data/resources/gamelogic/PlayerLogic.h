@@ -22,7 +22,7 @@ public:
 	}
 
 
-	se::EventHandler* playerHandler;
+	se::EventHandler playerHandler;
 	se::Keyboard keyboard;
 	float _timer;
 

@@ -34,7 +34,7 @@ class Manager
 public:
 	///Default constructor.
 	///1.param: pointer to Engine -class
-	Manager(Engine& engine_ref) : m_engine(engine_ref), m_event_handler(nullptr) {}
+	Manager(Engine& engine_ref) : m_engine(engine_ref), m_event_handler() {}
 	//
 	virtual ~Manager() = default;
 	Manager(const Manager&) = delete;
@@ -52,8 +52,8 @@ protected:
 	///Reference to engine
 	Engine& m_engine;
 
-	///Event handler. Remember to register if used
-	EventHandler* m_event_handler;
+	///Event handler
+	EventHandler m_event_handler;
 };
 
 }//namespace priv

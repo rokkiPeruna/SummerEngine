@@ -36,14 +36,18 @@ public:
 
 	void Update() override final;
 
-	///Registers EventHandler to EventManager and initializes given pointer
-	void RegisterEventHandler(EventHandler*& event_handler);
 
+
+	///Registers EventHandler to EventManager and initializes given pointer
+	static void __se_register_event_handler(EventHandler* event_handler);
+
+	///Unregisters event handler
+	static void __se_un_register_event_handler(EventHandler* event_handler);
 
 private:
-	std::vector<std::unique_ptr<EventHandler>> m_event_handlers;
+	static std::vector<EventHandler*> m_event_handlers;
 
-	std::vector<SE_Event> m_all_events;
+	static std::vector<SE_Event> m_all_events;
 };
 
 }//namespace priv

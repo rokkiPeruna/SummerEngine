@@ -41,6 +41,8 @@ public:
 	///Run through logic using components as values
 	void Update(SEfloat deltaTime) override final;
 
+	void CheckEvents() override final;
+
 	///Clear component containers
 	void ClearComponentContainers() override final;
 

@@ -17,7 +17,6 @@ namespace se
 class GameLogic;
 
 CGameLogic* GetGameLogicComponent(SEint index);
-void RegisterEventHandle(EventHandler*& eventHandler);
 
 namespace priv
 {
@@ -25,10 +24,7 @@ namespace priv
 
 class GameLogicSystem : public ComponentSystem
 {
-
 	friend CGameLogic* se::GetGameLogicComponent(SEint index);
-	friend void se::RegisterEventHandle(EventHandler*& eventHandler);
-
 public:
 
 	///Default constructor
@@ -54,6 +50,8 @@ public:
 
 	///Update each logic components 'active' logic
 	void Update(SEfloat deltaTime) override final;
+
+	void CheckEvents() override final;
 
 	///Cleat component container(s)
 	void ClearComponentContainers() override final;

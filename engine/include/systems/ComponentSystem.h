@@ -9,6 +9,7 @@
 
 ///External includes:
 #include <nlohmann_json/json.hpp>
+#include <SDL2/include/SDL.h>
 
 //SE includes:
 #include <managers/Entity.h>
@@ -49,6 +50,9 @@ public:
 	///Must be overridden in inheriting class.
 	virtual void Uninitialize() = 0;
 
+	///Checj and handle events.
+	virtual void CheckEvents() = 0;
+
 	///ComponentSystem's update. Takes in (float)deltatime as parameter.
 	///Must be overridden in inheriting class.
 	virtual void Update(SEfloat deltaTime) = 0;
@@ -75,12 +79,11 @@ public:
 	virtual Component* GetPlainComponentPtr(COMPONENT_TYPE type, SEint index_in_container) = 0;
 
 
-	//std::thread& update_thread(SEfloat deltaTime) { return std::thread([this, deltaTime] {this->Update(deltaTime); }); }
-
+	std::thread update_thread(SEfloat deltaTime) { return std::thread([this, deltaTime] {this->Update(deltaTime); }); }
 
 protected:
 	Engine& m_engine;				///Reference to Engine
-	EventHandler* m_event_handler;  ///Pointer to EventHandler. If used, must be initialized with EventManager's RegisterEventHandler() -function
+	EventHandler m_event_handler;  ///EventHandler.
 
 	///Template helper method that creates component from file and adds it to container and binds it to entity.
 	//Returns index off the newly created component if more measures need to be done in system's OnEntityAdded

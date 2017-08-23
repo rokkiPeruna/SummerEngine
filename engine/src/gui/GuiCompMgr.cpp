@@ -10,7 +10,7 @@ namespace gui
 GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority)
 	: ManagerGui(engine_ref, update_priority)
 	, m_scene_mgr(nullptr)
-	, m_entity_mgr(nullptr)
+	, m_entity_mgr{}
 	, m_comp_mgr(nullptr)
 	, m_reInitWithNewComp(true)
 	, m_component_obj()
@@ -21,9 +21,6 @@ GuiCompMgr::GuiCompMgr(priv::Engine& engine_ref, SEuint update_priority)
 	m_entity_mgr = &m_engine.GetEntityMgr();
 	m_comp_mgr = &m_engine.GetCompMgr();
 	assert(m_scene_mgr && m_entity_mgr && m_comp_mgr);
-
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
 }
 
 void GuiCompMgr::Update()
@@ -35,7 +32,7 @@ void GuiCompMgr::Update()
 	
 	//Check events!
 	SE_Event se_event;
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		switch (se_event.type)
 		{
@@ -73,7 +70,7 @@ void GuiCompMgr::Update()
 
 			if (ImGui::Button(component.second.c_str()))
 			{
-				m_event_handler->SendEvent(SE_Cmd_AddCompToEntity(curr_e, component.first));
+				m_event_handler.SendEvent(SE_Cmd_AddCompToEntity(curr_e, component.first));
 				break;
 			}
 		}
@@ -87,7 +84,7 @@ void GuiCompMgr::Update()
 				continue;
 			if (ImGui::Button(priv::CompTypeAsString.at(component.first).c_str()))
 			{
-				m_event_handler->SendEvent(SE_Cmd_RemoveCompFromEntity(curr_e, component.first));
+				m_event_handler.SendEvent(SE_Cmd_RemoveCompFromEntity(curr_e, component.first));
 				break;
 			}
 		}

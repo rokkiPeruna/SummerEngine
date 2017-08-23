@@ -10,7 +10,6 @@ GuiSceneMgr::GuiSceneMgr(priv::Engine& engine_ref, SEuint update_priority)
 	, m_sceneMgr(nullptr)
 {
 	m_sceneMgr = &m_engine.GetSceneMgr();
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 }
 
 void GuiSceneMgr::Update()
@@ -38,7 +37,7 @@ void GuiSceneMgr::Update()
 				ImGui::Separator();
 				if (ImGui::Button("Add scene"))
 				{
-					m_event_handler->SendEvent(SE_Event_SceneCreatedOnEditor(scenename, width, heigth));
+					m_event_handler.SendEvent(SE_Event_SceneCreatedOnEditor(scenename, width, heigth));
 				}
 			}
 		}
@@ -56,7 +55,7 @@ void GuiSceneMgr::Update()
 				{
 					char sname[32];
 					memcpy(sname, sn.c_str(), sizeof(sname));
-					m_event_handler->SendEvent(SE_Cmd_LoadScene(sname));				
+					m_event_handler.SendEvent(SE_Cmd_LoadScene(sname));				
 				}
 			}
 			ImGui::TreePop();

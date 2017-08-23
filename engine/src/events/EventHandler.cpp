@@ -9,6 +9,14 @@ EventHandler::EventHandler()
 	, m_pending_events{}
 {
 	m_sent_events.reserve(10);
+	//Register
+	priv::EventManager::__se_register_event_handler(this);
+}
+
+EventHandler::~EventHandler()
+{
+	//Unregister
+	priv::EventManager::__se_un_register_event_handler(this);
 }
 
 void EventHandler::RegisterEvent(SE_Event&& event_as_type)

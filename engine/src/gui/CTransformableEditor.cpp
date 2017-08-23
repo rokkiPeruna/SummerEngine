@@ -15,9 +15,6 @@ CTransformableEditor::CTransformableEditor(priv::Engine& engine_ref)
 	//MUST be done in every new component editor's constructor
 	//ALSO remember to add editor to Engine::m_engine_gui_container in Engine::_initGui()
 	GraphicalUserInterface::ComponentTypeToGuiEditor.emplace(COMPONENT_TYPE::TRANSFORMABLE, this);
-
-	///Event handler
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
 }
 
 void CTransformableEditor::ModifyComponent(COMPONENT_TYPE type, SEint index_in_container, Dataformat_itr component_obj)

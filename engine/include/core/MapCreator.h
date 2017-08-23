@@ -95,7 +95,7 @@ private:
 
 	SEint ppt;			//Pixels per tile
 
-	EventHandler* m_event_handler; //Remember to register!
+	EventHandler m_event_handler;
 
 	Dataformat_itr m_tiles_obj;
 

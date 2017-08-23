@@ -36,8 +36,7 @@ AnimationSystem::AnimationSystem(Engine& engine_ref)
 
 void AnimationSystem::Initialize()
 {
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	m_event_handler->RegisterEvent(SE_Cmd_ChangeAnimation("", -1));
+	m_event_handler.RegisterEvent(SE_Cmd_ChangeAnimation("", -1));
 
 	m_res_mgr = &m_engine.GetResourceManager();
 
@@ -52,11 +51,10 @@ void AnimationSystem::Uninitialize()
 	m_texture_map.clear();
 }
 
-void AnimationSystem::Update(SEfloat deltaTime)
+void AnimationSystem::CheckEvents()
 {
-	//Check events
 	SE_Event se_event;
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		switch (se_event.type)
 		{
@@ -79,7 +77,10 @@ void AnimationSystem::Update(SEfloat deltaTime)
 			break;
 		}
 	}
+}
 
+void AnimationSystem::Update(SEfloat deltaTime)
+{
 	for (auto& c_anim : m_cAnimations)
 	{
 		if (c_anim.ownerID == -1 || !c_anim.animations.size())

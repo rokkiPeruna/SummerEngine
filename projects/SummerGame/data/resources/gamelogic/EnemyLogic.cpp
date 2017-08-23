@@ -9,7 +9,6 @@ EnemyLogic::EnemyLogic()
 
 void EnemyLogic::Init()
 {
-	se::RegisterEventHandle(enemyHandler);
 	enemyHandler->SendEvent(se::SE_Event_GameLogicActivated("EnemyLogic", m_entityID));
 }
 

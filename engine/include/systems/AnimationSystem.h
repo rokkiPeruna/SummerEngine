@@ -47,6 +47,8 @@ public:
 
 	void Update(SEfloat deltaTime) override final;
 
+	void CheckEvents() override final;
+
 	void ClearComponentContainers() override final;
 
 	void OnEntityAdded(Entity& entity, Dataformat_itr& entity_obj) override final;

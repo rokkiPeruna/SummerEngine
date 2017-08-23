@@ -41,14 +41,12 @@ void EntityManager::Initialize(std::string relativePathToEntitiesJson)
 	while (!m_free_entity_ids.empty())
 		m_free_entity_ids.pop();
 
-	///Register event manager and events
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
-	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
-	m_event_handler->RegisterEvent(SE_Event_CreateBasicEntity(""));
-	m_event_handler->RegisterEvent(SE_Cmd_SaveEntityAsTemplate(nullptr));
-	m_event_handler->RegisterEvent(SE_Cmd_SetEntityAsCurrent(nullptr));
-	m_event_handler->RegisterEvent(SE_Cmd_DeleteEntityByName(""));
+	///Register events
+	m_event_handler.RegisterEvent(SE_Event_SceneChanged(nullptr));
+	m_event_handler.RegisterEvent(SE_Event_CreateBasicEntity(""));
+	m_event_handler.RegisterEvent(SE_Cmd_SaveEntityAsTemplate(nullptr));
+	m_event_handler.RegisterEvent(SE_Cmd_SetEntityAsCurrent(nullptr));
+	m_event_handler.RegisterEvent(SE_Cmd_DeleteEntityByName(""));
 }
 
 void EntityManager::Uninitialize()
@@ -60,7 +58,7 @@ void EntityManager::Update()
 {
 	//Check events
 	SE_Event se_event;
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		switch (se_event.type)
 		{
@@ -86,7 +84,7 @@ void EntityManager::Update()
 			{
 				auto new_cam_pos = TransformSystem::TransformableComponents.at(m_currentEntity->id).position;
 				new_cam_pos.z = 40.0f;
-				m_event_handler->SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
+				m_event_handler.SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
 			}
 			break;
 		}
@@ -137,10 +135,10 @@ void EntityManager::CreateEntityOnEditor(std::string name)
 
 	m_curr_free_entity_id = _findFreeEntityID();
 
-	m_event_handler->SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
+	m_event_handler.SendEvent(SE_Event_EntityCreatedOnEditor(m_currentEntity->id));
 	auto new_cam_pos{ TransformSystem::TransformableComponents.at(m_currentEntity->id).position };
 	new_cam_pos.z = 10.0f;
-	m_event_handler->SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
+	m_event_handler.SendEvent(SE_Cmd_ChangeCameraPos(new_cam_pos));
 }
 
 void EntityManager::CreateEntityOnEditor(Entity&, std::string)
@@ -290,7 +288,7 @@ void EntityManager::DeleteEntityOnEditor(std::string entity_name)
 		m_currentEntity = nullptr;
 	}
 
-	m_event_handler->SendEvent(SE_Event_EntityDeletedOnEditor(m_currentEntity, entity_id));
+	m_event_handler.SendEvent(SE_Event_EntityDeletedOnEditor(m_currentEntity, entity_id));
 	m_entities.erase(entity_id);
 	m_entities_names_map.erase(entity_name);
 }

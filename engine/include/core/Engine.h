@@ -3,6 +3,7 @@
 #define SUMMER_ENGINE_ENGINE_H
 #define STB_IMAGE_IMPLEMENTATION	//This is needed for stb_image.h to reveal function implementations
 
+
 //STL includes:
 #include <string>
 #include <memory>
@@ -12,6 +13,7 @@
 #include <iomanip>
 #include <exception>
 #include <thread>
+#include <future> //is now, old man!
 
 //External includes:
 #include <SDL2/include/SDL.h>
@@ -132,6 +134,8 @@ public:
 	static Engine* Ptr;
 
 private:
+	std::unique_ptr<EventManager> m_eventMgr; //EventManager is at the top of the private variables because it needs to exist when first handler is created
+
 	const std::string m_eng_conf_file_name;					///Const string naming the json file containing Engine configurations 
 	const std::string m_current_project_name;				///Current active project. Name must match the one in 'projects/' folder
 	const std::string m_json_data_files_fold_name;			///Const string naming the folder in project folder that contains all json data files
@@ -198,7 +202,8 @@ private:
 	std::unique_ptr<ResourceManager> m_resourceMgr;
 	std::unique_ptr<ComponentManager> m_compMgr;
 	std::unique_ptr<IOManager> m_ioMgr;
-	std::unique_ptr<EventManager> m_eventMgr;
+	//EventManager moved to the top of list. SE_TODO: Remove this comment if naming convention for EventManager changes!
+
 
 	///Systems and system ptrs container
 	std::unique_ptr<MovementSystem> m_movementSystem;

@@ -11,7 +11,7 @@ namespace priv
 MapCreator::MapCreator(Engine& engine_ref)
 	: m_engine(engine_ref)
 	, ppt{ 0 }
-	, m_event_handler{ nullptr }
+	, m_event_handler{ }
 	, m_tiles_obj{}
 	, m_current_tileconts{}
 	, sf_struct{}
@@ -24,17 +24,14 @@ void MapCreator::Init()
 {
 	ppt = m_engine.GetPixelsPerOneUnit();
 
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
-
-	m_event_handler->RegisterEvent(SE_Event_SceneChanged(nullptr));
-	m_event_handler->RegisterEvent(SE_Cmd_SaveScene());
+	m_event_handler.RegisterEvent(SE_Event_SceneChanged(nullptr));
+	m_event_handler.RegisterEvent(SE_Cmd_SaveScene());
 }
 
 void MapCreator::Update()
 {
 	SE_Event se_event;
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		switch (se_event.type)
 		{

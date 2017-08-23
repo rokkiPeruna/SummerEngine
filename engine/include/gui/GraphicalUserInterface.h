@@ -52,7 +52,7 @@ public:
 private:
 	priv::Engine& m_engine;
 
-	EventHandler* m_event_handler; //Remember to register
+	EventHandler m_event_handler;
 
 	std::vector<std::unique_ptr<EngineGui>> m_gui_container;
 

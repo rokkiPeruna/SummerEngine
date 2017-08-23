@@ -53,8 +53,8 @@ protected:
 	///Reference to engine
 	priv::Engine& m_engine;
 
-	///Event handler pointer. Remember to register if used!
-	EventHandler* m_event_handler;
+	///Event handler
+	EventHandler m_event_handler;
 
 	///Update priority
 	SEuint m_update_priority;

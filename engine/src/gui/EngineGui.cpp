@@ -6,10 +6,10 @@ namespace gui
 {
 EngineGui::EngineGui(priv::Engine& engine_ref, SEuint update_priority)
 	: m_engine(engine_ref)
-	, m_event_handler(nullptr)
+	, m_event_handler{}
 	, m_update_priority(update_priority)
 {
-	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(m_event_handler);
+
 }
 
 Vec3f EngineGui::_getEntityPos(SEuint entity_id)

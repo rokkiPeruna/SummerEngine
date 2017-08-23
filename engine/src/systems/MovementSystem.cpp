@@ -24,11 +24,15 @@ MovementSystem::MovementSystem(Engine& engine_ref)
 
 void MovementSystem::Initialize()
 {
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
+
 }
 
 void MovementSystem::Uninitialize()
+{
+
+}
+
+void MovementSystem::CheckEvents()
 {
 
 }
@@ -39,7 +43,7 @@ void MovementSystem::Update(SEfloat deltaTime)
 	{
 		c.velocity += c.acceleration * deltaTime;
 		//Send events!
-		m_event_handler->SendEvent(SE_Event_EntityPositionChanged(c.ownerID, c.velocity * deltaTime));
+		m_event_handler.SendEvent(SE_Event_EntityPositionChanged(c.ownerID, c.velocity * deltaTime));
 
 	}
 }

@@ -10,12 +10,6 @@ CGameLogic* GetGameLogicComponent(SEint index)
 
 }
 
-void RegisterEventHandle(EventHandler*& eventHandler)
-{
-	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(eventHandler);
-	assert(eventHandler);
-}
-
 
 namespace priv
 {
@@ -37,11 +31,7 @@ void GameLogicSystem::Initialize()
 {
 	LogicsFactory::GetInstance();
 
-
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
-
-	m_event_handler->RegisterEvent(SE_Event_GameLogicActivated("", -1));
+	m_event_handler.RegisterEvent(SE_Event_GameLogicActivated("", -1));
 
 	for (auto i : LogicsFactory::GetInstance()->m_factoryMap)
 	{
@@ -59,18 +49,17 @@ void GameLogicSystem::Uninitialize()
 
 }
 
-void GameLogicSystem::Update(SEfloat deltaTime)
+void GameLogicSystem::CheckEvents()
 {
 	SE_Event se_event;
-
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		switch (se_event.type)
 		{
 		case EventType::GameLogicActivated:
-		{		
-		//	auto index = m_engine.GetEntityMgr().GetEntities().at(se_event.additional_data.seint).components.at(COMPONENT_TYPE::GAMELOGIC);
-		//	m_cGameLogic.at(index);
+		{
+			//	auto index = m_engine.GetEntityMgr().GetEntities().at(se_event.additional_data.seint).components.at(COMPONENT_TYPE::GAMELOGIC);
+			//	m_cGameLogic.at(index);
 			auto spesificComponent = std::find_if(m_cGameLogic.begin(), m_cGameLogic.end(), _findByValue(se_event.additional_data.seint));
 
 			if (spesificComponent != m_cGameLogic.end())
@@ -92,7 +81,10 @@ void GameLogicSystem::Update(SEfloat deltaTime)
 			break;
 		}
 	}
+}
 
+void GameLogicSystem::Update(SEfloat deltaTime)
+{
 	for (auto& comp : m_cGameLogic)
 	{
 		if (comp.logics.size() != 0)

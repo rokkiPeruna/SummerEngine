@@ -43,7 +43,8 @@ std::map<COMPONENT_TYPE, ComponentSystem*> Engine::ComponentTypeToSystemPtr = {}
 Engine* Engine::Ptr = { nullptr };
 
 Engine::Engine(const std::string& curr_proj_name)
-	: m_eng_conf_file_name("engine_config.json")
+	: m_eventMgr(std::make_unique<EventManager>(*this))
+	, m_eng_conf_file_name("engine_config.json")
 	, m_current_project_name(curr_proj_name)
 	, m_json_data_files_fold_name("data")
 	, m_path_to_user_files("")
@@ -68,7 +69,6 @@ Engine::Engine(const std::string& curr_proj_name)
 	, m_resourceMgr(std::make_unique<ResourceManager>(*this))
 	, m_compMgr(std::make_unique<ComponentManager>(*this))
 	, m_ioMgr(std::make_unique<IOManager>(*this))
-	, m_eventMgr(std::make_unique<EventManager>(*this))
 
 	/*SYSTEMS*/
 	, m_transformSystem(std::make_unique<TransformSystem>(*this))
@@ -279,38 +279,63 @@ void Engine::_updateSystems(SEfloat deltaTime)
 	//
 	//m_gameLogicSystem->Update(deltaTime);
 
-	auto update1 = [this](SEfloat dt) {
-		this->GetMovementSystem().Update(dt);
-		this->GetAnimationSystem().Update(dt);
-	};
-	
-	auto update2 = [this](SEfloat dt) {
-		this->GetTransformSystem().Update(dt);
-		this->GetCollisionSystem().Update(dt);
-	};
+	m_movementSystem->CheckEvents();
 
-	auto update3 = [this](SEfloat dt) {
-		this->GetGameLogicSystem().Update(dt);
-	};
-	std::thread one(update1, deltaTime);
-	std::thread two(update2, deltaTime);
-	std::thread three(update3, deltaTime);
+	m_animationSystem->CheckEvents();
 
-	one.join();
-	two.join();
-	three.join();
-	//std::thread& movement_sys = m_movementSystem->update_thread(deltaTime);
-	//std::thread& animation_sys = m_animationSystem->update_thread(deltaTime);
-	//std::thread& transform_sys = m_transformSystem->update_thread(deltaTime);
-	//std::thread& collision_sys = m_collisionSystem->update_thread(deltaTime);
-	//std::thread& gameLogic_sys = m_gameLogicSystem->update_thread(deltaTime);
+	m_transformSystem->CheckEvents();
+
+	m_collisionSystem->CheckEvents();
+
+	m_gameLogicSystem->CheckEvents();
+
+	//auto update1 = [this](SEfloat dt) {
+	//	this->GetMovementSystem().Update(dt);
+	//	this->GetAnimationSystem().Update(dt);
+	//};
 	//
-	//movement_sys.join();
-	//animation_sys.join();
-	//transform_sys.join();
-	//collision_sys.join();
-	//gameLogic_sys.join();
+	//auto update2 = [this](SEfloat dt) {
+	//	this->GetTransformSystem().Update(dt);
+	//	this->GetCollisionSystem().Update(dt);
+	//};
+	//
+	//auto update3 = [this](SEfloat dt) {
+	//	this->GetGameLogicSystem().Update(dt);
+	//};
+	//std::thread one(update1, deltaTime);
+	//std::thread two(update2, deltaTime);
+	//std::thread three(update3, deltaTime);
+	//
+	//one.join();
+	//two.join();
+	//three.join();
 
+	/*std::thread wrapper{ [&]() {
+		std::thread& movement_sys = m_movementSystem->update_thread(deltaTime);
+		std::thread& animation_sys = m_animationSystem->update_thread(deltaTime);
+		std::thread& transform_sys = m_transformSystem->update_thread(deltaTime);
+		std::thread& collision_sys = m_collisionSystem->update_thread(deltaTime);
+		std::thread& gameLogic_sys = m_gameLogicSystem->update_thread(deltaTime);
+
+		movement_sys.detach();
+		animation_sys.detach();
+		transform_sys.detach();
+		collision_sys.detach();
+		gameLogic_sys.detach();
+		} };
+	wrapper.join();*/
+
+	std::thread& movement_sys = m_movementSystem->update_thread(deltaTime);
+	std::thread& animation_sys = m_animationSystem->update_thread(deltaTime);
+	std::thread& transform_sys = m_transformSystem->update_thread(deltaTime);
+	std::thread& collision_sys = m_collisionSystem->update_thread(deltaTime);
+	std::thread& gameLogic_sys = m_gameLogicSystem->update_thread(deltaTime);
+	
+	movement_sys.join();
+	animation_sys.join();
+	transform_sys.join();
+	collision_sys.join();
+	gameLogic_sys.join();
 }
 
 bool Engine::_gameLoop()
@@ -350,7 +375,7 @@ bool Engine::_gameLoop()
 		ImGui::Separator();
 		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
-		
+
 
 
 		_handleGameLoopEvents(gameloop);

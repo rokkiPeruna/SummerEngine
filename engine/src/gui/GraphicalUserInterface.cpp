@@ -30,7 +30,7 @@ std::map<COMPONENT_TYPE, gui::CompEditorGui*> GraphicalUserInterface::ComponentT
 
 GraphicalUserInterface::GraphicalUserInterface(priv::Engine& engine_ref)
 	: m_engine(engine_ref)
-	, m_event_handler{nullptr}
+	, m_event_handler{}
 	, m_gui_container{}
 	, m_map_editor{nullptr}
 	
@@ -46,9 +46,6 @@ GraphicalUserInterface::~GraphicalUserInterface()
 
 void GraphicalUserInterface::Initialize()
 {
-	//Event handler
-	m_engine.GetEventManager().RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
 
 	//Set gui values
 	window_data::width = m_engine.GetWindow().windowInitData.width;
@@ -115,7 +112,7 @@ void GraphicalUserInterface::Update()
 				util::SwitchBoolean(gui::elem_visibility::show_map_editor);
 			ImGui::SameLine();
 			if (ImGui::Button("Save progress"))
-				m_event_handler->SendEvent(SE_Cmd_SaveScene());
+				m_event_handler.SendEvent(SE_Cmd_SaveScene());
 
 			ImGui::EndMainMenuBar();
 		}

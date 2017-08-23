@@ -1,11 +1,11 @@
 #ifndef SUMMER_ENGINE_TRANSFORM_SYSTEM_H
 #define SUMMER_ENGINE_TRANSFORM_SYSTEM_H
 
-//Include standard library
+//STL includes:
+#include <set>
 
-//Include external
 
-//Include SE
+///SE includes:
 #include <systems/ComponentSystem.h>
 #include <components/CTransformable.h>
 #include <components/CShape.h>
@@ -31,7 +31,7 @@ class TransformSystem : public ComponentSystem
 	friend class RenderSystem;
 	//Friend getter method for CMovables components
 	friend CShape* se::GetShapeComponent(SEint index);
-	friend CTransformable* GetTransformComponent(SEint index);
+	friend CTransformable* se::GetTransformComponent(SEint index);
 
 public:
 
@@ -52,6 +52,8 @@ public:
 
 	///Run through logic using components as values 
 	void Update(SEfloat deltaTime) override final;
+
+	void CheckEvents() override final;
 
 	///Clear component containers
 	void ClearComponentContainers() override final;
@@ -76,17 +78,13 @@ public:
 
 
 private:
-
-	///Every shape in program is stored in this container
-
 	std::vector<CShape> m_cShapes;
 	std::queue<SEint> m_free_cShape_indices;
+
+	std::set<SEint> m_recalc_transf_indices;
 };
 
-
 } // !namespace priv
-
 } // !namespace se
-
 
 #endif

@@ -6,7 +6,7 @@ namespace se
 {
 
 Camera::Camera()
-	: m_event_handler(nullptr)
+	: m_event_handler{}
 	, m_cameraPosition(0.0f, 0.0f, 2.0f)
 	, m_cameraTarget(0.0f)
 	, m_cameraDirection(0.0f)
@@ -30,7 +30,7 @@ void Camera::Update(const SEfloat deltaTime)
 {
 	//Check events!
 	SE_Event se_event;
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		switch (se_event.type)
 		{
@@ -80,8 +80,7 @@ void Camera::Update(const SEfloat deltaTime)
 
 void Camera::Init()
 {
-	priv::Engine::Ptr->GetEventManager().RegisterEventHandler(m_event_handler);
-	m_event_handler->RegisterEvent(SE_Cmd_ChangeCameraPos(Vec3f(1.0f)));
+	m_event_handler.RegisterEvent(SE_Cmd_ChangeCameraPos(Vec3f(1.0f)));
 }
 
 Mat4f Camera::GetCameraView()

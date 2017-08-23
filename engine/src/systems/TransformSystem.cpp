@@ -16,8 +16,8 @@ CShape* GetShapeComponent(SEint index)
 
 CTransformable* GetTransformComponent(SEint index)
 {
-	return &priv::TransformSystem::TransformableComponents.at(index);
-}	
+	return &priv::Engine::Ptr->GetTransformSystem().TransformableComponents.at(index);
+}
 
 namespace priv
 {
@@ -27,6 +27,7 @@ TransformSystem::TransformSystem(Engine& engine_ref)
 	: ComponentSystem(engine_ref)
 	, m_cShapes{}
 	, m_free_cShape_indices{}
+	, m_recalc_transf_indices{}
 {
 	//THIS IS VERY IMPORTANT:
 	//This links components to correct systems and to correct typeid! Must be done in every new system for all components it handles
@@ -36,14 +37,10 @@ TransformSystem::TransformSystem(Engine& engine_ref)
 
 void TransformSystem::Initialize()
 {
-	///Register event handler
-	auto& em = m_engine.GetEventManager();
-	em.RegisterEventHandler(m_event_handler);
-	assert(m_event_handler);
-	///Give message types that we want this handler to store
-	m_event_handler->RegisterEvent(SE_Event_EntityPositionChanged(-1, Vec3f(1.0f)));
-	m_event_handler->RegisterEvent(SE_Event_EntityScaleChanged(-1, Vec3f(1.0f)));
-	m_event_handler->RegisterEvent(SE_Event_EntityRotationChanged(-1, Vec3f(0.0f)));
+	///Give message types that we want m_event_handler to store
+	m_event_handler.RegisterEvent(SE_Event_EntityPositionChanged(-1, Vec3f(1.0f)));
+	m_event_handler.RegisterEvent(SE_Event_EntityScaleChanged(-1, Vec3f(1.0f)));
+	m_event_handler.RegisterEvent(SE_Event_EntityRotationChanged(-1, Vec3f(0.0f)));
 }
 
 void TransformSystem::Uninitialize()
@@ -51,11 +48,10 @@ void TransformSystem::Uninitialize()
 
 }
 
-void TransformSystem::Update(SEfloat deltaTime)
+void TransformSystem::CheckEvents()
 {
-	//Check events!!
 	SE_Event se_event;
-	while (m_event_handler->PollEvents(se_event))
+	while (m_event_handler.PollEvents(se_event))
 	{
 		SEbool recalc_mod_mat = false;
 		SEint e_id = -1;
@@ -89,11 +85,18 @@ void TransformSystem::Update(SEfloat deltaTime)
 		}
 
 		if (recalc_mod_mat)
-		{
-			auto& tr = TransformableComponents.at(e_id);
-			tr.modelMatrix = glm::translate(Mat4f(1.0f), tr.position) * glm::rotate(Mat4f(1.0f), glm::radians(tr.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), tr.scale);
-		}
+			m_recalc_transf_indices.emplace(e_id);
 	}
+}
+
+void TransformSystem::Update(SEfloat deltaTime)
+{
+	for (auto& i : m_recalc_transf_indices)
+	{
+		auto& tr = TransformableComponents.at(i);
+		tr.modelMatrix = glm::translate(Mat4f(1.0f), tr.position) * glm::rotate(Mat4f(1.0f), glm::radians(tr.rotation), Vec3f(0.0f, 0.0f, 1.0f)) * glm::scale(Mat4f(1.0f), tr.scale);
+	}
+	m_recalc_transf_indices.clear();
 }
 
 void TransformSystem::ClearComponentContainers()

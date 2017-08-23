@@ -32,6 +32,11 @@ void CollisionSystem::Uninitialize()
 
 }
 
+void CollisionSystem::CheckEvents()
+{
+
+}
+
 void CollisionSystem::Update(SEfloat)
 {
 	if (m_cCollidables.empty())

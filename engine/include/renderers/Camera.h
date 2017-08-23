@@ -41,8 +41,8 @@ public:
 	void SetTarget(Vec3f target);
 
 private:
-	///EventHandler ptr. Remember to register if used
-	EventHandler* m_event_handler;
+	///EventHandler ptr
+	EventHandler m_event_handler;
 
 	///Where is the camera
 	Vec3f m_cameraPosition;
